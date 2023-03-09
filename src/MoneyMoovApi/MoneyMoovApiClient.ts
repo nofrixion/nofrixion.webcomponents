@@ -1,5 +1,6 @@
-import { ApiError, ApiErrorSchema } from "../types/ApiResponses";
+
 import { PaymentRequestPageResponse } from "./Responses/PaymentRequest";
+import { ApiError } from "./types/ApiResponses";
 
 class MoneyMoovApiClient {
 
@@ -60,7 +61,7 @@ class MoneyMoovApiClient {
             } catch (error){
     
                 console.log(error);
-                const parsedError = ApiErrorSchema.parse(json);
+                const parsedError = JSON.parse(JSON.stringify(json));
     
                 return parsedError as ApiError;
             }
