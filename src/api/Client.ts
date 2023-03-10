@@ -37,16 +37,16 @@ const getPagedResponse = async <T>(
         
         try{
 
-            const returnType:T = JSON.parse(JSON.stringify(json));
+            const returnType:T = json as T;
             
             return returnType;
 
         } catch (error){
 
             console.log(error);
-            const parsedError = JSON.parse(JSON.stringify(json));
+            const parsedError = json as ApiError;
 
-            return parsedError as ApiError;
+            return parsedError;
         }
 
     } catch(error){
