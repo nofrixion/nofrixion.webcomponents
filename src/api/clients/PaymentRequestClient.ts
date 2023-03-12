@@ -27,9 +27,9 @@ export class PaymentRequestClient extends BaseApiClient{
      * @param pageSize The page size. Default is 20
      * @returns A PaymentRequestPageResponse if successful. An ApiError if not successful.
      */
-    getAll = async (pageNumber: number = 1, pageSize: number = 20) : Promise<{
+    async getAll(pageNumber: number = 1, pageSize: number = 20) : Promise<{
         data?: PaymentRequestPageResponse;
-        error?: ApiError}> => {
+        error?: ApiError}> {
 
         return await this.getPagedResponse<PaymentRequestPageResponse>(
             `${this.apiBaseUrl}/paymentrequests`,
@@ -42,9 +42,9 @@ export class PaymentRequestClient extends BaseApiClient{
      * @param paymentRequestId The Payment Request Id 
      * @returns A PaymentRequest if successful. An ApiError if not successful.
      */
-    get = async (paymentRequestId: string) : Promise<{
+    async get(paymentRequestId: string) : Promise<{
         data?: PaymentRequest;
-        error?: ApiError}> => {
+        error?: ApiError}> {
 
         let response = await this.fetchWithHandleError<PaymentRequest>(
             `${this.apiBaseUrl}/paymentrequests/${paymentRequestId}`,
@@ -59,9 +59,9 @@ export class PaymentRequestClient extends BaseApiClient{
      * @param paymentRequestId The Payment Request Id 
      * @returns A PaymentRequestMinimal if successful. An ApiError if not successful.
      */
-    minimal = async (paymentRequestId: string) : Promise<{
+    async minimal(paymentRequestId: string) : Promise<{
         data?: PaymentRequestMinimal;
-        error?: ApiError}> => {
+        error?: ApiError}> {
 
         let response = await this.fetchWithHandleError<PaymentRequestMinimal>(
             `${this.apiBaseUrl}/paymentrequests/${paymentRequestId}/minimal`,
@@ -76,9 +76,9 @@ export class PaymentRequestClient extends BaseApiClient{
      * @param paymentRequestId The Payment Request Id
      * @returns True if successfull. An ApiError if not successful.
      */
-    delete = async (paymentRequestId: string): Promise<{
+    async delete(paymentRequestId: string): Promise<{
         success?: boolean;
-        error?: ApiError}> => {
+        error?: ApiError}> {
     
         let response = await this.fetchWithHandleError(
             `${this.apiBaseUrl}/paymentrequests/${paymentRequestId}`,
@@ -93,9 +93,9 @@ export class PaymentRequestClient extends BaseApiClient{
      * @param paymentRequestId The Payment Request Id
      * @returns True if successfull. An ApiError if not successful.
      */
-    voidCardPayment = async (paymentRequestId: string): Promise<{
+    async voidCardPayment(paymentRequestId: string): Promise<{
         success?: boolean;
-        error?: ApiError}> => {
+        error?: ApiError}> {
     
         let response = await this.fetchWithHandleError(
             `${this.apiBaseUrl}/paymentrequests/${paymentRequestId}/card/voidpaymentrequest`,
