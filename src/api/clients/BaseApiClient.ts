@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
-import { ApiError, HttpMethod } from "../types/ApiResponses";
+import { ApiError } from "../types/ApiResponses";
+import { HttpMethod } from "../types/Enums";
 
 export abstract class BaseApiClient{
 

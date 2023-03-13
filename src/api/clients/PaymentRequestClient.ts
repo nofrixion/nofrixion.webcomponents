@@ -1,4 +1,5 @@
-import { ApiError, HttpMethod, PaymentRequestCreate, PaymentRequestMinimal, PaymentRequestPageResponse } from '../types/ApiResponses';
+import { ApiError, PaymentRequestCreate, PaymentRequestMinimal, PaymentRequestPageResponse } from '../types/ApiResponses';
+import { HttpMethod } from '../types/Enums';
 import { BaseApiClient } from "./BaseApiClient";
 
 /**
