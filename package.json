@@ -4,11 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "start-storybook -p 6006 --no-open --quiet --no-manager-cache",
+    "dev-web": "start-storybook -p 6007 -c .storybook-webcomponents --no-open --quiet",
     "build": "tsc && vite build",
-    "preview": "vite preview",
-    "storybook": "start-storybook -p 6006 --no-open --quiet --no-manager-cache",
-    "storybook-web": "start-storybook -p 6007 -c .storybook-webcomponents --no-open --quiet",
     "build-storybook": "build-storybook",
     "lint": "eslint . --ext .ts,.tsx",
     "pretty-quick": "pretty-quick --staged",
