@@ -10,7 +10,9 @@
     "storybook": "start-storybook -p 6006 --no-open --quiet --no-manager-cache",
     "storybook-web": "start-storybook -p 6007 -c .storybook-webcomponents --no-open --quiet",
     "build-storybook": "build-storybook",
-    "lint": "eslint . --ext .ts,.tsx"
+    "lint": "eslint . --ext .ts,.tsx",
+    "pretty-quick": "pretty-quick --staged",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.54.1",
@@ -20,7 +22,6 @@
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-react": "^7.32.2",
-    "prettier": "^2.8.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-to-html-element": "^1.4.7"
@@ -39,7 +40,10 @@
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react-swc": "^3.0.0",
     "babel-loader": "^8.3.0",
+    "husky": "^8.0.3",
     "lit-html": "^2.6.1",
+    "prettier": "^2.8.4",
+    "pretty-quick": "^3.1.3",
     "prop-types": "^15.8.1",
     "typescript": "^4.9.3",
     "vite": "^4.1.0"

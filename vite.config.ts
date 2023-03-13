@@ -1,6 +1,6 @@
-import { resolve } from 'path'
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
+import { resolve } from 'path';
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react-swc';
 
 // We could explore to create a npm package
 // Here's an interesting link: https://www.bitovi.com/blog/react-everywhere-with-vite-and-react-to-webcomponent
@@ -15,6 +15,6 @@ export default defineConfig(() => ({
     },
   },
   define: {
-    'process.env': `"${process.env}"`
+    'process.env': `"${process.env}"`,
   },
-}))
+}));
