@@ -48,6 +48,42 @@ export type PaymentRequestMinimal = {
     cardStripePaymentIntentSecret?: string;
     jwk?: string;
     paymentMethodTypes: string;
+    cardTransmitRawDetails: boolean;
+    cardProcessorMerchantID?: string;
+    ignoreAddressVerification: boolean;
+    cardIgnoreCVN: boolean;
+    pispRecipientReference?: string;
+    useHostedPaymentPage: boolean;
+    cardNoPayerAuthentication: boolean;
+};
+
+export type PaymentRequestCreate = {
+    merchantID: string;
+    amount: number;
+    currency: Currency;
+    customerID?: string;
+    orderID?: string;
+    paymentMethodTypes: string;
+    description?: string;
+    pispAccountID?: string;
+    baseOriginUrl: string;
+    callbackUrl?: string;
+    successWebHookUrl?: string;
+    cardAuthorizeOnly: boolean;
+    cardCreateToken: boolean;
+    cardTokenCreateModes: CardTokenCreateModes;
+    partialPaymentMethod: PartialPaymentMethods;
+    customerEmailAddress?: string;
+    shippingFirstName?: string;
+    shippingLastName?: string;
+    shippingAddressLine1?: string;
+    shippingAddressLine2?: string;
+    shippingAddressCity?: string;
+    shippingAddressCounty?: string;
+    shippingAddressPostCode?: string;
+    shippingAddressCountryCode?: string;
+    shippingPhone?: string;
+    shippingEmail?: string;
 };
 
 export type PaymentRequestAddress = {
@@ -163,6 +199,13 @@ export enum PaymentRequestEventType{
     card_payer_authentication_failure = "card_payer_authentication_failure",
     pisp_webhook = "pisp_webhook",
     pisp_settle = "pisp_settle",
+}
+
+export enum HttpMethod {
+    GET = "GET",
+    POST = "POST",
+    PUT = "PUT",
+    DELETE = "DELETE",
 }
 
 export type ApiResponse<T> = {

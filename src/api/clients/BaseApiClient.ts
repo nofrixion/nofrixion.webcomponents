@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { ApiError } from "../types/ApiResponses";
+import { ApiError, HttpMethod } from "../types/ApiResponses";
 
 export abstract class BaseApiClient{
 
@@ -17,37 +17,48 @@ export abstract class BaseApiClient{
      * @param pageSize The page size
      * @returns A Paged response of type T if successful. An ApiError if not successful.
      */
-    protected async getPagedResponse<T>(
+    protected async getPagedResponse<TResponse>(
         url: string, 
         pageNumber: number = 1, 
         pageSize: number = 20
         ): Promise<{
-            data?: T;
+            data?: TResponse;
             error?: ApiError
         }> 
     {
         url = `${url}?page=${pageNumber}&size=${pageSize}`;
         
-        return await this.fetchWithHandleError<T>(url, 'GET');
+        return await this.fetchWithHandleError<TResponse>(url, HttpMethod.GET);
     };
 
-    protected async fetchWithHandleError<T>(
+    protected async fetchWithHandleError<TResponse>(
         url: string,
-        method: string
+        method: HttpMethod,
+        postData?: any,
         ): Promise<{
-            data?: T;
+            data?: TResponse;
             error?: ApiError
         }> {
 
-            console.log('Requesting: ' + url);
+            console.log(`Requesting: ${method} ${url}`);
+
+            let contentType = 'application/json';
+
+            // Send form encoding on POST and PUT
+            if (method === HttpMethod.POST || method === HttpMethod.PUT){
+                // Axios will automatically serialize the postData object to form urlencoded format
+                contentType = 'application/x-www-form-urlencoded';
+            }
 
             try{
         
-                const { data } = await axios<T>({
+                const { data } = await axios<TResponse>({
                     method: method,
                     url: url,
+                    data: postData,
                     headers: {
-                        'Authorization': `Bearer ${this.authToken}`
+                        'Authorization': `Bearer ${this.authToken}`,
+                        'content-type': contentType,
                     },
                   });
 

@@ -1,4 +1,4 @@
-import { ApiError, PaymentRequestMinimal, PaymentRequestPageResponse } from '../types/ApiResponses';
+import { ApiError, HttpMethod, PaymentRequestCreate, PaymentRequestMinimal, PaymentRequestPageResponse } from '../types/ApiResponses';
 import { BaseApiClient } from "./BaseApiClient";
 
 /**
@@ -48,7 +48,25 @@ export class PaymentRequestClient extends BaseApiClient{
 
         let response = await this.fetchWithHandleError<PaymentRequest>(
             `${this.apiBaseUrl}/paymentrequests/${paymentRequestId}`,
-            "GET"
+            HttpMethod.GET
+        );
+
+        return response;
+    }
+
+    /**
+     * Creates a Payment request
+     * @param paymentRequest The Payment Request to create 
+     * @returns The newly created PaymentRequest if successful. An ApiError if not successful.
+     */
+    async create(paymentRequest: PaymentRequestCreate) : Promise<{
+        data?: PaymentRequest;
+        error?: ApiError}> {
+
+        let response = await this.fetchWithHandleError<PaymentRequest>(
+            `${this.apiBaseUrl}/paymentrequests`,
+            HttpMethod.POST,
+            paymentRequest
         );
 
         return response;
@@ -65,7 +83,7 @@ export class PaymentRequestClient extends BaseApiClient{
 
         let response = await this.fetchWithHandleError<PaymentRequestMinimal>(
             `${this.apiBaseUrl}/paymentrequests/${paymentRequestId}/minimal`,
-            "GET"
+            HttpMethod.GET
         );
 
         return response;
@@ -82,7 +100,7 @@ export class PaymentRequestClient extends BaseApiClient{
     
         let response = await this.fetchWithHandleError(
             `${this.apiBaseUrl}/paymentrequests/${paymentRequestId}`,
-            "DELETE"
+            HttpMethod.DELETE
         );
 
         return !response.error ? { success: true } : { success: false, error: response.error };
@@ -99,7 +117,7 @@ export class PaymentRequestClient extends BaseApiClient{
     
         let response = await this.fetchWithHandleError(
             `${this.apiBaseUrl}/paymentrequests/${paymentRequestId}/card/voidpaymentrequest`,
-            "POST"
+            HttpMethod.POST
         );
 
         return !response.error ? { success: true } : { success: false, error: response.error };
