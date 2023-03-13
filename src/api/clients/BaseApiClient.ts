@@ -7,7 +7,6 @@ export abstract class BaseApiClient{
     authToken: string;
 
     constructor(authToken: string){
-        
         this.authToken = authToken;
     }
 
@@ -16,7 +15,7 @@ export abstract class BaseApiClient{
      * @param url The api url
      * @param pageNumber The page number
      * @param pageSize The page size
-     * @returns A Paged response of type T if successful. An ApiError if not successful.
+     * @returns A Paged response of type TResponse if successful. An ApiError if not successful.
      */
     protected async getPagedResponse<TResponse>(
         url: string, 
@@ -29,10 +28,17 @@ export abstract class BaseApiClient{
     {
         url = `${url}?page=${pageNumber}&size=${pageSize}`;
         
-        return await this.fetchWithHandleError<TResponse>(url, HttpMethod.GET);
+        return await this.httpRequest<TResponse>(url, HttpMethod.GET);
     };
 
-    protected async fetchWithHandleError<TResponse>(
+    /**
+     * Performs a http request to the MoneyMoov api.
+     * @param url The request url
+     * @param method The Http Method.
+     * @param postData Optional. The data to post if specified.
+     * @returns A response of type TResponse if successful. An ApiError if not successful.
+     */
+    protected async httpRequest<TResponse>(
         url: string,
         method: HttpMethod,
         postData?: any,
@@ -46,8 +52,8 @@ export abstract class BaseApiClient{
             let contentType = 'application/json';
 
             // Send form encoding on POST and PUT
+            // Axios will automatically serialize the postData object to form urlencoded format
             if (method === HttpMethod.POST || method === HttpMethod.PUT){
-                // Axios will automatically serialize the postData object to form urlencoded format
                 contentType = 'application/x-www-form-urlencoded';
             }
 

@@ -47,7 +47,7 @@ export class PaymentRequestClient extends BaseApiClient{
         data?: PaymentRequest;
         error?: ApiError}> {
 
-        let response = await this.fetchWithHandleError<PaymentRequest>(
+        let response = await this.httpRequest<PaymentRequest>(
             `${this.apiBaseUrl}/paymentrequests/${paymentRequestId}`,
             HttpMethod.GET
         );
@@ -64,7 +64,7 @@ export class PaymentRequestClient extends BaseApiClient{
         data?: PaymentRequest;
         error?: ApiError}> {
 
-        let response = await this.fetchWithHandleError<PaymentRequest>(
+        let response = await this.httpRequest<PaymentRequest>(
             `${this.apiBaseUrl}/paymentrequests`,
             HttpMethod.POST,
             paymentRequest
@@ -82,7 +82,7 @@ export class PaymentRequestClient extends BaseApiClient{
         data?: PaymentRequestMinimal;
         error?: ApiError}> {
 
-        let response = await this.fetchWithHandleError<PaymentRequestMinimal>(
+        let response = await this.httpRequest<PaymentRequestMinimal>(
             `${this.apiBaseUrl}/paymentrequests/${paymentRequestId}/minimal`,
             HttpMethod.GET
         );
@@ -99,7 +99,7 @@ export class PaymentRequestClient extends BaseApiClient{
         success?: boolean;
         error?: ApiError}> {
     
-        let response = await this.fetchWithHandleError(
+        let response = await this.httpRequest(
             `${this.apiBaseUrl}/paymentrequests/${paymentRequestId}`,
             HttpMethod.DELETE
         );
@@ -116,7 +116,7 @@ export class PaymentRequestClient extends BaseApiClient{
         success?: boolean;
         error?: ApiError}> {
     
-        let response = await this.fetchWithHandleError(
+        let response = await this.httpRequest(
             `${this.apiBaseUrl}/paymentrequests/${paymentRequestId}/card/voidpaymentrequest`,
             HttpMethod.POST
         );

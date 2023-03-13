@@ -10,7 +10,7 @@ class MoneyMoovApiClient {
   authToken: string;
 
   /**
-   * Provides access to PaymentRequest api.
+   * Provides access to the MoneyMoov PaymentRequests api.
    */
   PaymentRequests: PaymentRequestClient;
   
