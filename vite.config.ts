@@ -1,17 +1,20 @@
-import { defineConfig } from 'vite'
+import { resolve } from 'path'
+import { defineConfig } from 'Vite'
 import react from '@vitejs/plugin-react-swc'
 
-// https://vitejs.dev/config/
-export default defineConfig({
+// We could explore to create a npm package
+// Here's an interesting link: https://www.bitovi.com/blog/react-everywhere-with-vite-and-react-to-webcomponent
+
+export default defineConfig(() => ({
+  plugins: [react()],
   build: {
     lib: {
-      name: 'my-nofrixion-lib',
-      entry: 'src/web-components/main.tsx',
-    }
+      formats: ['es'], // We can also build for UMD adding 'umd' to the array
+      entry: resolve(__dirname, 'src/index.ts'),
+      name: 'web-components',
+    },
   },
   define: {
-    // 'process.env': { NODE_ENV: 'production' }
     'process.env': `"${process.env}"`
   },
-  plugins: [react()],
-})
+}))
