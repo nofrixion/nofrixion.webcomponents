@@ -17,7 +17,7 @@ export abstract class BaseApiClient{
      * @param pageSize The page size
      * @returns A Paged response of type T if successful. An ApiError if not successful.
      */
-    async getPagedResponse<T>(
+    protected async getPagedResponse<T>(
         url: string, 
         pageNumber: number = 1, 
         pageSize: number = 20
@@ -31,7 +31,7 @@ export abstract class BaseApiClient{
         return await this.fetchWithHandleError<T>(url, 'GET');
     };
 
-    async fetchWithHandleError<T>(
+    protected async fetchWithHandleError<T>(
         url: string,
         method: string
         ): Promise<{
@@ -60,11 +60,14 @@ export abstract class BaseApiClient{
                 // Axios will throw an exception for all errors
                 
                 const error = ex as AxiosError;
-        
+                
                 if (error.response?.data){
                     // This contains the problem details
                     console.log('Received error from api. : ' + JSON.stringify(error.response?.data));
-                    return {error: error.response?.data as ApiError};
+                    
+                    return {
+                        error: error.response?.data as ApiError
+                    };
                 }
                 
                 return { error: {
