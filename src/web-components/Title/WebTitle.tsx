@@ -1,6 +1,6 @@
 import React from "react";
 import * as ReactDOM from "react-dom/client";
 import { register } from "react-to-html-element";
-import Button from "../../components/Button/Button";
+import Title from "../../components/Title/Title";
 
-register(Button, "custom-button", React, ReactDOM);
+register(Title, "custom-title", React, ReactDOM);

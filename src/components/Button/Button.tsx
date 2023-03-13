@@ -1,5 +1,4 @@
 import "./button.css";
-import PropTypes from "prop-types";
 
 interface ButtonProps {
   /**
@@ -33,7 +32,6 @@ const Button = ({
   size = "medium",
   backgroundColor,
   label,
-  ...props
 }: ButtonProps) => {
   const mode = primary
     ? "storybook-button--primary"
@@ -46,17 +44,16 @@ const Button = ({
         " "
       )}
       style={{ backgroundColor }}
-      {...props}
     >
       {label}
     </button>
   );
 };
 
-Button.propTypes = {
-  primary: PropTypes.bool,
-  label: PropTypes.string,
-  size: PropTypes.string,
+Button.componentProps = {
+  primary: Boolean,
+  label: String,
+  size: String,
 };
 
 export default Button;

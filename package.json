@@ -14,7 +14,7 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-to-webcomponent": "^1.7.3"
+    "react-to-html-element": "^1.4.7"
   },
   "devDependencies": {
     "@babel/core": "^7.21.0",
