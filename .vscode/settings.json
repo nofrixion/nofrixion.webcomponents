@@ -3,5 +3,8 @@
     ".storybook-webcomponents": "Storybook",
     "components": "React-components",
     "web-components": "Public"
-  }
+  },
+  "prettier.configPath": ".prettierrc",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true
 }

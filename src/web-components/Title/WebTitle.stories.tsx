@@ -1,29 +1,28 @@
-import { html } from "lit-html";
+import { html } from 'lit-html';
 
-import "./WebTitle";
+import './WebTitle';
 
 export default {
-  title: "Title",
+  title: 'Title',
   argTypes: {
     label: {
-      control: "text",
+      control: 'text',
     },
   },
 };
 
 //👇 We create a “template” of how args map to rendering
-const Template = ({ label }) =>
-  html`<custom-title .label=${label}></custom-title>`;
+const Template = ({ label }) => html`<custom-title .label=${label}></custom-title>`;
 
 //👇 Each story then reuses that template
 export const Primary = Template.bind({});
 
 Primary.args = {
-  label: "Primary",
+  label: 'Primary',
 };
 
 export const Secondary = Template.bind({});
 
 Secondary.args = {
-  label: "Secondary",
+  label: 'Secondary',
 };

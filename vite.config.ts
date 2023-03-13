@@ -1,5 +1,5 @@
 import { resolve } from 'path'
-import { defineConfig } from 'Vite'
+import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 
 // We could explore to create a npm package

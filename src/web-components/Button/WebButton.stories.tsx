@@ -1,36 +1,32 @@
-import { html } from "lit-html";
+import { html } from 'lit-html';
 
-import "./WebButton";
+import './WebButton';
 
 export default {
-  title: "Button",
+  title: 'Button',
   argTypes: {
     primary: {
-      control: "boolean",
+      control: 'boolean',
     },
     label: {
-      control: "text",
+      control: 'text',
     },
     size: {
-      options: ["small", "medium", "large"],
-      control: { type: "inline-radio" },
+      options: ['small', 'medium', 'large'],
+      control: { type: 'inline-radio' },
     },
   },
 };
 
 //👇 We create a “template” of how args map to rendering
 const Template = ({ primary, label, size }) =>
-  html`<custom-button
-    .primary=${primary}
-    .label=${label}
-    .size=${size}
-  ></custom-button>`;
+  html`<custom-button .primary=${primary} .label=${label} .size=${size}></custom-button>`;
 
 //👇 Each story then reuses that template
 export const Primary = Template.bind({});
 
 Primary.args = {
   primary: true,
-  label: "Button",
-  size: "medium",
+  label: 'Button',
+  size: 'medium',
 };
