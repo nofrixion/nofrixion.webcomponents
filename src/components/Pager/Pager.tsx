@@ -40,10 +40,11 @@ const Pager = ({ pageSize, totalRecords }: PagerProps) => {
 
   return (
     <div className="flex space-x-1 text-[#8F99A3] text-sm">
-      <div>{fromRecord}</div>
-      <div>-</div>
-      <div>{toRecord}</div>
-      <div>of {totalRecords}</div>
+      <div>
+        {fromRecord}-{toRecord}
+      </div>
+      <div>of</div>
+      <div>{totalRecords}</div>
       <div>
         <button className="ml-2" onClick={() => decrementPageNumber()}>
           <p>{'<'}</p>
