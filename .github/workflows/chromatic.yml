@@ -15,7 +15,7 @@ jobs:
           fetch-depth: 0 # 👈 Required to retrieve git history
       - uses: actions/setup-node@v3
         with:
-        node-version: 16 # 👈 Chromatic requires Node 16
+          node-version: 16 # 👈 Chromatic requires Node 16
       - name: Install dependencies
         # 👇 Install dependencies
         run: npm install
