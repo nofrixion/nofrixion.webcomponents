@@ -27,6 +27,7 @@ const Card = ({ name, size, imageSrc, imageAlt, href, description }: CardProps) 
   );
 };
 
+// This is how we declare the props for the web component
 Card.componentProps = {
   name: String,
   description: String,
