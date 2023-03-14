@@ -10,37 +10,40 @@ export default {
     imageSrc: { control: 'text' },
     imageAlt: { control: 'text' },
     href: { control: 'text' },
-    // size: String,
+    size: { control: 'inline-radio', options: ['medium', 'large'] },
   },
 };
 
 //👇 We create a “template” of how args map to rendering
-const Template = ({ name, description, imageSrc, imageAlt, href }) =>
+const Template = ({ name, description, imageSrc, imageAlt, href, size }) =>
   html`<custom-card
     .name=${name}
     .description=${description}
     .imageSrc=${imageSrc}
     .imageAlt=${imageAlt}
     .href=${href}
+    .size=${size}
   ></custom-card>`;
 
 //👇 Each story then reuses that template
-export const Primary = Template.bind({});
+export const Medium = Template.bind({});
 
-Primary.args = {
+Medium.args = {
   name: 'Travel',
   description: 'Daily commute essentials',
   imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-02-edition-03.jpg',
   imageAlt: 'Collection of four insulated travel bottles on wooden shelf.',
   href: '#',
+  size: 'medium',
 };
 
-export const Secondary = Template.bind({});
+export const Large = Template.bind({});
 
-Secondary.args = {
+Large.args = {
   name: 'Desk and Office',
   description: 'Work from home accessories',
   imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-02-edition-01.jpg',
   imageAlt: 'Desk with leather desk pad, walnut desk organizer, wireless keyboard and mouse, and porcelain mug.',
   href: '#',
+  size: 'large',
 };

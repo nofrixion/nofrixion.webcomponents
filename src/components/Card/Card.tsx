@@ -4,7 +4,7 @@ interface CardProps {
   imageSrc: string;
   imageAlt: string;
   href: string;
-  size?: 'small' | 'medium';
+  size?: 'medium' | 'large';
 }
 
 /**
