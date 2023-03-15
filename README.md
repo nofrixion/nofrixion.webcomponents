@@ -4,12 +4,12 @@ NoFrixion Web Components is a collection of web components that can be used to b
 
 ## 💻 Requirements
 
-- [Node.js](https://nodejs.org/en/)
+- [Node.js 18.x](https://nodejs.org/en/)
 - [NPM](https://www.npmjs.com/)
 - [Visual Studio Code](https://code.visualstudio.com/)
-    - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
-    - [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-    - [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
+  - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+  - [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+  - [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
 
 ## 🚀 Getting Started (React components)
 
