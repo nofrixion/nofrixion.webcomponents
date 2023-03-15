@@ -14,12 +14,34 @@ export default {
 
 const Template: ComponentStory<typeof Pager> = (args) => <Pager {...args} />;
 
-export const Primary = Template.bind({});
+export const Showcase = Template.bind({});
 
-Primary.decorators = [
-  () => (
-    <div className="space-x-1">
-      <Pager onPageChange={action('Page Changed')} {...(Primary.args, { pageSize: 20, totalRecords: 100 })} />
-    </div>
-  ),
-];
+Showcase.args = {
+  pageSize: 20,
+  totalRecords: 100,
+  onPageChange: action('Page Changed'),
+};
+
+export const OneFiftyItems = Template.bind({});
+
+OneFiftyItems.args = {
+  pageSize: 20,
+  totalRecords: 150,
+  onPageChange: action('Page Changed'),
+};
+
+export const OneThousandAndSeventySevenItems = Template.bind({});
+
+OneThousandAndSeventySevenItems.args = {
+  pageSize: 43,
+  totalRecords: 1077,
+  onPageChange: action('Page Changed'),
+};
+
+export const PageSizeLargerThanTotalRecords = Template.bind({});
+
+PageSizeLargerThanTotalRecords.args = {
+  pageSize: 43,
+  totalRecords: 23,
+  onPageChange: action('Page Changed'),
+};

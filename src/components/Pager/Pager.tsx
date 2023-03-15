@@ -6,19 +6,27 @@ import classNames from 'classnames';
 interface PagerProps {
   pageSize: number;
   totalRecords: number;
-  onPageChange: (e: CustomEvent<number>) => void;
+  onPageChange: (pageNumber: number) => void;
 }
 
 const Pager = ({ pageSize, totalRecords, onPageChange }: PagerProps) => {
+  const getToRecord = () => {
+    if (pageSize > totalRecords) {
+      return totalRecords;
+    } else {
+      return pageSize;
+    }
+  };
+
   const [currentPage, setCurrentPage] = useState(1);
   const [fromRecord, setFromRecord] = useState(1);
-  const [toRecord, setToRecord] = useState(pageSize);
+  const [toRecord, setToRecord] = useState(getToRecord());
   const [totalPages, setTotalPages] = useState(Math.ceil(totalRecords / pageSize));
 
   useEffect(() => {
     if (currentPage <= 1) {
       setFromRecord(1);
-      setToRecord(pageSize);
+      setToRecord(getToRecord());
     } else if (currentPage < totalPages) {
       setFromRecord(pageSize * currentPage - pageSize + 1);
       setToRecord(pageSize * currentPage);
@@ -27,7 +35,7 @@ const Pager = ({ pageSize, totalRecords, onPageChange }: PagerProps) => {
       setToRecord(totalRecords);
     }
 
-    onPageChange(new CustomEvent('change', { detail: currentPage }));
+    onPageChange(currentPage);
   }, [currentPage]);
 
   const decrementPageNumber = async () => {
@@ -45,7 +53,7 @@ const Pager = ({ pageSize, totalRecords, onPageChange }: PagerProps) => {
   };
 
   return (
-    <div className="flex space-x-1 text-[#8F99A3] text-sm">
+    <div className="flex space-x-1 text-[#73808C] text-sm">
       <div>
         {fromRecord}-{toRecord}
       </div>
@@ -73,11 +81,6 @@ const Pager = ({ pageSize, totalRecords, onPageChange }: PagerProps) => {
       </div>
     </div>
   );
-};
-
-Pager.componentProps = {
-  pageSize: Number,
-  totalRecords: Number,
 };
 
 export default Pager;
