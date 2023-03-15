@@ -1,0 +1,149 @@
+import React from 'react';
+import { ComponentStory, ComponentMeta } from '@storybook/react';
+
+import Row from './Row';
+
+export default {
+  title: 'Row',
+  component: Row,
+  argTypes: {
+    status: {
+      control: {
+        type: 'inline-radio',
+        options: ['paid', 'partial', 'unpaid'],
+      },
+    },
+    createdAt: {
+      control: {
+        type: 'date',
+      },
+    },
+    contact: {
+      control: {
+        type: 'object',
+      },
+    },
+    amount: {
+      control: {
+        type: 'number',
+      },
+    },
+    currency: {
+      control: {
+        type: 'inline-radio',
+        options: ['EUR', 'GBP'],
+      },
+    },
+    tags: {
+      control: {
+        type: 'object',
+      },
+    },
+  },
+  decorators: [
+    (Story) => (
+      // This is needed in order to show the row in the canvas
+      // as the Row component is a table row
+      // We could change this in the future to use a <Table> component
+      <table className="table-fixed text-left w-full">
+        <thead className="opacity-20">
+          <tr>
+            <th className="w-28">Status</th>
+            <th className="w-40">Created</th>
+            <th className="w-44">Contact</th>
+            <th className="w-36 text-right">Amount</th>
+
+            {/* Currency */}
+            <th className="w-20"></th>
+
+            {/* Tags */}
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <Story />
+        </tbody>
+      </table>
+    ),
+  ],
+} as ComponentMeta<typeof Row>;
+
+const Template: ComponentStory<typeof Row> = (args) => <Row {...args} />;
+
+export const Playground = Template.bind({});
+Playground.args = {
+  status: 'paid',
+  createdAt: new Date(),
+  contact: {
+    name: 'Daniel Kowalski',
+    email: 'dkowalski@email.com',
+  },
+  amount: 29,
+  currency: 'EUR',
+  tags: ['Tag 1', 'Another tag', 'Third tag'],
+};
+
+export const ExampleToday = Template.bind({});
+ExampleToday.args = {
+  status: 'paid',
+  createdAt: new Date(),
+  contact: {
+    name: 'Daniel Kowalski',
+    email: 'dkowalski@email.com',
+  },
+  amount: 29,
+  currency: 'EUR',
+  tags: ['Tag 1', 'Another tag'],
+};
+
+export const ExampleYesterday = Template.bind({});
+ExampleYesterday.args = {
+  status: 'partial',
+  createdAt: new Date().setDate(new Date().getDate() - 1), // Yesterday
+  contact: {
+    name: 'Daniel Kowalski',
+    email: 'dkowalski@email.com',
+  },
+  amount: 115949,
+  currency: 'EUR',
+  tags: ['Tag 1', 'Another tag'],
+};
+
+export const ExampleTwoDaysAgo = Template.bind({});
+ExampleTwoDaysAgo.args = {
+  status: 'paid',
+  createdAt: new Date().setDate(new Date().getDate() - 2), // 2 days ago
+  contact: {
+    name: 'Daniel Kowalski',
+    email: 'dkowalski@email.com',
+  },
+  amount: 115.5,
+  currency: 'EUR',
+  tags: ['Tag 1', 'Another tag'],
+};
+
+export const ExampleTwoYearsAgo = Template.bind({});
+ExampleTwoYearsAgo.args = {
+  status: 'paid',
+  createdAt: new Date().setFullYear(new Date().getFullYear() - 2), // 2 years ago
+  contact: {
+    name: 'Daniel Kowalski',
+    email: 'dkowalski@email.com',
+  },
+  amount: 89.99,
+  currency: 'GBP',
+  tags: ['Tag 1', 'Another tag'],
+};
+
+export const ExampleGBP = Template.bind({});
+ExampleGBP.args = {
+  status: 'unpaid',
+  createdAt: new Date().setMonth(new Date().getMonth() - 2), // 2 months ago
+  contact: {
+    name: 'Daniel Kowalski',
+    email: 'dkowalski@email.com',
+  },
+  amount: 89.99,
+  currency: 'GBP',
+  tags: ['Tag 1', 'Another tag'],
+};
