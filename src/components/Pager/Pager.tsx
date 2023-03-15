@@ -3,9 +3,10 @@ import { useEffect, useState } from 'react';
 interface PagerProps {
   pageSize: number;
   totalRecords: number;
+  onPageChange: (e: CustomEvent<number>) => void;
 }
 
-const Pager = ({ pageSize, totalRecords }: PagerProps) => {
+const Pager = ({ pageSize, totalRecords, onPageChange }: PagerProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [fromRecord, setFromRecord] = useState(1);
   const [toRecord, setToRecord] = useState(pageSize);
@@ -22,6 +23,8 @@ const Pager = ({ pageSize, totalRecords }: PagerProps) => {
       setFromRecord(pageSize * currentPage - pageSize + 1);
       setToRecord(totalRecords);
     }
+
+    onPageChange(new CustomEvent('change', { detail: currentPage }));
   }, [currentPage]);
 
   const decrementPageNumber = async () => {

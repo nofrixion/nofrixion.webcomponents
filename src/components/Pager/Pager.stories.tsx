@@ -15,3 +15,16 @@ export default {
 const Template: ComponentStory<typeof Pager> = (args) => <Pager {...args} />;
 
 export const Primary = Template.bind({});
+
+Primary.decorators = [
+  () => (
+    <div className="space-x-1">
+      <Pager
+        onPageChange={function (e: CustomEvent<number>): void {
+          console.log(e.detail);
+        }}
+        {...(Primary.args, { pageSize: 20, totalRecords: 100 })}
+      />
+    </div>
+  ),
+];
