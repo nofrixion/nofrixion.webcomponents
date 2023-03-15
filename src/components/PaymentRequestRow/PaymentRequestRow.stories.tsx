@@ -1,11 +1,11 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import Row from './Row';
+import PaymentRequestRow from './PaymentRequestRow';
 
 export default {
-  title: 'Row',
-  component: Row,
+  title: 'Payment Request Row',
+  component: PaymentRequestRow,
   argTypes: {
     status: {
       control: {
@@ -66,9 +66,9 @@ export default {
       </table>
     ),
   ],
-} as ComponentMeta<typeof Row>;
+} as ComponentMeta<typeof PaymentRequestRow>;
 
-const Template: ComponentStory<typeof Row> = (args) => <Row {...args} />;
+const Template: ComponentStory<typeof PaymentRequestRow> = (args) => <PaymentRequestRow {...args} />;
 
 export const Playground = Template.bind({});
 Playground.args = {
