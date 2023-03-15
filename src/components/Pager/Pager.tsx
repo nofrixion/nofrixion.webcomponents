@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import pagePreviousIcon from '../../assets/images/page-previous.svg';
-import pageNextIcon from '../../assets/images/page-next.svg';
 import classNames from 'classnames';
 
 interface PagerProps {
@@ -59,31 +57,43 @@ const Pager = ({ pageSize, totalRecords, onPageChange }: PagerProps) => {
   };
 
   return (
-    <div className="flex space-x-1 text-[#73808C] text-sm">
+    <div className="flex space-x-1 text-[#73808C] text-sm justify-end">
       <div>
         {fromRecord}-{toRecord}
       </div>
       <div>of</div>
       <div>{totalRecords}</div>
-      <div className="ml-2">
-        <img
-          className={classNames('h-3 w-3 mt-1', {
+      <div>
+        <svg
+          className={classNames('h-3 w-3 mt-1 ml-1 stroke-[#8F99A3]', {
             'cursor-pointer': currentPage > 1,
+            'hover:stroke-[#454D54]': currentPage > 1,
           })}
-          src={pagePreviousIcon}
-          alt={'Previous Page'}
+          width="7"
+          height="13"
+          viewBox="0 0 7 13"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
           onClick={() => decrementPageNumber()}
-        />
+        >
+          <path d="M6.5 0.5L0.5 6.5L6.5 12.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
       </div>
       <div>
-        <img
-          className={classNames('h-3 w-3 mt-1', {
+        <svg
+          className={classNames('h-3 w-3 mt-1 stroke-[#8F99A3]', {
             'cursor-pointer': currentPage < totalPages,
+            'hover:stroke-[#454D54]': currentPage < totalPages,
           })}
-          src={pageNextIcon}
-          alt={'Next Page'}
+          width="8"
+          height="13"
+          viewBox="0 0 8 13"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
           onClick={() => incrementPageNumber()}
-        />
+        >
+          <path d="M1 12.5L7 6.5L0.999999 0.500001" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
       </div>
     </div>
   );
