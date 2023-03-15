@@ -1,14 +1,21 @@
+import Pager from '../Pager/Pager';
+
 interface TableProps {
   name: string;
   description: string;
 }
 
 const Table = ({ name, description }: TableProps) => {
+  const onPageChange = (e: CustomEvent<number>) => {
+    console.log(e.detail);
+  };
+
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-lg bg-blue-900 text-white">
-      <span>{name}</span>
-      <span>{description}</span>
-    </div>
+    <>
+      <div className="h-full w-full overflow-hidden justify-items-end">
+        <Pager pageSize={20} totalRecords={1000} onPageChange={onPageChange}></Pager>
+      </div>
+    </>
   );
 };
 
