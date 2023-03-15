@@ -54,8 +54,4 @@ const StatusBadge = ({ status }: StatusBadgeProps) => {
   }
 };
 
-StatusBadge.componentProps = {
-  status: String,
-};
-
 export default StatusBadge;
