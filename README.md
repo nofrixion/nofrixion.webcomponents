@@ -4,7 +4,7 @@ NoFrixion Web Components is a collection of web components that can be used to b
 
 ## 💻 Requirements
 
-- [Node.js 18.x](https://nodejs.org/en/)
+- [Node.js 16.x](https://nodejs.org/en/blog/release/v16.16.0)
 - [NPM](https://www.npmjs.com/)
 - [Visual Studio Code](https://code.visualstudio.com/)
   - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
