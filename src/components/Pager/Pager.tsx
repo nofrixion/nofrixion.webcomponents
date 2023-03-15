@@ -40,6 +40,11 @@ const Pager = ({ pageSize, totalRecords, onPageChange }: PagerProps) => {
 
   useEffect(() => {
     setTotalPages(Math.ceil(totalRecords / pageSize));
+
+    if (totalRecords < toRecord) {
+      // Reset to first page
+      setCurrentPage(1);
+    }
   }, [totalRecords]);
 
   const decrementPageNumber = async () => {
