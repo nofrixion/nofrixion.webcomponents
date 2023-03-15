@@ -24,6 +24,8 @@ const Pager = ({ pageSize, totalRecords, onPageChange }: PagerProps) => {
   const [totalPages, setTotalPages] = useState(Math.ceil(totalRecords / pageSize));
 
   useEffect(() => {
+    setTotalPages(Math.ceil(totalRecords / pageSize));
+
     if (currentPage <= 1) {
       setFromRecord(1);
       setToRecord(getToRecord());
@@ -36,7 +38,11 @@ const Pager = ({ pageSize, totalRecords, onPageChange }: PagerProps) => {
     }
 
     onPageChange(currentPage);
-  }, [currentPage]);
+  }, [currentPage, pageSize]);
+
+  useEffect(() => {
+    setTotalPages(Math.ceil(totalRecords / pageSize));
+  }, [totalRecords]);
 
   const decrementPageNumber = async () => {
     if (currentPage <= 1) {
