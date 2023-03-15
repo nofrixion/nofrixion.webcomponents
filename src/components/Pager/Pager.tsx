@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react';
+import pagePreviousIcon from '../../assets/images/page-previous.svg';
+import pageNextIcon from '../../assets/images/page-next.svg';
+import classNames from 'classnames';
 
 interface PagerProps {
   pageSize: number;
@@ -48,15 +51,25 @@ const Pager = ({ pageSize, totalRecords, onPageChange }: PagerProps) => {
       </div>
       <div>of</div>
       <div>{totalRecords}</div>
-      <div>
-        <button className="ml-2" onClick={() => decrementPageNumber()}>
-          <p>{'<'}</p>
-        </button>
+      <div className="ml-2">
+        <img
+          className={classNames('h-3 w-3 float-left mt-1', {
+            'cursor-pointer': currentPage > 1,
+          })}
+          src={pagePreviousIcon}
+          alt={'Previous Page'}
+          onClick={() => decrementPageNumber()}
+        />
       </div>
       <div>
-        <button onClick={() => incrementPageNumber()}>
-          <p>{'>'}</p>
-        </button>
+        <img
+          className={classNames('h-3 w-3 float-left mt-1', {
+            'cursor-pointer': currentPage < totalPages,
+          })}
+          src={pageNextIcon}
+          alt={'Next Page'}
+          onClick={() => incrementPageNumber()}
+        />
       </div>
     </div>
   );
