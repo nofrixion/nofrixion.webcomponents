@@ -53,7 +53,7 @@ const Pager = ({ pageSize, totalRecords, onPageChange }: PagerProps) => {
       <div>{totalRecords}</div>
       <div className="ml-2">
         <img
-          className={classNames('h-3 w-3 float-left mt-1', {
+          className={classNames('h-3 w-3 mt-1', {
             'cursor-pointer': currentPage > 1,
           })}
           src={pagePreviousIcon}
@@ -63,7 +63,7 @@ const Pager = ({ pageSize, totalRecords, onPageChange }: PagerProps) => {
       </div>
       <div>
         <img
-          className={classNames('h-3 w-3 float-left mt-1', {
+          className={classNames('h-3 w-3 mt-1', {
             'cursor-pointer': currentPage < totalPages,
           })}
           src={pageNextIcon}
