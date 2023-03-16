@@ -2,19 +2,18 @@ import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import StatusBadge from './StatusBadge';
-import { StatusBadgeProps } from '@storybook/addon-interactions/dist/ts3.9/components/StatusBadge/StatusBadge';
 
 const statuses = {
-  unpaid: 'Unpaid',
-  partial: 'Partial',
-  paid: 'Paid',
+  unpaid: 'unpaid',
+  partial: 'partial',
+  paid: 'paid',
 };
 
 export default {
   title: 'StatusBadge',
   component: StatusBadge,
   argTypes: {
-    status: { control: 'inline-radio', options: [statuses.unpaid, statuses.partial, statuses.paid] },
+    status: { control: 'inline-radio', options: Object.values(statuses) },
   },
 } as ComponentMeta<typeof StatusBadge>;
 

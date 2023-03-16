@@ -16,42 +16,31 @@ const badge = cva('rounded-full py-1 px-2 space-x-2 inline-flex items-center', {
   },
 });
 
-type Status = 'UNPAID' | 'PARTIAL' | 'PAID';
+type Status = 'unpaid' | 'partial' | 'paid';
 
 interface StatusBadgeProps {
-  status: String;
+  status: Status;
 }
 
 const getIconForStatus = (status: Status) => {
   switch (status) {
-    case 'PARTIAL':
+    case 'partial':
       return partiallyPaidIcon;
-    case 'PAID':
+    case 'paid':
       return paidIcon;
-    case 'UNPAID':
+    case 'unpaid':
     default:
       return unpaidIcon;
   }
 };
 
-const parseStatus = (statusString: String) => {
-  const statusArray = ['UNPAID', 'PARTIAL', 'PAID'];
-  if (statusArray.includes(statusString.toUpperCase())) {
-    return statusString.toUpperCase() as Status;
-  }
-};
-
 const StatusBadge = ({ status }: StatusBadgeProps) => {
-  let parsedStatus = parseStatus(status);
-
-  if (parsedStatus) {
-    return (
-      <div className={badge({ intent: parsedStatus.toLowerCase() })}>
-        <img className="h-3 w-3" src={getIconForStatus(parsedStatus)} alt={parsedStatus} />
-        <span className="text-xs font-normal uppercase">{parsedStatus}</span>
-      </div>
-    );
-  }
+  return (
+    <div className={badge({ intent: status })}>
+      <img className="h-3 w-3" src={getIconForStatus(status)} alt={status} />
+      <span className="text-xs font-normal uppercase">{status.toUpperCase()}</span>
+    </div>
+  );
 };
 
 export default StatusBadge;
