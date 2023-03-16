@@ -37,7 +37,7 @@ const getIconForStatus = (status: Status) => {
 const StatusBadge = ({ status }: StatusBadgeProps) => {
   return (
     <div className={badge({ intent: status })}>
-      <img className="h-3 w-3" src={getIconForStatus(status)} alt={status} />
+      <img className="h-2 w-auto" src={getIconForStatus(status)} alt={status} />
       <span className="text-xs font-normal uppercase">{status}</span>
     </div>
   );
