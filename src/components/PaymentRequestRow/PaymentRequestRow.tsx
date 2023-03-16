@@ -17,7 +17,7 @@ const Row = ({ status, createdAt, contact, amount, currency, tags }: PaymentRequ
       {/* TODO: Replace status text for <Status> component */}
       <td className="py-3">{status.charAt(0).toUpperCase() + status.slice(1)}</td>
 
-      <td className="text-sm">{formatDate(createdAt)}</td>
+      <td className="text-13px">{formatDate(createdAt)}</td>
 
       <td>
         <Contact {...contact} />
@@ -28,7 +28,7 @@ const Row = ({ status, createdAt, contact, amount, currency, tags }: PaymentRequ
       </td>
 
       <td>
-        <span className="ml-5 text-greyText">{currency}</span>
+        <span className="ml-5 text-greyText text-sm">{currency}</span>
       </td>
 
       <td className="space-x-1 text-right">

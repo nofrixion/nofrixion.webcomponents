@@ -7,6 +7,9 @@ module.exports = {
         defaultText: '#00264D',
         greyText: '#73808C',
       },
+      fontSize: {
+        '13px': '0.8125rem',
+      },
     },
   },
   plugins: [],
