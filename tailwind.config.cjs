@@ -2,10 +2,15 @@
 module.exports = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    colors: {
-      'default-text': '#00264D',
+    extend: {
+      colors: {
+        defaultText: '#00264D',
+        greyText: '#73808C',
+      },
+      fontSize: {
+        '13px': '0.8125rem',
+      },
     },
-    extend: {},
   },
   plugins: [],
 };
