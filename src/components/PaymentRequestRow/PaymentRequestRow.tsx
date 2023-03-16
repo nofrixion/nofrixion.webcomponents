@@ -34,7 +34,6 @@ const Row = ({
       className="border-b border-[#F1F2F3] cursor-pointer transition-all ease-in-out hover:bg-[#F6F8F9] hover:border-[#E1E5EA]"
       onClick={onClick}
     >
-      {/* TODO: Replace status text for <Status> component */}
       <td className="pl-4 py-3">
         <PaymentRequestStatusBadge status={status} />
       </td>
