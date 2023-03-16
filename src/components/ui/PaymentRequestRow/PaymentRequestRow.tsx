@@ -31,7 +31,7 @@ const Row = ({ status, createdAt, contact, amount, currency, tags, onClick }: Pa
       </td>
 
       <td className={'py-3'}>
-        <span className="text-greyText text-sm">{currency}</span>
+        <span className="text-greyText text-sm block">{currency}</span>
       </td>
 
       <td className={classNames(commonTdClasses, 'space-x-1 text-right pr-4')}>

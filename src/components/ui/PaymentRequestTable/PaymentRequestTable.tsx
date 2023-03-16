@@ -47,8 +47,9 @@ const PaymentRequestTable = ({
         </tr>
       </thead>
       <tbody>
-        {paymentRequests.map((paymentRequest) => (
+        {paymentRequests.map((paymentRequest, index) => (
           <PaymentRequestRow
+            key={`pr-${index}`}
             {...paymentRequest}
             onClick={() => onPaymentRequestClicked && onPaymentRequestClicked(paymentRequest)}
           />
@@ -56,10 +57,6 @@ const PaymentRequestTable = ({
       </tbody>
     </table>
   );
-};
-
-PaymentRequestTable.componentProps = {
-  label: String,
 };
 
 export default PaymentRequestTable;
