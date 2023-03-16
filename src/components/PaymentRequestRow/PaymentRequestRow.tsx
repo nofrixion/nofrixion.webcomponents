@@ -23,7 +23,7 @@ const Row = ({ status, createdAt, contact, amount, currency, tags }: PaymentRequ
         <Contact {...contact} />
       </td>
 
-      <td className="text-right truncate">
+      <td className="text-right truncate tabular-nums">
         <span className="font-medium">{formatAmount(amount)}</span>
       </td>
 
