@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import Contact from './Contact';
 
 export default {
-  title: 'Contact',
+  title: 'UI/Contact',
   component: Contact,
   argTypes: {
     name: { control: 'text' },

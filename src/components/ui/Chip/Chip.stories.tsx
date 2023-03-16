@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import Chip from './Chip';
 
 export default {
-  title: 'Chip',
+  title: 'UI/Chip',
   component: Chip,
   argTypes: {
     label: { control: 'text' },
