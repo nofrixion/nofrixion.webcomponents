@@ -51,7 +51,7 @@ export default {
       <table className="table-fixed text-left w-full">
         <thead className="opacity-20">
           <tr>
-            <th className="w-28">Status</th>
+            <th className="w-28 pl-4">Status</th>
             <th className="w-40">Created</th>
             <th className="w-44">Contact</th>
             <th className="w-36 text-right">Amount</th>
@@ -60,7 +60,7 @@ export default {
             <th className="w-20"></th>
 
             {/* Tags */}
-            <th></th>
+            <th className="pr-4"></th>
           </tr>
         </thead>
         <tbody>

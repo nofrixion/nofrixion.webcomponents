@@ -19,7 +19,7 @@ const Row = ({ status, createdAt, contact, amount, currency, tags, onClick }: Pa
       onClick={onClick}
     >
       {/* TODO: Replace status text for <Status> component */}
-      <td className="py-3">{status.charAt(0).toUpperCase() + status.slice(1)}</td>
+      <td className="pl-4 py-3">{status.charAt(0).toUpperCase() + status.slice(1)}</td>
 
       <td className="text-13px">{formatDate(createdAt)}</td>
 
@@ -35,7 +35,7 @@ const Row = ({ status, createdAt, contact, amount, currency, tags, onClick }: Pa
         <span className="ml-5 text-greyText text-sm">{currency}</span>
       </td>
 
-      <td className="space-x-1 text-right">
+      <td className="space-x-1 text-right pr-4">
         {tags.map((tag) => (
           <Chip label={tag} />
         ))}
