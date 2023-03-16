@@ -39,6 +39,9 @@ export default {
         type: 'object',
       },
     },
+    onClick: {
+      action: 'Row clicked',
+    },
   },
   decorators: [
     (Story) => (
