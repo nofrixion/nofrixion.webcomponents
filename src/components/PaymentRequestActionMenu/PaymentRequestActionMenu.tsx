@@ -21,9 +21,9 @@ const actionItem = cva(
 );
 
 interface PaymentRequestActionMenuProps {
-  onDuplicate: () => void;
-  onCopy: () => void;
-  onDelete: () => void;
+  onDuplicate?: () => void;
+  onCopy?: () => void;
+  onDelete?: () => void;
 }
 
 interface PaymentRequestActionMenuItemContentProps {
@@ -47,7 +47,7 @@ const PaymentRequestActionMenu = ({ onDuplicate, onCopy, onDelete }: PaymentRequ
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button
-          className="w-6 h-6 p-1 inline-flex items-center justify-center bg-white outline-none cursor-pointer"
+          className="w-6 h-6 p-1 inline-flex items-center justify-center outline-none cursor-pointer align-middle"
           aria-label="Actions"
         >
           <img src={menuIcon} alt="Actions" />

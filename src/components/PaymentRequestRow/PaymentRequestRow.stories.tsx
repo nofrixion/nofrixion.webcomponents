@@ -52,8 +52,8 @@ export default {
         <thead className="opacity-20">
           <tr>
             <th className="w-28 pl-4">Status</th>
-            <th className="w-40">Created</th>
-            <th className="w-44">Contact</th>
+            <th className="w-32">Created</th>
+            <th className="w-40">Contact</th>
             <th className="w-36 text-right">Amount</th>
 
             {/* Currency */}
@@ -84,6 +84,15 @@ Playground.args = {
   amount: 29,
   currency: 'EUR',
   tags: ['Tag 1', 'Another tag', 'Third tag'],
+  onDuplicate: () => {
+    alert('You clicked Duplicate!');
+  },
+  onCopy: () => {
+    alert('You clicked Copy!');
+  },
+  onDelete: () => {
+    alert('You clicked Delete!');
+  },
 };
 
 export const ExampleToday = Template.bind({});
@@ -97,6 +106,15 @@ ExampleToday.args = {
   amount: 29,
   currency: 'EUR',
   tags: ['Tag 1', 'Another tag'],
+  onDuplicate: () => {
+    alert('You clicked Duplicate!');
+  },
+  onCopy: () => {
+    alert('You clicked Copy!');
+  },
+  onDelete: () => {
+    alert('You clicked Delete!');
+  },
 };
 
 export const ExampleYesterday = Template.bind({});
@@ -110,6 +128,15 @@ ExampleYesterday.args = {
   amount: 115949,
   currency: 'EUR',
   tags: ['Tag 1', 'Another tag'],
+  onDuplicate: () => {
+    alert('You clicked Duplicate!');
+  },
+  onCopy: () => {
+    alert('You clicked Copy!');
+  },
+  onDelete: () => {
+    alert('You clicked Delete!');
+  },
 };
 
 export const ExampleTwoDaysAgo = Template.bind({});
@@ -123,6 +150,15 @@ ExampleTwoDaysAgo.args = {
   amount: 115.5,
   currency: 'EUR',
   tags: ['Tag 1', 'Another tag'],
+  onDuplicate: () => {
+    alert('You clicked Duplicate!');
+  },
+  onCopy: () => {
+    alert('You clicked Copy!');
+  },
+  onDelete: () => {
+    alert('You clicked Delete!');
+  },
 };
 
 export const ExampleTwoYearsAgo = Template.bind({});
@@ -136,6 +172,15 @@ ExampleTwoYearsAgo.args = {
   amount: 89.99,
   currency: 'GBP',
   tags: ['Tag 1', 'Another tag'],
+  onDuplicate: () => {
+    alert('You clicked Duplicate!');
+  },
+  onCopy: () => {
+    alert('You clicked Copy!');
+  },
+  onDelete: () => {
+    alert('You clicked Delete!');
+  },
 };
 
 export const ExampleGBP = Template.bind({});
@@ -149,4 +194,13 @@ ExampleGBP.args = {
   amount: 89.99,
   currency: 'GBP',
   tags: ['Tag 1', 'Another tag'],
+  onDuplicate: () => {
+    alert('You clicked Duplicate!');
+  },
+  onCopy: () => {
+    alert('You clicked Copy!');
+  },
+  onDelete: () => {
+    alert('You clicked Delete!');
+  },
 };

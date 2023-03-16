@@ -18,7 +18,7 @@ const badge = cva('rounded-full py-1 px-2 space-x-2 inline-flex items-center', {
 
 type Status = 'unpaid' | 'partial' | 'paid';
 
-interface StatusBadgeProps {
+interface PaymentRequestStatusBadgeProps {
   status: Status;
 }
 
@@ -34,7 +34,7 @@ const getIconForStatus = (status: Status) => {
   }
 };
 
-const StatusBadge = ({ status }: StatusBadgeProps) => {
+const PaymentRequestStatusBadge = ({ status }: PaymentRequestStatusBadgeProps) => {
   return (
     <div className={badge({ intent: status })}>
       <img className="h-2 w-auto" src={getIconForStatus(status)} alt={status} />
@@ -43,4 +43,4 @@ const StatusBadge = ({ status }: StatusBadgeProps) => {
   );
 };
 
-export default StatusBadge;
+export default PaymentRequestStatusBadge;
