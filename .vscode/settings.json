@@ -7,6 +7,9 @@
   "prettier.configPath": ".prettierrc",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
