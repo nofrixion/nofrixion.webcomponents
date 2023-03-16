@@ -61,6 +61,12 @@ const Pager = ({ pageSize, totalRecords, onPageChange }: PagerProps) => {
     }
   };
 
+  const svgClassNames = (show: boolean) => {
+    return classNames('h-3 w-3 mt-1 ml-1 stroke-[#8F99A3]', {
+      'cursor-pointer hover:stroke-[#454D54]': show,
+    });
+  };
+
   return (
     <div className="flex space-x-1 text-[#73808C] text-sm justify-end">
       <div>
@@ -70,10 +76,7 @@ const Pager = ({ pageSize, totalRecords, onPageChange }: PagerProps) => {
       <div>{totalRecords}</div>
       <div>
         <svg
-          className={classNames('h-3 w-3 mt-1 ml-1 stroke-[#8F99A3]', {
-            'cursor-pointer': currentPage > 1,
-            'hover:stroke-[#454D54]': currentPage > 1,
-          })}
+          className={svgClassNames(currentPage > 1)}
           width="7"
           height="13"
           viewBox="0 0 7 13"
@@ -81,15 +84,12 @@ const Pager = ({ pageSize, totalRecords, onPageChange }: PagerProps) => {
           xmlns="http://www.w3.org/2000/svg"
           onClick={() => decrementPageNumber()}
         >
-          <path d="M6.5 0.5L0.5 6.5L6.5 12.5" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M6.5 0.5L0.5 6.5L6.5 12.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </div>
       <div>
         <svg
-          className={classNames('h-3 w-3 mt-1 stroke-[#8F99A3]', {
-            'cursor-pointer': currentPage < totalPages,
-            'hover:stroke-[#454D54]': currentPage < totalPages,
-          })}
+          className={svgClassNames(currentPage < totalPages)}
           width="8"
           height="13"
           viewBox="0 0 8 13"
@@ -97,7 +97,7 @@ const Pager = ({ pageSize, totalRecords, onPageChange }: PagerProps) => {
           xmlns="http://www.w3.org/2000/svg"
           onClick={() => incrementPageNumber()}
         >
-          <path d="M1 12.5L7 6.5L0.999999 0.500001" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M1 12.5L7 6.5L0.999999 0.500001" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </div>
     </div>
