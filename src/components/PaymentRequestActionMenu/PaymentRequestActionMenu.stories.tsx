@@ -4,30 +4,19 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import PaymentRequestActionMenu from './PaymentRequestActionMenu';
 
 export default {
-  title: 'PaymentRequestActionMenu',
+  title: 'Payment Request Row Action Menu',
   component: PaymentRequestActionMenu,
 } as ComponentMeta<typeof PaymentRequestActionMenu>;
 
 const Template: ComponentStory<typeof PaymentRequestActionMenu> = (args) => <PaymentRequestActionMenu {...args} />;
 
-export const WithEdit = Template.bind({});
-WithEdit.args = {
-  onEdit: () => {
-    alert('You clicked Edit!');
+export const ActionMenuTemplate = Template.bind({});
+ActionMenuTemplate.args = {
+  onDuplicate: () => {
+    alert('You clicked Duplicate!');
   },
-};
-
-export const WithDelete = Template.bind({});
-WithDelete.args = {
-  onDelete: () => {
-    alert('You clicked Delete!');
-  },
-};
-
-export const WithEditAndDelete = Template.bind({});
-WithEditAndDelete.args = {
-  onEdit: () => {
-    alert('You clicked Edit!');
+  onCopy: () => {
+    alert('You clicked Copy!');
   },
   onDelete: () => {
     alert('You clicked Delete!');
