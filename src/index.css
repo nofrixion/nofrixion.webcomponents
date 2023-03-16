@@ -68,5 +68,7 @@
 @layer base {
   html {
     font-family: 'Inter', sans-serif;
+    font-feature-settings: 'cv01', 'cv02', 'cv03', 'cv04'; /* OpenType font features. See more in: https://rsms.me/inter/#features/cvXX */
+    @apply text-defaultText;
   }
 }
