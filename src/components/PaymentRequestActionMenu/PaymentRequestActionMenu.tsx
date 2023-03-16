@@ -22,7 +22,7 @@ const actionItem = cva(
 
 interface PaymentRequestActionMenuProps {
   onDuplicate?: () => void;
-  onCopy?: () => void;
+  onCopyLink?: () => void;
   onDelete?: () => void;
 }
 
@@ -42,7 +42,7 @@ const PaymentRequestActionMenuItemContent = ({ label, iconSource }: PaymentReque
   );
 };
 
-const PaymentRequestActionMenu = ({ onDuplicate, onCopy, onDelete }: PaymentRequestActionMenuProps) => {
+const PaymentRequestActionMenu = ({ onDuplicate, onCopyLink, onDelete }: PaymentRequestActionMenuProps) => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
@@ -63,8 +63,8 @@ const PaymentRequestActionMenu = ({ onDuplicate, onCopy, onDelete }: PaymentRequ
               <PaymentRequestActionMenuItemContent label="Duplicate" iconSource={copyIcon} />
             </DropdownMenu.Item>
           )}
-          {onCopy && (
-            <DropdownMenu.Item className={actionItem()} onClick={onCopy}>
+          {onCopyLink && (
+            <DropdownMenu.Item className={actionItem()} onClick={onCopyLink}>
               <PaymentRequestActionMenuItemContent label="Copy payment link" iconSource={linkIcon} />
             </DropdownMenu.Item>
           )}

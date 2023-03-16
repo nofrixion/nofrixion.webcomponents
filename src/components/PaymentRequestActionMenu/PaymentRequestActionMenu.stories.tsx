@@ -15,7 +15,7 @@ ActionMenuTemplate.args = {
   onDuplicate: () => {
     alert('You clicked Duplicate!');
   },
-  onCopy: () => {
+  onCopyLink: () => {
     alert('You clicked Copy!');
   },
   onDelete: () => {

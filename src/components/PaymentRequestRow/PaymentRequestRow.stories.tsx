@@ -87,7 +87,7 @@ Playground.args = {
   onDuplicate: () => {
     alert('You clicked Duplicate!');
   },
-  onCopy: () => {
+  onCopyLink: () => {
     alert('You clicked Copy!');
   },
   onDelete: () => {
@@ -109,7 +109,7 @@ ExampleToday.args = {
   onDuplicate: () => {
     alert('You clicked Duplicate!');
   },
-  onCopy: () => {
+  onCopyLink: () => {
     alert('You clicked Copy!');
   },
   onDelete: () => {
@@ -131,7 +131,7 @@ ExampleYesterday.args = {
   onDuplicate: () => {
     alert('You clicked Duplicate!');
   },
-  onCopy: () => {
+  onCopyLink: () => {
     alert('You clicked Copy!');
   },
   onDelete: () => {
@@ -153,7 +153,7 @@ ExampleTwoDaysAgo.args = {
   onDuplicate: () => {
     alert('You clicked Duplicate!');
   },
-  onCopy: () => {
+  onCopyLink: () => {
     alert('You clicked Copy!');
   },
   onDelete: () => {
@@ -175,7 +175,7 @@ ExampleTwoYearsAgo.args = {
   onDuplicate: () => {
     alert('You clicked Duplicate!');
   },
-  onCopy: () => {
+  onCopyLink: () => {
     alert('You clicked Copy!');
   },
   onDelete: () => {
@@ -197,7 +197,7 @@ ExampleGBP.args = {
   onDuplicate: () => {
     alert('You clicked Duplicate!');
   },
-  onCopy: () => {
+  onCopyLink: () => {
     alert('You clicked Copy!');
   },
   onDelete: () => {

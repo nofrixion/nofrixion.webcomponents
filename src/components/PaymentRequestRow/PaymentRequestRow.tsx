@@ -13,7 +13,7 @@ interface PaymentRequestRowProps {
   tags: string[];
   onClick?: () => void;
   onDuplicate?: () => void;
-  onCopy?: () => void;
+  onCopyLink?: () => void;
   onDelete?: () => void;
 }
 
@@ -26,7 +26,7 @@ const Row = ({
   tags,
   onClick,
   onDuplicate,
-  onCopy,
+  onCopyLink,
   onDelete,
 }: PaymentRequestRowProps) => {
   return (
@@ -58,7 +58,7 @@ const Row = ({
           <Chip label={tag} />
         ))}
 
-        <PaymentRequestActionMenu onDuplicate={onDuplicate} onCopy={onCopy} onDelete={onDelete} />
+        <PaymentRequestActionMenu onDuplicate={onDuplicate} onCopyLink={onCopyLink} onDelete={onDelete} />
       </td>
     </tr>
   );
