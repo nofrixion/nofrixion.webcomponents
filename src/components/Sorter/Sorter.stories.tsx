@@ -30,24 +30,9 @@ RowOfColumnHeaders.args = {
 RowOfColumnHeaders.decorators = [
   () => (
     <div className="space-x-1 grid grid-flow-col">
-      <Sorter
-        name={'Status'}
-        onSort={function (event: SortEvent): void {
-          console.log(event);
-        }}
-      />
-      <Sorter
-        name={'Created'}
-        onSort={function (event: SortEvent): void {
-          console.log(event);
-        }}
-      />
-      <Sorter
-        name={'Contact'}
-        onSort={function (event: SortEvent): void {
-          console.log(event);
-        }}
-      />
+      <Sorter name={'Status'} onSort={action('Sort Changed')} />
+      <Sorter name={'Created'} onSort={action('Sort Changed')} />
+      <Sorter name={'Contact'} onSort={action('Sort Changed')} />
     </div>
   ),
 ];
