@@ -12,12 +12,12 @@ export interface SortEvent {
   direction: SortDirection;
 }
 
-interface SorterProps {
+interface ColumnHeaderProps {
   name: string;
   onSort: (event: SortEvent) => void;
 }
 
-const Sorter = ({ name, onSort }: SorterProps) => {
+const ColumnHeader = ({ name, onSort }: ColumnHeaderProps) => {
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.NONE);
 
   useEffect(() => {
@@ -78,4 +78,4 @@ const Sorter = ({ name, onSort }: SorterProps) => {
   );
 };
 
-export default Sorter;
+export default ColumnHeader;

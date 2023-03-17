@@ -1,17 +1,17 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import Sorter, { SortEvent } from './Sorter';
+import ColumnHeader, { SortEvent } from './ColumnHeader';
 
 export default {
-  title: 'Sorter',
-  component: Sorter,
+  title: 'ColumnHeader',
+  component: ColumnHeader,
   argTypes: {
     name: { control: 'text' },
   },
-} as ComponentMeta<typeof Sorter>;
+} as ComponentMeta<typeof ColumnHeader>;
 
-const Template: ComponentStory<typeof Sorter> = (args) => <Sorter {...args} />;
+const Template: ComponentStory<typeof ColumnHeader> = (args) => <ColumnHeader {...args} />;
 
 export const Showcase = Template.bind({});
 
@@ -30,9 +30,9 @@ RowOfColumnHeaders.args = {
 RowOfColumnHeaders.decorators = [
   () => (
     <div className="space-x-1 grid grid-flow-col">
-      <Sorter name={'Status'} onSort={action('Sort Changed')} />
-      <Sorter name={'Created'} onSort={action('Sort Changed')} />
-      <Sorter name={'Contact'} onSort={action('Sort Changed')} />
+      <ColumnHeader name={'Status'} onSort={action('Sort Changed')} />
+      <ColumnHeader name={'Created'} onSort={action('Sort Changed')} />
+      <ColumnHeader name={'Contact'} onSort={action('Sort Changed')} />
     </div>
   ),
 ];
