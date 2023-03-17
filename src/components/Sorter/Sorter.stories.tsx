@@ -7,7 +7,7 @@ export default {
   title: 'Sorter',
   component: Sorter,
   argTypes: {
-    name: { control: 'number' },
+    name: { control: 'text' },
   },
 } as ComponentMeta<typeof Sorter>;
 

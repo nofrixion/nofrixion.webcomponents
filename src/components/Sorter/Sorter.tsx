@@ -47,8 +47,9 @@ const Sorter = ({ name, onSort }: SorterProps) => {
 
         <div className="mt-1 ml-2.5">
           <svg
-            className={classNames('stroke-[#8F99A3] hover:stroke-[#454D54]', {
+            className={classNames('hover:stroke-[#454D54]', {
               'stroke-[#454D54]': sortDirection === SortDirection.ASC,
+              'stroke-[#8F99A3]': sortDirection === SortDirection.NONE || sortDirection === SortDirection.DESC,
             })}
             width="10"
             height="6"
@@ -59,8 +60,9 @@ const Sorter = ({ name, onSort }: SorterProps) => {
             <path d="M1 5L5 1L9 5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           <svg
-            className={classNames('stroke-[#8F99A3] hover:stroke-[#454D54]', {
+            className={classNames('hover:stroke-[#454D54]', {
               'stroke-[#454D54]': sortDirection === SortDirection.DESC,
+              'stroke-[#8F99A3]': sortDirection === SortDirection.NONE || sortDirection === SortDirection.ASC,
             })}
             width="10"
             height="6"
