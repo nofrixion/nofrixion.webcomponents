@@ -7,24 +7,16 @@ export enum SortDirection {
   DESC = 'DESC',
 }
 
-export interface SortEvent {
-  name: string;
-  direction: SortDirection;
-}
-
 interface ColumnHeaderProps {
-  name: string;
-  onSort: (event: SortEvent) => void;
+  label: string;
+  onSort: (event: SortDirection) => void;
 }
 
-const ColumnHeader = ({ name, onSort }: ColumnHeaderProps) => {
+const ColumnHeader = ({ label, onSort }: ColumnHeaderProps) => {
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.NONE);
 
   useEffect(() => {
-    onSort({
-      name: name,
-      direction: sortDirection,
-    });
+    onSort(sortDirection);
   }, [sortDirection]);
 
   const doSort = () => {
@@ -38,43 +30,41 @@ const ColumnHeader = ({ name, onSort }: ColumnHeaderProps) => {
   };
 
   return (
-    <>
-      <div
-        className="h-3 grid grid-flow-col-dense w-8 mt-1 ml-1 text-sm text-greyText cursor-pointer hover:text-controlGreyHover"
-        onClick={doSort}
-      >
-        <div>{name.toUpperCase()}</div>
+    <div
+      className="inline-flex text-sm text-greyText cursor-pointer transition hover:text-controlGreyHover items-center"
+      onClick={doSort}
+    >
+      <span className="select-none uppercase">{label}</span>
 
-        <div className="mt-1 ml-2.5">
-          <svg
-            className={classNames('hover:stroke-controlGreyHover', {
-              'stroke-controlGreyHover': sortDirection === SortDirection.ASC,
-              'stroke-controlGrey': sortDirection === SortDirection.NONE || sortDirection === SortDirection.DESC,
-            })}
-            width="10"
-            height="6"
-            viewBox="0 0 10 6"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M1 5L5 1L9 5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          <svg
-            className={classNames('hover:stroke-controlGreyHover', {
-              'stroke-controlGreyHover': sortDirection === SortDirection.DESC,
-              'stroke-controlGrey': sortDirection === SortDirection.NONE || sortDirection === SortDirection.ASC,
-            })}
-            width="10"
-            height="6"
-            viewBox="0 0 10 6"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M9 1L5 5L1 1" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </div>
+      <div className="ml-2.5 space-y-1">
+        <svg
+          className={classNames({
+            'stroke-controlGreyHover': sortDirection === SortDirection.ASC,
+            'stroke-controlGrey': sortDirection === SortDirection.NONE || sortDirection === SortDirection.DESC,
+          })}
+          width="10"
+          height="6"
+          viewBox="0 0 10 6"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M1 5L5 1L9 5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <svg
+          className={classNames({
+            'stroke-controlGreyHover': sortDirection === SortDirection.DESC,
+            'stroke-controlGrey': sortDirection === SortDirection.NONE || sortDirection === SortDirection.ASC,
+          })}
+          width="10"
+          height="6"
+          viewBox="0 0 10 6"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M9 1L5 5L1 1" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
       </div>
-    </>
+    </div>
   );
 };
 

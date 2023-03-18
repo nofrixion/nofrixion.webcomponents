@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import ColumnHeader, { SortEvent } from './ColumnHeader';
+import ColumnHeader from './ColumnHeader';
 
 export default {
   title: 'ColumnHeader',
@@ -16,23 +16,23 @@ const Template: ComponentStory<typeof ColumnHeader> = (args) => <ColumnHeader {.
 export const Showcase = Template.bind({});
 
 Showcase.args = {
-  name: 'Status',
+  label: 'Status',
   onSort: action('Sort Changed'),
 };
 
 export const RowOfColumnHeaders = Template.bind({});
 
 RowOfColumnHeaders.args = {
-  name: 'Status',
+  label: 'Status',
   onSort: action('Sort Changed'),
 };
 
 RowOfColumnHeaders.decorators = [
   () => (
-    <div className="space-x-1 grid grid-flow-col">
-      <ColumnHeader name={'Status'} onSort={action('Sort Changed')} />
-      <ColumnHeader name={'Created'} onSort={action('Sort Changed')} />
-      <ColumnHeader name={'Contact'} onSort={action('Sort Changed')} />
+    <div className="space-x-1 flex justify-between">
+      <ColumnHeader label="Status" onSort={action('Status Sort Changed')} />
+      <ColumnHeader label="Created" onSort={action('Created Sort Changed')} />
+      <ColumnHeader label="Contact" onSort={action('Contact Sort Changed')} />
     </div>
   ),
 ];
