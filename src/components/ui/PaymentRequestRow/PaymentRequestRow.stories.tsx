@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import PaymentRequestRow from './PaymentRequestRow';
 
 export default {
-  title: 'Payment Request Row',
+  title: 'UI/Payment Request Row',
   component: PaymentRequestRow,
   argTypes: {
     status: {
