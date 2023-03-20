@@ -9,10 +9,10 @@ interface PaymentRequestTableProps {
   totalRecords: number;
   onPaymentRequestClicked?: (paymentRequest: LocalPaymentRequest) => void;
   onPageChanged?: (newPage: number) => void;
-  setStatusSortDirection?: (event: SortDirection) => void;
-  setCreatedSortDirection?: (event: SortDirection) => void;
-  setContactSortDirection?: (event: SortDirection) => void;
-  setAmountSortDirection?: (event: SortDirection) => void;
+  setStatusSortDirection?: (sortDirection: SortDirection) => void;
+  setCreatedSortDirection?: (sortDirection: SortDirection) => void;
+  setContactSortDirection?: (sortDirection: SortDirection) => void;
+  setAmountSortDirection?: (sortDirection: SortDirection) => void;
 }
 
 const commonThClasses = 'px-4 pb-4 font-normal';
