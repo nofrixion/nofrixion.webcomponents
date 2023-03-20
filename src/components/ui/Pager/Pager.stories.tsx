@@ -4,7 +4,7 @@ import { action } from '@storybook/addon-actions';
 import Pager from './Pager';
 
 export default {
-  title: 'Pager',
+  title: 'UI/Pager',
   component: Pager,
   argTypes: {
     pageSize: { control: 'number' },

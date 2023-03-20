@@ -68,7 +68,7 @@ const Pager = ({ pageSize, totalRecords, onPageChange }: PagerProps) => {
   };
 
   return (
-    <div className="flex space-x-1 text-[#73808C] text-sm justify-end">
+    <div className="flex space-x-1 text-[#73808C] text-sm justify-end whitespace-nowrap">
       <div>
         {fromRecord}-{toRecord}
       </div>
