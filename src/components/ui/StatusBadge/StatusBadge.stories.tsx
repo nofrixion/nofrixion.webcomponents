@@ -10,7 +10,7 @@ const statuses = {
 };
 
 export default {
-  title: 'UI/Status Badge',
+  title: 'UI/Payment Request Status Badge',
   component: StatusBadge,
   argTypes: {
     status: { control: 'inline-radio', options: Object.values(statuses) },
