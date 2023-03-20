@@ -29,11 +29,13 @@ export class PaymentRequestClient extends BaseApiClient {
    * Gets a paged list of Payment Requests
    * @param pageNumber The first page to fetch for the paged response. Default is 1
    * @param pageSize The page size. Default is 20
+   * @param sort Optional expression to sort the order of the payment requests. Example "Amount desc,Inserted asc".
    * @returns A PaymentRequestPageResponse if successful. An ApiError if not successful.
    */
   async getAll(
     pageNumber = 1,
     pageSize = 20,
+    sort?: string,
   ): Promise<{
     data?: PaymentRequestPageResponse;
     error?: ApiError;
@@ -42,6 +44,7 @@ export class PaymentRequestClient extends BaseApiClient {
       `${this.apiBaseUrl}/paymentrequests`,
       pageNumber,
       pageSize,
+      sort,
     );
   }
 

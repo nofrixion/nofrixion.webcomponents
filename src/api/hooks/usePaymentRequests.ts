@@ -1,8 +1,18 @@
 import { useEffect, useState } from 'react';
+import { SortDirection } from '../../components/ui/ColumnHeader/ColumnHeader';
 import MoneyMoovApiClient from '../clients/MoneyMoovApiClient';
 import { ApiError, PaymentRequest } from '../types/ApiResponses';
 
-export const usePaymentRequests = (apiUrl: string, authToken: string, page: number, pageSize?: number) => {
+export const usePaymentRequests = (
+  apiUrl: string,
+  authToken: string,
+  statusSortDirection: SortDirection,
+  createdSortDirection: SortDirection,
+  contactSortDirection: SortDirection,
+  amountSortDirection: SortDirection,
+  page: number,
+  pageSize?: number,
+) => {
   const client = new MoneyMoovApiClient(apiUrl, authToken);
 
   const [paymentRequests, setPaymentRequests] = useState<PaymentRequest[]>([]);
@@ -12,7 +22,7 @@ export const usePaymentRequests = (apiUrl: string, authToken: string, page: numb
 
   useEffect(() => {
     const fetchPaymentRequests = async () => {
-      const response = await client.PaymentRequests.getAll(page, pageSize);
+      const response = await client.PaymentRequests.getAll(page, pageSize, sortExpression);
 
       if (response.data) {
         setPaymentRequests(response.data.content);
@@ -23,8 +33,39 @@ export const usePaymentRequests = (apiUrl: string, authToken: string, page: numb
       }
     };
 
+    // Build the sort expression
+    let sortExpression = '';
+
+    if (statusSortDirection !== SortDirection.NONE) {
+      sortExpression += `Status ${statusSortDirection}`;
+    }
+
+    if (createdSortDirection !== SortDirection.NONE) {
+      sortExpression += sortExpression.length > 0 ? ',' : '';
+      sortExpression += `Inserted ${createdSortDirection}`;
+    }
+
+    if (contactSortDirection !== SortDirection.NONE) {
+      sortExpression += sortExpression.length > 0 ? ',' : '';
+      sortExpression += `CustomerEmailAddress ${contactSortDirection}`;
+    }
+
+    if (amountSortDirection !== SortDirection.NONE) {
+      sortExpression += sortExpression.length > 0 ? ',' : '';
+      sortExpression += `Amount ${amountSortDirection}`;
+    }
+
     fetchPaymentRequests();
-  }, [page, apiUrl, authToken, pageSize]);
+  }, [
+    page,
+    apiUrl,
+    authToken,
+    pageSize,
+    statusSortDirection,
+    createdSortDirection,
+    contactSortDirection,
+    amountSortDirection,
+  ]);
 
   return {
     paymentRequests,
