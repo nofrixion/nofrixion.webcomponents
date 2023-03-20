@@ -25,7 +25,11 @@ export abstract class BaseApiClient {
     data?: TResponse;
     error?: ApiError;
   }> {
-    url = `${url}?page=${pageNumber}&size=${pageSize}&sort=${sort ? sort : ''}`;
+    url = `${url}?page=${pageNumber}&size=${pageSize}`;
+
+    if (sort) {
+      url = `${url}&sort=${sort}`;
+    }
 
     return await this.httpRequest<TResponse>(url, HttpMethod.GET);
   }
