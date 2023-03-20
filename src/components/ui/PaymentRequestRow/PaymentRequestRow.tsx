@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { LocalPaymentRequest } from '../../../types';
 import { formatAmount, formatDate } from '../../../utils/formatters';
 import Chip from '../Chip/Chip';
 import Contact from '../Contact/Contact';
@@ -35,8 +36,8 @@ const Row = ({ status, createdAt, contact, amount, currency, tags, onClick }: Pa
       </td>
 
       <td className={classNames(commonTdClasses, 'space-x-1 text-right pr-4')}>
-        {tags.map((tag) => (
-          <Chip label={tag} />
+        {tags.map((tag, index) => (
+          <Chip key={`tag-${index}`} label={tag} />
         ))}
       </td>
     </tr>

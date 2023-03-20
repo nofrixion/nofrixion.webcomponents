@@ -1,14 +1,7 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-
+import { apiUrls } from '../../../utils/constants';
 import PaymentRequestTable from './PaymentRequestTable';
-
-const apiUrls = {
-  local: 'http://localhost:3000/api/v1',
-  dev: 'https://api-dev.nofrixion.com/api/v1',
-  sandbox: 'https://api-sandbox.nofrixion.com/api/v1',
-  production: 'https://api.nofrixion.com/api/v1',
-};
 
 export default {
   title: 'Functional/Payment Request Table',

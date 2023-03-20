@@ -2,13 +2,16 @@ import { useState } from 'react';
 import { usePaymentRequests } from '../../../api/hooks/usePaymentRequests';
 import UIPaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTable';
 
+import { LocalPaymentRequest, LocalPaymentStatus } from '../../../types';
 import { PaymentResult, Currency } from '../../../api/types/Enums';
 
 interface PaymentRequestTableProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
-  apiUrl?: string;
+  apiUrl?: string; // Example: "https://api.nofrixion.com/api/v1"
 }
 
+// TODO: Move this mapping to a class or function
+// Reference: https://martinfowler.com/articles/modularizing-react-apps.html
 const parseApiStatusToLocalStatus = (status: PaymentResult): LocalPaymentStatus => {
   switch (status) {
     case PaymentResult.FullyPaid:
@@ -20,23 +23,14 @@ const parseApiStatusToLocalStatus = (status: PaymentResult): LocalPaymentStatus 
   }
 };
 
-const parseApiCurrencyToLocalCurrency = (currency: Currency): LocalCurrency => {
-  switch (currency) {
-    case Currency.EUR:
-      return 'EUR';
-    case Currency.GBP:
-      return 'GBP';
-    default:
-      return 'EUR';
-  }
-};
-
 const PaymentRequestTable = ({ token, apiUrl = 'https://api.nofrixion.com/api/v1' }: PaymentRequestTableProps) => {
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
   const { paymentRequests, totalRecords } = usePaymentRequests(apiUrl, token, page, pageSize);
 
+  // TODO: Move this mapping to a class or function
+  // Reference: https://martinfowler.com/articles/modularizing-react-apps.html
   const localPaymentRequests: LocalPaymentRequest[] = paymentRequests.map((paymentRequest) => ({
     status: parseApiStatusToLocalStatus(paymentRequest.status),
     createdAt: new Date(paymentRequest.inserted),
@@ -47,7 +41,7 @@ const PaymentRequestTable = ({ token, apiUrl = 'https://api.nofrixion.com/api/v1
       email: paymentRequest.customerEmailAddress ?? '',
     },
     amount: paymentRequest.amount,
-    currency: parseApiCurrencyToLocalCurrency(paymentRequest.currency),
+    currency: paymentRequest.currency,
     tags: [], // TODO: Add tags when they are available in the API
   }));
 
@@ -59,6 +53,11 @@ const PaymentRequestTable = ({ token, apiUrl = 'https://api.nofrixion.com/api/v1
       onPageChanged={setPage}
     />
   );
+};
+
+PaymentRequestTable.componentProps = {
+  token: String,
+  apiUrl: String,
 };
 
 export default PaymentRequestTable;

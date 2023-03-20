@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { LocalPaymentRequest } from '../../../types';
 import Pager from '../Pager/Pager';
 import PaymentRequestRow from '../PaymentRequestRow/PaymentRequestRow';
 
