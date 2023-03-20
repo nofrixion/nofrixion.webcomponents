@@ -72,3 +72,16 @@
     @apply text-defaultText;
   }
 }
+
+.columnSort {
+  @apply inline-flex;
+  @apply text-sm;
+  @apply text-greyText;
+  @apply cursor-pointer;
+  @apply transition;
+  @apply items-center;
+}
+
+.columnSort:hover {
+  @apply text-controlGreyHover;
+}

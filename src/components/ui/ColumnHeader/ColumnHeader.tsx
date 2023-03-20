@@ -21,26 +21,24 @@ const ColumnHeader = ({ label, onSort }: ColumnHeaderProps) => {
 
   const doSort = () => {
     if (sortDirection === SortDirection.NONE) {
-      setSortDirection(SortDirection.ASC);
-    } else if (sortDirection === SortDirection.ASC) {
       setSortDirection(SortDirection.DESC);
+    } else if (sortDirection === SortDirection.DESC) {
+      setSortDirection(SortDirection.ASC);
     } else {
       setSortDirection(SortDirection.NONE);
     }
   };
 
   return (
-    <div
-      className="inline-flex text-sm text-greyText cursor-pointer transition hover:text-controlGreyHover items-center"
-      onClick={doSort}
-    >
+    <div className="columnSort group" onClick={doSort}>
       <span className="select-none uppercase">{label}</span>
 
       <div className="ml-2.5 space-y-1">
         <svg
-          className={classNames({
+          className={classNames('group-hover:block', {
             'stroke-controlGreyHover': sortDirection === SortDirection.ASC,
             'stroke-controlGrey': sortDirection === SortDirection.NONE || sortDirection === SortDirection.DESC,
+            hidden: sortDirection === SortDirection.NONE,
           })}
           width="10"
           height="6"
@@ -51,9 +49,10 @@ const ColumnHeader = ({ label, onSort }: ColumnHeaderProps) => {
           <path d="M1 5L5 1L9 5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
         <svg
-          className={classNames({
+          className={classNames('group-hover:block', {
             'stroke-controlGreyHover': sortDirection === SortDirection.DESC,
             'stroke-controlGrey': sortDirection === SortDirection.NONE || sortDirection === SortDirection.ASC,
+            hidden: sortDirection === SortDirection.NONE,
           })}
           width="10"
           height="6"
