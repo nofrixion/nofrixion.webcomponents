@@ -1,5 +1,3 @@
-import { Currency } from '../api/types/Enums';
-
 interface LocalContact {
   name: string;
   email: string;
