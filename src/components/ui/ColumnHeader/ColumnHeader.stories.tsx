@@ -4,7 +4,7 @@ import { action } from '@storybook/addon-actions';
 import ColumnHeader from './ColumnHeader';
 
 export default {
-  title: 'ColumnHeader',
+  title: 'UI/ColumnHeader',
   component: ColumnHeader,
   argTypes: {
     name: { control: 'text' },
