@@ -69,7 +69,10 @@ export default {
             <th className="w-20"></th>
 
             {/* Tags */}
-            <th className="pr-4"></th>
+            <th className="pr-2"></th>
+
+            {/* Menu */}
+            <th className="pr-2 w-8"></th>
           </tr>
         </thead>
         <tbody>

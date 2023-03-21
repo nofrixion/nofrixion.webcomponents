@@ -52,11 +52,12 @@ const Row = ({
         <span className="ml-5 text-greyText text-sm">{currency}</span>
       </td>
 
-      <td className="space-x-1 text-right pr-4">
+      <td className="space-x-1 text-right pr-1.5">
         {tags.map((tag) => (
           <Chip label={tag} />
         ))}
-
+      </td>
+      <td className="pr-2 w-8">
         <PaymentRequestActionMenu onDuplicate={onDuplicate} onCopyLink={onCopyLink} onDelete={onDelete} />
       </td>
     </tr>
