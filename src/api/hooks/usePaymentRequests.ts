@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { SortDirection } from '../../components/ui/ColumnHeader/ColumnHeader';
+import { formatPaymentRequestSortExpression } from '../../utils/formatters';
 import MoneyMoovApiClient from '../clients/MoneyMoovApiClient';
 import { ApiError, PaymentRequest } from '../types/ApiResponses';
 
@@ -34,26 +35,12 @@ export const usePaymentRequests = (
     };
 
     // Build the sort expression
-    let sortExpression = '';
-
-    if (statusSortDirection !== SortDirection.NONE) {
-      sortExpression += `Status ${statusSortDirection}`;
-    }
-
-    if (createdSortDirection !== SortDirection.NONE) {
-      sortExpression += sortExpression.length > 0 ? ',' : '';
-      sortExpression += `Inserted ${createdSortDirection}`;
-    }
-
-    if (contactSortDirection !== SortDirection.NONE) {
-      sortExpression += sortExpression.length > 0 ? ',' : '';
-      sortExpression += `CustomerEmailAddress ${contactSortDirection}`;
-    }
-
-    if (amountSortDirection !== SortDirection.NONE) {
-      sortExpression += sortExpression.length > 0 ? ',' : '';
-      sortExpression += `Amount ${amountSortDirection}`;
-    }
+    const sortExpression = formatPaymentRequestSortExpression(
+      statusSortDirection,
+      createdSortDirection,
+      contactSortDirection,
+      amountSortDirection,
+    );
 
     fetchPaymentRequests();
   }, [
