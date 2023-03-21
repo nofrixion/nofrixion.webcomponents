@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import Pager from '../Pager/Pager';
 import PaymentRequestRow from '../PaymentRequestRow/PaymentRequestRow';
 import ColumnHeader, { SortDirection } from '../ColumnHeader/ColumnHeader';
+import { LocalPaymentRequest } from '../../../types';
 
 interface PaymentRequestTableProps {
   paymentRequests: LocalPaymentRequest[];
@@ -36,7 +37,7 @@ const PaymentRequestTable = ({
             <ColumnHeader
               label="Status"
               onSort={(sortDirection) => setStatusSortDirection && setStatusSortDirection(sortDirection)}
-            ></ColumnHeader>
+            />
           </th>
           <th className={classNames(commonThClasses, 'w-44 text-left')}>
             <ColumnHeader

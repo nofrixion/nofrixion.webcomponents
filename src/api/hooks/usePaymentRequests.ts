@@ -3,6 +3,7 @@ import { SortDirection } from '../../components/ui/ColumnHeader/ColumnHeader';
 import { formatPaymentRequestSortExpression } from '../../utils/formatters';
 import MoneyMoovApiClient from '../clients/MoneyMoovApiClient';
 import { ApiError, PaymentRequest } from '../types/ApiResponses';
+import { PaymentRequestStatus } from '../types/Enums';
 
 export const usePaymentRequests = (
   apiUrl: string,
@@ -13,6 +14,9 @@ export const usePaymentRequests = (
   amountSortDirection: SortDirection,
   page: number,
   pageSize?: number,
+  fromDate?: Date,
+  toDate?: Date,
+  status?: PaymentRequestStatus,
 ) => {
   const client = new MoneyMoovApiClient(apiUrl, authToken);
 
@@ -23,7 +27,7 @@ export const usePaymentRequests = (
 
   useEffect(() => {
     const fetchPaymentRequests = async () => {
-      const response = await client.PaymentRequests.getAll(page, pageSize, sortExpression);
+      const response = await client.PaymentRequests.getAll(page, pageSize, sortExpression, fromDate, toDate, status);
 
       if (response.data) {
         setPaymentRequests(response.data.content);

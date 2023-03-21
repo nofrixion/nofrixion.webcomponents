@@ -4,7 +4,7 @@ import {
   PaymentRequestMinimal,
   PaymentRequestPageResponse,
 } from '../types/ApiResponses';
-import { HttpMethod } from '../types/Enums';
+import { HttpMethod, PaymentRequestStatus } from '../types/Enums';
 import { BaseApiClient } from './BaseApiClient';
 
 /**
@@ -30,12 +30,18 @@ export class PaymentRequestClient extends BaseApiClient {
    * @param pageNumber The first page to fetch for the paged response. Default is 1
    * @param pageSize The page size. Default is 20
    * @param sort Optional expression to sort the order of the payment requests. Example "Amount desc,Inserted asc".
+   * @param fromDate Optional. The date filter to apply to retrieve payment requests created after this date.
+   * @param toDate Optional. The date filter to apply to retrieve payment requests created up until this date.
+   * @param status Optional. The status filter to apply to retrieve records with this status.
    * @returns A PaymentRequestPageResponse if successful. An ApiError if not successful.
    */
   async getAll(
     pageNumber = 1,
     pageSize = 20,
     sort?: string,
+    fromDate?: Date,
+    toDate?: Date,
+    status?: PaymentRequestStatus,
   ): Promise<{
     data?: PaymentRequestPageResponse;
     error?: ApiError;
@@ -45,6 +51,9 @@ export class PaymentRequestClient extends BaseApiClient {
       pageNumber,
       pageSize,
       sort,
+      fromDate,
+      toDate,
+      status,
     );
   }
 
