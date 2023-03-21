@@ -14,6 +14,10 @@ export abstract class BaseApiClient {
    * @param url The api url
    * @param pageNumber The page number
    * @param pageSize The page size
+   * @param sort Optional. The sort expression
+   * @param fromDate Optional. The date filter to apply to retrieve payment requests created after this date.
+   * @param toDate Optional. The date filter to apply to retrieve payment requests created up until this date.
+   * @param status Optional. The status filter to apply to retrieve records with this status.
    * @returns A Paged response of type TResponse if successful. An ApiError if not successful.
    */
   protected async getPagedResponse<TResponse>(
@@ -21,6 +25,9 @@ export abstract class BaseApiClient {
     pageNumber = 1,
     pageSize = 20,
     sort?: string,
+    fromDate?: Date,
+    toDate?: Date,
+    status?: string,
   ): Promise<{
     data?: TResponse;
     error?: ApiError;
@@ -29,6 +36,18 @@ export abstract class BaseApiClient {
 
     if (sort) {
       url = `${url}&sort=${sort}`;
+    }
+
+    if (fromDate) {
+      url = `${url}&fromDate=${fromDate.toISOString()}`;
+    }
+
+    if (toDate) {
+      url = `${url}&toDate=${toDate.toISOString()}`;
+    }
+
+    if (status) {
+      url = `${url}&status=${status}`;
     }
 
     return await this.httpRequest<TResponse>(url, HttpMethod.GET);
