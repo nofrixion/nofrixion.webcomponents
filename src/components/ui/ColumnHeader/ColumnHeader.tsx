@@ -33,7 +33,7 @@ const ColumnHeader = ({ label, onSort }: ColumnHeaderProps) => {
     <div className="columnSort group" onClick={doSort}>
       <span className="select-none uppercase">{label}</span>
 
-      <div className="ml-2.5 space-y-1">
+      <div className="ml-2.5 space-y-1 w-2.5">
         <svg
           className={classNames('group-hover:block', {
             'stroke-controlGreyHover': sortDirection === SortDirection.ASC,
