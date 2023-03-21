@@ -1,6 +1,6 @@
-import unpaidIcon from '../../assets/images/paymentrequest_status_unpaid.svg';
-import paidIcon from '../../assets/images/paymentrequest_status_paid.svg';
-import partiallyPaidIcon from '../../assets/images/paymentrequest_status_partial.svg';
+import unpaidIcon from '../../../assets/images/paymentrequest_status_unpaid.svg';
+import paidIcon from '../../../assets/images/paymentrequest_status_paid.svg';
+import partiallyPaidIcon from '../../../assets/images/paymentrequest_status_partial.svg';
 import { cva } from 'class-variance-authority';
 
 const badge = cva('rounded-full py-1 px-2 space-x-2 inline-flex items-center', {
@@ -16,13 +16,11 @@ const badge = cva('rounded-full py-1 px-2 space-x-2 inline-flex items-center', {
   },
 });
 
-type Status = 'unpaid' | 'partial' | 'paid';
-
 interface PaymentRequestStatusBadgeProps {
-  status: Status;
+  status: LocalPaymentStatus;
 }
 
-const getIconForStatus = (status: Status) => {
+const getIconForStatus = (status: LocalPaymentStatus) => {
   switch (status) {
     case 'partial':
       return partiallyPaidIcon;

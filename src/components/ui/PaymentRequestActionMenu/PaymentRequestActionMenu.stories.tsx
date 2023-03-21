@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import PaymentRequestActionMenu from './PaymentRequestActionMenu';
 
 export default {
-  title: 'Payment Request Row Action Menu',
+  title: 'UI/Payment Request Row Action Menu',
   component: PaymentRequestActionMenu,
   argTypes: {
     onDuplicate: {

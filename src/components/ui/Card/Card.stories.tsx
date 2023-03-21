@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import Card from './Card';
 
 export default {
-  title: 'Card',
+  title: 'UI/Card',
   component: Card,
   argTypes: {
     name: { control: 'text' },

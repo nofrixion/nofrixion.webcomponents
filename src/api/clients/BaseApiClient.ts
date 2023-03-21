@@ -1,99 +1,119 @@
-import axios, { AxiosError } from "axios";
-import { ApiError } from "../types/ApiResponses";
-import { HttpMethod } from "../types/Enums";
+import axios, { AxiosError } from 'axios';
+import { ApiError } from '../types/ApiResponses';
+import { HttpMethod } from '../types/Enums';
 
-export abstract class BaseApiClient{
+export abstract class BaseApiClient {
+  authToken: string;
 
-    authToken: string;
+  constructor(authToken: string) {
+    this.authToken = authToken;
+  }
 
-    constructor(authToken: string){
-        this.authToken = authToken;
+  /**
+   * Gets a paged response from supporting api endpoints
+   * @param url The api url
+   * @param pageNumber The page number
+   * @param pageSize The page size
+   * @param sort Optional. The sort expression
+   * @param fromDate Optional. The date filter to apply to retrieve payment requests created after this date.
+   * @param toDate Optional. The date filter to apply to retrieve payment requests created up until this date.
+   * @param status Optional. The status filter to apply to retrieve records with this status.
+   * @returns A Paged response of type TResponse if successful. An ApiError if not successful.
+   */
+  protected async getPagedResponse<TResponse>(
+    url: string,
+    pageNumber = 1,
+    pageSize = 20,
+    sort?: string,
+    fromDate?: Date,
+    toDate?: Date,
+    status?: string,
+  ): Promise<{
+    data?: TResponse;
+    error?: ApiError;
+  }> {
+    url = `${url}?page=${pageNumber}&size=${pageSize}`;
+
+    if (sort) {
+      url = `${url}&sort=${sort}`;
     }
 
-    /**
-     * Gets a paged response from supporting api endpoints
-     * @param url The api url
-     * @param pageNumber The page number
-     * @param pageSize The page size
-     * @returns A Paged response of type TResponse if successful. An ApiError if not successful.
-     */
-    protected async getPagedResponse<TResponse>(
-        url: string, 
-        pageNumber: number = 1, 
-        pageSize: number = 20
-        ): Promise<{
-            data?: TResponse;
-            error?: ApiError
-        }> 
-    {
-        url = `${url}?page=${pageNumber}&size=${pageSize}`;
-        
-        return await this.httpRequest<TResponse>(url, HttpMethod.GET);
-    };
+    if (fromDate) {
+      url = `${url}&fromDate=${fromDate.toISOString()}`;
+    }
 
-    /**
-     * Performs a http request to the MoneyMoov api.
-     * @param url The request url
-     * @param method The Http Method.
-     * @param postData Optional. The data to post if specified.
-     * @returns A response of type TResponse if successful. An ApiError if not successful.
-     */
-    protected async httpRequest<TResponse>(
-        url: string,
-        method: HttpMethod,
-        postData?: any,
-        ): Promise<{
-            data?: TResponse;
-            error?: ApiError
-        }> {
+    if (toDate) {
+      url = `${url}&toDate=${toDate.toISOString()}`;
+    }
 
-            console.log(`Requesting: ${method} ${url}`);
+    if (status) {
+      url = `${url}&status=${status}`;
+    }
 
-            let contentType = 'application/json';
+    return await this.httpRequest<TResponse>(url, HttpMethod.GET);
+  }
 
-            // Send form encoding on POST and PUT
-            // Axios will automatically serialize the postData object to form urlencoded format
-            if (method === HttpMethod.POST || method === HttpMethod.PUT){
-                contentType = 'application/x-www-form-urlencoded';
-            }
+  /**
+   * Performs a http request to the MoneyMoov api.
+   * @param url The request url
+   * @param method The Http Method.
+   * @param postData Optional. The data to post if specified.
+   * @returns A response of type TResponse if successful. An ApiError if not successful.
+   */
+  protected async httpRequest<TResponse>(
+    url: string,
+    method: HttpMethod,
+    postData?: any,
+  ): Promise<{
+    data?: TResponse;
+    error?: ApiError;
+  }> {
+    console.log(`Requesting: ${method} ${url}`);
 
-            try{
-        
-                const { data } = await axios<TResponse>({
-                    method: method,
-                    url: url,
-                    data: postData,
-                    headers: {
-                        'Authorization': `Bearer ${this.authToken}`,
-                        'content-type': contentType,
-                    },
-                  });
+    let contentType = 'application/json';
 
-                return {
-                    data: data,
-                };
-        
-            } catch (ex) {
-        
-                // Axios will throw an exception for all errors
-                
-                const error = ex as AxiosError;
-                
-                if (error.response?.data){
-                    // This contains the problem details
-                    console.log('Received error from api. : ' + JSON.stringify(error.response?.data));
-                    
-                    return {
-                        error: error.response?.data as ApiError
-                    };
-                }
-                
-                return { error: {
-                    type: error.code,
-                    title: 'MoneyMoov Api Error.',
-                    status: error.status,
-                    detail: error.message
-                }};
-            }
-        }
+    // Send form encoding on POST and PUT
+    // Axios will automatically serialize the postData object to form urlencoded format
+    if (method === HttpMethod.POST || method === HttpMethod.PUT) {
+      contentType = 'application/x-www-form-urlencoded';
+    }
+
+    try {
+      const { data } = await axios<TResponse>({
+        method: method,
+        url: url,
+        data: postData,
+        headers: {
+          Authorization: `Bearer ${this.authToken}`,
+          'content-type': contentType,
+        },
+      });
+
+      return {
+        data: data,
+      };
+    } catch (ex) {
+      // Axios will throw an exception for all errors
+
+      const error = ex as AxiosError;
+
+      if (error.response?.data) {
+        // This contains the problem details
+        console.log('Received error from api. : ' + JSON.stringify(error.response?.data));
+
+        return {
+          error: error.response?.data as ApiError,
+        };
+      }
+
+      return {
+        error: {
+          type: error.code,
+          title: 'MoneyMoov Api Error.',
+          status: error.status,
+          detail: error.message,
+        },
+      };
+    }
+  }
 }

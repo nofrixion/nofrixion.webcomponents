@@ -6,6 +6,8 @@ module.exports = {
       colors: {
         defaultText: '#00264D',
         greyText: '#73808C',
+        controlGrey: '#8F99A3',
+        controlGreyHover: '#454D54',
         redText: '#F32448',
         greyBg: '#EDF2F7',
       },

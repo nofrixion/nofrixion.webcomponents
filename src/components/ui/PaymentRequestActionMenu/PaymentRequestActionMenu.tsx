@@ -1,8 +1,8 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import menuIcon from '../../assets/images/nf_menu.svg';
-import copyIcon from '../../assets/images/nf_copy.svg';
-import linkIcon from '../../assets/images/nf_link.svg';
-import trashIcon from '../../assets/images/nf_trash.svg';
+import menuIcon from '../../../assets/images/nf_menu.svg';
+import copyIcon from '../../../assets/images/nf_copy.svg';
+import linkIcon from '../../../assets/images/nf_link.svg';
+import trashIcon from '../../../assets/images/nf_trash.svg';
 import { cva } from 'class-variance-authority';
 import { motion } from 'framer-motion';
 

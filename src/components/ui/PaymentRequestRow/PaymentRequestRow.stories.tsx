@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import PaymentRequestRow from './PaymentRequestRow';
 
 export default {
-  title: 'Payment Request Row',
+  title: 'UI/Payment Request Row',
   component: PaymentRequestRow,
   argTypes: {
     status: {
@@ -59,8 +59,8 @@ export default {
       // We could change this in the future to use a <Table> component
       <table className="table-fixed text-left w-full">
         <thead className="opacity-20">
-          <tr>
-            <th className="w-28 pl-4">Status</th>
+          <tr className="[&>th]:pl-4">
+            <th className="w-28">Status</th>
             <th className="w-32">Created</th>
             <th className="w-40">Contact</th>
             <th className="w-36 text-right">Amount</th>
