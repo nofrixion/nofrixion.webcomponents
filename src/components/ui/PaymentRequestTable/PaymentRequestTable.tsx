@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import Pager from '../Pager/Pager';
 import PaymentRequestRow from '../PaymentRequestRow/PaymentRequestRow';
+import ColumnHeader, { SortDirection } from '../ColumnHeader/ColumnHeader';
 
 interface PaymentRequestTableProps {
   paymentRequests: LocalPaymentRequest[];
@@ -8,9 +9,13 @@ interface PaymentRequestTableProps {
   totalRecords: number;
   onPaymentRequestClicked?: (paymentRequest: LocalPaymentRequest) => void;
   onPageChanged?: (newPage: number) => void;
+  setStatusSortDirection?: (sortDirection: SortDirection) => void;
+  setCreatedSortDirection?: (sortDirection: SortDirection) => void;
+  setContactSortDirection?: (sortDirection: SortDirection) => void;
+  setAmountSortDirection?: (sortDirection: SortDirection) => void;
 }
 
-const commonThClasses = 'px-4 pb-11 font-normal';
+const commonThClasses = 'px-4 pb-4 font-normal';
 
 const PaymentRequestTable = ({
   paymentRequests,
@@ -18,16 +23,39 @@ const PaymentRequestTable = ({
   totalRecords,
   onPaymentRequestClicked,
   onPageChanged,
+  setStatusSortDirection,
+  setCreatedSortDirection,
+  setContactSortDirection,
+  setAmountSortDirection,
 }: PaymentRequestTableProps) => {
   return (
     <table className="table-fixed text-left w-full">
       <thead>
         <tr>
-          {/* TODO: Change for fitler components */}
-          <th className={classNames(commonThClasses, 'w-36 pl-4')}>Status</th>
-          <th className={classNames(commonThClasses, 'w-44')}>Created</th>
-          <th className={classNames(commonThClasses, 'w-56')}>Contact</th>
-          <th className={classNames(commonThClasses, 'w-44 text-right')}>Amount</th>
+          <th className={classNames(commonThClasses, 'w-44 text-left')}>
+            <ColumnHeader
+              label="Status"
+              onSort={(sortDirection) => setStatusSortDirection && setStatusSortDirection(sortDirection)}
+            ></ColumnHeader>
+          </th>
+          <th className={classNames(commonThClasses, 'w-44 text-left')}>
+            <ColumnHeader
+              label="Created"
+              onSort={(sortDirection) => setCreatedSortDirection && setCreatedSortDirection(sortDirection)}
+            />
+          </th>
+          <th className={classNames(commonThClasses, 'w-44 text-left')}>
+            <ColumnHeader
+              label="Contact"
+              onSort={(sortDirection) => setContactSortDirection && setContactSortDirection(sortDirection)}
+            />
+          </th>
+          <th className={classNames(commonThClasses, 'w-44 text-right')}>
+            <ColumnHeader
+              label="Amount"
+              onSort={(sortDirection) => setAmountSortDirection && setAmountSortDirection(sortDirection)}
+            />
+          </th>
 
           {/* Currency */}
           <th className={classNames('pb-11 w-20')}></th>
