@@ -4,6 +4,7 @@ import UIPaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTa
 
 import { RemotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
 import { SortDirection } from '../../ui/ColumnHeader/ColumnHeader';
+import { LocalPaymentRequest } from '../../../api/types/LocalTypes';
 
 interface PaymentRequestTableProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
