@@ -83,7 +83,7 @@ Playground.args = {
   },
   amount: 29,
   currency: 'EUR',
-  tags: ['Tag 1', 'Another tag', 'Third tag'],
+  tags: [{ name: 'Tag 1' }, { name: 'Another tag' }, { name: 'Third tag' }],
 };
 
 export const ExampleToday = Template.bind({});
@@ -96,7 +96,7 @@ ExampleToday.args = {
   },
   amount: 29,
   currency: 'EUR',
-  tags: ['Tag 1', 'Another tag'],
+  tags: [{ name: 'Tag 1' }, { name: 'Another tag' }],
 };
 
 export const ExampleYesterday = Template.bind({});
@@ -109,7 +109,7 @@ ExampleYesterday.args = {
   },
   amount: 115949,
   currency: 'EUR',
-  tags: ['Tag 1', 'Another tag'],
+  tags: [{ name: 'Tag 1' }, { name: 'Another tag' }],
 };
 
 export const ExampleTwoDaysAgo = Template.bind({});
@@ -122,7 +122,7 @@ ExampleTwoDaysAgo.args = {
   },
   amount: 115.5,
   currency: 'EUR',
-  tags: ['Tag 1', 'Another tag'],
+  tags: [{ name: 'Tag 1' }, { name: 'Another tag' }],
 };
 
 export const ExampleTwoYearsAgo = Template.bind({});
@@ -135,7 +135,7 @@ ExampleTwoYearsAgo.args = {
   },
   amount: 89.99,
   currency: 'GBP',
-  tags: ['Tag 1', 'Another tag'],
+  tags: [{ name: 'Tag 1' }, { name: 'Another tag' }],
 };
 
 export const ExampleGBP = Template.bind({});
@@ -148,5 +148,5 @@ ExampleGBP.args = {
   },
   amount: 89.99,
   currency: 'GBP',
-  tags: ['Tag 1', 'Another tag'],
+  tags: [{ name: 'Tag 1' }, { name: 'Another tag' }],
 };

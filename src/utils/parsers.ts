@@ -1,8 +1,9 @@
 import { PaymentRequest } from '../api/types/ApiResponses';
 import { PaymentResult } from '../api/types/Enums';
+import { LocalPaymentRequest, LocalPaymentStatus } from '../api/types/LocalTypes';
 
 const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: PaymentRequest): LocalPaymentRequest => {
-  const { addresses, inserted, customerEmailAddress, amount, currency, status } = remotePaymentRequest;
+  const { addresses, inserted, customerEmailAddress, amount, currency, status, tags } = remotePaymentRequest;
 
   const parseApiStatusToLocalStatus = (status: PaymentResult): LocalPaymentStatus => {
     switch (status) {
@@ -24,7 +25,7 @@ const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     },
     amount: amount,
     currency: currency,
-    tags: [], // TODO: Add tags when they are available in the API
+    tags: tags,
   };
 };
 

@@ -44,6 +44,7 @@ export type PaymentRequest = {
   cardStripePaymentIntentSecret?: string;
   addresses: PaymentRequestAddress[];
   jwk?: string;
+  tags: Tag[];
 };
 
 export type PaymentRequestMinimal = {
@@ -153,4 +154,12 @@ export type ApiError = {
 export type ApiResponse<T> = {
   data?: T;
   error?: ApiError;
+};
+
+export type Tag = {
+  ID: string;
+  merchantID: string;
+  name: string;
+  colourHex: string;
+  description: string;
 };
