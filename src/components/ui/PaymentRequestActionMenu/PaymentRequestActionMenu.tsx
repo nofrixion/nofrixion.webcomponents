@@ -7,12 +7,12 @@ import { cva } from 'class-variance-authority';
 import { motion } from 'framer-motion';
 
 const actionItemClassNames =
-  'group text-xs leading-none rounded-1 flex items-center h-6 py-4 pr-4 relative select-none outline-none cursor-pointer';
+  'group text-xs leading-none rounded-1 flex items-center relative select-none outline-none cursor-pointer';
 const actionItem = cva(actionItemClassNames, {
   variants: {
     intent: {
       neutral: ['data-[highlighted]:text-greyText'],
-      negative: ['text-redText'],
+      negative: ['text-redText data-[highlighted]:text-highlightedRedText'],
     },
   },
   defaultVariants: {
@@ -41,12 +41,12 @@ interface PaymentRequestActionMenuItemContentProps {
 
 const PaymentRequestActionMenuItemContent = ({ label, iconSource }: PaymentRequestActionMenuItemContentProps) => {
   return (
-    <>
-      <div className="pl-4 pr-2">
+    <div className="h-6 flex items-center">
+      <div className="pr-2">
         <img src={iconSource} alt={label} className="w-4 h-4" />
       </div>
       {label}
-    </>
+    </div>
   );
 };
 
@@ -100,8 +100,8 @@ const PaymentRequestActionMenu = ({ onDuplicate, onCopyLink, onDelete }: Payment
       <DropdownMenu.Portal>
         <DropdownMenu.Content asChild forceMount sideOffset={5}>
           <motion.div
-            className="min-w-[150px] bg-white rounded-md p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]"
-            initial={{ opacity: 0.5, y: 5, scaleX: 0.9, scaleY: 0.7 }}
+            className="min-w-[150px] bg-white rounded-md p-[5px] shadow-[0px_0px_8px_rgba(4,_41,_49,_0.1)] space-y-4 p-4"
+            initial={{ opacity: 0.5, y: -5, scaleX: 1, scaleY: 1 }}
             animate={{ opacity: 1, y: 0, scaleX: 1, scaleY: 1 }}
           >
             {onDuplicate && (
