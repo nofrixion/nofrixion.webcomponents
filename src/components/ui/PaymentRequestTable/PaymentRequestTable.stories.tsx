@@ -43,7 +43,7 @@ const paymentRequests = [
     },
     amount: 900,
     currency: 'EUR',
-    tags: ['logo-design', 'EU-client'],
+    tags: [{ name: 'logo-design' }, { name: 'EU-client' }],
   },
   {
     status: 'unpaid',
@@ -54,7 +54,7 @@ const paymentRequests = [
     },
     amount: 1800,
     currency: 'EUR',
-    tags: ['app-development', 'UI-design', 'EU-client'],
+    tags: [{ name: 'app-development' }, { name: 'UI-design' }, { name: 'EU-client' }],
   },
   {
     status: 'unpaid',
@@ -65,7 +65,7 @@ const paymentRequests = [
     },
     amount: 2700,
     currency: 'GBP',
-    tags: ['ecommerce', 'web-development', 'London-client'],
+    tags: [{ name: 'ecommerce' }, { name: 'web-development' }, { name: 'London-client' }],
   },
   {
     status: 'paid',
@@ -76,7 +76,7 @@ const paymentRequests = [
     },
     amount: 2500,
     currency: 'GBP',
-    tags: ['web-design', 'branding', 'London-client'],
+    tags: [{ name: 'web-design' }, { name: 'branding' }, { name: 'London-client' }],
   },
   {
     status: 'unpaid',
@@ -87,7 +87,7 @@ const paymentRequests = [
     },
     amount: 3000,
     currency: 'GBP',
-    tags: ['web-development', 'ecommerce', 'London-client'],
+    tags: [{ name: 'web-development' }, { name: 'ecommerce' }, { name: 'London-client' }],
   },
   {
     status: 'partial',
@@ -98,7 +98,7 @@ const paymentRequests = [
     },
     amount: 1500,
     currency: 'GBP',
-    tags: ['content-creation', 'SEO', 'London-client'],
+    tags: [{ name: 'content-creation' }, { name: 'SEO' }, { name: 'London-client' }],
   },
   {
     status: 'partial',
@@ -109,7 +109,7 @@ const paymentRequests = [
     },
     amount: 1200,
     currency: 'GBP',
-    tags: ['SEO', 'content-creation', 'London-client'],
+    tags: [{ name: 'SEO' }, { name: 'content-creation' }, { name: 'London-client' }],
   },
   {
     status: 'paid',
@@ -120,7 +120,7 @@ const paymentRequests = [
     },
     amount: 2300,
     currency: 'EUR',
-    tags: ['web-design', 'responsive-design', 'EU-client'],
+    tags: [{ name: 'web-design' }, { name: 'responsive-design' }, { name: 'EU-client' }],
   },
   {
     status: 'paid',
@@ -131,7 +131,7 @@ const paymentRequests = [
     },
     amount: 1000,
     currency: 'EUR',
-    tags: ['logo-design', 'branding', 'EU-client'],
+    tags: [{ name: 'logo-design' }, { name: 'branding' }, { name: 'EU-client' }],
   },
   {
     status: 'paid',
@@ -142,7 +142,7 @@ const paymentRequests = [
     },
     amount: 3500,
     currency: 'GBP',
-    tags: ['UX-design', 'app-development', 'London-client'],
+    tags: [{ name: 'UX-design' }, { name: 'app-development' }, { name: 'London-client' }],
   },
   {
     status: 'paid',
@@ -153,7 +153,7 @@ const paymentRequests = [
     },
     amount: 4200,
     currency: 'GBP',
-    tags: ['web-design', 'branding', 'London-client'],
+    tags: [{ name: 'web-design' }, { name: 'branding' }, { name: 'London-client' }],
   },
   {
     status: 'partial',
@@ -164,7 +164,7 @@ const paymentRequests = [
     },
     amount: 2200,
     currency: 'EUR',
-    tags: ['UI-design', 'app-development', 'EU-client'],
+    tags: [{ name: 'UI-design' }, { name: 'app-development' }, { name: 'EU-client' }],
   },
 ];
 

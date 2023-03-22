@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { LocalPaymentRequest } from '../../../types';
+import { LocalPaymentRequest } from '../../../api/types/LocalTypes';
 import { formatAmount, formatDate } from '../../../utils/formatters';
 import Chip from '../Chip/Chip';
 import Contact from '../Contact/Contact';
@@ -52,7 +52,7 @@ const Row = ({
 
       <td className={classNames(commonTdClasses, 'space-x-1 text-right pr-1.5')}>
         {tags.map((tag, index) => (
-          <Chip key={`tag-${index}`} label={tag} />
+          <Chip key={`tag-${index}`} label={tag.name} />
         ))}
       </td>
 
