@@ -100,7 +100,7 @@ const PaymentRequestActionMenu = ({ onDuplicate, onCopyLink, onDelete }: Payment
       <DropdownMenu.Portal>
         <DropdownMenu.Content asChild forceMount sideOffset={5}>
           <motion.div
-            className="min-w-[150px] bg-white rounded-md p-[5px] shadow-[0px_0px_8px_rgba(4,_41,_49,_0.1)] space-y-4 p-4"
+            className="min-w-[150px] bg-white rounded-md shadow-[0px_0px_8px_rgba(4,_41,_49,_0.1)] space-y-4 p-4"
             initial={{ opacity: 0.5, y: -5, scaleX: 1, scaleY: 1 }}
             animate={{ opacity: 1, y: 0, scaleX: 1, scaleY: 1 }}
           >
