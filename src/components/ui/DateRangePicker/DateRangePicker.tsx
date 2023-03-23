@@ -1,12 +1,13 @@
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { dateRanges } from '../../../utils/constants';
-import { getDateInPast } from '../../../utils/formatters';
+import { getDateFormat, getDateInPast } from '../../../utils/formatters';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { motion } from 'framer-motion';
 import { cva } from 'class-variance-authority';
 import { DateRangePicker as DateRange } from 'rsuite';
 import '../../../rsuite.css';
+import { format } from 'date-fns';
 
 const pillClasses = 'bg-[#EDF2F7] text-sm whitespace-nowrap border-[1px] border-[#D5DBDD] cursor-pointer';
 
@@ -141,6 +142,13 @@ const DateRangePicker = ({ rangeText = dateRanges.last90Days, onDateChange }: Da
           value={[fromDate, toDate]}
           size="md"
           ranges={[]}
+          renderValue={(value) => {
+            if (selectRangeText === dateRanges.today || selectRangeText === dateRanges.yesterday) {
+              return format(value[0], 'MMM do');
+            }
+            const dateFormat = getDateFormat(value[0], value[1]);
+            return format(value[0], dateFormat) + ' - ' + format(value[1], dateFormat);
+          }}
           onOk={(item) => {
             if (item !== null) {
               setFromDate(item[0]);
