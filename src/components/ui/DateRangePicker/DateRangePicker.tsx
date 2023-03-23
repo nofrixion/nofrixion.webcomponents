@@ -3,6 +3,23 @@ import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { dateRanges } from '../../../utils/constants';
 import { getDateFormat, getDateInPast } from '../../../utils/formatters';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { motion } from 'framer-motion';
+import { cva } from 'class-variance-authority';
+
+const actionItemClassNames =
+  'group text-xs leading-none rounded-1 flex items-center relative select-none outline-none cursor-pointer py-2';
+const actionItem = cva(actionItemClassNames, {
+  variants: {
+    intent: {
+      neutral: ['data-[highlighted]:text-greyText'],
+      selected: ['text-highlightedGreenText data-[highlighted]:cursor-default'],
+    },
+  },
+  defaultVariants: {
+    intent: 'neutral',
+  },
+});
 
 export type DateRange = {
   fromDate: Date;
@@ -66,23 +83,72 @@ const DateRangePicker = ({ rangeText = dateRanges.last90Days, onDateChange }: Da
 
   return (
     <div className="flex defaultText">
-      <div className={classNames(pillClasses, 'rounded-l-full border-r-0 flex flex-col-2 space-x-2')}>
-        <div>
-          <span>{selectRangeText}</span>
-        </div>
-        <div className="py-2.5">
-          <svg
-            className="stroke-defaultText"
-            width="10"
-            height="6"
-            viewBox="0 0 10 6"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M9 1L5 5L1 1" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </div>
-      </div>
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger asChild>
+          <div className={classNames(pillClasses, 'rounded-l-full border-r-0 flex flex-col-2 space-x-2')}>
+            <div>
+              <span>{selectRangeText}</span>
+            </div>
+            <div className="py-2.5">
+              <svg
+                className="stroke-defaultText"
+                width="10"
+                height="6"
+                viewBox="0 0 10 6"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M9 1L5 5L1 1" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+          </div>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Portal>
+          <DropdownMenu.Content asChild forceMount sideOffset={5}>
+            <motion.div
+              className="min-w-[150px] bg-white rounded-md shadow-[0px_0px_8px_rgba(4,_41,_49,_0.1)] space-y-2 p-4"
+              initial={{ opacity: 0.5, y: -5, scaleX: 1, scaleY: 1 }}
+              animate={{ opacity: 1, y: 0, scaleX: 1, scaleY: 1 }}
+            >
+              <DropdownMenu.Item
+                className={actionItem({ intent: selectRangeText === dateRanges.today ? 'selected' : 'neutral' })}
+                onClick={() => setSelectRangeText(dateRanges.today)}
+              >
+                <span>Today</span>
+              </DropdownMenu.Item>
+
+              <DropdownMenu.Item
+                className={actionItem({ intent: selectRangeText === dateRanges.yesterday ? 'selected' : 'neutral' })}
+                onClick={() => setSelectRangeText(dateRanges.yesterday)}
+              >
+                <span>Yesterday</span>
+              </DropdownMenu.Item>
+
+              <DropdownMenu.Item
+                className={actionItem({ intent: selectRangeText === dateRanges.last7Days ? 'selected' : 'neutral' })}
+                onClick={() => setSelectRangeText(dateRanges.last7Days)}
+              >
+                <span>Last 7 days</span>
+              </DropdownMenu.Item>
+
+              <DropdownMenu.Item
+                className={actionItem({ intent: selectRangeText === dateRanges.last30Days ? 'selected' : 'neutral' })}
+                onClick={() => setSelectRangeText(dateRanges.last30Days)}
+              >
+                <span>Last 30 days</span>
+              </DropdownMenu.Item>
+
+              <DropdownMenu.Item
+                className={actionItem({ intent: selectRangeText === dateRanges.last90Days ? 'selected' : 'neutral' })}
+                onClick={() => setSelectRangeText(dateRanges.last90Days)}
+              >
+                <span>Last 90 days</span>
+              </DropdownMenu.Item>
+            </motion.div>
+          </DropdownMenu.Content>
+        </DropdownMenu.Portal>
+      </DropdownMenu.Root>
+
       <div className={classNames(pillClasses, 'rounded-r-full flex flex-col-2 space-x-2')}>
         <div className="py-1">
           <svg

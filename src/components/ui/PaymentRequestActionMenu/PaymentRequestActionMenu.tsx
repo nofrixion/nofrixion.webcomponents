@@ -7,7 +7,7 @@ import { cva } from 'class-variance-authority';
 import { motion } from 'framer-motion';
 
 const actionItemClassNames =
-  'group text-xs leading-none rounded-1 flex items-center relative select-none outline-none cursor-pointer';
+  'group text-xs leading-none rounded-1 flex items-center relative select-none outline-none cursor-pointer p-y-1';
 const actionItem = cva(actionItemClassNames, {
   variants: {
     intent: {
