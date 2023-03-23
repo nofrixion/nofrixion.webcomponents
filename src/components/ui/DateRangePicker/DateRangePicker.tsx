@@ -8,6 +8,9 @@ import { cva } from 'class-variance-authority';
 import { DateRangePicker as DateRange } from 'rsuite';
 import '../../../rsuite.css';
 import { format } from 'date-fns';
+import isAfter from 'date-fns/isAfter';
+
+const { afterToday } = DateRange;
 
 const pillClasses = 'bg-[#EDF2F7] text-sm whitespace-nowrap border-[1px] border-[#D5DBDD] cursor-pointer';
 
@@ -133,6 +136,7 @@ const DateRangePicker = ({ rangeText = dateRanges.last90Days, onDateChange }: Da
       <div className={classNames(pillClasses, 'rounded-r-full flex flex-col-2 pr-2')}>
         <DateRange
           showOneCalendar
+          disabledDate={afterToday && afterToday()}
           cleanable={false}
           appearance="subtle"
           character=" - "
