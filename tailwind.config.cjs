@@ -8,6 +8,9 @@ module.exports = {
         greyText: '#73808C',
         controlGrey: '#8F99A3',
         controlGreyHover: '#454D54',
+        redText: '#F32448',
+        highlightedRedText: '#FF6681',
+        greyBg: '#EDF2F7',
       },
       fontSize: {
         '13px': '0.8125rem',

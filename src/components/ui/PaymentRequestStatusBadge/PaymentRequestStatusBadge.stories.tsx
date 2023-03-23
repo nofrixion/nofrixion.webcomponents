@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import StatusBadge from './StatusBadge';
+import PaymentRequestStatusBadge from './PaymentRequestStatusBadge';
 
 const statuses = {
   unpaid: 'unpaid',
@@ -11,13 +11,13 @@ const statuses = {
 
 export default {
   title: 'UI/Payment Request Status Badge',
-  component: StatusBadge,
+  component: PaymentRequestStatusBadge,
   argTypes: {
     status: { control: 'inline-radio', options: Object.values(statuses) },
   },
-} as ComponentMeta<typeof StatusBadge>;
+} as ComponentMeta<typeof PaymentRequestStatusBadge>;
 
-const Template: ComponentStory<typeof StatusBadge> = (args) => <StatusBadge {...args} />;
+const Template: ComponentStory<typeof PaymentRequestStatusBadge> = (args) => <PaymentRequestStatusBadge {...args} />;
 
 export const UnpaidBadge = Template.bind({});
 UnpaidBadge.args = {
