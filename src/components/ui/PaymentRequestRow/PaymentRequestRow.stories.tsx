@@ -42,6 +42,15 @@ export default {
     onClick: {
       action: 'Row clicked',
     },
+    onDuplicate: {
+      action: 'Duplicate selected',
+    },
+    onCopyLink: {
+      action: 'Copy selected',
+    },
+    onDelete: {
+      action: 'Delete selected',
+    },
   },
   decorators: [
     (Story) => (
@@ -50,17 +59,20 @@ export default {
       // We could change this in the future to use a <Table> component
       <table className="table-fixed text-left w-full">
         <thead className="opacity-20">
-          <tr>
-            <th className="w-28 pl-4">Status</th>
-            <th className="w-40">Created</th>
-            <th className="w-44">Contact</th>
+          <tr className="[&>th]:pl-4">
+            <th className="w-28">Status</th>
+            <th className="w-32">Created</th>
+            <th className="w-40">Contact</th>
             <th className="w-36 text-right">Amount</th>
 
             {/* Currency */}
             <th className="w-20"></th>
 
             {/* Tags */}
-            <th className="pr-4"></th>
+            <th className="pr-2"></th>
+
+            {/* Menu */}
+            <th className="pr-2 w-8"></th>
           </tr>
         </thead>
         <tbody>

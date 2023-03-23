@@ -3,15 +3,30 @@ import { LocalPaymentRequest } from '../../../api/types/LocalTypes';
 import { formatAmount, formatDate } from '../../../utils/formatters';
 import Chip from '../Chip/Chip';
 import Contact from '../Contact/Contact';
-import StatusBadge from '../StatusBadge/StatusBadge';
+import StatusBadge from '../PaymentRequestStatusBadge/PaymentRequestStatusBadge';
+import PaymentRequestActionMenu from '../PaymentRequestActionMenu/PaymentRequestActionMenu';
 
 interface PaymentRequestRowProps extends LocalPaymentRequest {
   onClick?: () => void;
+  onDuplicate?: () => void;
+  onCopyLink?: () => void;
+  onDelete?: () => void;
 }
 
 const commonTdClasses = 'px-4 py-3';
 
-const Row = ({ status, createdAt, contact, amount, currency, tags, onClick }: PaymentRequestRowProps) => {
+const Row = ({
+  status,
+  createdAt,
+  contact,
+  amount,
+  currency,
+  tags,
+  onClick,
+  onDuplicate,
+  onCopyLink,
+  onDelete,
+}: PaymentRequestRowProps) => {
   return (
     <tr
       className="border-b border-[#F1F2F3] cursor-pointer transition-all ease-in-out hover:bg-[#F6F8F9] hover:border-[#E1E5EA]"
@@ -35,10 +50,14 @@ const Row = ({ status, createdAt, contact, amount, currency, tags, onClick }: Pa
         <span className="text-greyText text-sm block">{currency}</span>
       </td>
 
-      <td className={classNames(commonTdClasses, 'space-x-1 text-right pr-4')}>
+      <td className={classNames(commonTdClasses, 'space-x-1 text-right pr-1.5')}>
         {tags.map((tag, index) => (
           <Chip key={`tag-${index}`} label={tag.name} />
         ))}
+      </td>
+
+      <td className="pr-2 w-8">
+        <PaymentRequestActionMenu onDuplicate={onDuplicate} onCopyLink={onCopyLink} onDelete={onDelete} />
       </td>
     </tr>
   );
