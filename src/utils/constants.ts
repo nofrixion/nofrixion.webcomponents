@@ -11,5 +11,4 @@ export const dateRanges = {
   last7Days: 'Last 7 Days',
   last30Days: 'Last 30 Days',
   last90Days: 'Last 90 Days',
-  custom: 'Custom',
 };

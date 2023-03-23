@@ -1,3 +1,5 @@
+import { LocalContact } from '../../../api/types/LocalTypes';
+
 const Contact = ({ name, email }: LocalContact) => {
   return (
     <div className="flex flex-col">

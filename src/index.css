@@ -85,3 +85,5 @@
 .columnSort:hover {
   @apply text-controlGreyHover;
 }
+
+@import '~rsuite/dist/rsuite.min.css';
