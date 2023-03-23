@@ -3,6 +3,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { dateRanges } from '../../../utils/constants';
 
 import DateRangePicker from './DateRangePicker';
+import { action } from '@storybook/addon-actions';
 
 export default {
   title: 'UI/DateRangePicker',
@@ -23,4 +24,5 @@ export const Showcase = Template.bind({});
 
 Showcase.args = {
   rangeText: dateRanges.last90Days,
+  onDateChange: action('Date Changed'),
 };

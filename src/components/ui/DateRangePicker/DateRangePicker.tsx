@@ -3,17 +3,23 @@ import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { dateRanges } from '../../../utils/constants';
 
+export type DateRange = {
+  fromDate: Date;
+  toDate: Date;
+};
+
 interface DateRangeFilterProps {
   rangeText: string;
+  onDateChange: (dateRange: DateRange) => void;
 }
 
-const DateRangePicker = ({ rangeText }: DateRangeFilterProps) => {
+const DateRangePicker = ({ rangeText, onDateChange }: DateRangeFilterProps) => {
   const [selectRangeText, setSelectRangeText] = useState(rangeText);
   const [dateRangeText, setDateRangeText] = useState('');
 
   const pillClasses = 'bg-[#EDF2F7] px-3 py-1.5 text-sm leading-6 whitespace-nowrap border-[1px] border-[#D5DBDD]';
 
-  const formatDateRangeText = (toDate: Date, fromDate: Date): string => {
+  const getDateFormat = (toDate: Date, fromDate: Date): string => {
     if (toDate.getFullYear() !== fromDate.getFullYear()) {
       return 'MMM do, y';
     }
@@ -22,10 +28,16 @@ const DateRangePicker = ({ rangeText }: DateRangeFilterProps) => {
   };
 
   const getDateRangeText = (toDate: Date, fromDate: Date): string => {
-    return `${format(toDate, formatDateRangeText(toDate, fromDate))} - ${format(
-      fromDate,
-      formatDateRangeText(toDate, fromDate),
-    )}`;
+    return `${format(toDate, getDateFormat(toDate, fromDate))} - ${format(fromDate, getDateFormat(toDate, fromDate))}`;
+  };
+
+  const getDateInPast = (daysToGoBack: number): Date => {
+    let date = new Date();
+
+    date.setDate(date.getDate() - daysToGoBack);
+    date.setHours(0, 0, 0, 0);
+
+    return date;
   };
 
   useEffect(() => {
@@ -33,33 +45,34 @@ const DateRangePicker = ({ rangeText }: DateRangeFilterProps) => {
   }, [rangeText]);
 
   useEffect(() => {
-    let date = new Date();
-
     switch (selectRangeText) {
       case dateRanges.today:
-        setDateRangeText(format(new Date(), 'MMM do'));
+        let today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        setDateRangeText(format(today, 'MMM do'));
+        onDateChange({ fromDate: new Date(), toDate: today });
         break;
       case dateRanges.yesterday:
-        date.setDate(date.getDate() - 1);
+        // TODO: Fix this
+        // Make sure hours are correct
+        let yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
 
-        setDateRangeText(format(date, 'MMM do'));
-
+        setDateRangeText(format(getDateInPast(1), 'MMM do'));
+        onDateChange({ fromDate: yesterday, toDate: getDateInPast(1) });
         break;
       case dateRanges.last7Days:
-        date.setDate(date.getDate() - 7);
-
-        setDateRangeText(getDateRangeText(new Date(), date));
-
+        setDateRangeText(getDateRangeText(new Date(), getDateInPast(7)));
+        onDateChange({ fromDate: new Date(), toDate: getDateInPast(7) });
         break;
       case dateRanges.last30Days:
-        date.setDate(date.getDate() - 30);
-
-        setDateRangeText(getDateRangeText(new Date(), date));
+        setDateRangeText(getDateRangeText(new Date(), getDateInPast(30)));
+        onDateChange({ fromDate: new Date(), toDate: getDateInPast(30) });
         break;
       case dateRanges.last90Days:
-        date.setDate(date.getDate() - 90);
-
-        setDateRangeText(getDateRangeText(new Date(), date));
+        setDateRangeText(getDateRangeText(new Date(), getDateInPast(90)));
+        onDateChange({ fromDate: new Date(), toDate: getDateInPast(90) });
         break;
       case dateRanges.custom:
         setDateRangeText('Last 90 days');
