@@ -78,4 +78,26 @@ const formatPaymentRequestSortExpression = (
   return sortExpression;
 };
 
-export { formatDate, formatAmount, formatPaymentRequestSortExpression };
+const getDateInPast = (daysToGoBack: number, startOfDay: boolean): Date => {
+  const date = new Date();
+
+  date.setDate(date.getDate() - daysToGoBack);
+
+  if (startOfDay) {
+    date.setHours(0, 0, 0, 0);
+  } else {
+    date.setHours(23, 59, 59, 999);
+  }
+
+  return date;
+};
+
+const getDateFormat = (toDate: Date, fromDate: Date): string => {
+  if (toDate.getFullYear() !== fromDate.getFullYear()) {
+    return 'MMM do, y';
+  }
+
+  return 'MMM do';
+};
+
+export { formatDate, formatAmount, formatPaymentRequestSortExpression, getDateInPast, getDateFormat };
