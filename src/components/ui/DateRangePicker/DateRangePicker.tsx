@@ -45,7 +45,7 @@ const DateRangePicker = ({ rangeText = dateRanges.last90Days, onDateChange }: Da
   const [toDate, setToDate] = useState(new Date());
 
   useEffect(() => {
-    onDateChange({ fromDate: fromDate, toDate: toDate });
+    onDateChange && onDateChange({ fromDate: fromDate, toDate: toDate });
   }, [fromDate, toDate]);
 
   useEffect(() => {
