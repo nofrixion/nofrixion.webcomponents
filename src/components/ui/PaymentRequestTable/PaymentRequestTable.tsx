@@ -9,6 +9,9 @@ interface PaymentRequestTableProps {
   pageSize: number;
   totalRecords: number;
   onPaymentRequestClicked?: (paymentRequest: LocalPaymentRequest) => void;
+  onPaymentRequestDuplicateClicked?: (paymentRequest: LocalPaymentRequest) => void;
+  onPaymentRequestDeleteClicked?: (paymentRequest: LocalPaymentRequest) => void;
+  onPaymentRequestCopyLinkClicked?: (paymentRequest: LocalPaymentRequest) => void;
   onPageChanged?: (newPage: number) => void;
   setStatusSortDirection?: (sortDirection: SortDirection) => void;
   setCreatedSortDirection?: (sortDirection: SortDirection) => void;
@@ -23,6 +26,9 @@ const PaymentRequestTable = ({
   pageSize,
   totalRecords,
   onPaymentRequestClicked,
+  onPaymentRequestDuplicateClicked,
+  onPaymentRequestDeleteClicked,
+  onPaymentRequestCopyLinkClicked,
   onPageChanged,
   setStatusSortDirection,
   setCreatedSortDirection,
@@ -81,6 +87,9 @@ const PaymentRequestTable = ({
             key={`pr-${index}`}
             {...paymentRequest}
             onClick={() => onPaymentRequestClicked && onPaymentRequestClicked(paymentRequest)}
+            onDuplicate={() => onPaymentRequestDuplicateClicked && onPaymentRequestDuplicateClicked(paymentRequest)}
+            onDelete={() => onPaymentRequestDeleteClicked && onPaymentRequestDeleteClicked(paymentRequest)}
+            onCopyLink={() => onPaymentRequestCopyLinkClicked && onPaymentRequestCopyLinkClicked(paymentRequest)}
           />
         ))}
       </tbody>

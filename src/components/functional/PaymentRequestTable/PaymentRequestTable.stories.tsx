@@ -25,6 +25,7 @@ const Template: ComponentStory<typeof PaymentRequestTable> = (args) => <PaymentR
 
 export const Showcase = Template.bind({});
 Showcase.args = {
-  token: 'eyJhbGciOiJIUz...',
-  apiUrl: apiUrls.sandbox,
+  token:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbmlkIjoiNTE0MGNjNDQtNGJlMi00NDM2LTg2ZmEtNTAxZTBiZjJiYjczIn0.kw74ZJpia5pTO4KpKqUDprPxIQTzEbCKKngupQ8oDSM',
+  apiUrl: apiUrls.local,
 };

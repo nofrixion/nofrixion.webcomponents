@@ -9,6 +9,7 @@ export interface LocalContact {
 export type LocalPaymentStatus = 'paid' | 'partial' | 'unpaid';
 
 export interface LocalPaymentRequest {
+  id: string;
   status: LocalPaymentStatus;
   createdAt: Date;
   contact: LocalContact;

@@ -11,6 +11,8 @@ module.exports = {
         redText: '#F32448',
         highlightedRedText: '#FF6681',
         greyBg: '#EDF2F7',
+        positiveActionBackground: '#40BFBF',
+        negativeActionBackground: '#E9EDF1',
       },
       fontSize: {
         '13px': '0.8125rem',

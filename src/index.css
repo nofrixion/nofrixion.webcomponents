@@ -66,7 +66,8 @@
 }
 
 @layer base {
-  html {
+  html,
+  .Toastify__toast-body > div {
     font-family: 'Inter', sans-serif;
     font-feature-settings: 'cv01', 'cv02', 'cv03', 'cv04'; /* OpenType font features. See more in: https://rsms.me/inter/#features/cvXX */
     @apply text-defaultText;
@@ -84,4 +85,33 @@
 
 .columnSort:hover {
   @apply text-controlGreyHover;
+}
+
+.Toastify__toast {
+  min-height: 16px !important;
+  --toastify-color-info: #fff;
+  --toastify-color-success: #fff;
+  --toastify-color-warning: #f2eed8;
+  --toastify-color-error: #fecaca;
+  --toastify-text-color-info: #00264d;
+  --toastify-text-color-success: #00264d;
+  --toastify-text-color-warning: #663300;
+  --toastify-text-color-error: #7f1d1d;
+}
+
+.Toastify__toast-body {
+  margin: 0 !important;
+}
+
+.Toastify__toast--info > .Toastify__toast-body > div,
+.Toastify__toast--success > .Toastify__toast-body > div {
+  color: var(--toastify-text-color-info);
+}
+
+.Toastify__toast--warning > .Toastify__toast-body > div {
+  color: var(--toastify-text-color-warning);
+}
+
+.Toastify__toast--error > .Toastify__toast-body > div {
+  color: var(--toastify-text-color-error);
 }
