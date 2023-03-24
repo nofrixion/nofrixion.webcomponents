@@ -141,7 +141,6 @@ const DateRangePicker = ({ rangeText = dateRanges.last90Days, onDateChange }: Da
           appearance="subtle"
           character=" - "
           editable={false}
-          onOpen={() => console.log('open')}
           format="MMM do, y"
           value={[fromDate, toDate]}
           size="md"
