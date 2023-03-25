@@ -1,15 +1,11 @@
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { dateRanges } from '../../../utils/constants';
-import { getDateFormat, getDateInPast } from '../../../utils/formatters';
+import { getDateInPast } from '../../../utils/formatters';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { motion } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { DateRangePicker as DateRange } from 'rsuite';
-import '../../../rsuite.css';
-import { format } from 'date-fns';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
-import type { Value } from 'react-multi-date-picker';
 import DateRangeInput from './DateRangeInput';
 
 const pillClasses =
@@ -41,29 +37,14 @@ interface DateRangeFilterProps {
 }
 
 const DateRangePicker = ({ rangeText = dateRanges.last90Days, onDateChange }: DateRangeFilterProps) => {
-  const today = new Date();
-  const tomorrow = new Date();
-
-  tomorrow.setDate(tomorrow.getDate() + 1);
-
-  const [dateValues, setDateValues] = useState<Value>(new Date());
-  // const [dateValues, setDateValues] = useState([today, tomorrow]);
-  const [formattedDates, setFormattedDates] = useState('');
+  const [dates, setDates] = useState<DateObject[]>([]);
   const [selectRangeText, setSelectRangeText] = useState(rangeText);
 
   useEffect(() => {
-    if (dateValues) {
-      const dates: Date[] = dateValues as Date[];
-
-      // console.log('dateValues', format(dates[0]);
-      // console.log('values 2', dateValues[0].format('MMM DD, YYYY'), dateValues[1].format('MMM DD, YYYY'));
-
-      // setFormattedDates(
-      //   format(new Date(dates[0]), 'MMM dd, yyyy') + ' - ' + format(new Date(dates[1]), 'MMM dd, yyyy'),
-      // );
-      // onDateChange && onDateChange({ fromDate: new Date(dates[0]), toDate: new Date(dates[1]) });
+    if (dates.length === 2) {
+      onDateChange && onDateChange({ fromDate: new Date(dates[0].toDate()), toDate: new Date(dates[1].toDate()) });
     }
-  }, [dateValues]);
+  }, [dates]);
 
   useEffect(() => {
     setSelectRangeText(rangeText);
@@ -74,26 +55,23 @@ const DateRangePicker = ({ rangeText = dateRanges.last90Days, onDateChange }: Da
 
     switch (selectRangeText) {
       case dateRanges.today:
-        setDateValues([getDateInPast(0, true), new Date()]);
+        setDates([new DateObject(getDateInPast(0, true)), new DateObject(new Date())]);
         break;
       case dateRanges.yesterday:
         fromDate = getDateInPast(1, true);
-        setDateValues([fromDate, new Date()]);
+        setDates([new DateObject(fromDate), new DateObject(getDateInPast(1, false))]);
         break;
       case dateRanges.last7Days:
         fromDate = getDateInPast(7, true);
-
-        // const blah: DateObject[] = [new DateObject(fromDate), new DateObject(getDateInPast(7, false))];
-        // console.log('blah', JSON.stringify(blah));
-        setDateValues([fromDate, new Date()]);
+        setDates([new DateObject(fromDate), new DateObject(new Date())]);
         break;
       case dateRanges.last30Days:
         fromDate = getDateInPast(30, true);
-        setDateValues([fromDate, new Date()]);
+        setDates([new DateObject(fromDate), new DateObject(new Date())]);
         break;
       case dateRanges.last90Days:
         fromDate = getDateInPast(90, true);
-        setDateValues([fromDate, new Date()]);
+        setDates([new DateObject(fromDate), new DateObject(new Date())]);
         break;
     }
   }, [selectRangeText]);
@@ -143,52 +121,20 @@ const DateRangePicker = ({ rangeText = dateRanges.last90Days, onDateChange }: Da
         </DropdownMenu.Portal>
       </DropdownMenu.Root>
 
-      <div className={classNames(pillClasses, 'rounded-r-full flex py-2')}>
+      <div className={classNames(pillClasses, 'rounded-r-full flex py-2 pr-4')}>
         <DatePicker
-          value={dateValues}
-          onChange={(changes: DateObject[]) => setDateValues(changes)}
-          // onChange={(values: DateObject[]) => {
-          //   // console.log('onChange values', values);
-          //   // setFromDate(values[0].toDate());
-          //   console.log(JSON.stringify(values));
-          //   // setToDate(values[1].toDate());
-          //   setDates([values[0].toDate(), values[1].toDate()]);
-          //   // setValues(values);
-          // }}
+          value={dates}
+          onChange={(changes: DateObject[]) => {
+            setDates(changes);
+            setSelectRangeText('Custom');
+          }}
           range
           rangeHover
+          maxDate={new Date()}
           render={<DateRangeInput />}
+          className="green"
         />
       </div>
-      {/* <div className={classNames(pillClasses, 'rounded-r-full flex flex-col-2')}>
-        <DateRange
-          showOneCalendar
-          disabledDate={afterToday && afterToday()}
-          cleanable={false}
-          appearance="subtle"
-          character=" - "
-          editable={false}
-          format="MMM do, y"
-          value={[fromDate, toDate]}
-          size="md"
-          ranges={[]}
-          caretAs={DateRangeIcon}
-          renderValue={(value) => {
-            if (selectRangeText === dateRanges.today || selectRangeText === dateRanges.yesterday) {
-              return format(value[0], 'MMM do');
-            }
-            const dateFormat = getDateFormat(value[0], value[1]);
-            return format(value[0], dateFormat) + ' - ' + format(value[1], dateFormat);
-          }}
-          onOk={(item) => {
-            if (item !== null) {
-              setFromDate(item[0]);
-              setToDate(item[1]);
-              setSelectRangeText('Custom');
-            }
-          }}
-        />
-      </div> */}
     </div>
   );
 };
