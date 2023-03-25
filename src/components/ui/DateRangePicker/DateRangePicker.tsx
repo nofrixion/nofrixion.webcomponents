@@ -9,7 +9,7 @@ import DatePicker, { DateObject } from 'react-multi-date-picker';
 import DateRangeInput from './DateRangeInput';
 
 const pillClasses =
-  'text-defaultText hover:text-greyText bg-[#EDF2F7] text-sm whitespace-nowrap border-[1px] border-[#D5DBDD] cursor-pointer';
+  'text-defaultText hover:text-greyText bg-greyBg text-sm whitespace-nowrap border-[1px] border-[#D5DBDD] cursor-pointer';
 
 const actionItemClassNames =
   'group text-xs leading-none rounded-1 flex items-center relative select-none outline-none cursor-pointer py-1';
@@ -18,7 +18,7 @@ const actionItem = cva(actionItemClassNames, {
   variants: {
     intent: {
       neutral: ['data-[highlighted]:text-greyText'],
-      selected: ['text-highlightedGreenText data-[highlighted]:cursor-default'],
+      selected: ['text-greenText data-[highlighted]:cursor-default'],
     },
   },
   defaultVariants: {

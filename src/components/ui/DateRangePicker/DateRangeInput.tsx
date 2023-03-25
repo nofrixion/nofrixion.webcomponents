@@ -1,10 +1,6 @@
 import { format } from 'date-fns';
 import { getDateFormat } from '../../../utils/formatters';
 
-interface DateRangeInputProps {
-  displayText: string;
-}
-
 const DateRangeInput = (props: any) => {
   let fromDate;
   let toDate;
