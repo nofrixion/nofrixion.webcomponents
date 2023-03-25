@@ -12,12 +12,12 @@ const pillClasses =
   'text-defaultText hover:text-greyText bg-[#EDF2F7] text-sm whitespace-nowrap border-[1px] border-[#D5DBDD] cursor-pointer';
 
 const actionItemClassNames =
-  'group text-xs leading-none rounded-1 flex items-center relative select-none outline-none cursor-pointer py-2';
+  'group text-xs leading-none rounded-1 flex items-center relative select-none outline-none cursor-pointer py-1';
 
 const actionItem = cva(actionItemClassNames, {
   variants: {
     intent: {
-      neutral: ['data-[highlighted]:text-[#00264D]'],
+      neutral: ['data-[highlighted]:text-greyText'],
       selected: ['text-highlightedGreenText data-[highlighted]:cursor-default'],
     },
   },
