@@ -15,7 +15,7 @@ const DateRangeInput = (props: any) => {
   }
 
   if (fromDate && toDate) {
-    const dateFormat = getDateFormat(fromDate, toDate);
+    const dateFormat = getDateFormat(fromDate);
 
     if (fromDate.getTime() === toDate.getTime()) {
       formattedDate = `${format(fromDate, dateFormat)}`;
@@ -23,7 +23,7 @@ const DateRangeInput = (props: any) => {
       formattedDate = `${format(fromDate, dateFormat)} - ${format(toDate, dateFormat)}`;
     }
   } else if (fromDate) {
-    formattedDate = `${format(fromDate, 'MMM do')}`;
+    formattedDate = `${format(fromDate, getDateFormat(fromDate))}`;
   }
 
   return (

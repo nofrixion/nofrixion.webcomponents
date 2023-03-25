@@ -92,8 +92,10 @@ const getDateInPast = (daysToGoBack: number, startOfDay: boolean): Date => {
   return date;
 };
 
-const getDateFormat = (fromDate: Date, toDate: Date): string => {
-  if (fromDate.getFullYear() !== toDate.getFullYear()) {
+const getDateFormat = (date: Date): string => {
+  const today = new Date();
+
+  if (date.getFullYear() < today.getFullYear()) {
     return 'MMM do, y';
   }
 
