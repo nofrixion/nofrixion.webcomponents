@@ -39,12 +39,21 @@ interface DateRangeFilterProps {
 const DateRangePicker = ({ rangeText = dateRanges.last90Days, onDateChange }: DateRangeFilterProps) => {
   const [dates, setDates] = useState<DateObject[]>([]);
   const [selectRangeText, setSelectRangeText] = useState(rangeText);
+  const [isClosed, setIsClosed] = useState(true);
 
-  useEffect(() => {
-    if (dates.length === 2) {
+  const onDateChangeHandler = () => {
+    if (dates.length === 2 && isClosed) {
       onDateChange && onDateChange({ fromDate: new Date(dates[0].toDate()), toDate: new Date(dates[1].toDate()) });
     }
+  };
+
+  useEffect(() => {
+    onDateChangeHandler();
   }, [dates]);
+
+  useEffect(() => {
+    onDateChangeHandler();
+  }, [isClosed]);
 
   useEffect(() => {
     setSelectRangeText(rangeText);
@@ -109,6 +118,7 @@ const DateRangePicker = ({ rangeText = dateRanges.last90Days, onDateChange }: Da
               {Object.values(dateRanges).map((daterange) => {
                 return (
                   <DropdownMenu.Item
+                    key={daterange}
                     className={actionItem({ intent: selectRangeText === daterange ? 'selected' : 'neutral' })}
                     onClick={() => setSelectRangeText(daterange)}
                   >
@@ -127,6 +137,13 @@ const DateRangePicker = ({ rangeText = dateRanges.last90Days, onDateChange }: Da
           onChange={(changes: DateObject[]) => {
             setDates(changes);
             setSelectRangeText('Custom');
+          }}
+          onOpen={() => {
+            setIsClosed(false);
+          }}
+          onClose={() => {
+            setIsClosed(true);
+            return true;
           }}
           range
           rangeHover
