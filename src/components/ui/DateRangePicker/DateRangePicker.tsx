@@ -1,15 +1,15 @@
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { dateRanges } from '../../../utils/constants';
 import { getDateInPast } from '../../../utils/formatters';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { motion } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import DatePicker, { DateObject } from 'react-multi-date-picker';
+import DatePicker, { CalendarProps, DateObject } from 'react-multi-date-picker';
 import DateRangeInput from './DateRangeInput';
 
 const pillClasses =
-  'text-defaultText hover:text-greyText bg-greyBg text-sm whitespace-nowrap border-[1px] border-[#D5DBDD] cursor-pointer';
+  'text-defaultText hover:text-greyText bg-greyBg text-sm whitespace-nowrap border-[1px] border-[#D5DBDD] cursor-pointer select-none';
 
 const actionItemClassNames =
   'group text-xs leading-none rounded-1 flex items-center relative select-none outline-none cursor-pointer py-1';
@@ -40,9 +40,11 @@ const DateRangePicker = ({ rangeText = dateRanges.last90Days, onDateChange }: Da
   const [dates, setDates] = useState<DateObject[]>([]);
   const [selectRangeText, setSelectRangeText] = useState(rangeText);
   const [isClosed, setIsClosed] = useState(true);
+  const datepickerRef = useRef<any>();
 
   const onDateChangeHandler = () => {
     if (dates.length === 2 && isClosed) {
+      datepickerRef.current.closeCalendar();
       onDateChange && onDateChange({ fromDate: new Date(dates[0].toDate()), toDate: new Date(dates[1].toDate()) });
     }
   };
@@ -133,6 +135,7 @@ const DateRangePicker = ({ rangeText = dateRanges.last90Days, onDateChange }: Da
 
       <div className={classNames(pillClasses, 'rounded-r-full flex py-2 pr-4')}>
         <DatePicker
+          ref={datepickerRef}
           value={dates}
           onChange={(changes: DateObject[]) => {
             setDates(changes);
