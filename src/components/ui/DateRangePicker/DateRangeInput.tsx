@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { format, isEqual } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { getDateFormat } from '../../../utils/formatters';
 
@@ -24,7 +24,7 @@ const DateRangeInput = (props: DateRangeInputProps) => {
     if (fromDate && toDate) {
       const dateFormat = getDateFormat(fromDate);
 
-      if (fromDate.getTime() === toDate.getTime()) {
+      if (isEqual(fromDate.getTime(), toDate.getTime())) {
         setFormattedDate(`${format(fromDate, dateFormat)}`);
       } else {
         setFormattedDate(`${format(fromDate, dateFormat)} - ${format(toDate, dateFormat)}`);
