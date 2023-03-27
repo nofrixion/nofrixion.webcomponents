@@ -122,7 +122,7 @@
 .green .rmdp-range-hover {
   color: #73808c;
   background-color: var(--rmdp-range-hover-green);
-  box-shadow: 0 0 3px var(--rmdp-shadow-green);
+  /* box-shadow: 0 0 3px var(--rmdp-shadow-green); */
 }
 
 .green .rmdp-arrow {
