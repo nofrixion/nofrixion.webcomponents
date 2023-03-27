@@ -9,7 +9,7 @@ import DatePicker, { CalendarProps, DateObject } from 'react-multi-date-picker';
 import DateRangeInput from './DateRangeInput';
 
 const pillClasses =
-  'text-defaultText hover:text-greyText bg-greyBg text-sm whitespace-nowrap border-[1px] border-[#D5DBDD] cursor-pointer select-none';
+  'text-defaultText hover:text-greyText bg-greyBg text-sm whitespace-nowrap border-[1px] border-[#D5DBDD] cursor-pointer select-none stroke-defaultText hover:stroke-controlGrey';
 
 const actionItemClassNames =
   'group text-xs leading-none rounded-1 flex items-center relative select-none outline-none cursor-pointer py-1';
@@ -97,14 +97,7 @@ const DateRangePicker = ({ rangeText = dateRanges.last90Days, onDateChange }: Da
             </div>
 
             <div className="py-4">
-              <svg
-                className="stroke-defaultText"
-                width="10"
-                height="6"
-                viewBox="0 0 10 6"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg className="" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M9 1L5 5L1 1" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>

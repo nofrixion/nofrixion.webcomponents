@@ -30,7 +30,7 @@ const DateRangeInput = (props: any) => {
     <div className="flex px-2">
       <div className="pt-1 pr-1">
         <svg
-          className="ml-2 stroke-controlGreyHover"
+          className="ml-2"
           width="1em"
           height="1em"
           viewBox="0 0 14 14"
