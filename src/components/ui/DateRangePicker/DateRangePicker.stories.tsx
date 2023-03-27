@@ -8,14 +8,6 @@ import { action } from '@storybook/addon-actions';
 export default {
   title: 'UI/DateRangePicker',
   component: DateRangePicker,
-  argTypes: {
-    rangeText: {
-      control: {
-        type: 'select',
-        options: Object.values(dateRanges),
-      },
-    },
-  },
 } as ComponentMeta<typeof DateRangePicker>;
 
 const Template: ComponentStory<typeof DateRangePicker> = (args) => <DateRangePicker {...args} />;
@@ -23,6 +15,5 @@ const Template: ComponentStory<typeof DateRangePicker> = (args) => <DateRangePic
 export const Showcase = Template.bind({});
 
 Showcase.args = {
-  rangeText: dateRanges.last90Days,
   onDateChange: action('Date Changed'),
 };

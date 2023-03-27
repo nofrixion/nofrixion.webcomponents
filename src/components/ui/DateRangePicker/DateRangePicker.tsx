@@ -1,12 +1,14 @@
 import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import { dateRanges } from '../../../utils/constants';
-import { getDateInPast } from '../../../utils/formatters';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { motion } from 'framer-motion';
 import { cva } from 'class-variance-authority';
 import DatePicker, { CalendarProps, DateObject } from 'react-multi-date-picker';
 import DateRangeInput from './DateRangeInput';
+import './DateRangePicker.css';
+import { add, startOfDay, endOfDay, isToday, isYesterday } from 'date-fns';
+import { getSelectRangeText } from '../../../utils/formatters';
 
 const pillClasses =
   'text-defaultText hover:text-greyText bg-greyBg text-sm whitespace-nowrap border-[1px] border-[#D5DBDD] cursor-pointer select-none stroke-defaultText hover:stroke-controlGrey';
@@ -40,11 +42,10 @@ const DateRangePicker = ({ rangeText = dateRanges.last90Days, onDateChange }: Da
   const [dates, setDates] = useState<DateObject[]>([]);
   const [selectRangeText, setSelectRangeText] = useState(rangeText);
   const [isClosed, setIsClosed] = useState(true);
-  const datepickerRef = useRef<any>();
 
   const onDateChangeHandler = () => {
     if (dates.length === 2 && isClosed) {
-      datepickerRef.current.closeCalendar();
+      setSelectRangeText(getSelectRangeText(dates[0].toDate(), dates[1].toDate()));
       onDateChange && onDateChange({ fromDate: new Date(dates[0].toDate()), toDate: new Date(dates[1].toDate()) });
     }
   };
@@ -63,26 +64,31 @@ const DateRangePicker = ({ rangeText = dateRanges.last90Days, onDateChange }: Da
 
   useEffect(() => {
     let fromDate = new Date();
+    let toDate = new Date();
 
     switch (selectRangeText) {
       case dateRanges.today:
-        setDates([new DateObject(getDateInPast(0, true)), new DateObject(new Date())]);
+        fromDate = startOfDay(new Date());
+        setDates([new DateObject(fromDate), new DateObject(new Date())]);
         break;
       case dateRanges.yesterday:
-        fromDate = getDateInPast(1, true);
-        setDates([new DateObject(fromDate), new DateObject(getDateInPast(1, false))]);
+        fromDate = startOfDay(add(new Date(), { days: -1 }));
+        toDate = endOfDay(add(new Date(), { days: -1 }));
+        setDates([new DateObject(fromDate), new DateObject(toDate)]);
         break;
       case dateRanges.last7Days:
-        fromDate = getDateInPast(7, true);
+        fromDate = startOfDay(add(new Date(), { days: -7 }));
         setDates([new DateObject(fromDate), new DateObject(new Date())]);
         break;
       case dateRanges.last30Days:
-        fromDate = getDateInPast(30, true);
+        fromDate = startOfDay(add(new Date(), { days: -30 }));
         setDates([new DateObject(fromDate), new DateObject(new Date())]);
         break;
       case dateRanges.last90Days:
-        fromDate = getDateInPast(90, true);
+        fromDate = startOfDay(add(new Date(), { days: -90 }));
         setDates([new DateObject(fromDate), new DateObject(new Date())]);
+        break;
+      default:
         break;
     }
   }, [selectRangeText]);
@@ -128,11 +134,9 @@ const DateRangePicker = ({ rangeText = dateRanges.last90Days, onDateChange }: Da
 
       <div className={classNames(pillClasses, 'rounded-r-full flex py-2 pr-4')}>
         <DatePicker
-          ref={datepickerRef}
           value={dates}
           onChange={(changes: DateObject[]) => {
             setDates(changes);
-            setSelectRangeText('Custom');
           }}
           onOpen={() => {
             setIsClosed(false);
@@ -144,7 +148,9 @@ const DateRangePicker = ({ rangeText = dateRanges.last90Days, onDateChange }: Da
           range
           rangeHover
           maxDate={new Date()}
-          render={<DateRangeInput />}
+          render={(value: string[], openCalendar: () => void) => {
+            return <DateRangeInput value={value} openCalendar={openCalendar} />;
+          }}
           className="green"
         />
       </div>

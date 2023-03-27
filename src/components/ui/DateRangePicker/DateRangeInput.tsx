@@ -1,30 +1,38 @@
 import { format } from 'date-fns';
+import { useEffect, useState } from 'react';
 import { getDateFormat } from '../../../utils/formatters';
 
-const DateRangeInput = (props: any) => {
-  let fromDate;
-  let toDate;
-  let formattedDate;
+interface DateRangeInputProps {
+  value: string[]; // [fromDate, toDate]
+  openCalendar: () => void;
+}
+
+const DateRangeInput = (props: DateRangeInputProps) => {
+  const [formattedDate, setFormattedDate] = useState<string>('');
+  let fromDate: Date | undefined;
+  let toDate: Date | undefined;
 
   if (props.value[0]) {
-    fromDate = new Date(props.value[0] as Date);
+    fromDate = new Date(props.value[0]);
   }
 
   if (props.value[1]) {
-    toDate = new Date(props.value[1] as Date);
+    toDate = new Date(props.value[1]);
   }
 
-  if (fromDate && toDate) {
-    const dateFormat = getDateFormat(fromDate);
+  useEffect(() => {
+    if (fromDate && toDate) {
+      const dateFormat = getDateFormat(fromDate);
 
-    if (fromDate.getTime() === toDate.getTime()) {
-      formattedDate = `${format(fromDate, dateFormat)}`;
-    } else {
-      formattedDate = `${format(fromDate, dateFormat)} - ${format(toDate, dateFormat)}`;
+      if (fromDate.getTime() === toDate.getTime()) {
+        setFormattedDate(`${format(fromDate, dateFormat)}`);
+      } else {
+        setFormattedDate(`${format(fromDate, dateFormat)} - ${format(toDate, dateFormat)}`);
+      }
+    } else if (fromDate) {
+      setFormattedDate(`${format(fromDate, getDateFormat(fromDate))}`);
     }
-  } else if (fromDate) {
-    formattedDate = `${format(fromDate, getDateFormat(fromDate))}`;
-  }
+  }, [fromDate, toDate]);
 
   return (
     <div className="flex px-2">
