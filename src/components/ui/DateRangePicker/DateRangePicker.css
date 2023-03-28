@@ -15,12 +15,12 @@
   --rmdp-today: #edf2f7;
 }
 
-.rmdp-shadow {
+.green .rmdp-shadow {
   border: none;
   box-shadow: 0 0 8px rgba(4, 41, 49, 0.1);
 }
 
-.rmdp-range {
+.green .rmdp-range {
   color: white;
   background-color: var(--rmdp-primary);
   box-shadow: none;
