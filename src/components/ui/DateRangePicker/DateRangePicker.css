@@ -33,6 +33,7 @@
 .green .rmdp-week-day {
   color: var(--rmdp-grey);
   font-size: var(--rmdp-font-size-week-day);
+  font-weight: 400;
 }
 
 .green .rmdp-day.rmdp-deactive {
@@ -111,5 +112,5 @@
 
 .green .rmdp-header-values span {
   color: var(--rmdp-primary-default);
-  font-weight: 600;
+  font-weight: 400;
 }
