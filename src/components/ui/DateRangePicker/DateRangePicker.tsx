@@ -11,16 +11,16 @@ import { add, startOfDay, endOfDay, isToday, isYesterday } from 'date-fns';
 import { getSelectRangeText } from '../../../utils/formatters';
 
 const pillClasses =
-  'text-defaultText hover:text-greyText bg-greyBg text-sm whitespace-nowrap border-[1px] border-[#D5DBDD] cursor-pointer select-none stroke-defaultText hover:stroke-controlGrey';
+  'text-defaultText leading-6 hover:text-greyText bg-transparent text-sm whitespace-nowrap border-[1px] border-[#D5DBDD] cursor-pointer select-none stroke-defaultText hover:stroke-controlGrey';
 
 const actionItemClassNames =
-  'group text-xs leading-none rounded-1 flex items-center relative select-none outline-none cursor-pointer py-1';
+  'group text-sm leading-6 rounded-1 flex items-center relative select-none outline-none cursor-pointer';
 
 const actionItem = cva(actionItemClassNames, {
   variants: {
     intent: {
       neutral: ['data-[highlighted]:text-greyText'],
-      selected: ['text-greenText data-[highlighted]:cursor-default'],
+      selected: ['text-[#009999] data-[highlighted]:cursor-default'],
     },
   },
   defaultVariants: {
@@ -34,14 +34,15 @@ export type DateRange = {
 };
 
 interface DateRangeFilterProps {
-  rangeText: string;
   onDateChange: (dateRange: DateRange) => void;
 }
 
-const DateRangePicker = ({ rangeText = dateRanges.last90Days, onDateChange }: DateRangeFilterProps) => {
+const DateRangePicker = ({ onDateChange }: DateRangeFilterProps) => {
   const [dates, setDates] = useState<DateObject[]>([]);
-  const [selectRangeText, setSelectRangeText] = useState(rangeText);
+  const [selectRangeText, setSelectRangeText] = useState(dateRanges.last90Days);
   const [isClosed, setIsClosed] = useState(true);
+
+  const weekDays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
   const onDateChangeHandler = () => {
     if (dates.length === 2 && isClosed) {
@@ -57,10 +58,6 @@ const DateRangePicker = ({ rangeText = dateRanges.last90Days, onDateChange }: Da
   useEffect(() => {
     onDateChangeHandler();
   }, [isClosed]);
-
-  useEffect(() => {
-    setSelectRangeText(rangeText);
-  }, [rangeText]);
 
   useEffect(() => {
     let fromDate = new Date();
@@ -152,6 +149,8 @@ const DateRangePicker = ({ rangeText = dateRanges.last90Days, onDateChange }: Da
             return <DateRangeInput value={value} openCalendar={openCalendar} />;
           }}
           className="green"
+          arrow={false}
+          weekDays={weekDays}
         />
       </div>
     </div>

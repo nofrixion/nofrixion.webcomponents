@@ -35,8 +35,8 @@ const DateRangeInput = (props: DateRangeInputProps) => {
   }, [fromDate, toDate]);
 
   return (
-    <div className="flex px-2">
-      <div className="pt-1 pr-1">
+    <div className="flex">
+      <div className="pt-1.5 pr-1">
         <svg
           className="ml-2"
           width="1em"
@@ -51,9 +51,9 @@ const DateRangeInput = (props: DateRangeInputProps) => {
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <path d="M0.375 4.875H11.625" stroke="#454D54" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M3.375 3V0.375" stroke="#454D54" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M8.625 3V0.375" stroke="#454D54" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M0.375 4.875H11.625" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M3.375 3V0.375" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M8.625 3V0.375" strokeLinecap="round" strokeLinejoin="round" />
           </g>
           <defs>
             <clipPath id="clip0_1362_8741">
