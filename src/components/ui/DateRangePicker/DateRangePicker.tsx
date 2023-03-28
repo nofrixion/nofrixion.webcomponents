@@ -152,7 +152,7 @@ const DateRangePicker = ({ onDateChange }: DateRangeFilterProps) => {
           className="green"
           arrow={false}
           weekDays={weekDays}
-          // offsetY={9}
+          offsetY={13}
         />
       </div>
     </div>
