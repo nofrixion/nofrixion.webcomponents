@@ -13,6 +13,8 @@
   --rmdp-font-size-week-day: 10px;
   --rmdp-grey: #73808c;
   --rmdp-today: #edf2f7;
+  --rmdp-control-grey: #8f99a3;
+  --rmdp-control-grey-hover: #454d54;
 }
 
 .green.rmdp-shadow {
@@ -49,12 +51,18 @@
 }
 
 .green .rmdp-arrow {
-  border: solid var(--rmdp-primary-green);
+  border: solid var(--rmdp-control-grey);
+  border-width: 0 2px 2px 0;
+}
+
+.green .rmdp-arrow:hover {
+  border: solid var(--rmdp-control-grey-hover);
   border-width: 0 2px 2px 0;
 }
 
 .green .rmdp-arrow-container:hover {
-  background-color: var(--rmdp-primary-green);
+  background-color: transparent;
+  box-shadow: none;
 }
 
 .green .rmdp-panel-body::-webkit-scrollbar-thumb {

@@ -1,14 +1,15 @@
 import classNames from 'classnames';
-import { useEffect, useRef, useState } from 'react';
+import { MouseEventHandler, useEffect, useState } from 'react';
 import { dateRanges } from '../../../utils/constants';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { motion } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import DatePicker, { CalendarProps, DateObject } from 'react-multi-date-picker';
+import DatePicker, { DateObject } from 'react-multi-date-picker';
 import DateRangeInput from './DateRangeInput';
 import './DateRangePicker.css';
 import { add, startOfDay, endOfDay, isToday, isYesterday } from 'date-fns';
 import { getSelectRangeText } from '../../../utils/formatters';
+import DateRangeButton from './DateRangeButton';
 
 const pillClasses =
   'text-defaultText leading-6 hover:text-greyText bg-transparent text-sm whitespace-nowrap border-[1px] border-[#D5DBDD] cursor-pointer select-none stroke-defaultText hover:stroke-controlGrey';
@@ -153,6 +154,13 @@ const DateRangePicker = ({ onDateChange }: DateRangeFilterProps) => {
           arrow={false}
           weekDays={weekDays}
           offsetY={13}
+          renderButton={(
+            direction: string,
+            handleClick: MouseEventHandler<HTMLButtonElement> | undefined,
+            disabled: boolean,
+          ) => {
+            return <DateRangeButton direction={direction} handleClick={handleClick} disabled={disabled} />;
+          }}
         />
       </div>
     </div>
