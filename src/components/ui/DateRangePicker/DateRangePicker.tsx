@@ -101,8 +101,8 @@ const DateRangePicker = ({ onDateChange }: DateRangeFilterProps) => {
             </div>
 
             <div className="py-4">
-              <svg className="" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 1L5 5L1 1" strokeLinecap="round" strokeLinejoin="round" />
+              <svg width="10" height="8" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1.25L5 5.25L9 1.25" strokeLinecap="square" />
               </svg>
             </div>
           </div>
