@@ -47,7 +47,8 @@ const DateRangePicker = ({ onDateChange }: DateRangeFilterProps) => {
   const onDateChangeHandler = () => {
     if (dates.length === 2 && isClosed) {
       setSelectRangeText(getSelectRangeText(dates[0].toDate(), dates[1].toDate()));
-      onDateChange && onDateChange({ fromDate: new Date(dates[0].toDate()), toDate: new Date(dates[1].toDate()) });
+      onDateChange &&
+        onDateChange({ fromDate: new Date(dates[0].toDate()), toDate: endOfDay(new Date(dates[1].toDate())) });
     }
   };
 
