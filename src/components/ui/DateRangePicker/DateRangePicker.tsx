@@ -14,7 +14,7 @@ const pillClasses =
   'text-defaultText leading-6 hover:text-greyText bg-transparent text-sm whitespace-nowrap border-[1px] border-[#D5DBDD] cursor-pointer select-none stroke-defaultText hover:stroke-controlGrey';
 
 const actionItemClassNames =
-  'group text-sm leading-6 rounded-1 flex items-center relative select-none outline-none cursor-pointer';
+  'group text-sm leading-6 py-2 rounded-1 flex items-center relative select-none outline-none cursor-pointer';
 
 const actionItem = cva(actionItemClassNames, {
   variants: {
