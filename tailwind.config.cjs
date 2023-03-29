@@ -10,6 +10,7 @@ module.exports = {
         controlGreyHover: '#454D54',
         negativeRed: '#F32448',
         highlightedNegativeRed: '#FF6681',
+        darkerNegativeRed: '#DA0C30',
         greyBg: '#EDF2F7',
         positiveActionBackground: '#40BFBF',
         negativeActionBackground: '#E9EDF1',

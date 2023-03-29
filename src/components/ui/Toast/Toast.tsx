@@ -22,8 +22,23 @@ const makeToast = (type: 'success' | 'error' | 'info' | 'warning', message: stri
 };
 
 const CloseButton = ({ closeToast }: CloseButtonProps) => (
-  <a onClick={closeToast} className="py-2 pr-4">
-    <img src={closeIcon} alt="Close" className="w-3 h-3" />
+  <a onClick={closeToast} className="top-0 bottom-0 my-auto">
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      className="group [&>path]:stroke-[#454d54] w-3 h-3"
+      version="1.1"
+    >
+      <path d="m 12.354,0.354 -12.00000001,12" stroke="none" className="group-hover:stroke-[#8F99A3]" id="path2" />
+      <path
+        d="M 0.35355339,0.35355339 12.353553,12.353553"
+        stroke="none"
+        className="group-hover:stroke-[#8F99A3]"
+        id="path2-8"
+      />
+    </svg>
   </a>
 );
 
@@ -35,7 +50,7 @@ const Toaster = ({ positionY, positionX, duration = 5000 }: ToastProps) => {
       hideProgressBar={true}
       limit={3}
       transition={Slide}
-      className="text-xs font-normal"
+      className="text-sm leading-[18px] font-normal"
       icon={false}
       theme="colored"
       closeButton={CloseButton}

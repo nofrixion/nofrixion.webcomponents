@@ -54,7 +54,7 @@ const PaymentRequestTable = ({ token, apiUrl = 'https://api.nofrixion.com/api/v1
     let link = `${apiUrl}/nextgen/pay/${paymentRequest.id}`;
     await navigator.clipboard.writeText(link);
 
-    makeToast('success', 'Payment request link copied to clipboard.');
+    makeToast('success', 'Link copied into clipboard.');
   };
 
   const onDuplicatePaymentRequest = (paymentRequest: LocalPaymentRequest) => {

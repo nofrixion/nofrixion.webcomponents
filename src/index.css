@@ -97,10 +97,14 @@
   --toastify-text-color-success: #00264d;
   --toastify-text-color-warning: #00264d;
   --toastify-text-color-error: #00264d;
+  padding: 14px 24px !important;
+  box-shadow: 0 0 8px rgba(4, 41, 49, 0.1) !important;
+  border-radius: 8px !important;
 }
 
 .Toastify__toast-body {
   margin: 0 !important;
+  padding: 0 !important;
 }
 
 .Toastify__toast--info > .Toastify__toast-body > div,
