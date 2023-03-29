@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { MouseEventHandler, useEffect, useState } from 'react';
 import { dateRanges } from '../../../utils/constants';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { motion, MotionConfig } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { cva } from 'class-variance-authority';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import DateRangeInput from './DateRangeInput';
@@ -95,7 +95,11 @@ const DateRangePicker = ({ onDateChange }: DateRangeFilterProps) => {
   }, [selectRangeText]);
 
   return (
-    <motion.div animate={{ width: width }} className="overflow-hidden border border-[#D5DBDD] rounded-3xl">
+    <motion.div
+      animate={{ width: width }}
+      transition={{ ease: 'easeOut', duration: 0.25 }}
+      className="overflow-hidden border border-[#D5DBDD] rounded-3xl"
+    >
       <motion.div key={selectRangeText} animate={{ opacity: 1 }} initial={{ opacity: 0.5 }}>
         <div ref={ref} className="flex defaultText w-fit">
           <DropdownMenu.Root>
