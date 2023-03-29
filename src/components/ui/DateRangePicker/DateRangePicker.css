@@ -88,6 +88,10 @@
   border: none;
 }
 
+.green .rmdp-day span {
+  font-size: var(--rmpd-font-size);
+}
+
 .green .rmdp-rtl .rmdp-panel {
   border-left: unset;
   border-right: 1px solid var(--rmdp-secondary-green);

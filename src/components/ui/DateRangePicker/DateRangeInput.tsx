@@ -62,11 +62,9 @@ const DateRangeInput = (props: DateRangeInputProps) => {
           </defs>
         </svg>
       </div>
-      <div>
-        <button className="pl-1" onClick={props.openCalendar}>
-          {formattedDate}
-        </button>
-      </div>
+      <button className="pl-1" onClick={props.openCalendar}>
+        {formattedDate}
+      </button>
     </div>
   );
 };
