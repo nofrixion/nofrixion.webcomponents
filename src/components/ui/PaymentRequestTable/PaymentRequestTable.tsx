@@ -3,9 +3,7 @@ import Pager from '../Pager/Pager';
 import PaymentRequestRow from '../PaymentRequestRow/PaymentRequestRow';
 import ColumnHeader, { SortDirection } from '../ColumnHeader/ColumnHeader';
 import { LocalPaymentRequest } from '../../../api/types/LocalTypes';
-import { makeToast, Toaster } from '../Toast/Toast';
-import CustomDialog from '../Dialog/Dialog';
-import { useState } from 'react';
+import { Toaster } from '../Toast/Toast';
 
 interface PaymentRequestTableProps {
   paymentRequests: LocalPaymentRequest[];
@@ -38,31 +36,18 @@ const PaymentRequestTable = ({
   setContactSortDirection,
   setAmountSortDirection,
 }: PaymentRequestTableProps) => {
-  /* Deletion confirmation dialog */
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [paymentRequestToDelete, setPaymentRequestToDelete] = useState<LocalPaymentRequest | undefined>();
-
-  const closeDeleteDialog = () => {
-    setIsDeleteDialogOpen(false);
-  };
-
-  const onDeletePaymentRequestClicked = async (paymentRequest: LocalPaymentRequest) => {
-    setPaymentRequestToDelete(paymentRequest);
-    setIsDeleteDialogOpen(true);
-  };
-
-  const confirmDeletePaymentRequest = async () => {
-    if (paymentRequestToDelete) {
-      onPaymentRequestDeleteClicked(paymentRequestToDelete);
-      setPaymentRequestToDelete(undefined);
-    }
-
-    setIsDeleteDialogOpen(false);
-  };
-
   return (
     <>
       <table className="table-fixed text-left w-full">
+        <colgroup>
+          <col />
+          <col />
+          <col />
+          <col />
+          <col />
+          <col />
+          <col className="w-8" />
+        </colgroup>
         <thead>
           <tr>
             <th className={classNames(commonThClasses, 'w-44 text-left')}>
@@ -83,7 +68,7 @@ const PaymentRequestTable = ({
                 onSort={(sortDirection) => setContactSortDirection && setContactSortDirection(sortDirection)}
               />
             </th>
-            <th className={classNames(commonThClasses, 'w-44 text-right')}>
+            <th className={classNames(commonThClasses, 'w-44 text-right pr-0')}>
               <ColumnHeader
                 label="Amount"
                 onSort={(sortDirection) => setAmountSortDirection && setAmountSortDirection(sortDirection)}
@@ -98,7 +83,7 @@ const PaymentRequestTable = ({
             However, it's used to display the
             pagination component in the table header
           */}
-            <th className={classNames(commonThClasses, 'pr-4')}>
+            <th colSpan={2} className={commonThClasses}>
               <Pager
                 pageSize={pageSize}
                 totalRecords={totalRecords}
@@ -114,23 +99,13 @@ const PaymentRequestTable = ({
               {...paymentRequest}
               onClick={() => onPaymentRequestClicked && onPaymentRequestClicked(paymentRequest)}
               onDuplicate={() => onPaymentRequestDuplicateClicked && onPaymentRequestDuplicateClicked(paymentRequest)}
-              onDelete={() => onDeletePaymentRequestClicked(paymentRequest)}
+              onDelete={() => onPaymentRequestDeleteClicked && onPaymentRequestDeleteClicked(paymentRequest)}
               onCopyLink={() => onPaymentRequestCopyLinkClicked && onPaymentRequestCopyLinkClicked(paymentRequest)}
             />
           ))}
         </tbody>
       </table>
-      <Toaster positionY="bottom" positionX="right" duration={5000} />
-      <CustomDialog
-        isOpen={isDeleteDialogOpen}
-        onClose={closeDeleteDialog}
-        title="Confirm payment request deletion."
-        message="Are you sure you want to delete this payment request?"
-        okButtonText="Delete"
-        cancelButtonText="Cancel"
-        okButtonOnClick={confirmDeletePaymentRequest}
-        cancelButtonOnClick={closeDeleteDialog}
-      />
+      <Toaster positionY="top" positionX="right" duration={5000} />
     </>
   );
 };

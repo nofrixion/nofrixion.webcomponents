@@ -1,5 +1,6 @@
-﻿import { toast, ToastContainer, Zoom } from 'react-toastify';
+﻿import { toast, ToastContainer, Slide, CloseButtonProps } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
+import closeIcon from '../../../assets/images/nf_close.svg';
 
 interface ToastProps {
   positionY: 'top' | 'bottom';
@@ -20,6 +21,12 @@ const makeToast = (type: 'success' | 'error' | 'info' | 'warning', message: stri
   }
 };
 
+const CloseButton = ({ closeToast }: CloseButtonProps) => (
+  <a onClick={closeToast} className="py-2 pr-4">
+    <img src={closeIcon} alt="Close" className="w-3 h-3" />
+  </a>
+);
+
 const Toaster = ({ positionY, positionX, duration = 5000 }: ToastProps) => {
   return (
     <ToastContainer
@@ -27,10 +34,11 @@ const Toaster = ({ positionY, positionX, duration = 5000 }: ToastProps) => {
       autoClose={duration}
       hideProgressBar={true}
       limit={3}
-      transition={Zoom}
+      transition={Slide}
       className="text-xs font-normal"
       icon={false}
       theme="colored"
+      closeButton={CloseButton}
     />
   );
 };

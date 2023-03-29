@@ -92,11 +92,11 @@
   --toastify-color-info: #fff;
   --toastify-color-success: #fff;
   --toastify-color-warning: #f2eed8;
-  --toastify-color-error: #fecaca;
+  --toastify-color-error: #fee9e7;
   --toastify-text-color-info: #00264d;
   --toastify-text-color-success: #00264d;
-  --toastify-text-color-warning: #663300;
-  --toastify-text-color-error: #7f1d1d;
+  --toastify-text-color-warning: #00264d;
+  --toastify-text-color-error: #00264d;
 }
 
 .Toastify__toast-body {

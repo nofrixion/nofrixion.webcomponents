@@ -12,7 +12,7 @@ const actionItem = cva(actionItemClassNames, {
   variants: {
     intent: {
       neutral: ['data-[highlighted]:text-greyText'],
-      negative: ['text-redText data-[highlighted]:text-highlightedRedText'],
+      negative: ['text-negativeRed data-[highlighted]:text-highlightedNegativeRed'],
     },
   },
   defaultVariants: {
