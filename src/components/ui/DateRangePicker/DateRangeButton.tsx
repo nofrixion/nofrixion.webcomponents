@@ -4,7 +4,7 @@ import { MouseEventHandler } from 'react';
 const svgClassNames = (disabled: boolean) => {
   return classNames('h-3 w-3 stroke-controlGrey', {
     'cursor-default': disabled,
-    'cursor-pointer hover:stroke-controlGreyHover': !disabled,
+    'cursor-pointer group-hover:stroke-controlGreyHover': !disabled,
   });
 };
 
@@ -18,7 +18,7 @@ const DateRangeButton = (props: DateRangeButtonProps) => {
   return (
     <>
       {props.direction === 'right' && (
-        <button className="px-2 py-2" onClick={props.handleClick}>
+        <button className="group px-2 py-2" onClick={props.handleClick}>
           <svg
             className={svgClassNames(props.disabled)}
             width="6"
@@ -33,7 +33,7 @@ const DateRangeButton = (props: DateRangeButtonProps) => {
       )}
 
       {props.direction === 'left' && (
-        <button className="px-2 py-2" onClick={props.handleClick}>
+        <button className="group px-2 py-2" onClick={props.handleClick}>
           <svg
             className={svgClassNames(props.disabled)}
             width="6"
