@@ -29,7 +29,7 @@ const Row = ({
 }: PaymentRequestRowProps) => {
   return (
     <tr
-      className="border-b border-[#F1F2F3] cursor-pointer transition-all ease-in-out hover:bg-[#F6F8F9] hover:border-[#E1E5EA]"
+      className="border-b border-[#F1F2F3] cursor-pointer transition-all ease-in-out hover:bg-mainGrey hover:border-[#E1E5EA]"
       onClick={onClick}
     >
       <td className={classNames(commonTdClasses, 'pl-4 py-3')}>

@@ -4,6 +4,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        mainGrey: '#F6F8F9',
         defaultText: '#00264D',
         greyText: '#73808C',
         controlGrey: '#8F99A3',
