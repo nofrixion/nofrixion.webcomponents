@@ -56,11 +56,10 @@ const Row = ({
         <AnimatePresence>
           {isDeleting && (
             <motion.div
-              className={`flex absolute z-10 items-center left-0 top-0 bottom-0 my-auto`}
+              className={`flex absolute z-10 items-center left-0 top-0 bottom-0 my-auto w-full`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              style={{ width: '100%' }}
             >
               <div className="ml-auto mr-11 space-x-1">
                 <button
