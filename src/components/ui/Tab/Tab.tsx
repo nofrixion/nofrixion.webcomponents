@@ -40,27 +40,23 @@ const getDisplayTextForStatus = (status: PaymentRequestStatus) => {
 const selectedClassNames = (classes: string, selected: boolean) => {
   return classNames(classes, {
     'text-defaultText': selected,
-    'text-greyText': !selected,
+    'text-greyText group-hover:text-controlGreyHover cursor-pointer': !selected,
   });
 };
 
 const Tab = ({ status, totalRecords, selected, onSelect }: TabProps) => {
   return (
     <div
-      className={classNames('flex justify-center  cursor-pointer whitespace-nowrap h-20 w-fit', {
+      className={classNames('flex justify-center whitespace-nowrap h-20 w-fit', {
         'border-t-2 border-[#00B2B2] pt-[14px]': selected,
         'pt-4': !selected,
       })}
     >
-      <div className="flex flex-col items-center px-8 pb-3">
-        <span
-          className={selectedClassNames('text-[20px] leading-7 font-semibold hover:text-controlGreyHover', selected)}
-        >
-          {totalRecords}
-        </span>
+      <div className="flex flex-col items-center px-8 pb-3 group">
+        <span className={selectedClassNames('text-[20px] leading-7 font-semibold', selected)}>{totalRecords}</span>
         <div className="flex items-center space-x-1">
           {getIconForStatus(status) && <img src={getIconForStatus(status)} alt="ellipse" className="pr-1" />}
-          <span className={selectedClassNames('text-sm leading-6 font-normal text-defaultText', selected)}>
+          <span className={selectedClassNames('text-sm leading-6 font-normal', selected)}>
             {getDisplayTextForStatus(status)}
           </span>
         </div>

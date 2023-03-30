@@ -18,7 +18,7 @@ const PaymentRequestTable = ({ token, apiUrl = 'https://api.nofrixion.com/api/v1
   const [contactSortDirection, setContactSortDirection] = useState<SortDirection>(SortDirection.NONE);
   const [amountSortDirection, setAmountSortDirection] = useState<SortDirection>(SortDirection.NONE);
 
-  const pageSize = 10;
+  const pageSize = 20;
 
   const { paymentRequests, totalRecords } = usePaymentRequests(
     apiUrl,

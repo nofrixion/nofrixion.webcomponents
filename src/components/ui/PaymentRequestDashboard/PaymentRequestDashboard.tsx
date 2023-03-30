@@ -58,7 +58,7 @@ const PaymentRequestDashboard = () => {
             totalRecords={77}
             selected={unpaidTabSelected}
             onSelect={() => {
-              console.log('All');
+              console.log('Unpaid');
             }}
           ></Tab>
         </Tabs.Trigger>
@@ -68,7 +68,7 @@ const PaymentRequestDashboard = () => {
             totalRecords={234}
             selected={partiallyPaidTabSelected}
             onSelect={() => {
-              console.log('All');
+              console.log('Partially paid');
             }}
           ></Tab>
         </Tabs.Trigger>
@@ -78,7 +78,7 @@ const PaymentRequestDashboard = () => {
             totalRecords={234}
             selected={paidTabSelected}
             onSelect={() => {
-              console.log('All');
+              console.log('Paid');
             }}
           ></Tab>
         </Tabs.Trigger>
