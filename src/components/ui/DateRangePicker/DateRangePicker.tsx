@@ -10,7 +10,7 @@ import './DateRangePicker.css';
 import { add, startOfDay, endOfDay, isToday, isYesterday } from 'date-fns';
 import { getSelectRangeText } from '../../../utils/formatters';
 import DateRangeButton from './DateRangeButton';
-import useMeasure from 'react-use-measure';
+import ResizableComponent from '../ResizableComponent/ResizableComponent';
 
 const pillClasses =
   'text-defaultText leading-6 hover:text-greyText bg-transparent text-sm whitespace-nowrap cursor-pointer select-none stroke-defaultText hover:stroke-controlGrey';
@@ -43,7 +43,6 @@ const DateRangePicker = ({ onDateChange }: DateRangeFilterProps) => {
   const [dates, setDates] = useState<DateObject[]>([]);
   const [selectRangeText, setSelectRangeText] = useState(dateRanges.last90Days);
   const [isClosed, setIsClosed] = useState(true);
-  let [ref, { width }] = useMeasure();
 
   const weekDays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
@@ -95,87 +94,81 @@ const DateRangePicker = ({ onDateChange }: DateRangeFilterProps) => {
   }, [selectRangeText]);
 
   return (
-    <motion.div
-      animate={{ width: width }}
-      transition={{ ease: 'easeOut', duration: 0.25 }}
-      className="overflow-hidden border border-[#D5DBDD] rounded-3xl"
-    >
-      <motion.div key={selectRangeText} animate={{ opacity: 1 }} initial={{ opacity: 0.5 }}>
-        <div ref={ref} className="flex defaultText w-fit">
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger>
-              <div
-                className={classNames(
-                  pillClasses,
-                  'border-inherit border-r flex items-center w-fit space-x-2 pl-4 pr-3',
-                )}
-              >
-                <span className="py-2">{selectRangeText}</span>
+    <div className="flex defaultText w-fit border border-[#D5DBDD] rounded-3xl">
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger>
+          <div
+            className={classNames(
+              pillClasses,
+              'border-inherit border-r flex items-center w-fit space-x-2 pl-4 pr-3 py-2',
+            )}
+          >
+            <ResizableComponent>
+              <span className="py-2">{selectRangeText}</span>
+            </ResizableComponent>
 
-                <svg width="10" height="8" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M1 1.25L5 5.25L9 1.25" strokeLinecap="square" />
-                </svg>
-              </div>
-            </DropdownMenu.Trigger>
-
-            <DropdownMenu.Portal>
-              <DropdownMenu.Content asChild forceMount sideOffset={5} className="px-6">
-                <motion.div
-                  className="min-w-[150px] bg-white rounded-md shadow-[0px_0px_8px_rgba(4,_41,_49,_0.1)] p-4 space-y-4"
-                  initial={{ opacity: 0.5, y: -5, scaleX: 1, scaleY: 1 }}
-                  animate={{ opacity: 1, y: 0, scaleX: 1, scaleY: 1 }}
-                >
-                  {Object.values(dateRanges).map((daterange) => {
-                    return (
-                      <DropdownMenu.Item
-                        key={daterange}
-                        className={actionItem({ intent: selectRangeText === daterange ? 'selected' : 'neutral' })}
-                        onClick={() => setSelectRangeText(daterange)}
-                      >
-                        <span>{daterange}</span>
-                      </DropdownMenu.Item>
-                    );
-                  })}
-                </motion.div>
-              </DropdownMenu.Content>
-            </DropdownMenu.Portal>
-          </DropdownMenu.Root>
-
-          <div className={classNames(pillClasses, 'flex py-2 pr-4')}>
-            <DatePicker
-              value={dates}
-              onChange={(changes: DateObject[]) => {
-                setDates(changes);
-              }}
-              onOpen={() => {
-                setIsClosed(false);
-              }}
-              onClose={() => {
-                setIsClosed(true);
-                return true;
-              }}
-              range
-              rangeHover
-              maxDate={new Date()}
-              render={(value: string[], openCalendar: () => void) => {
-                return <DateRangeInput value={value} openCalendar={openCalendar} />;
-              }}
-              className="green"
-              arrow={false}
-              weekDays={weekDays}
-              offsetY={13}
-              renderButton={(
-                direction: string,
-                handleClick: MouseEventHandler<HTMLButtonElement> | undefined,
-                disabled: boolean,
-              ) => {
-                return <DateRangeButton direction={direction} handleClick={handleClick} disabled={disabled} />;
-              }}
-            />
+            <svg width="10" height="8" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 1.25L5 5.25L9 1.25" strokeLinecap="square" />
+            </svg>
           </div>
-        </div>
-      </motion.div>
-    </motion.div>
+        </DropdownMenu.Trigger>
+
+        <DropdownMenu.Portal>
+          <DropdownMenu.Content asChild forceMount sideOffset={5} className="px-6">
+            <motion.div
+              className="min-w-[150px] bg-white rounded-md shadow-[0px_0px_8px_rgba(4,_41,_49,_0.1)] p-4 space-y-4"
+              initial={{ opacity: 0.5, y: -5, scaleX: 1, scaleY: 1 }}
+              animate={{ opacity: 1, y: 0, scaleX: 1, scaleY: 1 }}
+            >
+              {Object.values(dateRanges).map((daterange) => {
+                return (
+                  <DropdownMenu.Item
+                    key={daterange}
+                    className={actionItem({ intent: selectRangeText === daterange ? 'selected' : 'neutral' })}
+                    onClick={() => setSelectRangeText(daterange)}
+                  >
+                    <span>{daterange}</span>
+                  </DropdownMenu.Item>
+                );
+              })}
+            </motion.div>
+          </DropdownMenu.Content>
+        </DropdownMenu.Portal>
+      </DropdownMenu.Root>
+
+      <div className={classNames(pillClasses, 'flex py-2 pr-4')}>
+        <DatePicker
+          value={dates}
+          onChange={(changes: DateObject[]) => {
+            setDates(changes);
+          }}
+          onOpen={() => {
+            setIsClosed(false);
+          }}
+          onClose={() => {
+            setIsClosed(true);
+            return true;
+          }}
+          range
+          rangeHover
+          maxDate={new Date()}
+          render={(value: string[], openCalendar: () => void) => {
+            return <DateRangeInput value={value} openCalendar={openCalendar} />;
+          }}
+          className="green"
+          arrow={false}
+          weekDays={weekDays}
+          offsetY={13}
+          renderButton={(
+            direction: string,
+            handleClick: MouseEventHandler<HTMLButtonElement> | undefined,
+            disabled: boolean,
+          ) => {
+            return <DateRangeButton direction={direction} handleClick={handleClick} disabled={disabled} />;
+          }}
+        />
+      </div>
+    </div>
   );
 };
 

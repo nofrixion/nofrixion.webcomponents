@@ -1,6 +1,7 @@
 import { format, isEqual } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { getDateFormat } from '../../../utils/formatters';
+import ResizableComponent from '../ResizableComponent/ResizableComponent';
 
 interface DateRangeInputProps {
   value: string[]; // [fromDate, toDate]
@@ -62,9 +63,11 @@ const DateRangeInput = (props: DateRangeInputProps) => {
           </defs>
         </svg>
       </div>
-      <button className="pl-1" onClick={props.openCalendar}>
-        {formattedDate}
-      </button>
+      <ResizableComponent>
+        <button className="pl-1" onClick={props.openCalendar}>
+          {formattedDate}
+        </button>
+      </ResizableComponent>
     </div>
   );
 };
