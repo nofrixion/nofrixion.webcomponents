@@ -14,6 +14,7 @@ module.exports = {
         greyBg: '#EDF2F7',
         positiveActionBackground: '#40BFBF',
         negativeActionBackground: '#E9EDF1',
+        greenText: '#05C786',
       },
       fontSize: {
         '13px': '0.8125rem',

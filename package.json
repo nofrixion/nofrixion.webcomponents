@@ -28,7 +28,9 @@
     "framer-motion": "^10.8.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-multi-date-picker": "^3.3.4",
     "react-to-html-element": "^1.4.7",
+    "react-use-measure": "^2.1.1",
     "react-toastify": "^9.1.2"
   },
   "devDependencies": {

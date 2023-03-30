@@ -1,5 +1,6 @@
-import { formatDistanceToNowStrict, isToday, isYesterday } from 'date-fns';
+import { add, formatDistanceToNowStrict, isEqual, isToday, isYesterday, startOfDay } from 'date-fns';
 import { SortDirection } from '../components/ui/ColumnHeader/ColumnHeader';
+import { dateRanges } from './constants';
 
 // This function formats a date as a string, returning a human-readable
 // representation of either "Today" or "Yesterday" if the date is within the
@@ -78,4 +79,30 @@ const formatPaymentRequestSortExpression = (
   return sortExpression;
 };
 
-export { formatDate, formatAmount, formatPaymentRequestSortExpression };
+const getDateFormat = (date: Date): string => {
+  const today = new Date();
+
+  if (date.getFullYear() < today.getFullYear()) {
+    return 'MMM do, y';
+  }
+
+  return 'MMM do';
+};
+
+const getSelectRangeText = (fromDate: Date, toDate: Date): string => {
+  if (isToday(fromDate) && isToday(toDate)) {
+    return dateRanges.today;
+  } else if (isYesterday(fromDate) && isYesterday(toDate)) {
+    return dateRanges.yesterday;
+  } else if (isToday(toDate) && isEqual(fromDate, startOfDay(add(new Date(), { days: -7 })))) {
+    return dateRanges.last7Days;
+  } else if (isToday(toDate) && isEqual(fromDate, startOfDay(add(new Date(), { days: -30 })))) {
+    return dateRanges.last30Days;
+  } else if (isToday(toDate) && isEqual(fromDate, startOfDay(add(new Date(), { days: -90 })))) {
+    return dateRanges.last90Days;
+  } else {
+    return 'Custom';
+  }
+};
+
+export { formatDate, formatAmount, formatPaymentRequestSortExpression, getDateFormat, getSelectRangeText };
