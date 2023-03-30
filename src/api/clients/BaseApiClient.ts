@@ -39,11 +39,11 @@ export abstract class BaseApiClient {
     }
 
     if (fromDate) {
-      url = `${url}&fromDate=${fromDate.toISOString()}`;
+      url = `${url}&fromDate=${fromDate.toUTCString()}`;
     }
 
     if (toDate) {
-      url = `${url}&toDate=${toDate.toISOString()}`;
+      url = `${url}&toDate=${toDate.toUTCString()}`;
     }
 
     if (status) {
