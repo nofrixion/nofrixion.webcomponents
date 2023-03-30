@@ -17,6 +17,7 @@ const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
   };
 
   return {
+    id: remotePaymentRequest.id,
     status: parseApiStatusToLocalStatus(status),
     createdAt: new Date(inserted),
     contact: {
