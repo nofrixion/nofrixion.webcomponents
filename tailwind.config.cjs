@@ -13,6 +13,8 @@ module.exports = {
         highlightedRedText: '#FF6681',
         greyBg: '#EDF2F7',
         greenText: '#05C786',
+        primaryGreen: '#40BFBF',
+        primaryGreenHover: '#00807F',
       },
       fontSize: {
         '13px': '0.8125rem',

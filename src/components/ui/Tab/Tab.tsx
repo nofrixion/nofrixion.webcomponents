@@ -48,7 +48,7 @@ const Tab = ({ status, totalRecords, selected, onSelect }: TabProps) => {
   return (
     <div
       className={classNames('flex justify-center whitespace-nowrap h-20 w-fit', {
-        'border-t-2 border-[#00B2B2] pt-[14px]': selected,
+        'bg-white border-t-2 border-[#00B2B2] pt-[14px]': selected,
         'pt-4': !selected,
       })}
     >
