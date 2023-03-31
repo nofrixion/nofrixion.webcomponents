@@ -56,6 +56,9 @@ export const usePaymentRequests = (
     createdSortDirection,
     contactSortDirection,
     amountSortDirection,
+    fromDate,
+    toDate,
+    status,
   ]);
 
   return {
