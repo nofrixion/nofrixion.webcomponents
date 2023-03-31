@@ -27,16 +27,19 @@ const Pager = ({ pageSize, totalRecords, onPageChange }: PagerProps) => {
     if (currentPage <= 1) {
       setFromRecord(1);
       setToRecord(getToRecord());
+      console.log('first page ', totalRecords, pageSize, totalPages);
     } else if (currentPage < totalPages) {
       setFromRecord(pageSize * currentPage - pageSize + 1);
       setToRecord(pageSize * currentPage);
+      console.log('middle page');
     } else {
+      console.log('last page');
       setFromRecord(pageSize * currentPage - pageSize + 1);
       setToRecord(totalRecords);
     }
 
     onPageChange(currentPage);
-  }, [currentPage, pageSize]);
+  }, [currentPage, pageSize, totalRecords, totalPages, toRecord, fromRecord]);
 
   useEffect(() => {
     setTotalPages(Math.ceil(totalRecords / pageSize));

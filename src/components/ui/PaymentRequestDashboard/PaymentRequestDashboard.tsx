@@ -2,11 +2,18 @@ import { PaymentRequestStatus } from '../../../api/types/Enums';
 import Tab from '../Tab/Tab';
 import * as Tabs from '@radix-ui/react-tabs';
 import { useEffect, useState } from 'react';
-import DateRangePicker from '../DateRangePicker/DateRangePicker';
+import DateRangePicker, { DateRange } from '../DateRangePicker/DateRangePicker';
 import PrimaryButton from '../PrimaryButton/PrimaryButton';
-import { PaymentRequestMetrics } from '../../../api/types/ApiResponses';
-import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
 import { usePaymentRequestMetrics } from '../../../api/hooks/usePaymentRequestMetrics';
+import PaymentRequestTable from '../PaymentRequestTable/PaymentRequestTable';
+import { SortDirection } from '../ColumnHeader/ColumnHeader';
+import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
+import { usePaymentRequests } from '../../../api/hooks/usePaymentRequests';
+import { LocalPaymentRequest } from '../../../api/types/LocalTypes';
+import { makeToast } from '../Toast/Toast';
+import { RemotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
+import classNames from 'classnames';
+import { add, startOfDay } from 'date-fns';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -14,16 +21,78 @@ interface PaymentRequestDashboardProps {
 }
 
 const PaymentRequestDashboard = ({
-  token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbmlkIjoiN2ZlYmE3MWEtNzM0OS00YTgyLThjOTctODRkZmFkNDRiMTdiIn0.j91GfvpEQeKk2v4XdKH6cDbWz-6rBFomYRdulnti_94',
-  apiUrl = 'https://api-dev.nofrixion.com/api/v1',
+  token,
+  apiUrl = 'https://api.nofrixion.com/api/v1',
 }: PaymentRequestDashboardProps) => {
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+  const [statusSortDirection, setStatusSortDirection] = useState<SortDirection>(SortDirection.NONE);
+  const [createdSortDirection, setCreatedSortDirection] = useState<SortDirection>(SortDirection.NONE);
+  const [contactSortDirection, setContactSortDirection] = useState<SortDirection>(SortDirection.NONE);
+  const [amountSortDirection, setAmountSortDirection] = useState<SortDirection>(SortDirection.NONE);
   const [allTabSelected, setAllTabSelected] = useState(true);
   const [unpaidTabSelected, setUnpaidTabSelected] = useState(false);
   const [partiallyPaidTabSelected, setPartiallyPaidTabSelected] = useState(false);
   const [paidTabSelected, setPaidTabSelected] = useState(false);
   const [selectedTab, setSelectedTab] = useState('allTab');
+  const [status, setStatus] = useState<PaymentRequestStatus>(PaymentRequestStatus.All);
+  const [dateRange, setDateRange] = useState<DateRange>({
+    fromDate: new Date(),
+    toDate: new Date(),
+  });
 
-  const { paymentRequestMetrics, totalRecords, apiError } = usePaymentRequestMetrics(apiUrl, token);
+  const client = new PaymentRequestClient(apiUrl, token);
+
+  const tabCss = 'bg-white pt-10 pb-10 pl-10 pr-10 h-full';
+
+  const { paymentRequests, totalRecords, fetchPaymentRequests } = usePaymentRequests(
+    apiUrl,
+    token,
+    statusSortDirection,
+    createdSortDirection,
+    contactSortDirection,
+    amountSortDirection,
+    page,
+    pageSize,
+    dateRange.fromDate,
+    dateRange.toDate,
+    status,
+  );
+
+  const localPaymentRequests: LocalPaymentRequest[] = paymentRequests.map((paymentRequest) =>
+    RemotePaymentRequestToLocalPaymentRequest(paymentRequest),
+  );
+
+  const { paymentRequestMetrics, apiError } = usePaymentRequestMetrics(
+    apiUrl,
+    token,
+    dateRange.fromDate,
+    dateRange.toDate,
+  );
+
+  const onDeletePaymentRequest = async (paymentRequest: LocalPaymentRequest) => {
+    const response = await client.delete(paymentRequest.id);
+
+    if (response.error) {
+      makeToast('error', response.error.title);
+      return;
+    }
+
+    makeToast('success', 'Payment request successfully deleted.');
+
+    await fetchPaymentRequests();
+  };
+
+  const onCopyPaymentRequestLink = async (paymentRequest: LocalPaymentRequest) => {
+    let link = `${apiUrl}/nextgen/pay/${paymentRequest.id}`;
+    await navigator.clipboard.writeText(link);
+
+    makeToast('success', 'Link copied into clipboard.');
+  };
+
+  const onDuplicatePaymentRequest = (paymentRequest: LocalPaymentRequest) => {
+    console.log('Duplicate payment request clicked: ', paymentRequest);
+  };
 
   useEffect(() => {
     switch (selectedTab) {
@@ -55,14 +124,14 @@ const PaymentRequestDashboard = ({
   }, [selectedTab]);
 
   return (
-    <div className="bg-mainGrey text-defaultText">
+    <div className="bg-mainGrey text-defaultText h-full pl-8 pr-8 pb-10">
       <div className="flex justify-between">
         <div className="flex">
           <div className="pl-12 pt-[72px] pb-[68px] leading-8 font-medium text-[28px]">
             <span>Payment Requests</span>
           </div>
           <div className="pl-12 pt-[69px]">
-            <DateRangePicker onDateChange={(dateRange) => console.log(dateRange)}></DateRangePicker>
+            <DateRangePicker onDateChange={(dateRange) => setDateRange(dateRange)}></DateRangePicker>
           </div>
         </div>
         <div className="flex pr-10">
@@ -78,7 +147,7 @@ const PaymentRequestDashboard = ({
         </div>
       </div>
 
-      <div className="pl-8">
+      <div className="h-full">
         <Tabs.Root defaultValue="allTab" onValueChange={(value) => setSelectedTab(value)}>
           <Tabs.List>
             <Tabs.Trigger value="allTab">
@@ -86,9 +155,7 @@ const PaymentRequestDashboard = ({
                 status={PaymentRequestStatus.All}
                 totalRecords={paymentRequestMetrics?.all ?? 0}
                 selected={allTabSelected}
-                onSelect={() => {
-                  console.log('All');
-                }}
+                onSelect={() => setStatus(PaymentRequestStatus.All)}
               ></Tab>
             </Tabs.Trigger>
             <Tabs.Trigger value="unpaidTab">
@@ -96,9 +163,7 @@ const PaymentRequestDashboard = ({
                 status={PaymentRequestStatus.None}
                 totalRecords={paymentRequestMetrics?.unpaid ?? 0}
                 selected={unpaidTabSelected}
-                onSelect={() => {
-                  console.log('Unpaid');
-                }}
+                onSelect={() => setStatus(PaymentRequestStatus.None)}
               ></Tab>
             </Tabs.Trigger>
             <Tabs.Trigger value="partiallyPaidTab">
@@ -106,9 +171,7 @@ const PaymentRequestDashboard = ({
                 status={PaymentRequestStatus.PartiallyPaid}
                 totalRecords={paymentRequestMetrics?.partiallyPaid ?? 0}
                 selected={partiallyPaidTabSelected}
-                onSelect={() => {
-                  console.log('Partially paid');
-                }}
+                onSelect={() => setStatus(PaymentRequestStatus.PartiallyPaid)}
               ></Tab>
             </Tabs.Trigger>
             <Tabs.Trigger value="paidTab">
@@ -116,23 +179,77 @@ const PaymentRequestDashboard = ({
                 status={PaymentRequestStatus.FullyPaid}
                 totalRecords={paymentRequestMetrics?.paid ?? 0}
                 selected={paidTabSelected}
-                onSelect={() => {
-                  console.log('Paid');
-                }}
+                onSelect={() => setStatus(PaymentRequestStatus.FullyPaid)}
               ></Tab>
             </Tabs.Trigger>
           </Tabs.List>
           <Tabs.Content value="allTab">
-            <p>All tab</p>
+            <div className={classNames(tabCss)}>
+              <PaymentRequestTable
+                paymentRequests={localPaymentRequests}
+                pageSize={pageSize}
+                totalRecords={totalRecords}
+                onPageChanged={setPage}
+                setStatusSortDirection={setStatusSortDirection}
+                setCreatedSortDirection={setCreatedSortDirection}
+                setContactSortDirection={setContactSortDirection}
+                setAmountSortDirection={setAmountSortDirection}
+                onPaymentRequestDuplicateClicked={onDuplicatePaymentRequest}
+                onPaymentRequestDeleteClicked={onDeletePaymentRequest}
+                onPaymentRequestCopyLinkClicked={onCopyPaymentRequestLink}
+              ></PaymentRequestTable>
+            </div>
           </Tabs.Content>
           <Tabs.Content value="unpaidTab">
-            <p>Unpaid tab</p>
+            <div className={classNames(tabCss)}>
+              <PaymentRequestTable
+                paymentRequests={localPaymentRequests}
+                pageSize={pageSize}
+                totalRecords={totalRecords}
+                onPageChanged={setPage}
+                setStatusSortDirection={setStatusSortDirection}
+                setCreatedSortDirection={setCreatedSortDirection}
+                setContactSortDirection={setContactSortDirection}
+                setAmountSortDirection={setAmountSortDirection}
+                onPaymentRequestDuplicateClicked={onDuplicatePaymentRequest}
+                onPaymentRequestDeleteClicked={onDeletePaymentRequest}
+                onPaymentRequestCopyLinkClicked={onCopyPaymentRequestLink}
+              ></PaymentRequestTable>
+            </div>
           </Tabs.Content>
           <Tabs.Content value="partiallyPaidTab">
-            <p>Partially paid tab</p>
+            <div className={classNames(tabCss)}>
+              <PaymentRequestTable
+                paymentRequests={localPaymentRequests}
+                pageSize={pageSize}
+                totalRecords={totalRecords}
+                onPageChanged={setPage}
+                setStatusSortDirection={setStatusSortDirection}
+                setCreatedSortDirection={setCreatedSortDirection}
+                setContactSortDirection={setContactSortDirection}
+                setAmountSortDirection={setAmountSortDirection}
+                onPaymentRequestDuplicateClicked={onDuplicatePaymentRequest}
+                onPaymentRequestDeleteClicked={onDeletePaymentRequest}
+                onPaymentRequestCopyLinkClicked={onCopyPaymentRequestLink}
+              ></PaymentRequestTable>
+            </div>
           </Tabs.Content>
           <Tabs.Content value="paidTab">
-            <p>Paid tab</p>
+            <div className={classNames(tabCss)}>
+              <PaymentRequestTable
+                paymentRequests={localPaymentRequests}
+                pageSize={pageSize}
+                totalRecords={totalRecords}
+                onPageChanged={setPage}
+                setStatusSortDirection={setStatusSortDirection}
+                setCreatedSortDirection={setCreatedSortDirection}
+                setContactSortDirection={setContactSortDirection}
+                setAmountSortDirection={setAmountSortDirection}
+                onPaymentRequestDuplicateClicked={onDuplicatePaymentRequest}
+                onPaymentRequestDeleteClicked={onDeletePaymentRequest}
+                onPaymentRequestCopyLinkClicked={onCopyPaymentRequestLink}
+              ></PaymentRequestTable>
+            </div>
           </Tabs.Content>
         </Tabs.Root>
       </div>

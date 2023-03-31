@@ -51,6 +51,7 @@ const Tab = ({ status, totalRecords, selected, onSelect }: TabProps) => {
         'bg-white border-t-2 border-[#00B2B2] pt-[14px]': selected,
         'pt-4': !selected,
       })}
+      onClick={onSelect}
     >
       <div className="flex flex-col items-center px-8 pb-3 group">
         <span className={selectedClassNames('text-[20px] leading-7 font-semibold', selected)}>{totalRecords}</span>

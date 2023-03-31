@@ -146,16 +146,28 @@ export class PaymentRequestClient extends BaseApiClient {
 
   /**
    * Gets the metrics for Payment Requests
+   * @param fromDate Optional. The date filter to apply to retrieve payment requests metrics after this date.
+   * @param toDate Optional. The date filter to apply to retrieve payment requests metrics up until this date.
    * @returns A PaymentRequestMetrics response if successful. An ApiError if not successful.
    */
-  async metrics(): Promise<{
+  async metrics(
+    fromDate?: Date,
+    toDate?: Date,
+  ): Promise<{
     data?: PaymentRequestMetrics;
     error?: ApiError;
   }> {
-    const response = await this.httpRequest<PaymentRequestMetrics>(
-      `${this.apiBaseUrl}/paymentrequests/metrics`,
-      HttpMethod.GET,
-    );
+    let url = `${this.apiBaseUrl}/paymentrequests/metrics`;
+
+    if (fromDate) {
+      url = `${url}?fromDate=${fromDate.toUTCString()}`;
+    }
+
+    if (toDate) {
+      url = `${url}&toDate=${toDate.toUTCString()}`;
+    }
+
+    const response = await this.httpRequest<PaymentRequestMetrics>(url, HttpMethod.GET);
 
     return response;
   }
