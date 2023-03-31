@@ -165,8 +165,8 @@ export type Tag = {
 };
 
 export type PaymentRequestMetrics = {
-  All: number;
-  Paid: number;
-  Unpaid: number;
-  PartiallyPaid: number;
+  all: number;
+  paid: number;
+  unpaid: number;
+  partiallyPaid: number;
 };

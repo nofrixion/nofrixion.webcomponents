@@ -4,6 +4,9 @@ import * as Tabs from '@radix-ui/react-tabs';
 import { useEffect, useState } from 'react';
 import DateRangePicker from '../DateRangePicker/DateRangePicker';
 import PrimaryButton from '../PrimaryButton/PrimaryButton';
+import { PaymentRequestMetrics } from '../../../api/types/ApiResponses';
+import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
+import { usePaymentRequestMetrics } from '../../../api/hooks/usePaymentRequestMetrics';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -11,15 +14,16 @@ interface PaymentRequestDashboardProps {
 }
 
 const PaymentRequestDashboard = ({
-  token,
-  apiUrl = 'https://api.nofrixion.com/api/v1',
+  token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbmlkIjoiN2ZlYmE3MWEtNzM0OS00YTgyLThjOTctODRkZmFkNDRiMTdiIn0.j91GfvpEQeKk2v4XdKH6cDbWz-6rBFomYRdulnti_94',
+  apiUrl = 'https://api-dev.nofrixion.com/api/v1',
 }: PaymentRequestDashboardProps) => {
   const [allTabSelected, setAllTabSelected] = useState(true);
   const [unpaidTabSelected, setUnpaidTabSelected] = useState(false);
   const [partiallyPaidTabSelected, setPartiallyPaidTabSelected] = useState(false);
   const [paidTabSelected, setPaidTabSelected] = useState(false);
   const [selectedTab, setSelectedTab] = useState('allTab');
-  const [metrics, setMetrics] = useState();
+
+  const { paymentRequestMetrics, totalRecords, apiError } = usePaymentRequestMetrics(apiUrl, token);
 
   useEffect(() => {
     switch (selectedTab) {
@@ -80,7 +84,7 @@ const PaymentRequestDashboard = ({
             <Tabs.Trigger value="allTab">
               <Tab
                 status={PaymentRequestStatus.All}
-                totalRecords={123}
+                totalRecords={paymentRequestMetrics?.all ?? 0}
                 selected={allTabSelected}
                 onSelect={() => {
                   console.log('All');
@@ -90,7 +94,7 @@ const PaymentRequestDashboard = ({
             <Tabs.Trigger value="unpaidTab">
               <Tab
                 status={PaymentRequestStatus.None}
-                totalRecords={77}
+                totalRecords={paymentRequestMetrics?.unpaid ?? 0}
                 selected={unpaidTabSelected}
                 onSelect={() => {
                   console.log('Unpaid');
@@ -100,7 +104,7 @@ const PaymentRequestDashboard = ({
             <Tabs.Trigger value="partiallyPaidTab">
               <Tab
                 status={PaymentRequestStatus.PartiallyPaid}
-                totalRecords={234}
+                totalRecords={paymentRequestMetrics?.partiallyPaid ?? 0}
                 selected={partiallyPaidTabSelected}
                 onSelect={() => {
                   console.log('Partially paid');
@@ -110,7 +114,7 @@ const PaymentRequestDashboard = ({
             <Tabs.Trigger value="paidTab">
               <Tab
                 status={PaymentRequestStatus.FullyPaid}
-                totalRecords={234}
+                totalRecords={paymentRequestMetrics?.paid ?? 0}
                 selected={paidTabSelected}
                 onSelect={() => {
                   console.log('Paid');
