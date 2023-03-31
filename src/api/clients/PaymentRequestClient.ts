@@ -1,6 +1,7 @@
 import {
   ApiError,
   PaymentRequestCreate,
+  PaymentRequestMetrics,
   PaymentRequestMinimal,
   PaymentRequestPageResponse,
 } from '../types/ApiResponses';
@@ -141,5 +142,21 @@ export class PaymentRequestClient extends BaseApiClient {
     );
 
     return !response.error ? { success: true } : { success: false, error: response.error };
+  }
+
+  /**
+   * Gets the metrics for Payment Requests
+   * @returns A PaymentRequestMetrics response if successful. An ApiError if not successful.
+   */
+  async metrics(): Promise<{
+    data?: PaymentRequestMetrics;
+    error?: ApiError;
+  }> {
+    const response = await this.httpRequest<PaymentRequestMetrics>(
+      `${this.apiBaseUrl}/paymentrequests/metrics`,
+      HttpMethod.GET,
+    );
+
+    return response;
   }
 }

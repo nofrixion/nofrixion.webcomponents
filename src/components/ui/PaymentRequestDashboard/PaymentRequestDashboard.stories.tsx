@@ -3,6 +3,7 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 import React from 'react';
 import { PaymentRequestStatus } from '../../../api/types/Enums';
 import PaymentRequestDashboard from './PaymentRequestDashboard';
+
 export default {
   title: 'UI/PaymentRequestDashboard',
   component: PaymentRequestDashboard,
@@ -11,7 +12,7 @@ export default {
   },
 } as ComponentMeta<typeof PaymentRequestDashboard>;
 
-const Template: ComponentStory<typeof PaymentRequestDashboard> = (args) => <PaymentRequestDashboard />;
+const Template: ComponentStory<typeof PaymentRequestDashboard> = (args) => <PaymentRequestDashboard {...args} />;
 
 export const Showcase = Template.bind({});
 

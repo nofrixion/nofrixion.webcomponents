@@ -5,12 +5,21 @@ import { useEffect, useState } from 'react';
 import DateRangePicker from '../DateRangePicker/DateRangePicker';
 import PrimaryButton from '../PrimaryButton/PrimaryButton';
 
-const PaymentRequestDashboard = () => {
+interface PaymentRequestDashboardProps {
+  token: string; // Example: "eyJhbGciOiJIUz..."
+  apiUrl?: string; // Example: "https://api.nofrixion.com/api/v1"
+}
+
+const PaymentRequestDashboard = ({
+  token,
+  apiUrl = 'https://api.nofrixion.com/api/v1',
+}: PaymentRequestDashboardProps) => {
   const [allTabSelected, setAllTabSelected] = useState(true);
   const [unpaidTabSelected, setUnpaidTabSelected] = useState(false);
   const [partiallyPaidTabSelected, setPartiallyPaidTabSelected] = useState(false);
   const [paidTabSelected, setPaidTabSelected] = useState(false);
   const [selectedTab, setSelectedTab] = useState('allTab');
+  const [metrics, setMetrics] = useState();
 
   useEffect(() => {
     switch (selectedTab) {
