@@ -12,7 +12,7 @@ const actionItem = cva(actionItemClassNames, {
   variants: {
     intent: {
       neutral: ['data-[highlighted]:text-greyText'],
-      negative: ['text-redText data-[highlighted]:text-highlightedRedText'],
+      negative: ['text-negativeRed data-[highlighted]:text-highlightedNegativeRed'],
     },
   },
   defaultVariants: {
@@ -32,6 +32,7 @@ interface PaymentRequestActionMenuProps {
   onDuplicate?: () => void;
   onCopyLink?: () => void;
   onDelete?: () => void;
+  onBlur?: () => void;
 }
 
 interface PaymentRequestActionMenuItemContentProps {
@@ -50,7 +51,7 @@ const PaymentRequestActionMenuItemContent = ({ label, iconSource }: PaymentReque
   );
 };
 
-const PaymentRequestActionMenu = ({ onDuplicate, onCopyLink, onDelete }: PaymentRequestActionMenuProps) => {
+const PaymentRequestActionMenu = ({ onDuplicate, onCopyLink, onDelete, onBlur }: PaymentRequestActionMenuProps) => {
   const onDuplicateClick = (e: React.MouseEvent<HTMLDivElement>) => handleClick(e, onDuplicate);
   const onCopyLinkClick = (e: React.MouseEvent<HTMLDivElement>) => handleClick(e, onCopyLink);
   const onDeleteClick = (e: React.MouseEvent<HTMLDivElement>) => handleClick(e, onDelete);
@@ -61,6 +62,7 @@ const PaymentRequestActionMenu = ({ onDuplicate, onCopyLink, onDelete }: Payment
         <button
           className="rounded-full w-6 h-6 p-1 inline-flex items-center justify-center outline-none cursor-pointer align-middle hover:bg-greyBg group"
           aria-label="Actions"
+          onBlur={onBlur}
         >
           <svg
             width="15"

@@ -25,27 +25,27 @@ export const usePaymentRequests = (
   const [totalRecords, setTotalRecords] = useState(1);
   const [apiError, setApiError] = useState<ApiError>();
 
+  const fetchPaymentRequests = async () => {
+    const response = await client.PaymentRequests.getAll(page, pageSize, sortExpression, fromDate, toDate, status);
+
+    if (response.data) {
+      setPaymentRequests(response.data.content);
+      setPageNumber(response.data.pageNumber);
+      setTotalRecords(response.data.totalSize);
+    } else if (response.error) {
+      setApiError(response.error);
+    }
+  };
+
+  // Build the sort expression
+  const sortExpression = formatPaymentRequestSortExpression(
+    statusSortDirection,
+    createdSortDirection,
+    contactSortDirection,
+    amountSortDirection,
+  );
+
   useEffect(() => {
-    const fetchPaymentRequests = async () => {
-      const response = await client.PaymentRequests.getAll(page, pageSize, sortExpression, fromDate, toDate, status);
-
-      if (response.data) {
-        setPaymentRequests(response.data.content);
-        setPageNumber(response.data.pageNumber);
-        setTotalRecords(response.data.totalSize);
-      } else if (response.error) {
-        setApiError(response.error);
-      }
-    };
-
-    // Build the sort expression
-    const sortExpression = formatPaymentRequestSortExpression(
-      statusSortDirection,
-      createdSortDirection,
-      contactSortDirection,
-      amountSortDirection,
-    );
-
     fetchPaymentRequests();
   }, [
     page,
@@ -66,5 +66,6 @@ export const usePaymentRequests = (
     pageNumber,
     totalRecords,
     apiError,
+    fetchPaymentRequests,
   };
 };
