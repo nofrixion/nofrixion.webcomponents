@@ -13,7 +13,6 @@ import { LocalPaymentRequest } from '../../../api/types/LocalTypes';
 import { makeToast } from '../Toast/Toast';
 import { RemotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
 import classNames from 'classnames';
-import { add, startOfDay } from 'date-fns';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -25,7 +24,6 @@ const PaymentRequestDashboard = ({
   apiUrl = 'https://api.nofrixion.com/api/v1',
 }: PaymentRequestDashboardProps) => {
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(20);
   const [statusSortDirection, setStatusSortDirection] = useState<SortDirection>(SortDirection.NONE);
   const [createdSortDirection, setCreatedSortDirection] = useState<SortDirection>(SortDirection.NONE);
   const [contactSortDirection, setContactSortDirection] = useState<SortDirection>(SortDirection.NONE);
@@ -40,6 +38,8 @@ const PaymentRequestDashboard = ({
     fromDate: new Date(),
     toDate: new Date(),
   });
+
+  const pageSize = 20;
 
   const client = new PaymentRequestClient(apiUrl, token);
 
@@ -127,8 +127,8 @@ const PaymentRequestDashboard = ({
     <div className="bg-mainGrey text-defaultText h-full pl-8 pr-8 pb-10">
       <div className="flex justify-between">
         <div className="flex">
-          <div className="pl-12 pt-[72px] pb-[68px] leading-8 font-medium text-[28px]">
-            <span>Payment Requests</span>
+          <div className="pl-12 pt-[72px] pb-[68px] leading-8 font-medium text-[1.75rem]">
+            <span>Payment requests</span>
           </div>
           <div className="pl-12 pt-[69px]">
             <DateRangePicker onDateChange={(dateRange) => setDateRange(dateRange)}></DateRangePicker>
@@ -150,7 +150,7 @@ const PaymentRequestDashboard = ({
       <div className="h-full">
         <Tabs.Root defaultValue="allTab" onValueChange={(value) => setSelectedTab(value)}>
           <Tabs.List>
-            <Tabs.Trigger value="allTab">
+            <Tabs.Trigger value="allTab" disabled={paymentRequestMetrics?.all === 0}>
               <Tab
                 status={PaymentRequestStatus.All}
                 totalRecords={paymentRequestMetrics?.all ?? 0}
@@ -158,7 +158,7 @@ const PaymentRequestDashboard = ({
                 onSelect={() => setStatus(PaymentRequestStatus.All)}
               ></Tab>
             </Tabs.Trigger>
-            <Tabs.Trigger value="unpaidTab">
+            <Tabs.Trigger value="unpaidTab" disabled={paymentRequestMetrics?.unpaid === 0}>
               <Tab
                 status={PaymentRequestStatus.None}
                 totalRecords={paymentRequestMetrics?.unpaid ?? 0}
@@ -166,7 +166,7 @@ const PaymentRequestDashboard = ({
                 onSelect={() => setStatus(PaymentRequestStatus.None)}
               ></Tab>
             </Tabs.Trigger>
-            <Tabs.Trigger value="partiallyPaidTab">
+            <Tabs.Trigger value="partiallyPaidTab" disabled={paymentRequestMetrics?.partiallyPaid === 0}>
               <Tab
                 status={PaymentRequestStatus.PartiallyPaid}
                 totalRecords={paymentRequestMetrics?.partiallyPaid ?? 0}
@@ -174,7 +174,7 @@ const PaymentRequestDashboard = ({
                 onSelect={() => setStatus(PaymentRequestStatus.PartiallyPaid)}
               ></Tab>
             </Tabs.Trigger>
-            <Tabs.Trigger value="paidTab">
+            <Tabs.Trigger value="paidTab" disabled={paymentRequestMetrics?.paid === 0}>
               <Tab
                 status={PaymentRequestStatus.FullyPaid}
                 totalRecords={paymentRequestMetrics?.paid ?? 0}

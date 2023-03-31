@@ -37,10 +37,10 @@ const getDisplayTextForStatus = (status: PaymentRequestStatus) => {
   }
 };
 
-const selectedClassNames = (classes: string, selected: boolean) => {
+const selectedClassNames = (classes: string, selected: boolean, totalRecords: number) => {
   return classNames(classes, {
     'text-defaultText': selected,
-    'text-greyText group-hover:text-controlGreyHover cursor-pointer': !selected,
+    'text-greyText group-hover:text-controlGreyHover': !selected && totalRecords > 0,
   });
 };
 
@@ -54,10 +54,14 @@ const Tab = ({ status, totalRecords, selected, onSelect }: TabProps) => {
       onClick={onSelect}
     >
       <div className="flex flex-col items-center px-8 pb-3 group">
-        <span className={selectedClassNames('text-[20px] leading-7 font-semibold', selected)}>{totalRecords}</span>
+        <span
+          className={selectedClassNames('text-[1.25rem] leading-7 font-semibold tabular-nums', selected, totalRecords)}
+        >
+          {totalRecords}
+        </span>
         <div className="flex items-center space-x-1">
           {getIconForStatus(status) && <img src={getIconForStatus(status)} alt="ellipse" className="pr-1" />}
-          <span className={selectedClassNames('text-sm leading-6 font-normal', selected)}>
+          <span className={selectedClassNames('text-sm leading-6 font-normal', selected, totalRecords)}>
             {getDisplayTextForStatus(status)}
           </span>
         </div>

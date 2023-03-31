@@ -6,10 +6,20 @@ import PaymentRequestDashboard from './PaymentRequestDashboard';
 import { apiUrls } from '../../../utils/constants';
 
 export default {
-  title: 'UI/PaymentRequestDashboard',
+  title: 'Functional/PaymentRequestDashboard',
   component: PaymentRequestDashboard,
   argTypes: {
-    totalRecords: { control: 'number' },
+    token: {
+      control: {
+        type: 'text',
+      },
+    },
+    apiUrl: {
+      control: {
+        type: 'select',
+        options: Object.values(apiUrls),
+      },
+    },
   },
 } as ComponentMeta<typeof PaymentRequestDashboard>;
 
@@ -18,7 +28,6 @@ const Template: ComponentStory<typeof PaymentRequestDashboard> = (args) => <Paym
 export const Showcase = Template.bind({});
 
 Showcase.args = {
-  token:
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbmlkIjoiN2ZlYmE3MWEtNzM0OS00YTgyLThjOTctODRkZmFkNDRiMTdiIn0.j91GfvpEQeKk2v4XdKH6cDbWz-6rBFomYRdulnti_94',
-  apiUrl: apiUrls.dev,
+  token: 'Enter merchant token...',
+  apiUrl: apiUrls.sandbox,
 };
