@@ -1,0 +1,58 @@
+button,
+fieldset,
+input {
+  all: unset;
+}
+
+.TabsRoot {
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* width: 300px; */
+}
+
+.TabsList {
+  flex-shrink: 0;
+  display: flex;
+}
+
+.TabsTrigger {
+  color: #73808c;
+  background-color: transparent;
+  padding-top: 0px;
+  height: 5rem;
+  user-select: none;
+}
+/* .TabsTrigger:first-child {
+  border-top-left-radius: 6px;
+}
+.TabsTrigger:last-child {
+  border-top-right-radius: 6px;
+} */
+.TabsTrigger:hover {
+  color: #00264d;
+  cursor: pointer;
+}
+.TabsTrigger[data-state='active'] {
+  color: #00264d;
+  background-color: white;
+  box-shadow: inset 0 2px 0 0 #00b2b2;
+  cursor: default;
+}
+.TabsTrigger[data-disabled] {
+  pointer-events: none;
+}
+/* .TabsTrigger[data-state='inactive'] {
+  cursor: none;
+} */
+.TabsTrigger:focus {
+  position: relative;
+}
+
+.TabsContent {
+  /* flex-grow: 1; */
+  /* width: 100%; */
+  /* outline: none; */
+}
+/* .TabsContent:focus {
+  box-shadow: 0 0 0 2px black;
+} */

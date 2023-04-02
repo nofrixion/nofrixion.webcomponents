@@ -1,14 +1,11 @@
 import ellipseGrey from '../../../assets/images/ellipse.grey.svg';
 import ellipseGreen from '../../../assets/images/ellipse.green.svg';
 import ellipseOrange from '../../../assets/images/ellipse.orange.svg';
-import classNames from 'classnames';
 import { PaymentRequestStatus } from '../../../api/types/Enums';
 
 export interface TabProps {
   status: PaymentRequestStatus;
   totalRecords: number;
-  selected: boolean;
-  onSelect: () => void;
 }
 
 const getIconForStatus = (status: PaymentRequestStatus) => {
@@ -37,33 +34,14 @@ const getDisplayTextForStatus = (status: PaymentRequestStatus) => {
   }
 };
 
-const selectedClassNames = (classes: string, selected: boolean, totalRecords: number) => {
-  return classNames(classes, {
-    'text-defaultText': selected,
-    'text-greyText group-hover:text-controlGreyHover': !selected && totalRecords > 0,
-  });
-};
-
-const Tab = ({ status, totalRecords, selected, onSelect }: TabProps) => {
+const Tab = ({ status, totalRecords }: TabProps) => {
   return (
-    <div
-      className={classNames('flex justify-center whitespace-nowrap h-20 w-fit', {
-        'bg-white border-t-2 border-[#00B2B2] pt-[14px]': selected,
-        'pt-4': !selected,
-      })}
-      onClick={onSelect}
-    >
-      <div className="flex flex-col items-center px-8 pb-3 group">
-        <span
-          className={selectedClassNames('text-[1.25rem] leading-7 font-semibold tabular-nums', selected, totalRecords)}
-        >
-          {totalRecords}
-        </span>
-        <div className="flex items-center space-x-1">
+    <div>
+      <div className="flex flex-col items-center px-8">
+        <span className="text-[1.25rem] leading-7 font-semibold tabular-nums">{totalRecords}</span>
+        <div className="flex items-center space-x-1 whitespace-nowrap">
           {getIconForStatus(status) && <img src={getIconForStatus(status)} alt="ellipse" className="pr-1" />}
-          <span className={selectedClassNames('text-sm leading-6 font-normal', selected, totalRecords)}>
-            {getDisplayTextForStatus(status)}
-          </span>
+          <span className="text-sm leading-6 font-normal">{getDisplayTextForStatus(status)}</span>
         </div>
       </div>
     </div>

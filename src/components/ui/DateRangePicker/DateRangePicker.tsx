@@ -97,12 +97,7 @@ const DateRangePicker = ({ onDateChange }: DateRangeFilterProps) => {
     <div className="flex defaultText w-fit border border-[#D5DBDD] rounded-3xl">
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
-          <div
-            className={classNames(
-              pillClasses,
-              'border-inherit border-r flex items-center w-fit space-x-2 pl-4 pr-3 py-2',
-            )}
-          >
+          <div className={classNames(pillClasses, 'border-r flex items-center w-fit space-x-2 pl-4 pr-3 py-2')}>
             <ResizableComponent>
               <span className="py-2">{selectRangeText}</span>
             </ResizableComponent>

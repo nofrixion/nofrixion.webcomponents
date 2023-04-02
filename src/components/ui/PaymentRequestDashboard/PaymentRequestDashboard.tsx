@@ -13,6 +13,7 @@ import { LocalPaymentRequest } from '../../../api/types/LocalTypes';
 import { makeToast } from '../Toast/Toast';
 import { RemotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
 import classNames from 'classnames';
+import './Tabs.css';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -28,10 +29,6 @@ const PaymentRequestDashboard = ({
   const [createdSortDirection, setCreatedSortDirection] = useState<SortDirection>(SortDirection.NONE);
   const [contactSortDirection, setContactSortDirection] = useState<SortDirection>(SortDirection.NONE);
   const [amountSortDirection, setAmountSortDirection] = useState<SortDirection>(SortDirection.NONE);
-  const [allTabSelected, setAllTabSelected] = useState(true);
-  const [unpaidTabSelected, setUnpaidTabSelected] = useState(false);
-  const [partiallyPaidTabSelected, setPartiallyPaidTabSelected] = useState(false);
-  const [paidTabSelected, setPaidTabSelected] = useState(false);
   const [selectedTab, setSelectedTab] = useState('allTab');
   const [status, setStatus] = useState<PaymentRequestStatus>(PaymentRequestStatus.All);
   const [dateRange, setDateRange] = useState<DateRange>({
@@ -43,7 +40,7 @@ const PaymentRequestDashboard = ({
 
   const client = new PaymentRequestClient(apiUrl, token);
 
-  const tabCss = 'bg-white pt-10 pb-10 pl-10 pr-10 h-full';
+  const tabCss = 'bg-white p-6 h-full';
 
   const { paymentRequests, totalRecords, fetchPaymentRequests } = usePaymentRequests(
     apiUrl,
@@ -63,12 +60,7 @@ const PaymentRequestDashboard = ({
     RemotePaymentRequestToLocalPaymentRequest(paymentRequest),
   );
 
-  const { paymentRequestMetrics, apiError } = usePaymentRequestMetrics(
-    apiUrl,
-    token,
-    dateRange.fromDate,
-    dateRange.toDate,
-  );
+  const { metrics, apiError } = usePaymentRequestMetrics(apiUrl, token, dateRange.fromDate, dateRange.toDate);
 
   const onDeletePaymentRequest = async (paymentRequest: LocalPaymentRequest) => {
     const response = await client.delete(paymentRequest.id);
@@ -97,28 +89,16 @@ const PaymentRequestDashboard = ({
   useEffect(() => {
     switch (selectedTab) {
       case 'allTab':
-        setAllTabSelected(true);
-        setUnpaidTabSelected(false);
-        setPartiallyPaidTabSelected(false);
-        setPaidTabSelected(false);
+        setStatus(PaymentRequestStatus.All);
         break;
       case 'unpaidTab':
-        setUnpaidTabSelected(true);
-        setAllTabSelected(false);
-        setPartiallyPaidTabSelected(false);
-        setPaidTabSelected(false);
+        setStatus(PaymentRequestStatus.None);
         break;
       case 'partiallyPaidTab':
-        setPartiallyPaidTabSelected(true);
-        setUnpaidTabSelected(false);
-        setAllTabSelected(false);
-        setPaidTabSelected(false);
+        setStatus(PaymentRequestStatus.PartiallyPaid);
         break;
       case 'paidTab':
-        setPaidTabSelected(true);
-        setPartiallyPaidTabSelected(false);
-        setUnpaidTabSelected(false);
-        setAllTabSelected(false);
+        setStatus(PaymentRequestStatus.FullyPaid);
         break;
     }
   }, [selectedTab]);
@@ -148,42 +128,22 @@ const PaymentRequestDashboard = ({
       </div>
 
       <div className="h-full">
-        <Tabs.Root defaultValue="allTab" onValueChange={(value) => setSelectedTab(value)}>
-          <Tabs.List>
-            <Tabs.Trigger value="allTab" disabled={paymentRequestMetrics?.all === 0}>
-              <Tab
-                status={PaymentRequestStatus.All}
-                totalRecords={paymentRequestMetrics?.all ?? 0}
-                selected={allTabSelected}
-                onSelect={() => setStatus(PaymentRequestStatus.All)}
-              ></Tab>
+        <Tabs.Root className="TabsRoot" defaultValue="allTab" onValueChange={(value) => setSelectedTab(value)}>
+          <Tabs.List className="TabsList">
+            <Tabs.Trigger className="TabsTrigger" value="allTab" disabled={metrics?.all === 0}>
+              <Tab status={PaymentRequestStatus.All} totalRecords={metrics?.all ?? 0}></Tab>
             </Tabs.Trigger>
-            <Tabs.Trigger value="unpaidTab" disabled={paymentRequestMetrics?.unpaid === 0}>
-              <Tab
-                status={PaymentRequestStatus.None}
-                totalRecords={paymentRequestMetrics?.unpaid ?? 0}
-                selected={unpaidTabSelected}
-                onSelect={() => setStatus(PaymentRequestStatus.None)}
-              ></Tab>
+            <Tabs.Trigger className="TabsTrigger" value="unpaidTab" disabled={metrics?.unpaid === 0}>
+              <Tab status={PaymentRequestStatus.None} totalRecords={metrics?.unpaid ?? 0}></Tab>
             </Tabs.Trigger>
-            <Tabs.Trigger value="partiallyPaidTab" disabled={paymentRequestMetrics?.partiallyPaid === 0}>
-              <Tab
-                status={PaymentRequestStatus.PartiallyPaid}
-                totalRecords={paymentRequestMetrics?.partiallyPaid ?? 0}
-                selected={partiallyPaidTabSelected}
-                onSelect={() => setStatus(PaymentRequestStatus.PartiallyPaid)}
-              ></Tab>
+            <Tabs.Trigger className="TabsTrigger" value="partiallyPaidTab" disabled={metrics?.partiallyPaid === 0}>
+              <Tab status={PaymentRequestStatus.PartiallyPaid} totalRecords={metrics?.partiallyPaid ?? 0}></Tab>
             </Tabs.Trigger>
-            <Tabs.Trigger value="paidTab" disabled={paymentRequestMetrics?.paid === 0}>
-              <Tab
-                status={PaymentRequestStatus.FullyPaid}
-                totalRecords={paymentRequestMetrics?.paid ?? 0}
-                selected={paidTabSelected}
-                onSelect={() => setStatus(PaymentRequestStatus.FullyPaid)}
-              ></Tab>
+            <Tabs.Trigger className="TabsTrigger" value="paidTab" disabled={metrics?.paid === 0}>
+              <Tab status={PaymentRequestStatus.FullyPaid} totalRecords={metrics?.paid ?? 0}></Tab>
             </Tabs.Trigger>
           </Tabs.List>
-          <Tabs.Content value="allTab">
+          <Tabs.Content className="TabsContent" value="allTab">
             <div className={classNames(tabCss)}>
               <PaymentRequestTable
                 paymentRequests={localPaymentRequests}
