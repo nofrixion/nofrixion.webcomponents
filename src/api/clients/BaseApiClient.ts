@@ -32,23 +32,28 @@ export abstract class BaseApiClient {
     data?: TResponse;
     error?: ApiError;
   }> {
-    url = `${url}?page=${pageNumber}&size=${pageSize}`;
+    const filterParams = new URLSearchParams();
+
+    filterParams.append('page', pageNumber.toString());
+    filterParams.append('size', pageSize.toString());
 
     if (sort) {
-      url = `${url}&sort=${sort}`;
+      filterParams.append('sort', sort);
     }
 
     if (fromDate) {
-      url = `${url}&fromDate=${fromDate.toUTCString()}`;
+      filterParams.append('fromDate', fromDate.toUTCString());
     }
 
     if (toDate) {
-      url = `${url}&toDate=${toDate.toUTCString()}`;
+      filterParams.append('toDate', toDate.toUTCString());
     }
 
     if (status) {
-      url = `${url}&status=${status}`;
+      filterParams.append('status', status);
     }
+
+    url = `${url}?${filterParams.toString()}`;
 
     return await this.httpRequest<TResponse>(url, HttpMethod.GET);
   }
