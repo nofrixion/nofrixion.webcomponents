@@ -12,7 +12,7 @@ export interface TabProps {
 }
 
 const ellipseClassNames = (status: string) => {
-  return classNames({
+  return classNames('mr-1.5', {
     'fill-[#ABB2BA]': status === PaymentRequestStatus.None,
     'fill-[#E88C30]': status === PaymentRequestStatus.PartiallyPaid,
     'fill-[#00CC88]': status === PaymentRequestStatus.FullyPaid,
@@ -62,7 +62,7 @@ const Tab = ({ status, totalRecords }: TabProps) => {
               <circle cx="3" cy="3" r="3" />
             </svg>
           )}
-          <span className="text-sm leading-6 font-normal pl-1.5">{getDisplayTextForStatus(status)}</span>
+          <span className="text-sm leading-6 font-normal">{getDisplayTextForStatus(status)}</span>
         </div>
       </div>
     </div>
