@@ -12,7 +12,6 @@ import { usePaymentRequests } from '../../../api/hooks/usePaymentRequests';
 import { LocalPaymentRequest } from '../../../api/types/LocalTypes';
 import { makeToast } from '../Toast/Toast';
 import { RemotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
-import classNames from 'classnames';
 import './Tabs.css';
 
 interface PaymentRequestDashboardProps {
@@ -39,8 +38,6 @@ const PaymentRequestDashboard = ({
   const pageSize = 20;
 
   const client = new PaymentRequestClient(apiUrl, token);
-
-  const tabCss = 'bg-white p-6 h-full';
 
   const { paymentRequests, totalRecords, fetchPaymentRequests } = usePaymentRequests(
     apiUrl,
@@ -145,7 +142,7 @@ const PaymentRequestDashboard = ({
             </Tabs.Trigger>
           </Tabs.List>
           <Tabs.Content className="TabsContent" value="allTab">
-            <div className={classNames(tabCss)}>
+            <div>
               <PaymentRequestTable
                 paymentRequests={localPaymentRequests}
                 pageSize={pageSize}
@@ -158,11 +155,11 @@ const PaymentRequestDashboard = ({
                 onPaymentRequestDuplicateClicked={onDuplicatePaymentRequest}
                 onPaymentRequestDeleteClicked={onDeletePaymentRequest}
                 onPaymentRequestCopyLinkClicked={onCopyPaymentRequestLink}
-              ></PaymentRequestTable>
+              />
             </div>
           </Tabs.Content>
-          <Tabs.Content value="unpaidTab">
-            <div className={classNames(tabCss)}>
+          <Tabs.Content className="TabsContent" value="unpaidTab">
+            <div>
               <PaymentRequestTable
                 paymentRequests={localPaymentRequests}
                 pageSize={pageSize}
@@ -175,11 +172,11 @@ const PaymentRequestDashboard = ({
                 onPaymentRequestDuplicateClicked={onDuplicatePaymentRequest}
                 onPaymentRequestDeleteClicked={onDeletePaymentRequest}
                 onPaymentRequestCopyLinkClicked={onCopyPaymentRequestLink}
-              ></PaymentRequestTable>
+              />
             </div>
           </Tabs.Content>
-          <Tabs.Content value="partiallyPaidTab">
-            <div className={classNames(tabCss)}>
+          <Tabs.Content className="TabsContent" value="partiallyPaidTab">
+            <div>
               <PaymentRequestTable
                 paymentRequests={localPaymentRequests}
                 pageSize={pageSize}
@@ -192,11 +189,11 @@ const PaymentRequestDashboard = ({
                 onPaymentRequestDuplicateClicked={onDuplicatePaymentRequest}
                 onPaymentRequestDeleteClicked={onDeletePaymentRequest}
                 onPaymentRequestCopyLinkClicked={onCopyPaymentRequestLink}
-              ></PaymentRequestTable>
+              />
             </div>
           </Tabs.Content>
-          <Tabs.Content value="paidTab">
-            <div className={classNames(tabCss)}>
+          <Tabs.Content className="TabsContent" value="paidTab">
+            <div>
               <PaymentRequestTable
                 paymentRequests={localPaymentRequests}
                 pageSize={pageSize}
@@ -209,13 +206,18 @@ const PaymentRequestDashboard = ({
                 onPaymentRequestDuplicateClicked={onDuplicatePaymentRequest}
                 onPaymentRequestDeleteClicked={onDeletePaymentRequest}
                 onPaymentRequestCopyLinkClicked={onCopyPaymentRequestLink}
-              ></PaymentRequestTable>
+              />
             </div>
           </Tabs.Content>
         </Tabs.Root>
       </div>
     </div>
   );
+};
+
+PaymentRequestDashboard.componentProps = {
+  token: String,
+  apiUrl: String,
 };
 
 export default PaymentRequestDashboard;

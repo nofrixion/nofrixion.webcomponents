@@ -22,12 +22,7 @@ input {
   height: 5rem;
   user-select: none;
 }
-/* .TabsTrigger:first-child {
-  border-top-left-radius: 6px;
-}
-.TabsTrigger:last-child {
-  border-top-right-radius: 6px;
-} */
+
 .TabsTrigger:hover {
   color: #00264d;
   cursor: pointer;
@@ -41,18 +36,13 @@ input {
 .TabsTrigger[data-disabled] {
   pointer-events: none;
 }
-/* .TabsTrigger[data-state='inactive'] {
-  cursor: none;
-} */
+
 .TabsTrigger:focus {
   position: relative;
 }
 
 .TabsContent {
-  /* flex-grow: 1; */
-  /* width: 100%; */
-  /* outline: none; */
+  background-color: white;
+  padding: 1.5rem;
+  height: 100%;
 }
-/* .TabsContent:focus {
-  box-shadow: 0 0 0 2px black;
-} */
