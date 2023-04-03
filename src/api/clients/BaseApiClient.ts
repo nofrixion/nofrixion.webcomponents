@@ -68,7 +68,7 @@ export abstract class BaseApiClient {
   protected async httpRequest<TResponse>(
     url: string,
     method: HttpMethod,
-    postData?: any,
+    postData?: unknown,
   ): Promise<{
     data?: TResponse;
     error?: ApiError;

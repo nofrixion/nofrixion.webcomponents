@@ -38,7 +38,7 @@ const PaymentRequestTable = ({
 }: PaymentRequestTableProps) => {
   return (
     <>
-      <table className="table-fixed text-left w-full bg-white">
+      <table className="table-fixed text-left w-full">
         <colgroup>
           <col />
           <col />
