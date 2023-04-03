@@ -12,7 +12,6 @@ import { usePaymentRequests } from '../../../api/hooks/usePaymentRequests';
 import { LocalPaymentRequest } from '../../../api/types/LocalTypes';
 import { makeToast } from '../Toast/Toast';
 import { RemotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
-import './Tabs.css';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -35,7 +34,13 @@ const PaymentRequestDashboard = ({
     toDate: new Date(),
   });
 
+  const tabsTriggerClasses =
+    "text-greyText hover:text-defaultText hover:cursor-pointer pt-0 h-20 data-[state='active']:text-defaultText data-[state='active']:bg-white data-[state='active']:cursor-default data-[state='active']:shadow-[inset_0_2px_0px_rgba(0,178,178,1)] data-[disabled]:pointer-events-none data-[disabled]:cursor-not-allowed focus:relative";
+
+  const tabsContentClasses = 'bg-white p-6 h-full';
+
   const pageSize = 20;
+  const nextGenUrl = `${apiUrl}/nextgen/pay`;
 
   const client = new PaymentRequestClient(apiUrl, token);
 
@@ -73,7 +78,7 @@ const PaymentRequestDashboard = ({
   };
 
   const onCopyPaymentRequestLink = async (paymentRequest: LocalPaymentRequest) => {
-    let link = `${apiUrl}/nextgen/pay/${paymentRequest.id}`;
+    let link = `${nextGenUrl}/${paymentRequest.id}`;
     await navigator.clipboard.writeText(link);
 
     makeToast('success', 'Link copied into clipboard.');
@@ -127,21 +132,25 @@ const PaymentRequestDashboard = ({
 
       <div className="h-full">
         <Tabs.Root className="TabsRoot" defaultValue="allTab" onValueChange={(value) => setSelectedTab(value)}>
-          <Tabs.List className="TabsList">
-            <Tabs.Trigger className="TabsTrigger" value="allTab" disabled={metrics?.all === 0}>
+          <Tabs.List className="flex shrink-0">
+            <Tabs.Trigger className={tabsTriggerClasses} value="allTab" disabled={metrics?.all === 0}>
               <Tab status={PaymentRequestStatus.All} totalRecords={metrics?.all ?? 0}></Tab>
             </Tabs.Trigger>
-            <Tabs.Trigger className="TabsTrigger" value="unpaidTab" disabled={metrics?.unpaid === 0}>
+            <Tabs.Trigger className={tabsTriggerClasses} value="unpaidTab" disabled={metrics?.unpaid === 0}>
               <Tab status={PaymentRequestStatus.None} totalRecords={metrics?.unpaid ?? 0}></Tab>
             </Tabs.Trigger>
-            <Tabs.Trigger className="TabsTrigger" value="partiallyPaidTab" disabled={metrics?.partiallyPaid === 0}>
+            <Tabs.Trigger
+              className={tabsTriggerClasses}
+              value="partiallyPaidTab"
+              disabled={metrics?.partiallyPaid === 0}
+            >
               <Tab status={PaymentRequestStatus.PartiallyPaid} totalRecords={metrics?.partiallyPaid ?? 0}></Tab>
             </Tabs.Trigger>
-            <Tabs.Trigger className="TabsTrigger" value="paidTab" disabled={metrics?.paid === 0}>
+            <Tabs.Trigger className={tabsTriggerClasses} value="paidTab" disabled={metrics?.paid === 0}>
               <Tab status={PaymentRequestStatus.FullyPaid} totalRecords={metrics?.paid ?? 0}></Tab>
             </Tabs.Trigger>
           </Tabs.List>
-          <Tabs.Content className="TabsContent" value="allTab">
+          <Tabs.Content className={tabsContentClasses} value="allTab">
             <div>
               <PaymentRequestTable
                 paymentRequests={localPaymentRequests}
@@ -158,7 +167,7 @@ const PaymentRequestDashboard = ({
               />
             </div>
           </Tabs.Content>
-          <Tabs.Content className="TabsContent" value="unpaidTab">
+          <Tabs.Content className={tabsContentClasses} value="unpaidTab">
             <div>
               <PaymentRequestTable
                 paymentRequests={localPaymentRequests}
@@ -175,7 +184,7 @@ const PaymentRequestDashboard = ({
               />
             </div>
           </Tabs.Content>
-          <Tabs.Content className="TabsContent" value="partiallyPaidTab">
+          <Tabs.Content className={tabsContentClasses} value="partiallyPaidTab">
             <div>
               <PaymentRequestTable
                 paymentRequests={localPaymentRequests}
@@ -192,7 +201,7 @@ const PaymentRequestDashboard = ({
               />
             </div>
           </Tabs.Content>
-          <Tabs.Content className="TabsContent" value="paidTab">
+          <Tabs.Content className={tabsContentClasses} value="paidTab">
             <div>
               <PaymentRequestTable
                 paymentRequests={localPaymentRequests}

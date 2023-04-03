@@ -1,21 +1,32 @@
 import ellipseGrey from '../../../assets/images/ellipse.grey.svg';
 import ellipseGreen from '../../../assets/images/ellipse.green.svg';
 import ellipseOrange from '../../../assets/images/ellipse.orange.svg';
+import ellipse from '../../../assets/images/ellipse.svg';
+
 import { PaymentRequestStatus } from '../../../api/types/Enums';
+import classNames from 'classnames';
 
 export interface TabProps {
   status: PaymentRequestStatus;
   totalRecords: number;
 }
 
-const getIconForStatus = (status: PaymentRequestStatus) => {
+const ellipseClassNames = (status: string) => {
+  return classNames({
+    'fill-[#ABB2BA]': status === PaymentRequestStatus.None,
+    'fill-[#E88C30]': status === PaymentRequestStatus.PartiallyPaid,
+    'fill-[#00CC88]': status === PaymentRequestStatus.FullyPaid,
+  });
+};
+
+const getIconFillForStatus = (status: PaymentRequestStatus) => {
   switch (status) {
     case PaymentRequestStatus.PartiallyPaid:
-      return ellipseOrange;
+      return ellipse;
     case PaymentRequestStatus.FullyPaid:
-      return ellipseGreen;
+      return ellipse;
     case PaymentRequestStatus.None:
-      return ellipseGrey;
+      return ellipse;
     default:
       return;
   }
@@ -39,9 +50,19 @@ const Tab = ({ status, totalRecords }: TabProps) => {
     <div>
       <div className="flex flex-col items-center px-8">
         <span className="text-[1.25rem] leading-7 font-semibold tabular-nums">{totalRecords}</span>
-        <div className="flex items-center space-x-1 whitespace-nowrap">
-          {getIconForStatus(status) && <img src={getIconForStatus(status)} alt="ellipse" className="pr-1" />}
-          <span className="text-sm leading-6 font-normal">{getDisplayTextForStatus(status)}</span>
+        <div className="flex items-center whitespace-nowrap">
+          {getIconFillForStatus(status) && (
+            <svg
+              width="6"
+              height="6"
+              viewBox="0 0 6 6"
+              xmlns="http://www.w3.org/2000/svg"
+              className={ellipseClassNames(status)}
+            >
+              <circle cx="3" cy="3" r="3" />
+            </svg>
+          )}
+          <span className="text-sm leading-6 font-normal pl-1.5">{getDisplayTextForStatus(status)}</span>
         </div>
       </div>
     </div>
