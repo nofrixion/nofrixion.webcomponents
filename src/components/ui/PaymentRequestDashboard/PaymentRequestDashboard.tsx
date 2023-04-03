@@ -86,6 +86,10 @@ const PaymentRequestDashboard = ({
     console.log('Duplicate payment request clicked: ', paymentRequest);
   };
 
+  const onCreatePaymentRequest = () => {
+    console.log('Create payment request clicked.');
+  };
+
   useEffect(() => {
     switch (selectedTab) {
       case 'allTab':
@@ -119,10 +123,7 @@ const PaymentRequestDashboard = ({
             <span>Settings</span>
           </div>
           <div className="pt-16 pl-8">
-            <PrimaryButton
-              label="Create payment request"
-              onClick={() => console.log('Create payment request')}
-            ></PrimaryButton>
+            <PrimaryButton label="Create payment request" onClick={() => onCreatePaymentRequest()}></PrimaryButton>
           </div>
         </div>
       </div>
