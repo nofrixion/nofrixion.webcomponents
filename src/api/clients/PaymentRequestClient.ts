@@ -159,17 +159,17 @@ export class PaymentRequestClient extends BaseApiClient {
   }> {
     let url = `${this.apiBaseUrl}/paymentrequests/metrics`;
 
-    const filerParams = new URLSearchParams();
+    const filterParams = new URLSearchParams();
 
     if (fromDate) {
-      filerParams.append('fromDate', fromDate.toUTCString());
+      filterParams.append('fromDate', fromDate.toUTCString());
     }
 
     if (toDate) {
-      filerParams.append('toDate', toDate.toUTCString());
+      filterParams.append('toDate', toDate.toUTCString());
     }
 
-    url = `${url}?${filerParams.toString()}`;
+    url = `${url}?${filterParams.toString()}`;
 
     const response = await this.httpRequest<PaymentRequestMetrics>(url, HttpMethod.GET);
 
