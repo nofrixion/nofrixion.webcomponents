@@ -134,7 +134,7 @@ const PaymentRequestDashboard = ({
           <div className="pl-12 pt-16 font-medium text-base cursor-pointer">
             <PrimaryButton
               label="Settings"
-              className="text-defaultText hover:bg-greyBg"
+              className="text-defaultText hover:bg-greyBg font-normal"
               onClick={() => onCreatePaymentRequest()}
             ></PrimaryButton>
           </div>
