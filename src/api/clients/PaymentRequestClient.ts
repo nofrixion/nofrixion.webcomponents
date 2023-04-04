@@ -1,6 +1,7 @@
 import {
   ApiError,
   PaymentRequestCreate,
+  PaymentRequestMetrics,
   PaymentRequestMinimal,
   PaymentRequestPageResponse,
 } from '../types/ApiResponses';
@@ -141,5 +142,37 @@ export class PaymentRequestClient extends BaseApiClient {
     );
 
     return !response.error ? { success: true } : { success: false, error: response.error };
+  }
+
+  /**
+   * Gets the metrics for Payment Requests
+   * @param fromDate Optional. The date filter to apply to retrieve payment requests metrics after this date.
+   * @param toDate Optional. The date filter to apply to retrieve payment requests metrics up until this date.
+   * @returns A PaymentRequestMetrics response if successful. An ApiError if not successful.
+   */
+  async metrics(
+    fromDate?: Date,
+    toDate?: Date,
+  ): Promise<{
+    data?: PaymentRequestMetrics;
+    error?: ApiError;
+  }> {
+    let url = `${this.apiBaseUrl}/paymentrequests/metrics`;
+
+    const filterParams = new URLSearchParams();
+
+    if (fromDate) {
+      filterParams.append('fromDate', fromDate.toUTCString());
+    }
+
+    if (toDate) {
+      filterParams.append('toDate', toDate.toUTCString());
+    }
+
+    url = `${url}?${filterParams.toString()}`;
+
+    const response = await this.httpRequest<PaymentRequestMetrics>(url, HttpMethod.GET);
+
+    return response;
   }
 }

@@ -36,7 +36,7 @@ const Pager = ({ pageSize, totalRecords, onPageChange }: PagerProps) => {
     }
 
     onPageChange(currentPage);
-  }, [currentPage, pageSize]);
+  }, [currentPage, pageSize, totalRecords, totalPages, toRecord, fromRecord]);
 
   useEffect(() => {
     setTotalPages(Math.ceil(totalRecords / pageSize));

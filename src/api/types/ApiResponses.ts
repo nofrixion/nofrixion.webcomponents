@@ -163,3 +163,10 @@ export type Tag = {
   colourHex: string;
   description: string;
 };
+
+export type PaymentRequestMetrics = {
+  all: number;
+  paid: number;
+  unpaid: number;
+  partiallyPaid: number;
+};

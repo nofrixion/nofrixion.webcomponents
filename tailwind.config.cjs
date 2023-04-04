@@ -4,6 +4,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        mainGrey: '#F6F8F9',
         defaultText: '#00264D',
         greyText: '#73808C',
         controlGrey: '#8F99A3',
@@ -15,6 +16,8 @@ module.exports = {
         positiveActionBackground: '#40BFBF',
         negativeActionBackground: '#E9EDF1',
         greenText: '#05C786',
+        primaryGreen: '#40BFBF',
+        primaryGreenHover: '#00807F',
       },
       fontSize: {
         '13px': '0.8125rem',
