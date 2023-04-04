@@ -12,6 +12,7 @@ import { usePaymentRequests } from '../../../api/hooks/usePaymentRequests';
 import { LocalPaymentRequest } from '../../../api/types/LocalTypes';
 import { makeToast } from '../Toast/Toast';
 import { RemotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
+import classNames from 'classnames';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -34,8 +35,17 @@ const PaymentRequestDashboard = ({
     toDate: new Date(),
   });
 
-  const tabsTriggerClasses =
-    "text-greyText hover:text-defaultText hover:cursor-pointer pt-0 h-20 data-[state='active']:text-defaultText data-[state='active']:bg-white data-[state='active']:cursor-default data-[state='active']:shadow-[inset_0_2px_0px_rgba(0,178,178,1)] data-[disabled]:pointer-events-none data-[disabled]:cursor-not-allowed focus:relative";
+  const tabsTriggerClassNames = (status: PaymentRequestStatus) => {
+    return classNames(
+      "text-greyText hover:text-defaultText hover:bg-[#F0F2F5] hover:cursor-pointer pt-0 h-20 data-[state='active']:text-defaultText data-[state='active']:bg-white data-[state='active']:cursor-default data-[disabled]:pointer-events-none data-[disabled]:cursor-not-allowed focus:relative",
+      {
+        "data-[state='active']:shadow-[inset_0_2px_0px_#00B2B2]": status === PaymentRequestStatus.All,
+        "data-[state='active']:shadow-[inset_0_2px_0px_#E88C30]": status === PaymentRequestStatus.PartiallyPaid,
+        "data-[state='active']:shadow-[inset_0_2px_0px_#ABB2BA]": status === PaymentRequestStatus.None,
+        "data-[state='active']:shadow-[inset_0_2px_0px_#00CC88]": status === PaymentRequestStatus.FullyPaid,
+      },
+    );
+  };
 
   const tabsContentClasses = 'bg-white p-6 h-full';
 
@@ -113,40 +123,48 @@ const PaymentRequestDashboard = ({
     <div className="bg-mainGrey text-defaultText h-full pl-8 pr-8 pb-10">
       <div className="flex justify-between">
         <div className="flex">
-          <div className="pl-12 pt-[72px] pb-[68px] leading-8 font-medium text-[1.75rem]">
+          <div className="pl-4 pt-[72px] pb-[68px] leading-8 font-medium text-[1.75rem]">
             <span>Payment requests</span>
           </div>
           <div className="pl-12 pt-[69px]">
             <DateRangePicker onDateChange={(dateRange) => setDateRange(dateRange)}></DateRangePicker>
           </div>
         </div>
-        <div className="flex pr-10">
-          <div className="pl-12 pt-[76px] font-medium text-base cursor-pointer hover:text-controlGreyHover">
-            <span>Settings</span>
+        <div className="flex pr-6">
+          <div className="pl-12 pt-16 font-medium text-base cursor-pointer">
+            <PrimaryButton
+              label="Settings"
+              className="text-defaultText hover:bg-greyBg"
+              onClick={() => onCreatePaymentRequest()}
+            ></PrimaryButton>
           </div>
-          <div className="pt-16 pl-8">
-            <PrimaryButton label="Create payment request" onClick={() => onCreatePaymentRequest()}></PrimaryButton>
+          <div className="pt-16 pl-2">
+            <PrimaryButton
+              label="Create payment request"
+              className="text-white bg-primaryGreen hover:bg-primaryGreenHover"
+              onClick={() => onCreatePaymentRequest()}
+            ></PrimaryButton>
           </div>
         </div>
       </div>
 
       <div className="h-full">
-        <Tabs.Root className="TabsRoot" defaultValue="allTab" onValueChange={(value) => setSelectedTab(value)}>
+        <Tabs.Root defaultValue="allTab" onValueChange={(value) => setSelectedTab(value)}>
           <Tabs.List className="flex shrink-0">
-            <Tabs.Trigger className={tabsTriggerClasses} value="allTab" disabled={metrics?.all === 0}>
+            <Tabs.Trigger className={tabsTriggerClassNames(status)} value="allTab" disabled={metrics?.all === 0}>
               <Tab status={PaymentRequestStatus.All} totalRecords={metrics?.all ?? 0}></Tab>
             </Tabs.Trigger>
-            <Tabs.Trigger className={tabsTriggerClasses} value="unpaidTab" disabled={metrics?.unpaid === 0}>
+            <Tabs.Trigger className={tabsTriggerClassNames(status)} value="unpaidTab" disabled={metrics?.unpaid === 0}>
               <Tab status={PaymentRequestStatus.None} totalRecords={metrics?.unpaid ?? 0}></Tab>
             </Tabs.Trigger>
             <Tabs.Trigger
-              className={tabsTriggerClasses}
+              className={tabsTriggerClassNames(status)}
               value="partiallyPaidTab"
               disabled={metrics?.partiallyPaid === 0}
             >
               <Tab status={PaymentRequestStatus.PartiallyPaid} totalRecords={metrics?.partiallyPaid ?? 0}></Tab>
             </Tabs.Trigger>
-            <Tabs.Trigger className={tabsTriggerClasses} value="paidTab" disabled={metrics?.paid === 0}>
+            <Tabs.Trigger className={tabsTriggerClassNames(status)} value="paidTab" disabled={metrics?.paid === 0}>
               <Tab status={PaymentRequestStatus.FullyPaid} totalRecords={metrics?.paid ?? 0}></Tab>
             </Tabs.Trigger>
           </Tabs.List>

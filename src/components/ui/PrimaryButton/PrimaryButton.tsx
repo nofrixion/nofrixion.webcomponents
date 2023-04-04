@@ -1,12 +1,14 @@
 interface PrimaryButtonProps {
   label: string;
+  className: string;
   onClick?: () => void;
 }
 
-const PrimaryButton = ({ label, onClick }: PrimaryButtonProps) => {
+const PrimaryButton = ({ label, className, onClick }: PrimaryButtonProps) => {
+  console.log('PrimaryButton', className);
   return (
     <button
-      className="text-white bg-primaryGreen hover:bg-primaryGreenHover px-6 py-3 rounded-full text-base whitespace-nowrap inline-block align-middle cursor-pointer transistion"
+      className={`px-6 py-3 rounded-full text-base whitespace-nowrap inline-block align-middle cursor-pointer transistion ${className}`}
       onClick={onClick}
     >
       {label}
