@@ -13,7 +13,7 @@ const InputTextField = ({ label, optional, ...props }: InputTextFieldProps) => {
       </div>
       <input
         type="text"
-        className="pl-3 border border-borderGrey rounded-[0.25rem] h-12 w-[27rem] inline-block font-medium text-sm text-defaultText"
+        className="pl-3 border border-borderGrey rounded-[0.25rem] h-12 w-[27rem] inline-block font-normal text-sm text-defaultText"
         {...props}
       />
     </div>
