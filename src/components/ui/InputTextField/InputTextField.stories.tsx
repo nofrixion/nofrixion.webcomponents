@@ -18,6 +18,7 @@ export const Showcase = Template.bind({});
 
 Showcase.args = {
   label: 'Product or service',
+  value: 'Some Product or service',
   onChange: action('Product or service changed'),
 };
 
@@ -26,5 +27,6 @@ export const FirstNameOptional = Template.bind({});
 FirstNameOptional.args = {
   label: 'First name',
   optional: true,
+  value: 'Jimbo',
   onChange: action('First name changed'),
 };
