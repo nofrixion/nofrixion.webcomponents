@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react';
 
 import PaymentRequestActionMenu from './PaymentRequestActionMenu';
 
@@ -17,9 +17,9 @@ export default {
       action: 'Delete selected',
     },
   },
-} as ComponentMeta<typeof PaymentRequestActionMenu>;
+} as Meta<typeof PaymentRequestActionMenu>;
 
-const Template: ComponentStory<typeof PaymentRequestActionMenu> = (args) => <PaymentRequestActionMenu {...args} />;
+const Template: StoryFn<typeof PaymentRequestActionMenu> = (args) => <PaymentRequestActionMenu {...args} />;
 
 export const ActionMenuTemplate = Template.bind({});
 ActionMenuTemplate.args = {};

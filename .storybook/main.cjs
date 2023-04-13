@@ -12,12 +12,16 @@ module.exports = {
         postCss: true,
       },
     },
+    '@storybook/addon-mdx-gfm',
   ],
-  framework: '@storybook/react',
-  core: {
-    builder: '@storybook/builder-vite',
+  framework: {
+    name: '@storybook/react-vite',
+    options: {},
   },
   features: {
     storyStoreV7: true,
+  },
+  docs: {
+    autodocs: true,
   },
 };

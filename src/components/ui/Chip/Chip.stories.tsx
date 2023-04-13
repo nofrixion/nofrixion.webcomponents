@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react';
 
 import Chip from './Chip';
 
@@ -9,9 +9,9 @@ export default {
   argTypes: {
     label: { control: 'text' },
   },
-} as ComponentMeta<typeof Chip>;
+} as Meta<typeof Chip>;
 
-const Template: ComponentStory<typeof Chip> = (args) => <Chip {...args} />;
+const Template: StoryFn<typeof Chip> = (args) => <Chip {...args} />;
 
 export const Regular = Template.bind({});
 Regular.args = {

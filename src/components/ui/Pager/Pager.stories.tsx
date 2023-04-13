@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import Pager from './Pager';
 
@@ -10,9 +10,9 @@ export default {
     pageSize: { control: 'number' },
     totalRecords: { control: 'number' },
   },
-} as ComponentMeta<typeof Pager>;
+} as Meta<typeof Pager>;
 
-const Template: ComponentStory<typeof Pager> = (args) => <Pager {...args} />;
+const Template: StoryFn<typeof Pager> = (args) => <Pager {...args} />;
 
 export const Showcase = Template.bind({});
 

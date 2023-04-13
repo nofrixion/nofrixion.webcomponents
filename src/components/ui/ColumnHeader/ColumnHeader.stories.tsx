@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import ColumnHeader from './ColumnHeader';
 
@@ -9,9 +9,9 @@ export default {
   argTypes: {
     name: { control: 'text' },
   },
-} as ComponentMeta<typeof ColumnHeader>;
+} as Meta<typeof ColumnHeader>;
 
-const Template: ComponentStory<typeof ColumnHeader> = (args) => <ColumnHeader {...args} />;
+const Template: StoryFn<typeof ColumnHeader> = (args) => <ColumnHeader {...args} />;
 
 export const Showcase = Template.bind({});
 

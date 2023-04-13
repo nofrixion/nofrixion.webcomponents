@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react';
 
 import Card from './Card';
 
@@ -14,9 +14,9 @@ export default {
     href: { control: 'text' },
     size: { control: 'inline-radio', options: ['medium', 'large'] },
   },
-} as ComponentMeta<typeof Card>;
+} as Meta<typeof Card>;
 
-const Template: ComponentStory<typeof Card> = (args) => <Card {...args} />;
+const Template: StoryFn<typeof Card> = (args) => <Card {...args} />;
 
 export const Medium = Template.bind({});
 Medium.args = {
