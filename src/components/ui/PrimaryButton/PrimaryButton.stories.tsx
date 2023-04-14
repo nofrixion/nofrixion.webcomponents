@@ -1,14 +1,14 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react';
 
 import PrimaryButton from './PrimaryButton';
 
 export default {
   title: 'UI/PrimaryButton',
   component: PrimaryButton,
-} as ComponentMeta<typeof PrimaryButton>;
+} as Meta<typeof PrimaryButton>;
 
-const Template: ComponentStory<typeof PrimaryButton> = (args) => <PrimaryButton {...args} />;
+const Template: StoryFn<typeof PrimaryButton> = (args) => <PrimaryButton {...args} />;
 
 export const Primary = Template.bind({});
 Primary.args = {

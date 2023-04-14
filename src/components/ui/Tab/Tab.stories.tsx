@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import React from 'react';
 import { PaymentRequestStatus } from '../../../api/types/Enums';
 import Tab from './Tab';
@@ -10,9 +10,9 @@ export default {
   argTypes: {
     totalRecords: { control: 'number' },
   },
-} as ComponentMeta<typeof Tab>;
+} as Meta<typeof Tab>;
 
-const Template: ComponentStory<typeof Tab> = (args) => <Tab {...args} />;
+const Template: StoryFn<typeof Tab> = (args) => <Tab {...args} />;
 
 export const Showcase = Template.bind({});
 

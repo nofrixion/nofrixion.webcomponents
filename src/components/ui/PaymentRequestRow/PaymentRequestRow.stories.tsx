@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react';
 
 import PaymentRequestRow from './PaymentRequestRow';
 
@@ -81,9 +81,9 @@ export default {
       </table>
     ),
   ],
-} as ComponentMeta<typeof PaymentRequestRow>;
+} as Meta<typeof PaymentRequestRow>;
 
-const Template: ComponentStory<typeof PaymentRequestRow> = (args) => <PaymentRequestRow {...args} />;
+const Template: StoryFn<typeof PaymentRequestRow> = (args) => <PaymentRequestRow {...args} />;
 
 export const Playground = Template.bind({});
 Playground.args = {

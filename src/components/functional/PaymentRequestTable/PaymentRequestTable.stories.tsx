@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react';
 import { apiUrls } from '../../../utils/constants';
 import PaymentRequestTable from './PaymentRequestTable';
 
@@ -19,9 +19,9 @@ export default {
       },
     },
   },
-} as ComponentMeta<typeof PaymentRequestTable>;
+} as Meta<typeof PaymentRequestTable>;
 
-const Template: ComponentStory<typeof PaymentRequestTable> = (args) => <PaymentRequestTable {...args} />;
+const Template: StoryFn<typeof PaymentRequestTable> = (args) => <PaymentRequestTable {...args} />;
 
 export const Showcase = Template.bind({});
 Showcase.args = {

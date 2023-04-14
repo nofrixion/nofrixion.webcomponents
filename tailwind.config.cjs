@@ -18,6 +18,7 @@ module.exports = {
         greenText: '#05C786',
         primaryGreen: '#40BFBF',
         primaryGreenHover: '#00807F',
+        borderGrey: '#D5DBDD',
       },
       fontSize: {
         '13px': '0.8125rem',

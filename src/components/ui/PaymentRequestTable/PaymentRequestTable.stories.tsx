@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react';
 
 import PaymentRequestTable from './PaymentRequestTable';
 
@@ -29,9 +29,9 @@ export default {
       action: 'Page Changed',
     },
   },
-} as ComponentMeta<typeof PaymentRequestTable>;
+} as Meta<typeof PaymentRequestTable>;
 
-const Template: ComponentStory<typeof PaymentRequestTable> = (args) => <PaymentRequestTable {...args} />;
+const Template: StoryFn<typeof PaymentRequestTable> = (args) => <PaymentRequestTable {...args} />;
 
 const paymentRequests = [
   {

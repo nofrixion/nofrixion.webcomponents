@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import React from 'react';
 import { PaymentRequestStatus } from '../../../api/types/Enums';
 import PaymentRequestDashboard from './PaymentRequestDashboard';
@@ -21,9 +21,9 @@ export default {
       },
     },
   },
-} as ComponentMeta<typeof PaymentRequestDashboard>;
+} as Meta<typeof PaymentRequestDashboard>;
 
-const Template: ComponentStory<typeof PaymentRequestDashboard> = (args) => <PaymentRequestDashboard {...args} />;
+const Template: StoryFn<typeof PaymentRequestDashboard> = (args) => <PaymentRequestDashboard {...args} />;
 
 export const Showcase = Template.bind({});
 
