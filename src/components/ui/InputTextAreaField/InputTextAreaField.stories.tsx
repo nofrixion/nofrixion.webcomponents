@@ -39,9 +39,9 @@ AnotherDescriptionOptional.args = {
   maxLength: 140,
 };
 
-export const MaxLength50 = Template.bind({});
+export const MaxLength20 = Template.bind({});
 
-MaxLength50.args = {
+MaxLength20.args = {
   label: 'Another Description',
   value: 'Max length is twenty',
   optional: true,
