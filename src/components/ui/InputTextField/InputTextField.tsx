@@ -1,11 +1,13 @@
 import { useId } from 'react';
 
-interface InputTextFieldProps extends React.HTMLAttributes<HTMLInputElement> {
+export interface InputTextFieldProps extends React.HTMLAttributes<HTMLInputElement> {
   label: string;
+  value: string;
   optional: boolean;
+  onChangeInput: (value: string) => void;
 }
 
-const InputTextField = ({ label, optional, ...props }: InputTextFieldProps) => {
+const InputTextField = ({ label, value, optional, onChangeInput, ...props }: InputTextFieldProps) => {
   const textId = useId();
 
   return (
@@ -21,7 +23,11 @@ const InputTextField = ({ label, optional, ...props }: InputTextFieldProps) => {
         id={textId}
         type="text"
         className="pl-3 border border-borderGrey rounded-[0.25rem] h-12 w-[27rem] inline-block font-normal text-sm text-defaultText"
-        onChange={props.onChange}
+        onChange={(e) => {
+          onChangeInput(e.target.value);
+        }}
+        value={value}
+        {...props}
       />
     </div>
   );
