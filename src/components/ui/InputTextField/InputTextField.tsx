@@ -6,7 +6,7 @@ export interface InputTextFieldProps extends React.HTMLAttributes<HTMLInputEleme
   optional: boolean;
 }
 
-const InputTextField = ({ label, value, optional, onChange: onChangeInput, ...props }: InputTextFieldProps) => {
+const InputTextField = ({ label, value, optional, ...props }: InputTextFieldProps) => {
   const textId = useId();
 
   return (
