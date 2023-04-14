@@ -21,7 +21,7 @@ const InputTextField = ({ label, optional, ...props }: InputTextFieldProps) => {
         id={textId}
         type="text"
         className="pl-3 border border-borderGrey rounded-[0.25rem] h-12 w-[27rem] inline-block font-normal text-sm text-defaultText"
-        {...props}
+        onChange={props.onChange}
       />
     </div>
   );
