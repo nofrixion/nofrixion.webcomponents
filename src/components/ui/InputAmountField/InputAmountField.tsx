@@ -39,10 +39,10 @@ const InputAmountField = ({ value, currency, onCurrencyChange, ...props }: Input
     <div className="flex flex-col">
       <div className="flex w-[13.938rem] py-[0.438rem] border border-borderGrey rounded-[0.25rem] justify-between">
         <div className="flex">
-          <span className="flex items-center ml-3 font-normal text-sm text-greyText">{currencySymbol}</span>
+          <span className="flex items-center ml-3 mr-2 font-normal text-sm text-greyText">{currencySymbol}</span>
           <input
             type="number"
-            className="ml-2 w-32 font-normal text-sm text-defaultText appearance-none"
+            className="w-32 font-normal text-sm text-defaultText appearance-none"
             value={value}
             {...props}
           />
