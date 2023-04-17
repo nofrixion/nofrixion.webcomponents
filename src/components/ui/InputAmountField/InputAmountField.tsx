@@ -37,23 +37,21 @@ const InputAmountField = ({ value, currency, onCurrencyChange, ...props }: Input
 
   return (
     <div className="flex flex-col">
-      <div className="flex group relative w-[13.938rem] py-[0.438rem] border border-borderGrey rounded-[0.25rem] justify-between">
+      <div className="flex w-[13.938rem] py-[0.438rem] border border-borderGrey rounded-[0.25rem] justify-between">
         <div className="flex">
-          <span className="flex absolute align-middle inset-y-0 items-center pl-3 font-normal text-sm text-greyText">
-            {currencySymbol}
-          </span>
+          <span className="flex items-center ml-3 font-normal text-sm text-greyText">{currencySymbol}</span>
           <input
             type="number"
-            className="pl-7 w-40 inline-block font-normal text-sm text-defaultText appearance-none"
+            className="ml-2 w-32 font-normal text-sm text-defaultText appearance-none"
             value={value}
             {...props}
           />
         </div>
         <DropdownMenu.Root>
           <DropdownMenu.Trigger>
-            <div className="flex inset-y-0 my-2 mr-3 text-greyText font-normal leading-4 hover:text-defaultText bg-transparent text-sm whitespace-nowrap cursor-pointer select-none stroke-greyText hover:stroke-defaultText items-center">
+            <div className="flex items-center my-2 mr-3 text-greyText font-normal leading-4 hover:text-defaultText bg-transparent text-sm whitespace-nowrap cursor-pointer select-none stroke-greyText hover:stroke-defaultText">
               <ResizableComponent>
-                <span className="py-2 pr-2">{selectedCurrency}</span>
+                <span className="mr-2">{selectedCurrency}</span>
               </ResizableComponent>
 
               <svg width="10" height="8" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
