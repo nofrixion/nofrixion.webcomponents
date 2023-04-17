@@ -27,7 +27,7 @@ const actionItem = cva(actionItemClassNames, {
 });
 
 const InputAmountField = ({ value, currency, onCurrencyChange, ...props }: InputAmountFieldProps) => {
-  const [currencySymbol, setCurrencySymbol] = useState(CurrencySymbol.EUR);
+  const [currencySymbol, setCurrencySymbol] = useState('');
   const [selectedCurrency, setSelectedCurrency] = useState(currency);
 
   useEffect(() => {
@@ -38,8 +38,8 @@ const InputAmountField = ({ value, currency, onCurrencyChange, ...props }: Input
   return (
     <div className="flex flex-col">
       <div className="flex group relative w-[13.938rem] py-[0.438rem] border border-borderGrey rounded-[0.25rem] justify-between">
-        <div className="flex absoulte align-middle">
-          <span className="absolute align-middle left-0 inset-y-0 flex items-center pl-3 font-normal text-sm text-greyText">
+        <div className="flex">
+          <span className="flex absolute align-middle inset-y-0 items-center pl-3 font-normal text-sm text-greyText">
             {currencySymbol}
           </span>
           <input
