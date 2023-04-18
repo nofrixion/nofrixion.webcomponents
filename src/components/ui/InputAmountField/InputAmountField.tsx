@@ -37,18 +37,20 @@ const InputAmountField = ({ value, currency, onCurrencyChange, ...props }: Input
 
   return (
     <div className="flex w-[13.938rem] h-12 border border-borderGrey rounded-[0.25rem] justify-between">
-      <div className="flex">
-        <span className="flex items-center ml-3 mr-2 font-normal text-sm text-greyText">{currencySymbol}</span>
+      <div className="flex relative">
+        <span className="flex absolute inset-y-0 pointer-events-none items-center ml-3 mr-2 font-normal text-sm text-greyText">
+          {currencySymbol}
+        </span>
         <input
           type="number"
-          className="w-32 font-normal text-sm text-defaultText appearance-none"
+          className="w-full pl-7 rounded-[0.25rem] font-normal text-sm text-defaultText appearance-none"
           value={value}
           {...props}
         />
       </div>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
-          <div className="flex items-center mr-3 text-greyText font-normal leading-4 hover:text-defaultText bg-transparent text-sm whitespace-nowrap cursor-pointer select-none stroke-greyText hover:stroke-defaultText">
+          <div className="flex h-full items-center pl-3 mr-3 text-greyText font-normal leading-4 hover:text-defaultText bg-transparent text-sm whitespace-nowrap cursor-pointer select-none stroke-greyText hover:stroke-defaultText">
             <ResizableComponent>
               <span className="mr-2">{selectedCurrency}</span>
             </ResizableComponent>
