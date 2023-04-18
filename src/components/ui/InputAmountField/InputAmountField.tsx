@@ -36,7 +36,7 @@ const InputAmountField = ({ value, currency, onCurrencyChange, ...props }: Input
   }, [selectedCurrency]);
 
   return (
-    <div className="flex w-[13.938rem] py-[0.438rem] border border-borderGrey rounded-[0.25rem] justify-between">
+    <div className="flex w-[13.938rem] h-12 border border-borderGrey rounded-[0.25rem] justify-between">
       <div className="flex">
         <span className="flex items-center ml-3 mr-2 font-normal text-sm text-greyText">{currencySymbol}</span>
         <input
@@ -48,7 +48,7 @@ const InputAmountField = ({ value, currency, onCurrencyChange, ...props }: Input
       </div>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
-          <div className="flex items-center my-2 mr-3 text-greyText font-normal leading-4 hover:text-defaultText bg-transparent text-sm whitespace-nowrap cursor-pointer select-none stroke-greyText hover:stroke-defaultText">
+          <div className="flex items-center mr-3 text-greyText font-normal leading-4 hover:text-defaultText bg-transparent text-sm whitespace-nowrap cursor-pointer select-none stroke-greyText hover:stroke-defaultText">
             <ResizableComponent>
               <span className="mr-2">{selectedCurrency}</span>
             </ResizableComponent>
