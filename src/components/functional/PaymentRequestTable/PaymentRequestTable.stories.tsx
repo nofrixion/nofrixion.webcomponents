@@ -3,7 +3,7 @@ import { StoryFn, Meta } from '@storybook/react';
 import { apiUrls } from '../../../utils/constants';
 import PaymentRequestTable from './PaymentRequestTable';
 
-export default {
+const meta: Meta<typeof PaymentRequestTable> = {
   title: 'Functional/Payment Request Table',
   component: PaymentRequestTable,
   argTypes: {
@@ -13,10 +13,8 @@ export default {
       },
     },
     apiUrl: {
-      control: {
-        type: 'select',
-        options: Object.values(apiUrls),
-      },
+      control: { type: 'select' },
+      options: Object.values(apiUrls),
     },
   },
 } as Meta<typeof PaymentRequestTable>;
@@ -28,3 +26,5 @@ Showcase.args = {
   token: 'eyJhbGciOiJIUz...',
   apiUrl: apiUrls.sandbox,
 };
+
+export default meta;

@@ -33,9 +33,11 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-multi-date-picker": "^3.3.4",
+    "react-text-mask": "^5.5.0",
     "react-to-html-element": "^1.4.7",
     "react-toastify": "^9.1.2",
-    "react-use-measure": "^2.1.1"
+    "react-use-measure": "^2.1.1",
+    "text-mask-addons": "^3.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.21.0",
@@ -51,6 +53,7 @@
     "@storybook/web-components": "^7.0.4",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
+    "@types/react-text-mask": "^5.4.11",
     "@vitejs/plugin-react-swc": "^3.0.0",
     "autoprefixer": "^10.4.14",
     "babel-loader": "^8.3.0",
