@@ -20,6 +20,7 @@ const Template: StoryFn<InputAmountFieldProps> = (args) => {
   const [localValue, setValue] = useState<string>(args.value);
 
   const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.value);
     setValue(event.target.value);
   };
 
@@ -29,7 +30,7 @@ const Template: StoryFn<InputAmountFieldProps> = (args) => {
 export const Showcase = Template.bind({});
 
 Showcase.args = {
-  value: '12.99',
+  value: '1222.99',
   currency: 'EUR',
   onCurrencyChange: action('Currency changed'),
 };

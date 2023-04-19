@@ -6,11 +6,6 @@ export enum Currency {
   BTC = 'BTC',
 }
 
-export enum CurrencySymbol {
-  GBP = '£',
-  EUR = '€',
-}
-
 export enum CardTokenCreateModes {
   None = 'None',
   ConsentNotRequired = 'ConsentNotRequired',
