@@ -1,0 +1,81 @@
+import { Fragment } from 'react';
+import { Dialog, Transition } from '@headlessui/react';
+
+interface CustomModalProps extends BaseModalProps {
+  title: string;
+  children: React.ReactNode;
+}
+
+export interface BaseModalProps {
+  open: boolean;
+  onApply?: (data: any) => void;
+  onDismiss: () => void;
+}
+
+const CustomModal = ({ title, children, open, onApply, onDismiss }: CustomModalProps) => {
+  return (
+    <Transition appear show={open} as={Fragment}>
+      <Dialog as="div" onClose={onDismiss}>
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0 bg-black bg-opacity-25" />
+        </Transition.Child>
+
+        <div className="fixed inset-0 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-lg bg-white text-left align-middle shadow-xl transition-all">
+                <Dialog.Title as="h3" className="text-2xl font-medium leading-6 p-12">
+                  {title}
+                </Dialog.Title>
+                <div className="px-12">{children}</div>
+
+                <div className="bg-mainGrey flex pr-6 py-4 mt-12">
+                  <button
+                    type="button"
+                    className="inline-flex justify-center rounded-full bg-[#006A80] py-3 px-16 text-sm text-white font-semibold ml-auto cursor-pointer"
+                    onClick={onApply}
+                  >
+                    Apply
+                  </button>
+                </div>
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
+        </div>
+      </Dialog>
+    </Transition>
+  );
+};
+
+export default CustomModal;
+
+{
+  /* 
+<CustomModal title='Available methods' onApply={() => {console.log("Applied")}} onUseAsDefaultChanged={(value) => {console.log("Use as default")}}>
+  <Trigger>
+    <p>Trigger</p>
+  </Trigger>
+  <Content>
+    <ToggleControl label="Bank transfer" value={bankTransferEnabled} onChange={(value) => onBankTransferEnabledChanged(value)} />
+    <ToggleControl label="Apple Pay" value={applePayEnabled} onChange={(value) => onApplePayEnabledChanged(value)} />
+    <ToggleControl label="Bitcoin Lightning" value={bitcoinLightningEnabled} onChange={(value) => onBitcoinLightningEnabledChanged(value)} />
+  </Content>
+</CustomModal>
+*/
+}
