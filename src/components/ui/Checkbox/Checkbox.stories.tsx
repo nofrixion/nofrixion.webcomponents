@@ -16,12 +16,7 @@ const Template: StoryFn<typeof Checkbox> = (args) => {
   };
   return (
     <>
-      <Checkbox
-        {...args}
-        value={checked}
-        onChange={onChangeChecked}
-        infoText="Select a priority bank to set it as the default payment option for users. This streamlines the payment process by displaying the preferred bank first."
-      />
+      <Checkbox {...args} value={checked} onChange={onChangeChecked} />
     </>
   );
 };
@@ -29,6 +24,8 @@ const Template: StoryFn<typeof Checkbox> = (args) => {
 export const Primary = Template.bind({});
 Primary.args = {
   label: 'Define a priority bank',
+  infoText:
+    'Select a priority bank to set it as the default payment option for users. This streamlines the payment process by displaying the preferred bank first.',
 };
 
 export const Secondary = Template.bind({});
