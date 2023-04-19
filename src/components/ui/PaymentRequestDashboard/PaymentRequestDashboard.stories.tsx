@@ -5,7 +5,7 @@ import { PaymentRequestStatus } from '../../../api/types/Enums';
 import PaymentRequestDashboard from './PaymentRequestDashboard';
 import { apiUrls } from '../../../utils/constants';
 
-export default {
+const meta: Meta<typeof PaymentRequestDashboard> = {
   title: 'Functional/PaymentRequestDashboard',
   component: PaymentRequestDashboard,
   argTypes: {
@@ -15,10 +15,8 @@ export default {
       },
     },
     apiUrl: {
-      control: {
-        type: 'select',
-        options: Object.values(apiUrls),
-      },
+      control: { type: 'select' },
+      options: Object.values(apiUrls),
     },
   },
 } as Meta<typeof PaymentRequestDashboard>;
@@ -31,3 +29,5 @@ Showcase.args = {
   token: 'Enter merchant token...',
   apiUrl: apiUrls.sandbox,
 };
+
+export default meta;
