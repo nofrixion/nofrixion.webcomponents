@@ -25,7 +25,7 @@ const Checkbox = ({ label, value, infoText, onChange }: CheckboxProps) => {
           <img src={CheckedIcon} alt="Checked icon" className="m-auto" />
         </RadixCheckbox.Indicator>
       </RadixCheckbox.Root>
-      <label className="cursor-pointer px-2" htmlFor={id}>
+      <label className="cursor-pointer pl-3 pr-2" htmlFor={id}>
         {label}
       </label>
 

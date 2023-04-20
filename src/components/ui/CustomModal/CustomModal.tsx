@@ -48,7 +48,7 @@ const CustomModal = ({ title, children, open, onApply, onDismiss }: CustomModalP
                 <div className="bg-mainGrey flex pr-6 py-4 mt-12">
                   <button
                     type="button"
-                    className="inline-flex justify-center rounded-full bg-[#006A80] py-3 px-16 text-sm text-white font-semibold ml-auto cursor-pointer"
+                    className="inline-flex justify-center rounded-full bg-[#006A80] py-3 px-16 text-sm text-white font-semibold ml-auto cursor-pointer transition hover:bg-[#144752]"
                     onClick={onApply}
                   >
                     Apply
@@ -64,18 +64,3 @@ const CustomModal = ({ title, children, open, onApply, onDismiss }: CustomModalP
 };
 
 export default CustomModal;
-
-{
-  /* 
-<CustomModal title='Available methods' onApply={() => {console.log("Applied")}} onUseAsDefaultChanged={(value) => {console.log("Use as default")}}>
-  <Trigger>
-    <p>Trigger</p>
-  </Trigger>
-  <Content>
-    <ToggleControl label="Bank transfer" value={bankTransferEnabled} onChange={(value) => onBankTransferEnabledChanged(value)} />
-    <ToggleControl label="Apple Pay" value={applePayEnabled} onChange={(value) => onApplePayEnabledChanged(value)} />
-    <ToggleControl label="Bitcoin Lightning" value={bitcoinLightningEnabled} onChange={(value) => onBitcoinLightningEnabledChanged(value)} />
-  </Content>
-</CustomModal>
-*/
-}

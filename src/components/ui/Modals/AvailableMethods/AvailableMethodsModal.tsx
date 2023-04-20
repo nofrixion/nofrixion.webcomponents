@@ -62,7 +62,7 @@ const AvailableMethodsModal = ({ open, onDismiss, onApply }: AvailableMethodsMod
           <AnimatePresence>
             {isBankEnabled && (
               <motion.div
-                className="ml-10 mt-7"
+                className="ml-10 mt-7 mb-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
