@@ -12,3 +12,8 @@ export const dateRanges = {
   last30Days: 'Last 30 Days',
   last90Days: 'Last 90 Days',
 };
+
+export const localCurrency = {
+  gbp: { code: 'GBP', symbol: '£' },
+  eur: { code: 'EUR', symbol: '€' },
+};
