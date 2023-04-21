@@ -25,6 +25,26 @@ interface AvailableMethodsModalProps extends BaseModalProps {
   onApply: (data: FormData) => void;
 }
 
+const AnimateHeightWrapper = ({ children, key }: { children: React.ReactNode; key: string }) => {
+  return (
+    <motion.div
+      key={key}
+      className="overflow-hidden"
+      initial={{ opacity: 0, height: 0 }}
+      animate={{
+        opacity: 1,
+        height: 'auto',
+        transitionEnd: {
+          overflow: 'inherit',
+        },
+      }}
+      exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
 const AvailableMethodsModal = ({ open, onDismiss, onApply }: AvailableMethodsModalProps) => {
   const [isBankEnabled, setIsBankEnabled] = useState<boolean>(false);
   const [isCardEnabled, setIsCardEnabled] = useState<boolean>(false);
@@ -61,32 +81,24 @@ const AvailableMethodsModal = ({ open, onDismiss, onApply }: AvailableMethodsMod
 
           <AnimatePresence>
             {isBankEnabled && (
-              <motion.div
-                className="ml-10 mt-7 mb-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <Checkbox
-                  label="Define a priority bank"
-                  infoText="Select a priority bank to set it as the default payment option for users. This streamlines the payment process by displaying the preferred bank first."
-                  value={isPriorityBankEnabled}
-                  onChange={setIsPriorityBankEnabled}
-                />
+              <AnimateHeightWrapper key="checkbox-priority-bank">
+                <div className="pl-10 pt-7 pb-4">
+                  <Checkbox
+                    label="Define a priority bank"
+                    infoText="Select a priority bank to set it as the default payment option for users. This streamlines the payment process by displaying the preferred bank first."
+                    value={isPriorityBankEnabled}
+                    onChange={setIsPriorityBankEnabled}
+                  />
+                </div>
+              </AnimateHeightWrapper>
+            )}
 
-                <AnimatePresence>
-                  {isPriorityBankEnabled && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="mt-4"
-                    >
-                      <Select options={banksOptions} selected={priorityBank} onChange={setPriorityBank} />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
+            {isBankEnabled && isPriorityBankEnabled && (
+              <AnimateHeightWrapper key="select-priority-bank">
+                <div className="pl-[3.25rem]">
+                  <Select options={banksOptions} selected={priorityBank} onChange={setPriorityBank} />
+                </div>
+              </AnimateHeightWrapper>
             )}
           </AnimatePresence>
         </div>
@@ -95,19 +107,16 @@ const AvailableMethodsModal = ({ open, onDismiss, onApply }: AvailableMethodsMod
 
           <AnimatePresence>
             {isCardEnabled && (
-              <motion.div
-                className="ml-10 mt-7 mb-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <Checkbox
-                  label="Don't capture funds on card payments"
-                  infoText="Enable this option to authorize card payments without immediately capturing the funds. This allows for manual capture or cancellation before completing the transaction."
-                  value={isCaptureFundsEnabled}
-                  onChange={setIsCaptureFundsEnabled}
-                />
-              </motion.div>
+              <AnimateHeightWrapper key="card-capture-founds">
+                <div className="ml-10 pt-7 pb-4">
+                  <Checkbox
+                    label="Don't capture funds on card payments"
+                    infoText="Enable this option to authorize card payments without immediately capturing the funds. This allows for manual capture or cancellation before completing the transaction."
+                    value={isCaptureFundsEnabled}
+                    onChange={setIsCaptureFundsEnabled}
+                  />
+                </div>
+              </AnimateHeightWrapper>
             )}
           </AnimatePresence>
         </div>
