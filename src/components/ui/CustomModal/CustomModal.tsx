@@ -1,5 +1,6 @@
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
+import Checkbox from '../Checkbox/Checkbox';
 
 interface CustomModalProps extends BaseModalProps {
   title: string;
@@ -13,6 +14,8 @@ export interface BaseModalProps {
 }
 
 const CustomModal = ({ title, children, open, onApply, onDismiss }: CustomModalProps) => {
+  const [isDefaultChecked, setIsDefaultChecked] = useState<boolean>(false);
+
   return (
     <Transition appear show={open} as={Fragment}>
       <Dialog as="div" onClose={onDismiss}>
@@ -45,7 +48,10 @@ const CustomModal = ({ title, children, open, onApply, onDismiss }: CustomModalP
                 </Dialog.Title>
                 <div className="px-12">{children}</div>
 
-                <div className="bg-mainGrey flex pr-6 py-4 mt-12">
+                <div className="bg-mainGrey flex items-center pl-14 pr-6 py-4 mt-12">
+                  <div>
+                    <Checkbox label="Use as my default" value={isDefaultChecked} onChange={setIsDefaultChecked} />
+                  </div>
                   <button
                     type="button"
                     className="inline-flex justify-center rounded-full bg-[#006A80] py-3 px-16 text-sm text-white font-semibold ml-auto cursor-pointer transition hover:bg-[#144752]"
