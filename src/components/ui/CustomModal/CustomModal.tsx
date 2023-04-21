@@ -1,8 +1,10 @@
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
+import Checkbox from '../Checkbox/Checkbox';
 
 interface CustomModalProps extends BaseModalProps {
   title: string;
+  enableUseAsDefault?: boolean;
   children: React.ReactNode;
 }
 
@@ -12,7 +14,25 @@ export interface BaseModalProps {
   onDismiss: () => void;
 }
 
-const CustomModal = ({ title, children, open, onApply, onDismiss }: CustomModalProps) => {
+const CustomModal = ({ title, children, open, enableUseAsDefault, onApply, onDismiss }: CustomModalProps) => {
+  const [isDefaultChecked, setIsDefaultChecked] = useState<boolean>(false);
+
+  const onApplyClicked = () => {
+    if (!onApply) return;
+
+    if (!enableUseAsDefault) {
+      onApply({});
+      return;
+    }
+
+    // Add the isDefaultChecked value to the formData
+    const formData = {
+      isDefaultChecked,
+    };
+
+    onApply(formData);
+  };
+
   return (
     <Transition appear show={open} as={Fragment}>
       <Dialog as="div" onClose={onDismiss}>
@@ -45,11 +65,16 @@ const CustomModal = ({ title, children, open, onApply, onDismiss }: CustomModalP
                 </Dialog.Title>
                 <div className="px-12">{children}</div>
 
-                <div className="bg-mainGrey flex pr-6 py-4 mt-12">
+                <div className="bg-mainGrey flex items-center pl-14 pr-6 py-4 mt-12">
+                  {enableUseAsDefault && (
+                    <div>
+                      <Checkbox label="Use as my default" value={isDefaultChecked} onChange={setIsDefaultChecked} />
+                    </div>
+                  )}
                   <button
                     type="button"
                     className="inline-flex justify-center rounded-full bg-[#006A80] py-3 px-16 text-sm text-white font-semibold ml-auto cursor-pointer transition hover:bg-[#144752]"
-                    onClick={onApply}
+                    onClick={onApplyClicked}
                   >
                     Apply
                   </button>
