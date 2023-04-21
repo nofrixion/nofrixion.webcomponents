@@ -58,8 +58,9 @@ const AvailableMethodsModal = ({ open, onDismiss, onApply }: AvailableMethodsMod
   const [isCaptureFundsEnabled, setIsCaptureFundsEnabled] = useState<boolean>(false);
 
   // When the user clicks on the Apply button, we need to send the data to the parent component
-  const onApplyClicked = () => {
+  const onApplyClicked = (data: any) => {
     const formData: FormData = {
+      ...data,
       isBankEnabled,
       isCardEnabled,
       isAppleEnabled,
@@ -74,7 +75,13 @@ const AvailableMethodsModal = ({ open, onDismiss, onApply }: AvailableMethodsMod
   };
 
   return (
-    <CustomModal title="Available methods" open={open} onDismiss={onDismiss} onApply={onApplyClicked}>
+    <CustomModal
+      title="Available methods"
+      open={open}
+      enableUseAsDefault
+      onDismiss={onDismiss}
+      onApply={onApplyClicked}
+    >
       <div className="divide-y">
         <div className="py-4">
           <Switch icon={BankIcon} label="Bank transfer" value={isBankEnabled} onChange={setIsBankEnabled} />
