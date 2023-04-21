@@ -16,15 +16,11 @@ const PaymentConditionsModal = ({ open, onDismiss, onApply }: PaymentConditionsM
 
   return (
     <CustomModal title="Payment conditions" open={open} onDismiss={onDismiss} onApply={onApplyClicked}>
-      <div className="divide-y">
-        <div className="py-1">
-          <Checkbox label="Allow partial payments" value={isAllowPartialEnabled} onChange={setIsAllowPartialEnabled} />
-        </div>
+      <div className="py-1">
+        <Checkbox label="Allow partial payments" value={isAllowPartialEnabled} onChange={setIsAllowPartialEnabled} />
       </div>
-      <div className="ml-7">
-        <span className="text-greyText font-normal text-xs">
-          Enable customers to pay a portion of the total amount owed, rather than the full balance all at once.
-        </span>
+      <div className="ml-7 mt-1 text-greyText font-normal text-xs">
+        Enable customers to pay a portion of the total amount owed, rather than the full balance all at once.
       </div>
     </CustomModal>
   );
