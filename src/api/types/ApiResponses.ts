@@ -46,6 +46,7 @@ export type PaymentRequest = {
   jwk?: string;
   tags: Tag[];
   priorityBankID?: string;
+  title?: string;
 };
 
 export type PaymentRequestMinimal = {
@@ -97,6 +98,7 @@ export type PaymentRequestCreate = {
   shippingPhone?: string;
   shippingEmail?: string;
   priorityBankID?: string;
+  title?: string;
 };
 
 export type PaymentRequestAddress = {
