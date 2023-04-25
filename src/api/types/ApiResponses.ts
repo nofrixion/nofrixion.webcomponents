@@ -179,7 +179,7 @@ export type UserPaymentDefaults = {
   userID: string;
   pisp: boolean;
   pispPriorityBank: boolean;
-  pispPriorityBankID: boolean;
+  pispPriorityBankID: string;
   card: boolean;
   cardAuthorizeOnly: boolean;
   applePay: boolean;
