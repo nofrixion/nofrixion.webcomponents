@@ -65,7 +65,7 @@ const CustomModal = ({ title, children, open, enableUseAsDefault, onApply, onDis
                 </Dialog.Title>
                 <div className="px-12">{children}</div>
 
-                <div className="bg-mainGrey flex items-center pl-14 pr-6 py-4 mt-12">
+                <div className="bg-mainGrey flex items-center pl-8 pr-6 py-4 mt-12">
                   {enableUseAsDefault && (
                     <div>
                       <Checkbox label="Use as my default" value={isDefaultChecked} onChange={setIsDefaultChecked} />
