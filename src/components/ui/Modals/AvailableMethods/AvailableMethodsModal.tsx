@@ -7,8 +7,9 @@ import ApplePayIcon from '../../../../assets/icons/apple-icon.svg';
 import BitcoinIcon from '../../../../assets/icons/bitcoin-icon.svg';
 import { useState } from 'react';
 import Checkbox from '../../Checkbox/Checkbox';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import Select from '../../Select/Select';
+import AnimateHeightWrapper from '../../utils/AnimateHeight';
 
 const banksOptions = ['Revolut', 'Fineco', 'Bank of Ireland', 'NoFrixion', 'AIB']; // TODO: Get this from the API
 
@@ -24,26 +25,6 @@ interface FormData {
 interface AvailableMethodsModalProps extends BaseModalProps {
   onApply: (data: FormData) => void;
 }
-
-const AnimateHeightWrapper = ({ children, key }: { children: React.ReactNode; key: string }) => {
-  return (
-    <motion.div
-      key={key}
-      className="overflow-hidden"
-      initial={{ opacity: 0, height: 0 }}
-      animate={{
-        opacity: 1,
-        height: 'auto',
-        transitionEnd: {
-          overflow: 'inherit',
-        },
-      }}
-      exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
-    >
-      {children}
-    </motion.div>
-  );
-};
 
 const AvailableMethodsModal = ({ open, onDismiss, onApply }: AvailableMethodsModalProps) => {
   const [isBankEnabled, setIsBankEnabled] = useState<boolean>(false);
