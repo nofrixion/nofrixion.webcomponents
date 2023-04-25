@@ -24,7 +24,7 @@ export class ClientSettingsClient extends BaseApiClient {
    * Gets the user payment defaults
    * @returns A UserPaymentDefaults if successful. An ApiError if not successful.
    */
-  async get(): Promise<{
+  async getUserPaymentDefaults(): Promise<{
     data?: UserPaymentDefaults;
     error?: ApiError;
   }> {
@@ -38,7 +38,7 @@ export class ClientSettingsClient extends BaseApiClient {
    * @param userPaymentDefaults The user payment defaults to save
    * @returns A UserPaymentDefaults if successful. An ApiError if not successful.
    */
-  async save(userPaymentDefaults: UserPaymentDefaults): Promise<{
+  async saveUserPaymentDefaults(userPaymentDefaults: UserPaymentDefaults): Promise<{
     data?: UserPaymentDefaults;
     error?: ApiError;
   }> {
@@ -51,7 +51,7 @@ export class ClientSettingsClient extends BaseApiClient {
    * Deletes the user payment defaults
    * @returns True if successfull. An ApiError if not successful.
    */
-  async delete(): Promise<{
+  async deleteUserPaymentDefaults(): Promise<{
     success?: boolean;
     error?: ApiError;
   }> {
