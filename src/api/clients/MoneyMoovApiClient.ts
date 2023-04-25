@@ -1,4 +1,5 @@
-import { PaymentRequestClient } from "./PaymentRequestClient";
+import { ClientSettingsClient } from './ClientSettingsClient';
+import { PaymentRequestClient } from './PaymentRequestClient';
 
 /**
  * The MoneyMoov Api Client provides access to the api endpoints in the MoneyMoov api.
@@ -13,9 +14,14 @@ class MoneyMoovApiClient {
    * Provides access to the MoneyMoov PaymentRequests api.
    */
   PaymentRequests: PaymentRequestClient;
-  
+
   /**
-   * 
+   * Provides access to the MoneyMoov ClientSettings api.
+   */
+  ClientSettings: ClientSettingsClient;
+
+  /**
+   *
    * @param apiBaseUrl The base api url.
    * Production: https://api.nofrixion.com/api/v1
    * Sandbox: https://api-sandbox.nofrixion.com/api/v1
@@ -26,6 +32,7 @@ class MoneyMoovApiClient {
     this.authToken = authToken;
 
     this.PaymentRequests = new PaymentRequestClient(apiBaseUrl, authToken);
+    this.ClientSettings = new ClientSettingsClient(apiBaseUrl, authToken);
   }
 }
 

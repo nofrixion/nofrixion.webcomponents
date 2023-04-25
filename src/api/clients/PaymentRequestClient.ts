@@ -13,7 +13,7 @@ import { BaseApiClient } from './BaseApiClient';
  * on the MoneyMoov PaymentRequests api.
  */
 export class PaymentRequestClient extends BaseApiClient {
-  apiBaseUrl: string;
+  apiUrl: string;
 
   /**
    * @param apiBaseUrl The base api url.
@@ -23,7 +23,7 @@ export class PaymentRequestClient extends BaseApiClient {
    */
   constructor(apiBaseUrl: string, authToken: string) {
     super(authToken);
-    this.apiBaseUrl = apiBaseUrl;
+    this.apiUrl = `${apiBaseUrl}/paymentrequests`;
   }
 
   /**
@@ -48,7 +48,7 @@ export class PaymentRequestClient extends BaseApiClient {
     error?: ApiError;
   }> {
     return await this.getPagedResponse<PaymentRequestPageResponse>(
-      `${this.apiBaseUrl}/paymentrequests`,
+      this.apiUrl,
       pageNumber,
       pageSize,
       sort,
@@ -67,10 +67,7 @@ export class PaymentRequestClient extends BaseApiClient {
     data?: PaymentRequest;
     error?: ApiError;
   }> {
-    const response = await this.httpRequest<PaymentRequest>(
-      `${this.apiBaseUrl}/paymentrequests/${paymentRequestId}`,
-      HttpMethod.GET,
-    );
+    const response = await this.httpRequest<PaymentRequest>(`${this.apiUrl}/${paymentRequestId}`, HttpMethod.GET);
 
     return response;
   }
@@ -84,11 +81,7 @@ export class PaymentRequestClient extends BaseApiClient {
     data?: PaymentRequest;
     error?: ApiError;
   }> {
-    const response = await this.httpRequest<PaymentRequest>(
-      `${this.apiBaseUrl}/paymentrequests`,
-      HttpMethod.POST,
-      paymentRequest,
-    );
+    const response = await this.httpRequest<PaymentRequest>(this.apiUrl, HttpMethod.POST, paymentRequest);
 
     return response;
   }
@@ -103,7 +96,7 @@ export class PaymentRequestClient extends BaseApiClient {
     error?: ApiError;
   }> {
     const response = await this.httpRequest<PaymentRequestMinimal>(
-      `${this.apiBaseUrl}/paymentrequests/${paymentRequestId}/minimal`,
+      `${this.apiUrl}/${paymentRequestId}/minimal`,
       HttpMethod.GET,
     );
 
@@ -119,10 +112,7 @@ export class PaymentRequestClient extends BaseApiClient {
     success?: boolean;
     error?: ApiError;
   }> {
-    const response = await this.httpRequest(
-      `${this.apiBaseUrl}/paymentrequests/${paymentRequestId}`,
-      HttpMethod.DELETE,
-    );
+    const response = await this.httpRequest(`${this.apiUrl}/${paymentRequestId}`, HttpMethod.DELETE);
 
     return !response.error ? { success: true } : { success: false, error: response.error };
   }
@@ -137,7 +127,7 @@ export class PaymentRequestClient extends BaseApiClient {
     error?: ApiError;
   }> {
     const response = await this.httpRequest(
-      `${this.apiBaseUrl}/paymentrequests/${paymentRequestId}/card/voidpaymentrequest`,
+      `${this.apiUrl}/${paymentRequestId}/card/voidpaymentrequest`,
       HttpMethod.POST,
     );
 
@@ -157,7 +147,7 @@ export class PaymentRequestClient extends BaseApiClient {
     data?: PaymentRequestMetrics;
     error?: ApiError;
   }> {
-    let url = `${this.apiBaseUrl}/paymentrequests/metrics`;
+    let url = `${this.apiUrl}/metrics`;
 
     const filterParams = new URLSearchParams();
 

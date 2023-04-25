@@ -172,3 +172,14 @@ export type PaymentRequestMetrics = {
   unpaid: number;
   partiallyPaid: number;
 };
+
+export type UserPaymentDefaults = {
+  userID: string;
+  pisp: boolean;
+  pispPriorityBank: boolean;
+  pispPriorityBankID: boolean;
+  card: boolean;
+  cardAuthorizeOnly: boolean;
+  applePay: boolean;
+  lightning: boolean;
+};
