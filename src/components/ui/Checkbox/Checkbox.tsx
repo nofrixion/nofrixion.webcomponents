@@ -14,7 +14,7 @@ const Checkbox = ({ label, value, infoText, onChange }: CheckboxProps) => {
   const id = useId();
 
   return (
-    <div className="flex items-center select-none cursor-pointer text-sm">
+    <div className="flex items-center select-none cursor-pointer text-sm w-fit">
       <RadixCheckbox.Root
         className="bg-white outline outline-1 outline-borderGrey border-borderGrey rounded-sm w-4 h-4"
         id={id}
