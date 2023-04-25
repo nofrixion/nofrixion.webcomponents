@@ -3,19 +3,32 @@ import { useState } from 'react';
 import Checkbox from '../../Checkbox/Checkbox';
 
 interface PaymentConditionsModalProps extends BaseModalProps {
-  onApply: (allowPartial: boolean) => void;
+  onApply: (data: FormData) => void;
 }
 
 const PaymentConditionsModal = ({ open, onDismiss, onApply }: PaymentConditionsModalProps) => {
   const [isAllowPartialEnabled, setIsAllowPartialEnabled] = useState<boolean>(false);
 
   // When the user clicks on the Apply button, we need to send the data to the parent component
-  const onApplyClicked = () => {
-    onApply(isAllowPartialEnabled);
+  const onApplyClicked = (data: any) => {
+    const formData: FormData = {
+      ...data,
+      isAllowPartialEnabled,
+    };
+
+    onApply(formData);
+
+    return formData;
   };
 
   return (
-    <CustomModal title="Payment conditions" open={open} onDismiss={onDismiss} onApply={onApplyClicked}>
+    <CustomModal
+      title="Payment conditions"
+      open={open}
+      enableUseAsDefault
+      onDismiss={onDismiss}
+      onApply={onApplyClicked}
+    >
       <div className="py-1">
         <Checkbox label="Allow partial payments" value={isAllowPartialEnabled} onChange={setIsAllowPartialEnabled} />
       </div>
