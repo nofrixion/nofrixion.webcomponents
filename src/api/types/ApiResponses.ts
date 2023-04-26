@@ -176,7 +176,6 @@ export type PaymentRequestMetrics = {
 };
 
 export type UserPaymentDefaults = {
-  userID: string;
   pisp: boolean;
   pispPriorityBank: boolean;
   pispPriorityBankID: string;
