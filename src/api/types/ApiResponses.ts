@@ -46,6 +46,7 @@ export type PaymentRequest = {
   jwk?: string;
   tags: Tag[];
   priorityBankID?: string;
+  title?: string;
 };
 
 export type PaymentRequestMinimal = {
@@ -97,6 +98,7 @@ export type PaymentRequestCreate = {
   shippingPhone?: string;
   shippingEmail?: string;
   priorityBankID?: string;
+  title?: string;
 };
 
 export type PaymentRequestAddress = {
@@ -171,4 +173,14 @@ export type PaymentRequestMetrics = {
   paid: number;
   unpaid: number;
   partiallyPaid: number;
+};
+
+export type UserPaymentDefaults = {
+  pisp: boolean;
+  pispPriorityBank: boolean;
+  pispPriorityBankID: string;
+  card: boolean;
+  cardAuthorizeOnly: boolean;
+  applePay: boolean;
+  lightning: boolean;
 };
