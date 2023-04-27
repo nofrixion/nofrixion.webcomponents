@@ -14,16 +14,19 @@ import { BaseApiClient } from './BaseApiClient';
  */
 export class PaymentRequestClient extends BaseApiClient {
   apiUrl: string;
+  merchantId: string;
 
   /**
    * @param apiBaseUrl The base api url.
    * Production: https://api.nofrixion.com/api/v1
    * Sandbox: https://api-sandbox.nofrixion.com/api/v1
    * @param authToken The OAUTH token used to authenticate with the api.
+   * @param merchantId The merchant id to use when accessing the api.
    */
-  constructor(apiBaseUrl: string, authToken: string) {
+  constructor(apiBaseUrl: string, authToken: string, merchantId: string) {
     super(authToken);
     this.apiUrl = `${apiBaseUrl}/paymentrequests`;
+    this.merchantId = merchantId;
   }
 
   /**
@@ -49,6 +52,7 @@ export class PaymentRequestClient extends BaseApiClient {
   }> {
     return await this.getPagedResponse<PaymentRequestPageResponse>(
       this.apiUrl,
+      this.merchantId,
       pageNumber,
       pageSize,
       sort,
@@ -61,13 +65,20 @@ export class PaymentRequestClient extends BaseApiClient {
   /**
    * Get a single Payment request
    * @param paymentRequestId The Payment Request Id
+   * @param includeEvents Optional. Include the events for the Payment Request. Default is false.
    * @returns A PaymentRequest if successful. An ApiError if not successful.
    */
-  async get(paymentRequestId: string): Promise<{
+  async get(
+    paymentRequestId: string,
+    includeEvents = false,
+  ): Promise<{
     data?: PaymentRequest;
     error?: ApiError;
   }> {
-    const response = await this.httpRequest<PaymentRequest>(`${this.apiUrl}/${paymentRequestId}`, HttpMethod.GET);
+    const response = await this.httpRequest<PaymentRequest>(
+      `${this.apiUrl}/${paymentRequestId}?includeEvents=${includeEvents}`,
+      HttpMethod.GET,
+    );
 
     return response;
   }
@@ -150,6 +161,8 @@ export class PaymentRequestClient extends BaseApiClient {
     let url = `${this.apiUrl}/metrics`;
 
     const filterParams = new URLSearchParams();
+
+    filterParams.append('merchantID', this.merchantId);
 
     if (fromDate) {
       filterParams.append('fromDate', fromDate.toUTCString());

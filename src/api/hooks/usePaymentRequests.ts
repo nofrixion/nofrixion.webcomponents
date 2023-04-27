@@ -8,6 +8,7 @@ import { PaymentRequestStatus } from '../types/Enums';
 export const usePaymentRequests = (
   apiUrl: string,
   authToken: string,
+  merchantId: string,
   statusSortDirection: SortDirection,
   createdSortDirection: SortDirection,
   contactSortDirection: SortDirection,
@@ -18,7 +19,7 @@ export const usePaymentRequests = (
   toDate?: Date,
   status?: PaymentRequestStatus,
 ) => {
-  const client = new MoneyMoovApiClient(apiUrl, authToken);
+  const client = new MoneyMoovApiClient(apiUrl, authToken, merchantId);
 
   const [paymentRequests, setPaymentRequests] = useState<PaymentRequest[]>([]);
   const [pageNumber, setPageNumber] = useState(1);
@@ -50,6 +51,7 @@ export const usePaymentRequests = (
   }, [
     page,
     apiUrl,
+    merchantId,
     authToken,
     pageSize,
     statusSortDirection,

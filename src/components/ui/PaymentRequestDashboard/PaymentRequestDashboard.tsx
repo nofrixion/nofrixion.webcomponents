@@ -17,11 +17,13 @@ import classNames from 'classnames';
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
   apiUrl?: string; // Example: "https://api.nofrixion.com/api/v1"
+  merchantId: string;
 }
 
 const PaymentRequestDashboard = ({
   token,
   apiUrl = 'https://api.nofrixion.com/api/v1',
+  merchantId,
 }: PaymentRequestDashboardProps) => {
   const [page, setPage] = useState(1);
   const [statusSortDirection, setStatusSortDirection] = useState<SortDirection>(SortDirection.NONE);
@@ -52,11 +54,12 @@ const PaymentRequestDashboard = ({
   const pageSize = 20;
   const nextGenUrl = `${apiUrl}/nextgen/pay`;
 
-  const client = new PaymentRequestClient(apiUrl, token);
+  const client = new PaymentRequestClient(apiUrl, token, merchantId);
 
   const { paymentRequests, totalRecords, fetchPaymentRequests } = usePaymentRequests(
     apiUrl,
     token,
+    merchantId,
     statusSortDirection,
     createdSortDirection,
     contactSortDirection,
@@ -72,7 +75,13 @@ const PaymentRequestDashboard = ({
     RemotePaymentRequestToLocalPaymentRequest(paymentRequest),
   );
 
-  const { metrics, apiError } = usePaymentRequestMetrics(apiUrl, token, dateRange.fromDate, dateRange.toDate);
+  const { metrics, apiError } = usePaymentRequestMetrics(
+    apiUrl,
+    token,
+    merchantId,
+    dateRange.fromDate,
+    dateRange.toDate,
+  );
 
   const onDeletePaymentRequest = async (paymentRequest: LocalPaymentRequest) => {
     const response = await client.delete(paymentRequest.id);
