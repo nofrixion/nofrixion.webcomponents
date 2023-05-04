@@ -17,4 +17,11 @@ const Template: StoryFn<typeof PaymentMethodsModal> = (args) => <PaymentMethodsM
 export const Showcase = Template.bind({});
 Showcase.args = {
   open: true,
+  value: {
+    isBankEnabled: true,
+    isCardEnabled: true,
+    isWalletEnabled: true,
+    isLightningEnabled: false,
+    isCaptureFundsEnabled: true,
+  },
 };
