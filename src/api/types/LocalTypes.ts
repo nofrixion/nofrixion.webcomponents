@@ -43,6 +43,10 @@ export interface LocalPaymentRequestCreate {
   };
 }
 
+export interface LocalPaymentConditionsFormValue {
+  allowPartialPayments: boolean;
+}
+
 export interface LocalPaymentMethodsFormValue {
   isBankEnabled: boolean;
   isCardEnabled: boolean;

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import InputAmountField from '../InputAmountField/InputAmountField';
 import InputTextField from '../InputTextField/InputTextField';
@@ -11,8 +11,23 @@ import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
 import AnimateHeightWrapper from '../utils/AnimateHeight';
 import PaymentMethodsModal from '../Modals/PaymentMethodsModal/PaymentMethodsModal';
 import { Currency } from '../../../api/types/Enums';
-import { LocalPaymentMethodsFormValue, LocalPaymentRequestCreate } from '../../../api/types/LocalTypes';
+import {
+  LocalPaymentConditionsFormValue,
+  LocalPaymentMethodsFormValue,
+  LocalPaymentRequestCreate,
+} from '../../../api/types/LocalTypes';
 import classNames from 'classnames';
+import PaymentConditionsModal from '../Modals/PaymentConditionsModal/PaymentConditionsModal';
+
+import BankIcon from '../../../assets/icons/bank-icon.svg';
+import CardIcon from '../../../assets/icons/card-icon.svg';
+import WalletIcon from '../../../assets/icons/wallet-icon.svg';
+import BitcoinIcon from '../../../assets/icons/bitcoin-icon.svg';
+
+import BankDisabledIcon from '../../../assets/icons/bank-disabled.svg';
+import CardDisabledIcon from '../../../assets/icons/card-disabled.svg';
+import WalletDisabledIcon from '../../../assets/icons/wallet-disabled.svg';
+import BitcoinDisabledIcon from '../../../assets/icons/bitcoin-disabled.svg';
 
 interface CreatePaymentRequestPageProps {
   onConfirm: (data: LocalPaymentRequestCreate) => void;
@@ -37,13 +52,14 @@ const CreatePaymentRequestPage = ({ onConfirm }: CreatePaymentRequestPageProps) 
     isCaptureFundsEnabled: true,
   });
 
+  const [paymentConditionsFormValue, setPaymentConditionsFormValue] = useState<LocalPaymentConditionsFormValue>({
+    allowPartialPayments: false,
+  });
+
   const [isPaymentMethodsModalOpen, setIsPaymentMethodsModalOpen] = useState(false);
+  const [isPaymentConditionsModalOpen, setIsPaymentConditionsModalOpen] = useState(false);
 
   const [isReviewing, setIsReviewing] = useState(false);
-
-  useEffect(() => {
-    console.log('isPaymentMethodsModalOpen', isPaymentMethodsModalOpen);
-  }, [isPaymentMethodsModalOpen]);
 
   const onCurrencyChange = (currency: string) => {
     setCurrency(currency as 'EUR' | 'GBP');
@@ -61,6 +77,12 @@ const CreatePaymentRequestPage = ({ onConfirm }: CreatePaymentRequestPageProps) 
     setIsPaymentMethodsModalOpen(false);
 
     setPaymentMethodsFormValue(data);
+  };
+
+  const onConditionsReceived = (data: LocalPaymentConditionsFormValue) => {
+    setIsPaymentConditionsModalOpen(false);
+
+    setPaymentConditionsFormValue(data);
   };
 
   const onReviewClicked = () => {
@@ -98,6 +120,13 @@ const CreatePaymentRequestPage = ({ onConfirm }: CreatePaymentRequestPageProps) 
 
     onConfirm(paymentRequestToCreate);
   };
+
+  const availableMethodsDetails = [
+    ...(paymentMethodsFormValue.isBankEnabled && paymentMethodsFormValue.priorityBank
+      ? [`*${paymentMethodsFormValue.priorityBank}* set up as priority bank.`]
+      : []),
+    ...(!paymentMethodsFormValue.isCaptureFundsEnabled ? ["Don't capture funds on cards is on."] : []),
+  ];
 
   return (
     <>
@@ -207,18 +236,49 @@ const CreatePaymentRequestPage = ({ onConfirm }: CreatePaymentRequestPageProps) 
 
                               <div className="mt-14">
                                 <div className="w-[27rem] space-y-2">
-                                  <EditOptionCard label="Payment conditions" value="Single full payment" />
+                                  <EditOptionCard
+                                    label="Payment conditions"
+                                    value={
+                                      !paymentConditionsFormValue.allowPartialPayments
+                                        ? 'Single full payment'
+                                        : 'Partial payments'
+                                    }
+                                    onClick={() => {
+                                      setIsPaymentConditionsModalOpen(true);
+                                    }}
+                                  />
                                   <EditOptionCard
                                     label="Available methods"
-                                    value="Banks and cards"
-                                    details={[
-                                      '*Bank of Ireland* set up as priority bank.',
-                                      "Don't capture funds on cards is on.",
-                                    ]}
+                                    details={availableMethodsDetails}
                                     onClick={() => {
                                       setIsPaymentMethodsModalOpen(true);
                                     }}
-                                  />
+                                  >
+                                    <div className="flex items-center space-x-3">
+                                      <img
+                                        src={paymentMethodsFormValue.isBankEnabled ? BankIcon : BankDisabledIcon}
+                                        alt="Bank"
+                                        className="w-6 h-6"
+                                      />
+                                      <img
+                                        src={paymentMethodsFormValue.isCardEnabled ? CardIcon : CardDisabledIcon}
+                                        alt="Card"
+                                        className="w-6 h-6"
+                                      />
+                                      <img
+                                        src={paymentMethodsFormValue.isWalletEnabled ? WalletIcon : WalletDisabledIcon}
+                                        alt="Apple Pay"
+                                        className="w-6 h-6"
+                                      />
+                                      <img
+                                        src={
+                                          paymentMethodsFormValue.isLightningEnabled ? BitcoinIcon : BitcoinDisabledIcon
+                                        }
+                                        alt="Bitcoin"
+                                        className="w-6 h-6"
+                                      />
+                                    </div>
+                                  </EditOptionCard>
                                 </div>
                               </div>
                             </div>
@@ -370,6 +430,12 @@ const CreatePaymentRequestPage = ({ onConfirm }: CreatePaymentRequestPageProps) 
             value={paymentMethodsFormValue}
             onApply={onMethodsReceived}
             onDismiss={() => {}}
+          />
+
+          <PaymentConditionsModal
+            open={isPaymentConditionsModalOpen}
+            onDismiss={() => {}}
+            onApply={onConditionsReceived}
           />
         </Dialog>
       </Transition>

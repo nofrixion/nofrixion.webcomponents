@@ -23,6 +23,7 @@ const Template: StoryFn<typeof CreatePaymentRequest> = (args) => <CreatePaymentR
 export const Showcase = Template.bind({});
 Showcase.args = {
   token: 'eyJhbGciOiJIUz...',
+  merchantId: 'bf9e1828-c6a1-4cc5-a012-...',
   apiUrl: apiUrls.sandbox,
 };
 

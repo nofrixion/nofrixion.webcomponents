@@ -1,19 +1,19 @@
 import CustomModal, { BaseModalProps } from '../../CustomModal/CustomModal';
 import { useState } from 'react';
 import Checkbox from '../../Checkbox/Checkbox';
+import { LocalPaymentConditionsFormValue } from '../../../../api/types/LocalTypes';
 
 interface PaymentConditionsModalProps extends BaseModalProps {
-  onApply: (data: FormData) => void;
+  onApply: (data: LocalPaymentConditionsFormValue) => void;
 }
 
 const PaymentConditionsModal = ({ open, onDismiss, onApply }: PaymentConditionsModalProps) => {
   const [isAllowPartialEnabled, setIsAllowPartialEnabled] = useState<boolean>(false);
 
   // When the user clicks on the Apply button, we need to send the data to the parent component
-  const onApplyClicked = (data: any) => {
-    const formData: FormData = {
-      ...data,
-      isAllowPartialEnabled,
+  const onApplyClicked = () => {
+    const formData: LocalPaymentConditionsFormValue = {
+      allowPartialPayments: isAllowPartialEnabled,
     };
 
     onApply(formData);

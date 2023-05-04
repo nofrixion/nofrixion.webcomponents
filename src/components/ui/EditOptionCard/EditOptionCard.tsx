@@ -2,7 +2,7 @@ import { parseBoldText } from '../../../utils/uiFormaters';
 
 interface EditOptionCardProps {
   label: string;
-  value: string;
+  value?: string;
   details?: string[];
   onClick?: () => void;
   children?: React.ReactNode;
@@ -21,7 +21,7 @@ const EditOptionCard = ({ label, value, details, onClick, children }: EditOption
       </div>
 
       {details && details.length > 0 && (
-        <div className="ml-auto mr-8 flex flex-col mt-2 text-end text-greyText text-xs">
+        <div className="ml-auto flex flex-col mt-2 text-end text-greyText text-xs">
           {details?.map((detail, index) => {
             return <span key={`detail-${index}`}>{parseBoldText(detail)}</span>;
           })}
