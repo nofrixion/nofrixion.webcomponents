@@ -26,12 +26,13 @@ class MoneyMoovApiClient {
    * Production: https://api.nofrixion.com/api/v1
    * Sandbox: https://api-sandbox.nofrixion.com/api/v1
    * @param authToken The OAUTH token used to authenticate with the api.
+   * @param merchantId The merchant id to use when accessing the api.
    */
-  constructor(apiBaseUrl: string, authToken: string) {
+  constructor(apiBaseUrl: string, authToken: string, merchantId: string) {
     this.apiBaseUrl = apiBaseUrl;
     this.authToken = authToken;
 
-    this.PaymentRequests = new PaymentRequestClient(apiBaseUrl, authToken);
+    this.PaymentRequests = new PaymentRequestClient(apiBaseUrl, authToken, merchantId);
     this.ClientSettings = new ClientSettingsClient(apiBaseUrl, authToken);
   }
 }

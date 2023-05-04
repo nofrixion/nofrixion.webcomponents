@@ -18,6 +18,11 @@ const meta: Meta<typeof PaymentRequestDashboard> = {
       control: { type: 'select' },
       options: Object.values(apiUrls),
     },
+    merchantId: {
+      control: {
+        type: 'text',
+      },
+    },
   },
 } as Meta<typeof PaymentRequestDashboard>;
 
@@ -26,8 +31,9 @@ const Template: StoryFn<typeof PaymentRequestDashboard> = (args) => <PaymentRequ
 export const Showcase = Template.bind({});
 
 Showcase.args = {
-  token: 'Enter merchant token...',
+  token: 'Enter user token...',
   apiUrl: apiUrls.sandbox,
+  merchantId: 'Enter merchant id...',
 };
 
 export default meta;
