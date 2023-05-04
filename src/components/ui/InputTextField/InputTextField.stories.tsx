@@ -12,7 +12,7 @@ export default {
 } as Meta<typeof InputTextField>;
 
 const Template: StoryFn<InputTextFieldProps> = (args) => {
-  const [localValue, setValue] = useState<string>(args.value);
+  const [localValue, setValue] = useState<string>(args.value?.toString() || '');
 
   const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);

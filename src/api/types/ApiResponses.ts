@@ -78,7 +78,7 @@ export type PaymentRequestCreate = {
   paymentMethodTypes: string;
   description?: string;
   pispAccountID?: string;
-  baseOriginUrl: string;
+  baseOriginUrl?: string;
   callbackUrl?: string;
   successWebHookUrl?: string;
   cardAuthorizeOnly: boolean;

@@ -1,0 +1,89 @@
+import { useState } from 'react';
+import { usePaymentRequests } from '../../../api/hooks/usePaymentRequests';
+import UICreatePaymentRequestPage from '../../ui/CreatePaymentRequestPage/CreatePaymentRequestPage';
+
+import { LocalPaymentRequestCreate } from '../../../api/types/LocalTypes';
+import { makeToast } from '../../ui/Toast/Toast';
+import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
+import { PaymentRequestCreate } from '../../../api/types/ApiResponses';
+import { CardTokenCreateModes, PartialPaymentMethods } from '../../../api/types/Enums';
+
+interface CreatePaymentRequesPageProps {
+  token: string; // Example: "eyJhbGciOiJIUz..."
+  apiUrl?: string; // Example: "https://api.nofrixion.com/api/v1"
+  redirectUrl: string; // Example: "https://portal.nofrixion.com/payment-request"
+}
+
+const CreatePaymentRequestPage = ({
+  token,
+  apiUrl = 'https://api.nofrixion.com/api/v1',
+}: CreatePaymentRequesPageProps) => {
+  const client = new PaymentRequestClient(apiUrl, token);
+
+  const merchantId = 'bf9e1828-c6a1-4cc5-a012-08daf2ff1b2d';
+
+  const parseLocalPaymentRequestCreateToRemotePaymentRequest = (
+    merchantId: string,
+    paymentRequest: LocalPaymentRequestCreate,
+  ): PaymentRequestCreate => {
+    // None = 0,
+    // card = 1,
+    // pisp = 2,
+    // lightning = 4,
+    // cardtoken = 8,
+    // applePay = 16
+    // googlePay = 32
+
+    let paymentMethodTypes = paymentRequest.paymentMethods.card.active ? 1 : 0;
+    paymentMethodTypes += paymentRequest.paymentMethods.bank.active ? 2 : 0;
+    paymentMethodTypes += paymentRequest.paymentMethods.lightning ? 4 : 0;
+    paymentMethodTypes += paymentRequest.paymentMethods.wallet ? 16 + 32 : 0;
+
+    return {
+      merchantID: merchantId,
+      amount: paymentRequest.amount,
+      currency: paymentRequest.currency,
+      paymentMethodTypes: paymentMethodTypes.toString(),
+      description: paymentRequest.description,
+      cardAuthorizeOnly: !paymentRequest.paymentMethods.card.captureFunds,
+      customerEmailAddress: paymentRequest.email,
+      cardCreateToken: false,
+      cardTokenCreateModes: CardTokenCreateModes.None,
+      partialPaymentMethod: paymentRequest.paymentConditions.allowPartialPayments
+        ? PartialPaymentMethods.Partial
+        : PartialPaymentMethods.None,
+      priorityBankID: paymentRequest.paymentMethods.bank.active
+        ? paymentRequest.paymentMethods.bank.priority
+        : undefined,
+    };
+  };
+
+  const onCreatePaymentRequest = async (paymentRequestToCreate: LocalPaymentRequestCreate) => {
+    const parsedPaymentRequestToCreate = parseLocalPaymentRequestCreateToRemotePaymentRequest(
+      merchantId,
+      paymentRequestToCreate,
+    );
+
+    console.log(parsedPaymentRequestToCreate);
+
+    const response = await client.create(parsedPaymentRequestToCreate);
+
+    // TODO: Toasts are not working - however, we need to figure out how to handle errors & success cases
+    // Maybe we should have a redirectUrl that we can redirect to? This could be a parameter in the web-component
+    if (response.error) {
+      makeToast('error', response.error.title);
+      return;
+    }
+
+    makeToast('success', 'Payment request successfully created.');
+  };
+
+  return <UICreatePaymentRequestPage onConfirm={onCreatePaymentRequest} />;
+};
+
+CreatePaymentRequestPage.componentProps = {
+  token: String,
+  apiUrl: String,
+};
+
+export default CreatePaymentRequestPage;

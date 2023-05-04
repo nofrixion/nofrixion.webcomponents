@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
 
-const AnimateHeightWrapper = ({ children, key }: { children: React.ReactNode; key: string }) => {
+const AnimateHeightWrapper = ({ children, layoutId }: { children: React.ReactNode; layoutId: string }) => {
   return (
     <motion.div
-      key={key}
+      layoutId={layoutId}
       className="overflow-hidden"
       initial={{ opacity: 0, height: 0 }}
       animate={{

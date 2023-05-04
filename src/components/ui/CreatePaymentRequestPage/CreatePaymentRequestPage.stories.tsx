@@ -5,11 +5,11 @@ import CreatePaymentRequestPage from './CreatePaymentRequestPage';
 export default {
   title: 'UI/CreatePaymentRequestPage',
   component: CreatePaymentRequestPage,
+  argTypes: {
+    onConfirm: { action: 'onConfirm' },
+  },
 } as Meta<typeof CreatePaymentRequestPage>;
 
 const Template: StoryFn<typeof CreatePaymentRequestPage> = (args) => <CreatePaymentRequestPage {...args} />;
 
-export const Primary = Template.bind({});
-Primary.args = {
-  label: 'Primary',
-};
+export const Showcase = Template.bind({});
