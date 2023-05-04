@@ -1,5 +1,6 @@
 import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
+import * as ScrollArea from '@radix-ui/react-scroll-area';
 import InputAmountField from '../InputAmountField/InputAmountField';
 import InputTextField from '../InputTextField/InputTextField';
 import EditOptionCard from '../EditOptionCard/EditOptionCard';
@@ -164,125 +165,146 @@ const CreatePaymentRequestPage = ({ onConfirm }: CreatePaymentRequestPageProps) 
                           exit={{ opacity: 0, width: 0, flex: 0 }}
                         >
                           {/* Left side */}
-                          <div className="pt-20">
-                            <div className="flex items-center">
-                              <button className="inline-block ml-[3.25rem]" onClick={closeModal}>
-                                <img
-                                  src={BackButtonIcon}
-                                  alt="Back button"
-                                  className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem]"
-                                />
-                              </button>
-                              <Dialog.Title
-                                as="h3"
-                                className="text-[1.75rem]/8 font-semibold inline-block ml-[2.875rem] text-clip whitespace-nowrap"
-                              >
-                                New payment request
-                              </Dialog.Title>
-                            </div>
-                            <div className="mt-14 ml-32 pr-10">
-                              <InputAmountField
-                                value={amount}
-                                onChange={(e) => setAmount(e.target.value)}
-                                onCurrencyChange={onCurrencyChange}
-                                currency={currency}
-                              />
-
-                              <div className="mt-11">
-                                <InputTextField
-                                  label="Product or service"
-                                  maxLength={40}
-                                  value={productOrService}
-                                  onChange={(e) => setProductOrService(e.target.value)}
-                                />
-                              </div>
-
-                              <div className="mt-[3.75rem]">
-                                <InputTextAreaField
-                                  label="Description"
-                                  maxLength={140}
-                                  value={description}
-                                  onChange={(e) => setDescription(e.target.value)}
-                                  optional
-                                />
-                              </div>
-
-                              <div className="mt-6">
-                                <InputTextField
-                                  label="First name"
-                                  optional
-                                  value={firstName}
-                                  onChange={(e) => setFirstName(e.target.value)}
-                                />
-                              </div>
-
-                              <div className="mt-10">
-                                <InputTextField
-                                  label="Last name"
-                                  optional
-                                  value={lastName}
-                                  onChange={(e) => setLastName(e.target.value)}
-                                />
-                              </div>
-
-                              <div className="mt-11">
-                                <InputTextField
-                                  label="Email"
-                                  optional
-                                  value={email}
-                                  onChange={(e) => setEmail(e.target.value)}
-                                />
-                              </div>
-
-                              <div className="mt-14">
-                                <div className="w-[27rem] space-y-2">
-                                  <EditOptionCard
-                                    label="Payment conditions"
-                                    value={
-                                      !paymentConditionsFormValue.allowPartialPayments
-                                        ? 'Single full payment'
-                                        : 'Partial payments'
-                                    }
-                                    onClick={() => {
-                                      setIsPaymentConditionsModalOpen(true);
-                                    }}
-                                  />
-                                  <EditOptionCard
-                                    label="Available methods"
-                                    details={availableMethodsDetails}
-                                    onClick={() => {
-                                      setIsPaymentMethodsModalOpen(true);
-                                    }}
+                          <ScrollArea.Root className="w-full h-screen overflow-hidden">
+                            <ScrollArea.Viewport className="w-full h-full">
+                              <div className="pt-20">
+                                <div className="flex items-center">
+                                  <button className="inline-block ml-[3.25rem]" onClick={closeModal}>
+                                    <img
+                                      src={BackButtonIcon}
+                                      alt="Back button"
+                                      className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem]"
+                                    />
+                                  </button>
+                                  <Dialog.Title
+                                    as="h3"
+                                    className="text-[1.75rem]/8 font-semibold inline-block ml-[2.875rem] text-clip whitespace-nowrap"
                                   >
-                                    <div className="flex items-center space-x-3">
-                                      <img
-                                        src={paymentMethodsFormValue.isBankEnabled ? BankIcon : BankDisabledIcon}
-                                        alt="Bank"
-                                        className="w-6 h-6"
-                                      />
-                                      <img
-                                        src={paymentMethodsFormValue.isCardEnabled ? CardIcon : CardDisabledIcon}
-                                        alt="Card"
-                                        className="w-6 h-6"
-                                      />
-                                      <img
-                                        src={paymentMethodsFormValue.isWalletEnabled ? WalletIcon : WalletDisabledIcon}
-                                        alt="Apple Pay"
-                                        className="w-6 h-6"
-                                      />
-                                      <img
-                                        src={
-                                          paymentMethodsFormValue.isLightningEnabled ? BitcoinIcon : BitcoinDisabledIcon
+                                    New payment request
+                                  </Dialog.Title>
+                                </div>
+                                <div className="mt-14 ml-32 pr-10">
+                                  <InputAmountField
+                                    value={amount}
+                                    onChange={(e) => setAmount(e.target.value)}
+                                    onCurrencyChange={onCurrencyChange}
+                                    currency={currency}
+                                  />
+
+                                  <div className="mt-11">
+                                    <InputTextField
+                                      label="Product or service"
+                                      maxLength={40}
+                                      value={productOrService}
+                                      onChange={(e) => setProductOrService(e.target.value)}
+                                    />
+                                  </div>
+
+                                  <div className="mt-[3.75rem]">
+                                    <InputTextAreaField
+                                      label="Description"
+                                      maxLength={140}
+                                      value={description}
+                                      onChange={(e) => setDescription(e.target.value)}
+                                      optional
+                                    />
+                                  </div>
+
+                                  <div className="mt-6">
+                                    <InputTextField
+                                      label="First name"
+                                      optional
+                                      value={firstName}
+                                      onChange={(e) => setFirstName(e.target.value)}
+                                    />
+                                  </div>
+
+                                  <div className="mt-10">
+                                    <InputTextField
+                                      label="Last name"
+                                      optional
+                                      value={lastName}
+                                      onChange={(e) => setLastName(e.target.value)}
+                                    />
+                                  </div>
+
+                                  <div className="mt-11">
+                                    <InputTextField
+                                      label="Email"
+                                      optional
+                                      value={email}
+                                      onChange={(e) => setEmail(e.target.value)}
+                                    />
+                                  </div>
+
+                                  <div className="mt-14">
+                                    <div className="w-[27rem] space-y-2">
+                                      <EditOptionCard
+                                        label="Payment conditions"
+                                        value={
+                                          !paymentConditionsFormValue.allowPartialPayments
+                                            ? 'Single full payment'
+                                            : 'Partial payments'
                                         }
-                                        alt="Bitcoin"
-                                        className="w-6 h-6"
+                                        onClick={() => {
+                                          setIsPaymentConditionsModalOpen(true);
+                                        }}
                                       />
+                                      <EditOptionCard
+                                        label="Available methods"
+                                        details={availableMethodsDetails}
+                                        onClick={() => {
+                                          setIsPaymentMethodsModalOpen(true);
+                                        }}
+                                      >
+                                        <div className="flex items-center space-x-3">
+                                          <img
+                                            src={paymentMethodsFormValue.isBankEnabled ? BankIcon : BankDisabledIcon}
+                                            alt="Bank"
+                                            className="w-6 h-6"
+                                          />
+                                          <img
+                                            src={paymentMethodsFormValue.isCardEnabled ? CardIcon : CardDisabledIcon}
+                                            alt="Card"
+                                            className="w-6 h-6"
+                                          />
+                                          <img
+                                            src={
+                                              paymentMethodsFormValue.isWalletEnabled ? WalletIcon : WalletDisabledIcon
+                                            }
+                                            alt="Apple Pay"
+                                            className="w-6 h-6"
+                                          />
+                                          <img
+                                            src={
+                                              paymentMethodsFormValue.isLightningEnabled
+                                                ? BitcoinIcon
+                                                : BitcoinDisabledIcon
+                                            }
+                                            alt="Bitcoin"
+                                            className="w-6 h-6"
+                                          />
+                                        </div>
+                                      </EditOptionCard>
                                     </div>
-                                  </EditOptionCard>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </div>
+                            </ScrollArea.Viewport>
+                            <ScrollArea.Scrollbar
+                              className="flex select-none touch-none p-0.5 bg-black bg-opacity-10 transition-colors duration-[160ms] ease-out hover:bg-opacity-25 data-[orientation=vertical]:w-2.5 data-[orientation=horizontal]:flex-col data-[orientation=horizontal]:h-2.5"
+                              orientation="vertical"
+                            >
+                              <ScrollArea.Thumb className="flex-1 bg-gray-400 rounded-[10px] relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:w-full before:h-full before:min-w-[44px] before:min-h-[44px]" />
+                            </ScrollArea.Scrollbar>
+                            <ScrollArea.Scrollbar
+                              className="flex select-none touch-none p-0.5 bg-black bg-opacity-10 transition-colors duration-[160ms] ease-out hover:bg-opacity-25 data-[orientation=vertical]:w-2.5 data-[orientation=horizontal]:flex-col data-[orientation=horizontal]:h-2.5"
+                              orientation="horizontal"
+                            >
+                              <ScrollArea.Thumb className="flex-1 bg-gray-400 rounded-[10px] relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:w-full before:h-full before:min-w-[44px] before:min-h-[44px]" />
+                            </ScrollArea.Scrollbar>
+                            <ScrollArea.Corner className="bg-opacity-25" />
+                          </ScrollArea.Root>
                         </motion.div>
                       )}
                     </AnimatePresence>
