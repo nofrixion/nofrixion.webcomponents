@@ -40,6 +40,7 @@ const CreatePaymentRequestPage = ({
 
     return {
       merchantID: merchantId,
+      title: paymentRequest.productOrService,
       amount: paymentRequest.amount,
       currency: paymentRequest.currency,
       paymentMethodTypes: paymentMethodTypes.toString(),
