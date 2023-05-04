@@ -10,17 +10,16 @@ import { CardTokenCreateModes, PartialPaymentMethods } from '../../../api/types/
 
 interface CreatePaymentRequesPageProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
+  merchantId: string; // Example: "bf9e1828-c6a1-4cc5-a012-08daf2ff1b2d"
   apiUrl?: string; // Example: "https://api.nofrixion.com/api/v1"
-  redirectUrl: string; // Example: "https://portal.nofrixion.com/payment-request"
 }
 
 const CreatePaymentRequestPage = ({
   token,
+  merchantId,
   apiUrl = 'https://api.nofrixion.com/api/v1',
 }: CreatePaymentRequesPageProps) => {
-  const client = new PaymentRequestClient(apiUrl, token);
-
-  const merchantId = 'bf9e1828-c6a1-4cc5-a012-08daf2ff1b2d';
+  const client = new PaymentRequestClient(apiUrl, token, merchantId);
 
   const parseLocalPaymentRequestCreateToRemotePaymentRequest = (
     merchantId: string,

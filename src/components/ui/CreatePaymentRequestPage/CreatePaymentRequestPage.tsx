@@ -13,7 +13,6 @@ import PaymentMethodsModal from '../Modals/PaymentMethodsModal/PaymentMethodsMod
 import { Currency } from '../../../api/types/Enums';
 import { LocalPaymentMethodsFormValue, LocalPaymentRequestCreate } from '../../../api/types/LocalTypes';
 import classNames from 'classnames';
-import useMeasure from 'react-use-measure';
 
 interface CreatePaymentRequestPageProps {
   onConfirm: (data: LocalPaymentRequestCreate) => void;
@@ -41,8 +40,6 @@ const CreatePaymentRequestPage = ({ onConfirm }: CreatePaymentRequestPageProps) 
   const [isPaymentMethodsModalOpen, setIsPaymentMethodsModalOpen] = useState(false);
 
   const [isReviewing, setIsReviewing] = useState(false);
-
-  const [ref, { width }] = useMeasure();
 
   useEffect(() => {
     console.log('isPaymentMethodsModalOpen', isPaymentMethodsModalOpen);
