@@ -2,13 +2,19 @@ import { useEffect, useState } from 'react';
 import { PaymentRequestClient } from '../clients/PaymentRequestClient';
 import { ApiError, PaymentRequestMetrics } from '../types/ApiResponses';
 
-export const usePaymentRequestMetrics = (apiUrl: string, authToken: string, fromDate?: Date, toDate?: Date) => {
+export const usePaymentRequestMetrics = (
+  apiUrl: string,
+  authToken: string,
+  merchantId: string,
+  fromDate?: Date,
+  toDate?: Date,
+) => {
   const [metrics, setMetrics] = useState<PaymentRequestMetrics>();
   const [apiError, setApiError] = useState<ApiError>();
 
   useEffect(() => {
     const fetchPaymentRequestMetrics = async () => {
-      const client = new PaymentRequestClient(apiUrl, authToken);
+      const client = new PaymentRequestClient(apiUrl, authToken, merchantId);
       const response = await client.metrics(fromDate, toDate);
 
       if (response.data) {
@@ -19,7 +25,7 @@ export const usePaymentRequestMetrics = (apiUrl: string, authToken: string, from
     };
 
     fetchPaymentRequestMetrics();
-  }, [apiUrl, authToken, fromDate, toDate]);
+  }, [apiUrl, authToken, merchantId, fromDate, toDate]);
 
   return {
     metrics,

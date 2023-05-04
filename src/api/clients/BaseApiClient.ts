@@ -12,6 +12,7 @@ export abstract class BaseApiClient {
   /**
    * Gets a paged response from supporting api endpoints
    * @param url The api url
+   * @param merchantId The merchant id
    * @param pageNumber The page number
    * @param pageSize The page size
    * @param sort Optional. The sort expression
@@ -22,6 +23,7 @@ export abstract class BaseApiClient {
    */
   protected async getPagedResponse<TResponse>(
     url: string,
+    merchantId: string,
     pageNumber = 1,
     pageSize = 20,
     sort?: string,
@@ -34,6 +36,7 @@ export abstract class BaseApiClient {
   }> {
     const filterParams = new URLSearchParams();
 
+    filterParams.append('merchantID', merchantId);
     filterParams.append('page', pageNumber.toString());
     filterParams.append('size', pageSize.toString());
 
