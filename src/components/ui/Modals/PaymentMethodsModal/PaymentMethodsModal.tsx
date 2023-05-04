@@ -48,7 +48,13 @@ const PaymentMethodsModal = ({ open, value, onDismiss, onApply }: PaymentMethods
   };
 
   return (
-    <CustomModal title="Payment methods" open={open} onDismiss={onDismiss} onApply={onApplyClicked}>
+    <CustomModal
+      title="Available methods"
+      open={open}
+      enableUseAsDefault
+      onDismiss={onDismiss}
+      onApply={onApplyClicked}
+    >
       <div className="divide-y">
         <div className="py-4">
           <Switch icon={BankIcon} label="Bank transfer" value={isBankEnabled} onChange={setIsBankEnabled} />
