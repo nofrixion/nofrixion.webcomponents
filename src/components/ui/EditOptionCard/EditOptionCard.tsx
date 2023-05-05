@@ -15,7 +15,7 @@ const EditOptionCard = ({ label, value, details, onClick, children }: EditOption
         <span className="text-greyText">{label}</span>
 
         <div className="ml-auto flex justify-center items-center">
-          {value && <span className="mr-4">{value}</span>}
+          {value && <span>{value}</span>}
           {children}
         </div>
       </div>
