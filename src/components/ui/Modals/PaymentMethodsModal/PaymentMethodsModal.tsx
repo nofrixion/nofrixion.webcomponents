@@ -11,15 +11,15 @@ import { AnimatePresence } from 'framer-motion';
 import Select from '../../Select/Select';
 import AnimateHeightWrapper from '../../utils/AnimateHeight';
 import { LocalPaymentMethodsFormValue } from '../../../../api/types/LocalTypes';
-
-const banksOptions = ['Revolut', 'Fineco', 'Bank of Ireland', 'NoFrixion', 'AIB']; // TODO: Get this from the API
+import { BankSettings } from '../../../../api/types/ApiResponses';
 
 interface PaymentMethodsModalProps extends BaseModalProps {
+  banks: BankSettings[];
   value: LocalPaymentMethodsFormValue;
   onApply: (data: LocalPaymentMethodsFormValue) => void;
 }
 
-const PaymentMethodsModal = ({ open, value, onDismiss, onApply }: PaymentMethodsModalProps) => {
+const PaymentMethodsModal = ({ open, banks, value, onDismiss, onApply }: PaymentMethodsModalProps) => {
   const [isBankEnabled, setIsBankEnabled] = useState<boolean>(value.isBankEnabled);
   const [isCardEnabled, setIsCardEnabled] = useState<boolean>(value.isCardEnabled);
   const [isWalletEnabled, setIsWalletEnabled] = useState<boolean>(value.isWalletEnabled);
@@ -27,7 +27,7 @@ const PaymentMethodsModal = ({ open, value, onDismiss, onApply }: PaymentMethods
 
   const [isPriorityBankEnabled, setIsPriorityBankEnabled] = useState<boolean>(false);
 
-  const [priorityBank, setPriorityBank] = useState<string>(banksOptions[0]);
+  const [priorityBank, setPriorityBank] = useState<BankSettings | undefined>();
 
   const [isCaptureFundsEnabled, setIsCaptureFundsEnabled] = useState<boolean>(value.isCardEnabled);
 
@@ -39,7 +39,13 @@ const PaymentMethodsModal = ({ open, value, onDismiss, onApply }: PaymentMethods
       isWalletEnabled,
       isLightningEnabled,
       isCaptureFundsEnabled,
-      priorityBank: isPriorityBankEnabled ? priorityBank : undefined,
+      priorityBank:
+        isPriorityBankEnabled && priorityBank
+          ? {
+              id: priorityBank.bankID,
+              name: priorityBank.bankName,
+            }
+          : undefined,
     };
 
     onApply(formData);
@@ -60,7 +66,7 @@ const PaymentMethodsModal = ({ open, value, onDismiss, onApply }: PaymentMethods
           <Switch icon={BankIcon} label="Bank transfer" value={isBankEnabled} onChange={setIsBankEnabled} />
 
           <AnimatePresence initial={false}>
-            {isBankEnabled && (
+            {isBankEnabled && banks.length > 0 && (
               <AnimateHeightWrapper layoutId="checkbox-priority-bank">
                 <div className="pl-10 pt-7 pb-4">
                   <Checkbox
@@ -77,7 +83,28 @@ const PaymentMethodsModal = ({ open, value, onDismiss, onApply }: PaymentMethods
             {isBankEnabled && isPriorityBankEnabled && (
               <AnimateHeightWrapper layoutId="select-priority-bank">
                 <div className="pl-[3.25rem]">
-                  <Select options={banksOptions} selected={priorityBank} onChange={setPriorityBank} />
+                  <Select
+                    options={banks.map((bank) => {
+                      return {
+                        value: bank.bankID,
+                        label: bank.bankName,
+                      };
+                    })}
+                    selected={
+                      !priorityBank
+                        ? {
+                            value: banks[0].bankID,
+                            label: banks[0].bankName,
+                          }
+                        : {
+                            value: priorityBank.bankID,
+                            label: priorityBank.bankName,
+                          }
+                    }
+                    onChange={(selectedOption) => {
+                      setPriorityBank(banks.find((bank) => bank.bankID === selectedOption.value) ?? banks[0]);
+                    }}
+                  />
                 </div>
               </AnimateHeightWrapper>
             )}

@@ -32,7 +32,10 @@ export interface LocalPaymentRequestCreate {
   paymentMethods: {
     bank: {
       active: boolean;
-      priority?: string;
+      priority?: {
+        id: string;
+        name: string;
+      };
     };
     card: {
       active: boolean;
@@ -53,5 +56,8 @@ export interface LocalPaymentMethodsFormValue {
   isWalletEnabled: boolean;
   isLightningEnabled: boolean;
   isCaptureFundsEnabled: boolean;
-  priorityBank?: string;
+  priorityBank?: {
+    id: string;
+    name: string;
+  };
 }

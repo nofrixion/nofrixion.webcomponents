@@ -30,12 +30,14 @@ import CardDisabledIcon from '../../../assets/icons/card-disabled.svg';
 import WalletDisabledIcon from '../../../assets/icons/wallet-disabled.svg';
 import BitcoinDisabledIcon from '../../../assets/icons/bitcoin-disabled.svg';
 import { parseBoldText } from '../../../utils/uiFormaters';
+import { BankSettings } from '../../../api/types/ApiResponses';
 
 interface CreatePaymentRequestPageProps {
+  banks: BankSettings[];
   onConfirm: (data: LocalPaymentRequestCreate) => void;
 }
 
-const CreatePaymentRequestPage = ({ onConfirm }: CreatePaymentRequestPageProps) => {
+const CreatePaymentRequestPage = ({ banks, onConfirm }: CreatePaymentRequestPageProps) => {
   let [isOpen, setIsOpen] = useState(true);
 
   const [amount, setAmount] = useState('');
@@ -150,7 +152,7 @@ const CreatePaymentRequestPage = ({ onConfirm }: CreatePaymentRequestPageProps) 
 
   const availableMethodsDetails = [
     ...(paymentMethodsFormValue.isBankEnabled && paymentMethodsFormValue.priorityBank
-      ? [`*${paymentMethodsFormValue.priorityBank}* set up as priority bank.`]
+      ? [`*${paymentMethodsFormValue.priorityBank.name}* set up as priority bank.`]
       : []),
     ...(!paymentMethodsFormValue.isCaptureFundsEnabled ? ["Don't capture funds on cards is on."] : []),
   ];
@@ -468,7 +470,7 @@ const CreatePaymentRequestPage = ({ onConfirm }: CreatePaymentRequestPageProps) 
                     <AnimatePresence>
                       {currency && amount && productOrService && (
                         <motion.div
-                          className="flex h-12 !mt-[19.25rem] justify-center"
+                          className="flex h-12 !mt-20 justify-center"
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
@@ -528,6 +530,7 @@ const CreatePaymentRequestPage = ({ onConfirm }: CreatePaymentRequestPageProps) 
             value={paymentMethodsFormValue}
             onApply={onMethodsReceived}
             onDismiss={() => {}}
+            banks={banks}
           />
 
           <PaymentConditionsModal

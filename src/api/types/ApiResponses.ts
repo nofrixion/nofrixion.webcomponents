@@ -184,3 +184,21 @@ export type UserPaymentDefaults = {
   applePay: boolean;
   lightning: boolean;
 };
+
+export type MerchantBankSettings = {
+  merchantID: string;
+  payByBankSettings: BankSettings[];
+};
+
+export type BankSettings = {
+  bankID: string;
+  bankName: string;
+  order: number;
+  logo: string;
+  currency: Currency;
+  processor: PaymentProcessor;
+  personalInstitutionID?: string;
+  businessInstitutionID?: string;
+  message?: string;
+  messageImageUrl?: string;
+};

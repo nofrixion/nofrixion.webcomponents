@@ -1,5 +1,3 @@
-import { useState } from 'react';
-import { usePaymentRequests } from '../../../api/hooks/usePaymentRequests';
 import UICreatePaymentRequestPage from '../../ui/CreatePaymentRequestPage/CreatePaymentRequestPage';
 
 import { LocalPaymentRequestCreate } from '../../../api/types/LocalTypes';
@@ -7,6 +5,7 @@ import { makeToast } from '../../ui/Toast/Toast';
 import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
 import { PaymentRequestCreate } from '../../../api/types/ApiResponses';
 import { CardTokenCreateModes, PartialPaymentMethods } from '../../../api/types/Enums';
+import { useBanks } from '../../../api/hooks/useBanks';
 
 interface CreatePaymentRequesPageProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -19,7 +18,9 @@ const CreatePaymentRequestPage = ({
   merchantId,
   apiUrl = 'https://api.nofrixion.com/api/v1',
 }: CreatePaymentRequesPageProps) => {
-  const client = new PaymentRequestClient(apiUrl, token, merchantId);
+  const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId);
+
+  const { banks } = useBanks(apiUrl, token, merchantId);
 
   const parseLocalPaymentRequestCreateToRemotePaymentRequest = (
     merchantId: string,
@@ -53,7 +54,7 @@ const CreatePaymentRequestPage = ({
         ? PartialPaymentMethods.Partial
         : PartialPaymentMethods.None,
       priorityBankID: paymentRequest.paymentMethods.bank.active
-        ? paymentRequest.paymentMethods.bank.priority
+        ? paymentRequest.paymentMethods.bank.priority?.id
         : undefined,
     };
   };
@@ -66,7 +67,7 @@ const CreatePaymentRequestPage = ({
 
     console.log(parsedPaymentRequestToCreate);
 
-    const response = await client.create(parsedPaymentRequestToCreate);
+    const response = await paymentRequestClient.create(parsedPaymentRequestToCreate);
 
     // TODO: Toasts are not working - however, we need to figure out how to handle errors & success cases
     // Maybe we should have a redirectUrl that we can redirect to? This could be a parameter in the web-component
@@ -78,7 +79,7 @@ const CreatePaymentRequestPage = ({
     makeToast('success', 'Payment request successfully created.');
   };
 
-  return <UICreatePaymentRequestPage onConfirm={onCreatePaymentRequest} />;
+  return <UICreatePaymentRequestPage banks={banks ?? []} onConfirm={onCreatePaymentRequest} />;
 };
 
 CreatePaymentRequestPage.componentProps = {
