@@ -167,7 +167,7 @@ const CreatePaymentRequestPage = ({ onConfirm }: CreatePaymentRequestPageProps) 
                           {/* Left side */}
                           <ScrollArea.Root className="w-full h-screen overflow-hidden">
                             <ScrollArea.Viewport className="w-full h-full">
-                              <div className="pt-20">
+                              <div className="pt-20 pb-28">
                                 <div className="flex items-center">
                                   <button className="inline-block ml-[3.25rem]" onClick={closeModal}>
                                     <img
@@ -238,6 +238,7 @@ const CreatePaymentRequestPage = ({ onConfirm }: CreatePaymentRequestPageProps) 
                                   </div>
 
                                   <div className="mt-14">
+                                    <h4 className="text-lg/6 font-semibold mb-6">Settings</h4>
                                     <div className="w-[27rem] space-y-2">
                                       <EditOptionCard
                                         label="Payment conditions"
