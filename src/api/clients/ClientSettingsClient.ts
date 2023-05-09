@@ -7,7 +7,7 @@ import { BaseApiClient } from './BaseApiClient';
  * on the MoneyMoov ClientSettings api.
  */
 export class ClientSettingsClient extends BaseApiClient {
-  apiUrl: string;
+  paymentDefaultsUrl: string;
 
   /**
    * @param apiBaseUrl The base api url.
@@ -17,7 +17,7 @@ export class ClientSettingsClient extends BaseApiClient {
    */
   constructor(apiBaseUrl: string, authToken: string) {
     super(authToken);
-    this.apiUrl = `${apiBaseUrl}/clientsettings`;
+    this.paymentDefaultsUrl = `${apiBaseUrl}/clientsettings/paymentdefaults`;
   }
 
   /**
@@ -28,7 +28,7 @@ export class ClientSettingsClient extends BaseApiClient {
     data?: UserPaymentDefaults;
     error?: ApiError;
   }> {
-    const response = await this.httpRequest<UserPaymentDefaults>(this.apiUrl, HttpMethod.GET);
+    const response = await this.httpRequest<UserPaymentDefaults>(this.paymentDefaultsUrl, HttpMethod.GET);
 
     return response;
   }
@@ -42,7 +42,11 @@ export class ClientSettingsClient extends BaseApiClient {
     data?: UserPaymentDefaults;
     error?: ApiError;
   }> {
-    const response = await this.httpRequest<UserPaymentDefaults>(this.apiUrl, HttpMethod.POST, userPaymentDefaults);
+    const response = await this.httpRequest<UserPaymentDefaults>(
+      this.paymentDefaultsUrl,
+      HttpMethod.POST,
+      userPaymentDefaults,
+    );
 
     return response;
   }
@@ -55,7 +59,7 @@ export class ClientSettingsClient extends BaseApiClient {
     success?: boolean;
     error?: ApiError;
   }> {
-    const response = await this.httpRequest(this.apiUrl, HttpMethod.DELETE);
+    const response = await this.httpRequest(this.paymentDefaultsUrl, HttpMethod.DELETE);
 
     return !response.error ? { success: true } : { success: false, error: response.error };
   }
