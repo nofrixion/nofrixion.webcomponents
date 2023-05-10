@@ -341,89 +341,94 @@ const CreatePaymentRequestPage = ({ banks, onConfirm }: CreatePaymentRequestPage
                   {/* Right side */}
                   <div className="flex-1 bg-mainGrey min-h-screen pl-[8.25rem] pr-32 py-44">
                     <div className="w-full max-w-lg mx-auto">
-                      {/* Amount */}
-                      <AnimatePresence>
-                        {currency && amount && (
-                          <AnimateHeightWrapper layoutId="amount">
-                            <div className="flex overflow-hidden pb-10">
-                              <span className="leading-6 text-greyText w-1/2">Request</span>
-                              <span className="font-semibold text-[2rem]/8 w-1/2">
-                                {currency == 'GBP' ? '£' : '€'} {amount}
-                              </span>
-                            </div>
-                          </AnimateHeightWrapper>
-                        )}
-                      </AnimatePresence>
-
-                      {/* For */}
-                      <AnimatePresence>
-                        {(productOrService || description) && (
-                          <AnimateHeightWrapper layoutId="product-or-service-wrapper">
-                            <div className="flex pb-10">
-                              <motion.span layout="position" className="leading-6 text-greyText w-1/2">
-                                For
-                              </motion.span>
-
-                              <div className="flex flex-col w-1/2">
-                                <AnimatePresence>
-                                  {productOrService && (
-                                    <AnimateHeightWrapper layoutId="product-or-service">
-                                      <span className="font-semibold w-[17.5rem] break-words text-lg/5 mb-2">
-                                        {productOrService}
-                                      </span>
-                                    </AnimateHeightWrapper>
-                                  )}
-                                </AnimatePresence>
-
-                                <AnimatePresence>
-                                  {description && (
-                                    <AnimateHeightWrapper layoutId="description">
-                                      <motion.p
-                                        layout="position"
-                                        className="text-sm/5 max-w-[17.5rem] w-full mt-8 text-ellipsis break-words"
-                                      >
-                                        {description}
-                                      </motion.p>
-                                    </AnimateHeightWrapper>
-                                  )}
-                                </AnimatePresence>
+                      <div className="space-y-10">
+                        {/* Amount */}
+                        <AnimatePresence>
+                          {currency && amount && (
+                            <AnimateHeightWrapper layoutId="amount">
+                              <div className="flex overflow-hidden">
+                                <span className="leading-6 text-greyText w-1/2">Request</span>
+                                <span className="font-semibold text-[2rem]/8 w-1/2">
+                                  {currency == 'GBP' ? '£' : '€'} {amount}
+                                </span>
                               </div>
-                            </div>
-                          </AnimateHeightWrapper>
-                        )}
-                      </AnimatePresence>
+                            </AnimateHeightWrapper>
+                          )}
+                        </AnimatePresence>
 
-                      {/* From */}
-                      <AnimatePresence>
-                        {(firstName || lastName || email) && (
-                          <AnimateHeightWrapper layoutId="from">
-                            <div className="flex">
-                              {(firstName || lastName || email) && (
-                                <span className="leading-6 text-greyText w-1/2">From</span>
-                              )}
+                        {/* For */}
+                        <AnimatePresence>
+                          {(productOrService || description) && (
+                            <AnimateHeightWrapper layoutId="product-or-service-wrapper">
+                              <div className="flex">
+                                <motion.span layout="position" className="leading-6 text-greyText w-1/2">
+                                  For
+                                </motion.span>
 
-                              <div className="flex flex-col w-1/2">
-                                <AnimatePresence>
-                                  {(firstName || lastName) && (
-                                    <AnimateHeightWrapper layoutId="name">
-                                      <span className="font-semibold text-lg/5 mb-2">
-                                        {firstName} {lastName}
-                                      </span>
-                                    </AnimateHeightWrapper>
-                                  )}
-                                </AnimatePresence>
-                                <AnimatePresence>
-                                  {email && (
-                                    <AnimateHeightWrapper layoutId="email">
-                                      <p className="text-sm/5">{email}</p>
-                                    </AnimateHeightWrapper>
-                                  )}
-                                </AnimatePresence>
+                                <div className="flex flex-col w-1/2">
+                                  <AnimatePresence>
+                                    {productOrService && (
+                                      <AnimateHeightWrapper layoutId="product-or-service">
+                                        <motion.p
+                                          layout="position"
+                                          className="font-semibold w-[17.5rem] break-words text-lg/5 mb-2"
+                                        >
+                                          {productOrService}
+                                        </motion.p>
+                                      </AnimateHeightWrapper>
+                                    )}
+                                  </AnimatePresence>
+
+                                  <AnimatePresence>
+                                    {description && (
+                                      <AnimateHeightWrapper layoutId="description">
+                                        <motion.p
+                                          layout="position"
+                                          className="text-sm/5 max-w-[17.5rem] w-full text-ellipsis break-words"
+                                        >
+                                          {description}
+                                        </motion.p>
+                                      </AnimateHeightWrapper>
+                                    )}
+                                  </AnimatePresence>
+                                </div>
                               </div>
-                            </div>
-                          </AnimateHeightWrapper>
-                        )}
-                      </AnimatePresence>
+                            </AnimateHeightWrapper>
+                          )}
+                        </AnimatePresence>
+
+                        {/* From */}
+                        <AnimatePresence>
+                          {(firstName || lastName || email) && (
+                            <AnimateHeightWrapper layoutId="from">
+                              <div className="flex">
+                                {(firstName || lastName || email) && (
+                                  <span className="leading-6 text-greyText w-1/2">From</span>
+                                )}
+
+                                <div className="flex flex-col w-1/2">
+                                  <AnimatePresence>
+                                    {(firstName || lastName) && (
+                                      <AnimateHeightWrapper layoutId="name">
+                                        <p className="font-semibold text-lg/5 mb-2">
+                                          {firstName} {lastName}
+                                        </p>
+                                      </AnimateHeightWrapper>
+                                    )}
+                                  </AnimatePresence>
+                                  <AnimatePresence>
+                                    {email && (
+                                      <AnimateHeightWrapper layoutId="email">
+                                        <p className="text-sm/5">{email}</p>
+                                      </AnimateHeightWrapper>
+                                    )}
+                                  </AnimatePresence>
+                                </div>
+                              </div>
+                            </AnimateHeightWrapper>
+                          )}
+                        </AnimatePresence>
+                      </div>
 
                       {/* Settings */}
                       <AnimatePresence>
@@ -439,10 +444,10 @@ const CreatePaymentRequestPage = ({ banks, onConfirm }: CreatePaymentRequestPage
                             <div className="h-px w-full bg-borderGrey mt-12"></div>
                             <div className="flex overflow-hidden mt-12">
                               <span className="leading-6 text-greyText w-1/2">Settings</span>
-                              <div className="flex flex-col w-1/2">
-                                <span className="text-sm/6 mb-6">Single full payment.</span>
+                              <div className="flex flex-col w-1/2 space-y-6">
+                                <span className="text-sm/6">Single full payment.</span>
 
-                                <div className="flex items-center space-x-3 mb-6">
+                                <div className="flex items-center space-x-3">
                                   <img
                                     src={paymentMethodsFormValue.isBankEnabled ? BankIcon : BankDisabledIcon}
                                     alt="Bank"
