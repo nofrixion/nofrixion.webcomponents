@@ -23,7 +23,7 @@ import PaymentConditionsModal from '../Modals/PaymentConditionsModal/PaymentCond
 import BankIcon from '../../../assets/icons/bank-icon.svg';
 import CardIcon from '../../../assets/icons/card-icon.svg';
 import WalletIcon from '../../../assets/icons/wallet-icon.svg';
-import BitcoinIcon from '../../../assets/icons/bitcoin-icon.svg';
+import BitcoinLightningIcon from '../../../assets/icons/bitcoin-icon.svg';
 
 import BankDisabledIcon from '../../../assets/icons/bank-disabled.svg';
 import CardDisabledIcon from '../../../assets/icons/card-disabled.svg';
@@ -31,6 +31,7 @@ import WalletDisabledIcon from '../../../assets/icons/wallet-disabled.svg';
 import BitcoinDisabledIcon from '../../../assets/icons/bitcoin-disabled.svg';
 import { parseBoldText } from '../../../utils/uiFormaters';
 import { BankSettings } from '../../../api/types/ApiResponses';
+import InfoTooltip from '../InfoTooltip/InfoTooltip';
 
 interface CreatePaymentRequestPageProps {
   banks: BankSettings[];
@@ -153,6 +154,9 @@ const CreatePaymentRequestPage = ({ banks, onConfirm }: CreatePaymentRequestPage
       : []),
     ...(!paymentMethodsFormValue.isCaptureFundsEnabled ? ["Don't capture funds on cards is on."] : []),
   ];
+
+  const getIconDescription = (paymentMethodName: string, enabled: boolean) =>
+    `${paymentMethodName} ${enabled ? 'enabled' : 'disabled'}`;
 
   return (
     <>
@@ -307,7 +311,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm }: CreatePaymentRequestPage
                                         <img
                                           src={
                                             paymentMethodsFormValue.isLightningEnabled
-                                              ? BitcoinIcon
+                                              ? BitcoinLightningIcon
                                               : BitcoinDisabledIcon
                                           }
                                           alt="Bitcoin"
@@ -448,26 +452,52 @@ const CreatePaymentRequestPage = ({ banks, onConfirm }: CreatePaymentRequestPage
                                 <span className="text-sm/6">Single full payment.</span>
 
                                 <div className="flex items-center space-x-3">
-                                  <img
-                                    src={paymentMethodsFormValue.isBankEnabled ? BankIcon : BankDisabledIcon}
-                                    alt="Bank"
-                                    className="w-6 h-6"
-                                  />
-                                  <img
-                                    src={paymentMethodsFormValue.isCardEnabled ? CardIcon : CardDisabledIcon}
-                                    alt="Card"
-                                    className="w-6 h-6"
-                                  />
-                                  <img
-                                    src={paymentMethodsFormValue.isWalletEnabled ? WalletIcon : WalletDisabledIcon}
-                                    alt="Apple Pay"
-                                    className="w-6 h-6"
-                                  />
-                                  <img
-                                    src={paymentMethodsFormValue.isLightningEnabled ? BitcoinIcon : BitcoinDisabledIcon}
-                                    alt="Bitcoin"
-                                    className="w-6 h-6"
-                                  />
+                                  <InfoTooltip
+                                    content={getIconDescription('Bank', paymentMethodsFormValue.isBankEnabled)}
+                                  >
+                                    <img
+                                      src={paymentMethodsFormValue.isBankEnabled ? BankIcon : BankDisabledIcon}
+                                      alt="Bank"
+                                      className="w-6 h-6"
+                                    />
+                                  </InfoTooltip>
+                                  <InfoTooltip
+                                    content={getIconDescription('Card', paymentMethodsFormValue.isCardEnabled)}
+                                  >
+                                    <img
+                                      src={paymentMethodsFormValue.isCardEnabled ? CardIcon : CardDisabledIcon}
+                                      alt="Card"
+                                      className="w-6 h-6"
+                                    />
+                                  </InfoTooltip>
+                                  <InfoTooltip
+                                    content={getIconDescription(
+                                      'Apple Pay / Google Pay',
+                                      paymentMethodsFormValue.isWalletEnabled,
+                                    )}
+                                  >
+                                    <img
+                                      src={paymentMethodsFormValue.isWalletEnabled ? WalletIcon : WalletDisabledIcon}
+                                      alt="Apple Pay"
+                                      className="w-6 h-6"
+                                    />
+                                  </InfoTooltip>
+                                  <InfoTooltip
+                                    content={getIconDescription(
+                                      'Bitcoin Lightning',
+                                      paymentMethodsFormValue.isLightningEnabled,
+                                    )}
+                                  >
+                                    <img
+                                      src={
+                                        paymentMethodsFormValue.isLightningEnabled
+                                          ? BitcoinLightningIcon
+                                          : BitcoinDisabledIcon
+                                      }
+                                      alt="Bitcoin Lightning"
+                                      className="w-6 h-6"
+                                    />
+                                  </InfoTooltip>
                                 </div>
 
                                 {availableMethodsDetails.length > 0 && (
