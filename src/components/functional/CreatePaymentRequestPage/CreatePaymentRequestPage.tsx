@@ -65,8 +65,6 @@ const CreatePaymentRequestPage = ({
       paymentRequestToCreate,
     );
 
-    console.log(parsedPaymentRequestToCreate);
-
     const response = await paymentRequestClient.create(parsedPaymentRequestToCreate);
 
     // TODO: Toasts are not working - however, we need to figure out how to handle errors & success cases

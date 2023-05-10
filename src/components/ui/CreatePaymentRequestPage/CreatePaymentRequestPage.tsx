@@ -90,11 +90,10 @@ const CreatePaymentRequestPage = ({ banks, onConfirm }: CreatePaymentRequestPage
   };
 
   const onReviewClicked = () => {
-    if (!isReviewing) {
-      setIsReviewing(true);
-      return;
-    }
+    setIsReviewing(true);
+  };
 
+  const onConfrimClicked = () => {
     const paymentRequestToCreate: LocalPaymentRequestCreate = {
       amount: parseInt(amount),
       currency: currency as Currency,
@@ -119,8 +118,6 @@ const CreatePaymentRequestPage = ({ banks, onConfirm }: CreatePaymentRequestPage
         lightning: paymentMethodsFormValue.isLightningEnabled,
       },
     };
-
-    console.log('paymentRequestToCreate', paymentRequestToCreate);
 
     onConfirm(paymentRequestToCreate);
 
@@ -428,55 +425,60 @@ const CreatePaymentRequestPage = ({ banks, onConfirm }: CreatePaymentRequestPage
                         )}
                       </AnimatePresence>
 
+                      {/* Settings */}
                       <AnimatePresence>
                         {isReviewing && (
-                          <AnimateHeightWrapper layoutId="settings">
-                            <>
-                              <div className="h-px w-full bg-borderGrey mt-12"></div>
-                              <div className="flex overflow-hidden mt-12">
-                                <span className="leading-6 text-greyText w-1/2">Settings</span>
-                                <div className="flex flex-col w-1/2">
-                                  <span className="text-sm/6 mb-6">Single full payment.</span>
+                          <motion.div
+                            initial={{
+                              opacity: 0,
+                            }}
+                            animate={{
+                              opacity: 1,
+                            }}
+                          >
+                            <div className="h-px w-full bg-borderGrey mt-12"></div>
+                            <div className="flex overflow-hidden mt-12">
+                              <span className="leading-6 text-greyText w-1/2">Settings</span>
+                              <div className="flex flex-col w-1/2">
+                                <span className="text-sm/6 mb-6">Single full payment.</span>
 
-                                  <div className="flex items-center space-x-3 mb-6">
-                                    <img
-                                      src={paymentMethodsFormValue.isBankEnabled ? BankIcon : BankDisabledIcon}
-                                      alt="Bank"
-                                      className="w-6 h-6"
-                                    />
-                                    <img
-                                      src={paymentMethodsFormValue.isCardEnabled ? CardIcon : CardDisabledIcon}
-                                      alt="Card"
-                                      className="w-6 h-6"
-                                    />
-                                    <img
-                                      src={paymentMethodsFormValue.isWalletEnabled ? WalletIcon : WalletDisabledIcon}
-                                      alt="Apple Pay"
-                                      className="w-6 h-6"
-                                    />
-                                    <img
-                                      src={
-                                        paymentMethodsFormValue.isLightningEnabled ? BitcoinIcon : BitcoinDisabledIcon
-                                      }
-                                      alt="Bitcoin"
-                                      className="w-6 h-6"
-                                    />
-                                  </div>
-
-                                  {availableMethodsDetails.length > 0 && (
-                                    <div className="flex flex-col text-greyText text-xs">
-                                      {availableMethodsDetails?.map((detail, index) => {
-                                        return <span key={`detail-${index}`}>{parseBoldText(detail)}</span>;
-                                      })}
-                                    </div>
-                                  )}
+                                <div className="flex items-center space-x-3 mb-6">
+                                  <img
+                                    src={paymentMethodsFormValue.isBankEnabled ? BankIcon : BankDisabledIcon}
+                                    alt="Bank"
+                                    className="w-6 h-6"
+                                  />
+                                  <img
+                                    src={paymentMethodsFormValue.isCardEnabled ? CardIcon : CardDisabledIcon}
+                                    alt="Card"
+                                    className="w-6 h-6"
+                                  />
+                                  <img
+                                    src={paymentMethodsFormValue.isWalletEnabled ? WalletIcon : WalletDisabledIcon}
+                                    alt="Apple Pay"
+                                    className="w-6 h-6"
+                                  />
+                                  <img
+                                    src={paymentMethodsFormValue.isLightningEnabled ? BitcoinIcon : BitcoinDisabledIcon}
+                                    alt="Bitcoin"
+                                    className="w-6 h-6"
+                                  />
                                 </div>
+
+                                {availableMethodsDetails.length > 0 && (
+                                  <div className="flex flex-col text-greyText text-xs">
+                                    {availableMethodsDetails?.map((detail, index) => {
+                                      return <span key={`detail-${index}`}>{parseBoldText(detail)}</span>;
+                                    })}
+                                  </div>
+                                )}
                               </div>
-                            </>
-                          </AnimateHeightWrapper>
+                            </div>
+                          </motion.div>
                         )}
                       </AnimatePresence>
 
+                      {/* Buttons */}
                       <AnimatePresence>
                         {currency && amount && productOrService && (
                           <motion.div
@@ -487,45 +489,52 @@ const CreatePaymentRequestPage = ({ banks, onConfirm }: CreatePaymentRequestPage
                           >
                             {/* Edit button */}
                             {isReviewing && (
-                              <button
+                              <motion.button
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
                                 className="w-52 py-3 bg-[#DEE5ED] rounded-full mr-5"
                                 onClick={() => setIsReviewing(false)}
                               >
                                 Edit
-                              </button>
+                              </motion.button>
                             )}
 
-                            <button
-                              type="button"
-                              className={classNames(
-                                'whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-sm text-white font-semibold cursor-pointer hover:bg-[#144752]',
-                                {
-                                  'w-full px-16': !isReviewing,
-                                  'w-72': isReviewing,
-                                },
-                              )}
-                              onClick={onReviewClicked}
-                            >
-                              <span className="py-3">
-                                {!isReviewing ? 'Review payment request' : 'Confirm payment request'}
-                              </span>
+                            {/* Review PR */}
+                            {!isReviewing && (
+                              <motion.button
+                                type="button"
+                                className="w-full px-16 whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-sm text-white font-semibold cursor-pointer hover:bg-[#144752]"
+                                onClick={onReviewClicked}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                              >
+                                <span className="py-3">Review payment request</span>
 
-                              <AnimatePresence>
-                                {!isReviewing && (
-                                  <motion.div
-                                    initial={{ opacity: 1 }}
-                                    animate={{ opacity: 1, width: 'auto' }}
-                                    exit={{ opacity: 0, width: 0 }}
-                                  >
-                                    <img
-                                      src={NextIcon}
-                                      alt="Arrow right"
-                                      className="ml-2 w-6 h-6 min-w-[1.5rem] min-h-[1.5rem]"
-                                    />
-                                  </motion.div>
-                                )}
-                              </AnimatePresence>
-                            </button>
+                                <img
+                                  src={NextIcon}
+                                  alt="Arrow right"
+                                  className="ml-2 w-6 h-6 min-w-[1.5rem] min-h-[1.5rem]"
+                                />
+                              </motion.button>
+                            )}
+
+                            {/* Confirm PR */}
+                            <AnimatePresence>
+                              {isReviewing && (
+                                <motion.button
+                                  type="button"
+                                  className="w-72 whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-sm text-white font-semibold cursor-pointer hover:bg-[#144752]"
+                                  initial={{ opacity: 0 }}
+                                  animate={{ opacity: 1 }}
+                                  exit={{}}
+                                  onClick={onConfrimClicked}
+                                >
+                                  <span className="py-3">Confirm payment request</span>
+                                </motion.button>
+                              )}
+                            </AnimatePresence>
                           </motion.div>
                         )}
                       </AnimatePresence>
