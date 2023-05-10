@@ -284,7 +284,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm }: CreatePaymentRequestPage
                                       }}
                                     />
                                     <EditOptionCard
-                                      label="Available methods"
+                                      label="Payment methods"
                                       details={availableMethodsDetails}
                                       onClick={() => {
                                         setIsPaymentMethodsModalOpen(true);
