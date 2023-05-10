@@ -1,5 +1,7 @@
 import { parseBoldText } from '../../../utils/uiFormaters';
 
+import EditIcon from '../../../assets/icons/edit-icon.svg';
+
 interface EditOptionCardProps {
   label: string;
   value?: string;
@@ -10,9 +12,13 @@ interface EditOptionCardProps {
 
 const EditOptionCard = ({ label, value, details, onClick, children }: EditOptionCardProps) => {
   return (
-    <button className="bg-mainGrey rounded-lg p-4 w-full flex flex-col text-sm/6" onClick={onClick}>
+    <button
+      className="bg-mainGrey group rounded-lg p-4 w-full flex flex-col text-sm/6 transition ease-in-out hover:bg-greyBg"
+      onClick={onClick}
+    >
       <div className="flex w-full">
         <span className="text-greyText">{label}</span>
+        <img src={EditIcon} alt="Edit icon" className="ml-2 transition opacity-0 group-hover:opacity-100" />
 
         <div className="ml-auto flex justify-center items-center">
           {value && <span>{value}</span>}
