@@ -56,6 +56,8 @@ const CreatePaymentRequestPage = ({
       priorityBankID: paymentRequest.paymentMethods.bank.active
         ? paymentRequest.paymentMethods.bank.priority?.id
         : undefined,
+      shippingFirstName: paymentRequest.firstName,
+      shippingLastName: paymentRequest.lastName,
     };
   };
 

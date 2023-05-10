@@ -104,7 +104,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm }: CreatePaymentRequestPage
       lastName,
       email,
       paymentConditions: {
-        allowPartialPayments: false,
+        allowPartialPayments: paymentConditionsFormValue.allowPartialPayments,
       },
       paymentMethods: {
         bank: {
