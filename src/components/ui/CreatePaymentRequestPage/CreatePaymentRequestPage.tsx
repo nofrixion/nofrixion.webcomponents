@@ -342,183 +342,194 @@ const CreatePaymentRequestPage = ({ banks, onConfirm }: CreatePaymentRequestPage
                   </AnimatePresence>
 
                   {/* Right side */}
-                  <div className="flex-1 bg-mainGrey min-h-screen pl-[8.25rem] pr-32 pt-44">
-                    {/* Amount */}
-                    <AnimatePresence>
-                      {currency && amount && (
-                        <AnimateHeightWrapper layoutId="amount">
-                          <div className="flex overflow-hidden pb-10">
-                            <span className="leading-6 text-greyText w-1/2">Request</span>
-                            <span className="font-semibold text-[2rem]/8 w-1/2">
-                              {currency == 'GBP' ? '£' : '€'} {amount}
-                            </span>
-                          </div>
-                        </AnimateHeightWrapper>
-                      )}
-                    </AnimatePresence>
-
-                    {/* For */}
-                    <AnimatePresence>
-                      {(productOrService || description) && (
-                        <AnimateHeightWrapper layoutId="product-or-service-wrapper">
-                          <div className="flex pb-10">
-                            <span className="leading-6 text-greyText w-1/2">For</span>
-
-                            <div className="flex flex-col w-1/2">
-                              <AnimatePresence>
-                                {productOrService && (
-                                  <AnimateHeightWrapper layoutId="product-or-service">
-                                    <span className="font-semibold w-[17.5rem] break-words text-lg/5 mb-2">
-                                      {productOrService}
-                                    </span>
-                                  </AnimateHeightWrapper>
-                                )}
-                              </AnimatePresence>
-
-                              <AnimatePresence>
-                                {description && (
-                                  <AnimateHeightWrapper layoutId="description">
-                                    <p className="text-sm/5 w-[17.5rem] text-ellipsis break-words">{description}</p>
-                                  </AnimateHeightWrapper>
-                                )}
-                              </AnimatePresence>
+                  <div className="flex-1 bg-mainGrey min-h-screen pl-[8.25rem] pr-32 py-44">
+                    <div className="w-full max-w-lg mx-auto">
+                      {/* Amount */}
+                      <AnimatePresence>
+                        {currency && amount && (
+                          <AnimateHeightWrapper layoutId="amount">
+                            <div className="flex overflow-hidden pb-10">
+                              <span className="leading-6 text-greyText w-1/2">Request</span>
+                              <span className="font-semibold text-[2rem]/8 w-1/2">
+                                {currency == 'GBP' ? '£' : '€'} {amount}
+                              </span>
                             </div>
-                          </div>
-                        </AnimateHeightWrapper>
-                      )}
-                    </AnimatePresence>
+                          </AnimateHeightWrapper>
+                        )}
+                      </AnimatePresence>
 
-                    {/* From */}
-                    <AnimatePresence>
-                      {(firstName || lastName || email) && (
-                        <AnimateHeightWrapper layoutId="from">
-                          <div className="flex">
-                            {(firstName || lastName || email) && (
-                              <span className="leading-6 text-greyText w-1/2">From</span>
-                            )}
+                      {/* For */}
+                      <AnimatePresence>
+                        {(productOrService || description) && (
+                          <AnimateHeightWrapper layoutId="product-or-service-wrapper">
+                            <div className="flex pb-10">
+                              <motion.span layout="position" className="leading-6 text-greyText w-1/2">
+                                For
+                              </motion.span>
 
-                            <div className="flex flex-col w-1/2">
-                              <AnimatePresence>
-                                {(firstName || lastName) && (
-                                  <AnimateHeightWrapper layoutId="name">
-                                    <span className="font-semibold text-lg/5 mb-2">
-                                      {firstName} {lastName}
-                                    </span>
-                                  </AnimateHeightWrapper>
-                                )}
-                              </AnimatePresence>
-                              <AnimatePresence>
-                                {email && (
-                                  <AnimateHeightWrapper layoutId="email">
-                                    <p className="text-sm/5">{email}</p>
-                                  </AnimateHeightWrapper>
-                                )}
-                              </AnimatePresence>
-                            </div>
-                          </div>
-                        </AnimateHeightWrapper>
-                      )}
-                    </AnimatePresence>
-
-                    <AnimatePresence>
-                      {isReviewing && (
-                        <AnimateHeightWrapper layoutId="settings">
-                          <>
-                            <div className="h-px w-full bg-borderGrey mt-12"></div>
-                            <div className="flex overflow-hidden pb-10 mt-12">
-                              <span className="leading-6 text-greyText w-1/2">Settings</span>
                               <div className="flex flex-col w-1/2">
-                                <span className="text-sm/6 mb-6">Single full payment.</span>
+                                <AnimatePresence>
+                                  {productOrService && (
+                                    <AnimateHeightWrapper layoutId="product-or-service">
+                                      <span className="font-semibold w-[17.5rem] break-words text-lg/5 mb-2">
+                                        {productOrService}
+                                      </span>
+                                    </AnimateHeightWrapper>
+                                  )}
+                                </AnimatePresence>
 
-                                <div className="flex items-center space-x-3 mb-6">
-                                  <img
-                                    src={paymentMethodsFormValue.isBankEnabled ? BankIcon : BankDisabledIcon}
-                                    alt="Bank"
-                                    className="w-6 h-6"
-                                  />
-                                  <img
-                                    src={paymentMethodsFormValue.isCardEnabled ? CardIcon : CardDisabledIcon}
-                                    alt="Card"
-                                    className="w-6 h-6"
-                                  />
-                                  <img
-                                    src={paymentMethodsFormValue.isWalletEnabled ? WalletIcon : WalletDisabledIcon}
-                                    alt="Apple Pay"
-                                    className="w-6 h-6"
-                                  />
-                                  <img
-                                    src={paymentMethodsFormValue.isLightningEnabled ? BitcoinIcon : BitcoinDisabledIcon}
-                                    alt="Bitcoin"
-                                    className="w-6 h-6"
-                                  />
-                                </div>
-
-                                {availableMethodsDetails.length > 0 && (
-                                  <div className="flex flex-col text-greyText text-xs">
-                                    {availableMethodsDetails?.map((detail, index) => {
-                                      return <span key={`detail-${index}`}>{parseBoldText(detail)}</span>;
-                                    })}
-                                  </div>
-                                )}
+                                <AnimatePresence>
+                                  {description && (
+                                    <AnimateHeightWrapper layoutId="description">
+                                      <motion.p
+                                        layout="position"
+                                        className="text-sm/5 max-w-[17.5rem] w-full mt-8 text-ellipsis break-words"
+                                      >
+                                        {description}
+                                      </motion.p>
+                                    </AnimateHeightWrapper>
+                                  )}
+                                </AnimatePresence>
                               </div>
                             </div>
-                          </>
-                        </AnimateHeightWrapper>
-                      )}
-                    </AnimatePresence>
+                          </AnimateHeightWrapper>
+                        )}
+                      </AnimatePresence>
 
-                    <AnimatePresence>
-                      {currency && amount && productOrService && (
-                        <motion.div
-                          className="flex h-12 !mt-20 justify-center"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                        >
-                          {/* Edit button */}
-                          {isReviewing && (
-                            <button
-                              className="w-52 py-3 bg-[#DEE5ED] rounded-full mr-5"
-                              onClick={() => setIsReviewing(false)}
-                            >
-                              Edit
-                            </button>
-                          )}
-
-                          <button
-                            type="button"
-                            className={classNames(
-                              'whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-sm text-white font-semibold cursor-pointer hover:bg-[#144752]',
-                              {
-                                'w-full px-16': !isReviewing,
-                                'w-72': isReviewing,
-                              },
-                            )}
-                            onClick={onReviewClicked}
-                          >
-                            <span className="py-3">
-                              {!isReviewing ? 'Review payment request' : 'Confirm payment request'}
-                            </span>
-
-                            <AnimatePresence>
-                              {!isReviewing && (
-                                <motion.div
-                                  initial={{ opacity: 1 }}
-                                  animate={{ opacity: 1, width: 'auto' }}
-                                  exit={{ opacity: 0, width: 0 }}
-                                >
-                                  <img
-                                    src={NextIcon}
-                                    alt="Arrow right"
-                                    className="ml-2 w-6 h-6 min-w-[1.5rem] min-h-[1.5rem]"
-                                  />
-                                </motion.div>
+                      {/* From */}
+                      <AnimatePresence>
+                        {(firstName || lastName || email) && (
+                          <AnimateHeightWrapper layoutId="from">
+                            <div className="flex">
+                              {(firstName || lastName || email) && (
+                                <span className="leading-6 text-greyText w-1/2">From</span>
                               )}
-                            </AnimatePresence>
-                          </button>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+
+                              <div className="flex flex-col w-1/2">
+                                <AnimatePresence>
+                                  {(firstName || lastName) && (
+                                    <AnimateHeightWrapper layoutId="name">
+                                      <span className="font-semibold text-lg/5 mb-2">
+                                        {firstName} {lastName}
+                                      </span>
+                                    </AnimateHeightWrapper>
+                                  )}
+                                </AnimatePresence>
+                                <AnimatePresence>
+                                  {email && (
+                                    <AnimateHeightWrapper layoutId="email">
+                                      <p className="text-sm/5">{email}</p>
+                                    </AnimateHeightWrapper>
+                                  )}
+                                </AnimatePresence>
+                              </div>
+                            </div>
+                          </AnimateHeightWrapper>
+                        )}
+                      </AnimatePresence>
+
+                      <AnimatePresence>
+                        {isReviewing && (
+                          <AnimateHeightWrapper layoutId="settings">
+                            <>
+                              <div className="h-px w-full bg-borderGrey mt-12"></div>
+                              <div className="flex overflow-hidden mt-12">
+                                <span className="leading-6 text-greyText w-1/2">Settings</span>
+                                <div className="flex flex-col w-1/2">
+                                  <span className="text-sm/6 mb-6">Single full payment.</span>
+
+                                  <div className="flex items-center space-x-3 mb-6">
+                                    <img
+                                      src={paymentMethodsFormValue.isBankEnabled ? BankIcon : BankDisabledIcon}
+                                      alt="Bank"
+                                      className="w-6 h-6"
+                                    />
+                                    <img
+                                      src={paymentMethodsFormValue.isCardEnabled ? CardIcon : CardDisabledIcon}
+                                      alt="Card"
+                                      className="w-6 h-6"
+                                    />
+                                    <img
+                                      src={paymentMethodsFormValue.isWalletEnabled ? WalletIcon : WalletDisabledIcon}
+                                      alt="Apple Pay"
+                                      className="w-6 h-6"
+                                    />
+                                    <img
+                                      src={
+                                        paymentMethodsFormValue.isLightningEnabled ? BitcoinIcon : BitcoinDisabledIcon
+                                      }
+                                      alt="Bitcoin"
+                                      className="w-6 h-6"
+                                    />
+                                  </div>
+
+                                  {availableMethodsDetails.length > 0 && (
+                                    <div className="flex flex-col text-greyText text-xs">
+                                      {availableMethodsDetails?.map((detail, index) => {
+                                        return <span key={`detail-${index}`}>{parseBoldText(detail)}</span>;
+                                      })}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </>
+                          </AnimateHeightWrapper>
+                        )}
+                      </AnimatePresence>
+
+                      <AnimatePresence>
+                        {currency && amount && productOrService && (
+                          <motion.div
+                            className="flex h-12 !mt-20 justify-center"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                          >
+                            {/* Edit button */}
+                            {isReviewing && (
+                              <button
+                                className="w-52 py-3 bg-[#DEE5ED] rounded-full mr-5"
+                                onClick={() => setIsReviewing(false)}
+                              >
+                                Edit
+                              </button>
+                            )}
+
+                            <button
+                              type="button"
+                              className={classNames(
+                                'whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-sm text-white font-semibold cursor-pointer hover:bg-[#144752]',
+                                {
+                                  'w-full px-16': !isReviewing,
+                                  'w-72': isReviewing,
+                                },
+                              )}
+                              onClick={onReviewClicked}
+                            >
+                              <span className="py-3">
+                                {!isReviewing ? 'Review payment request' : 'Confirm payment request'}
+                              </span>
+
+                              <AnimatePresence>
+                                {!isReviewing && (
+                                  <motion.div
+                                    initial={{ opacity: 1 }}
+                                    animate={{ opacity: 1, width: 'auto' }}
+                                    exit={{ opacity: 0, width: 0 }}
+                                  >
+                                    <img
+                                      src={NextIcon}
+                                      alt="Arrow right"
+                                      className="ml-2 w-6 h-6 min-w-[1.5rem] min-h-[1.5rem]"
+                                    />
+                                  </motion.div>
+                                )}
+                              </AnimatePresence>
+                            </button>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
