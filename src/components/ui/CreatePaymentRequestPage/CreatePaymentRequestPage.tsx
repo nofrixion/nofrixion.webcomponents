@@ -8,7 +8,7 @@ import EditOptionCard from '../EditOptionCard/EditOptionCard';
 import BackButtonIcon from '../../../assets/icons/back-button-icon.svg';
 import NextIcon from '../../../assets/icons/next-icon.svg';
 import InputTextAreaField from '../InputTextAreaField/InputTextAreaField';
-import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import AnimateHeightWrapper from '../utils/AnimateHeight';
 import PaymentMethodsModal from '../Modals/PaymentMethodsModal/PaymentMethodsModal';
 import { Currency } from '../../../api/types/Enums';
@@ -36,11 +36,11 @@ import InfoTooltip from '../InfoTooltip/InfoTooltip';
 interface CreatePaymentRequestPageProps {
   banks: BankSettings[];
   onConfirm: (data: LocalPaymentRequestCreate) => void;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-const CreatePaymentRequestPage = ({ banks, onConfirm }: CreatePaymentRequestPageProps) => {
-  let [isOpen, setIsOpen] = useState(true);
-
+const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreatePaymentRequestPageProps) => {
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState<'EUR' | 'GBP'>('EUR');
   const [productOrService, setProductOrService] = useState('');
@@ -68,14 +68,6 @@ const CreatePaymentRequestPage = ({ banks, onConfirm }: CreatePaymentRequestPage
 
   const onCurrencyChange = (currency: string) => {
     setCurrency(currency as 'EUR' | 'GBP');
-  };
-
-  const closeModal = () => {
-    setIsOpen(false);
-  };
-
-  const openModal = () => {
-    setIsOpen(true);
   };
 
   const onMethodsReceived = (data: LocalPaymentMethodsFormValue) => {
@@ -123,7 +115,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm }: CreatePaymentRequestPage
     onConfirm(paymentRequestToCreate);
 
     // TODO: Remove this. This is just for demo purposes
-    closeModal();
+    onClose();
     resetStates();
   };
 
@@ -160,16 +152,6 @@ const CreatePaymentRequestPage = ({ banks, onConfirm }: CreatePaymentRequestPage
 
   return (
     <>
-      <div className="fixed inset-0 flex items-center justify-center">
-        <button
-          type="button"
-          onClick={openModal}
-          className="rounded-md bg-black bg-opacity-80 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-        >
-          Open create payment request page
-        </button>
-      </div>
-
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative" onClose={() => {}}>
           <div className="fixed inset-0 overflow-y-auto">
@@ -197,7 +179,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm }: CreatePaymentRequestPage
                           <ScrollArea.Viewport className="w-full h-full">
                             <div className="pt-20 pb-28">
                               <div className="flex items-center">
-                                <button className="inline-block ml-[3.25rem]" onClick={closeModal}>
+                                <button className="inline-block ml-[3.25rem]" onClick={onClose}>
                                   <img
                                     src={BackButtonIcon}
                                     alt="Back button"

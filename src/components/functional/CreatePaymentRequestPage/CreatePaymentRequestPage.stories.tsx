@@ -25,6 +25,8 @@ Showcase.args = {
   token: 'eyJhbGciOiJIUz...',
   merchantId: 'bf9e1828-c6a1-4cc5-a012-...',
   apiUrl: apiUrls.sandbox,
+  isOpen: true,
+  onClose: () => {},
 };
 
 export default meta;

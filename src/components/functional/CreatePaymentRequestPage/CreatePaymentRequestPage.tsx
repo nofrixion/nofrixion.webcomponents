@@ -11,12 +11,16 @@ interface CreatePaymentRequesPageProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
   merchantId: string; // Example: "bf9e1828-c6a1-4cc5-a012-08daf2ff1b2d"
   apiUrl?: string; // Example: "https://api.nofrixion.com/api/v1"
+  isOpen: boolean; // When true, the modal will be open. When false, the modal will be closed.
+  onClose: () => void; // Callback function that will be called when the modal is asked to be closed.
 }
 
 const CreatePaymentRequestPage = ({
   token,
   merchantId,
   apiUrl = 'https://api.nofrixion.com/api/v1',
+  isOpen,
+  onClose,
 }: CreatePaymentRequesPageProps) => {
   const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId);
 
@@ -79,7 +83,14 @@ const CreatePaymentRequestPage = ({
     makeToast('success', 'Payment request successfully created.');
   };
 
-  return <UICreatePaymentRequestPage banks={banks ?? []} onConfirm={onCreatePaymentRequest} />;
+  return (
+    <UICreatePaymentRequestPage
+      isOpen={isOpen}
+      onClose={onClose}
+      banks={banks ?? []}
+      onConfirm={onCreatePaymentRequest}
+    />
+  );
 };
 
 CreatePaymentRequestPage.componentProps = {

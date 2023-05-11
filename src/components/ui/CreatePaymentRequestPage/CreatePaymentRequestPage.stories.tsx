@@ -2,6 +2,7 @@ import { StoryFn, Meta } from '@storybook/react';
 
 import CreatePaymentRequestPage from './CreatePaymentRequestPage';
 import { Currency, PaymentProcessor } from '../../../api/types/Enums';
+import { useState } from 'react';
 
 export default {
   title: 'UI/CreatePaymentRequestPage',
@@ -16,7 +17,37 @@ export default {
   },
 } as Meta<typeof CreatePaymentRequestPage>;
 
-const Template: StoryFn<typeof CreatePaymentRequestPage> = (args) => <CreatePaymentRequestPage {...args} />;
+// const Template: StoryFn<typeof CreatePaymentRequestPage> = (args) => <CreatePaymentRequestPage {...args} />;
+
+const Template: StoryFn<typeof CreatePaymentRequestPage> = (args) => {
+  let [isOpen, setIsOpen] = useState(true);
+
+  const openScreen = () => {
+    setIsOpen(true);
+  };
+  const onClose = () => {
+    setIsOpen(false);
+  };
+
+  const onCreatePaymentRequest = () => {
+    onClose();
+  };
+
+  return (
+    <>
+      <div className="fixed inset-0 flex items-center justify-center">
+        <button
+          type="button"
+          onClick={openScreen}
+          className="rounded-md bg-black bg-opacity-80 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+        >
+          Open create payment request page
+        </button>
+      </div>
+      <CreatePaymentRequestPage {...args} isOpen={isOpen} onConfirm={onCreatePaymentRequest} onClose={onClose} />
+    </>
+  );
+};
 
 export const Showcase = Template.bind({});
 Showcase.args = {
