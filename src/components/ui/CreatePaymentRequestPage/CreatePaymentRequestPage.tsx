@@ -171,8 +171,8 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                       <motion.div
                         className="w-1/2 overflow-hidden"
                         initial={{ opacity: 0, width: 0 }}
-                        animate={{ opacity: 1, width: '50%' }}
-                        exit={{ opacity: 0, width: 0, flex: 0 }}
+                        animate={{ opacity: 1, width: '50%', transition: { duration: 0.3 } }}
+                        exit={{ opacity: 0, width: 0, flex: 0, transition: { duration: 0.3 } }}
                       >
                         {/* Left side */}
                         <ScrollArea.Root className="w-full h-screen overflow-hidden">
