@@ -5,7 +5,7 @@ import InputAmountField from '../InputAmountField/InputAmountField';
 import InputTextField from '../InputTextField/InputTextField';
 import EditOptionCard from '../EditOptionCard/EditOptionCard';
 
-import BackButtonIcon from '../../../assets/icons/back-button-icon.svg';
+import AlertIcon from '../../../assets/icons/alert-icon.svg';
 import NextIcon from '../../../assets/icons/next-icon.svg';
 import InputTextAreaField from '../InputTextAreaField/InputTextAreaField';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -48,6 +48,8 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+
+  const [hasEmailError, setHasEmailError] = useState(false);
 
   const [paymentMethodsFormValue, setPaymentMethodsFormValue] = useState<LocalPaymentMethodsFormValue>({
     isBankEnabled: true,
@@ -146,6 +148,25 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
       : []),
     ...(!paymentMethodsFormValue.isCaptureFundsEnabled ? ["Don't capture funds on cards is on."] : []),
   ];
+
+  const onValidateEmail = (email: string) => {
+    if (email && !validateEmail(email)) {
+      setHasEmailError(true);
+    }
+
+    if (!email) {
+      setHasEmailError(false);
+    }
+
+    if (email && validateEmail(email)) {
+      setHasEmailError(false);
+    }
+  };
+
+  const validateEmail = (email: string) => {
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  };
 
   const getIconDescription = (paymentMethodName: string, enabled: boolean) =>
     `${paymentMethodName} ${enabled ? 'enabled' : 'disabled'}`;
@@ -253,8 +274,25 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                 optional
                                 value={email}
                                 type="email"
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={(e) => {
+                                  setEmail(e.target.value);
+
+                                  if (hasEmailError) {
+                                    onValidateEmail(e.target.value);
+                                  }
+                                }}
+                                onBlur={(e) => onValidateEmail(e.target.value)}
                               />
+
+                              <AnimatePresence>
+                                {hasEmailError && (
+                                  <AnimateHeightWrapper layoutId="email-error">
+                                    <div className="mt-2 bg-[#FCF5CF] text-sm p-3 w-[27rem] rounded">
+                                      Make sure the email address is valid.
+                                    </div>
+                                  </AnimateHeightWrapper>
+                                )}
+                              </AnimatePresence>
                             </div>
 
                             <div>
@@ -394,7 +432,16 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                   <AnimatePresence>
                                     {email && (
                                       <AnimateHeightWrapper layoutId="email">
-                                        <p className="text-sm/5 break-words">{email}</p>
+                                        <div
+                                          className={classNames('flex items-center w-fit', {
+                                            'p-1 bg-[#FCF5CF]': hasEmailError,
+                                          })}
+                                        >
+                                          <p className="text-sm/5 break-words">{email}</p>
+                                          {hasEmailError && (
+                                            <img src={AlertIcon} alt="Alert icon" className="w-4 h-4 ml-2" />
+                                          )}
+                                        </div>
                                       </AnimateHeightWrapper>
                                     )}
                                   </AnimatePresence>
@@ -503,6 +550,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                   animate={{ opacity: 1 }}
                                   exit={{}}
                                   onClick={onConfrimClicked}
+                                  disabled={email ? !validateEmail(email) : false}
                                 >
                                   Confirm payment request
                                 </motion.button>
@@ -527,7 +575,13 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                               <motion.button
                                 type="button"
                                 className="w-full h-12 px-16 whitespace-nowrap flex justify-center items-center rounded-full py-3 text-sm cursor-pointer bg-[#DEE5ED] transition hover:bg-[#BDCCDB]"
-                                onClick={onReviewClicked}
+                                onClick={() => {
+                                  if (email && !validateEmail(email)) {
+                                    return;
+                                  }
+
+                                  onReviewClicked();
+                                }}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
