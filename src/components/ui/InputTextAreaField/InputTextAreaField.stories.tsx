@@ -26,7 +26,7 @@ export const Showcase = Template.bind({});
 Showcase.args = {
   label: 'Description',
   value: 'Some description',
-  optional: false,
+  required: false,
   maxLength: 140,
 };
 
@@ -35,7 +35,6 @@ export const AnotherDescriptionOptional = Template.bind({});
 AnotherDescriptionOptional.args = {
   label: 'Another Description',
   value: 'Jimbo',
-  optional: true,
   maxLength: 140,
 };
 
@@ -44,6 +43,5 @@ export const MaxLength20 = Template.bind({});
 MaxLength20.args = {
   label: 'Another Description',
   value: 'Max length is twenty',
-  optional: true,
   maxLength: 20,
 };

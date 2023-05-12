@@ -26,7 +26,7 @@ export const Showcase = Template.bind({});
 Showcase.args = {
   label: 'Product or service',
   value: 'Some Product or service',
-  optional: false,
+  required: false,
 };
 
 export const FirstNameOptional = Template.bind({});
@@ -34,5 +34,4 @@ export const FirstNameOptional = Template.bind({});
 FirstNameOptional.args = {
   label: 'First name',
   value: 'Jimbo',
-  optional: true,
 };
