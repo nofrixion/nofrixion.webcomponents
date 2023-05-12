@@ -234,6 +234,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                 maxLength={40}
                                 value={productOrService}
                                 onChange={(e) => setProductOrService(e.target.value)}
+                                required
                               />
                             </div>
 
@@ -243,7 +244,6 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                 maxLength={140}
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
-                                optional
                               />
                             </div>
 
@@ -251,7 +251,6 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                               <InputTextField
                                 label="First name"
                                 autoComplete="given-name"
-                                optional
                                 value={firstName}
                                 onChange={(e) => setFirstName(e.target.value)}
                               />
@@ -261,7 +260,6 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                               <InputTextField
                                 label="Last name"
                                 autoComplete="family-name"
-                                optional
                                 value={lastName}
                                 onChange={(e) => setLastName(e.target.value)}
                               />
@@ -271,7 +269,6 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                               <InputTextField
                                 label="Email"
                                 autoComplete="email"
-                                optional
                                 value={email}
                                 type="email"
                                 onChange={(e) => {

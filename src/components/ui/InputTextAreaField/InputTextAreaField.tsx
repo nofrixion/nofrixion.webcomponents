@@ -2,11 +2,11 @@ import React, { useId } from 'react';
 
 export interface InputTextAreaFieldProps extends React.InputHTMLAttributes<HTMLTextAreaElement> {
   label: string;
-  optional?: boolean;
+  required?: boolean;
   maxLength?: number;
 }
 const InputTextAreaField = React.forwardRef<HTMLTextAreaElement, InputTextAreaFieldProps>(
-  ({ label, onChange, value, optional, maxLength, ...props }, ref) => {
+  ({ label, onChange, value, required, maxLength, ...props }, ref) => {
     const textId = useId();
 
     return (
@@ -16,7 +16,7 @@ const InputTextAreaField = React.forwardRef<HTMLTextAreaElement, InputTextAreaFi
             {label}
           </label>
 
-          {optional && <div className="text-greyText font-normal text-xs leading-4">OPTIONAL</div>}
+          {required && <div className="text-greyText font-normal text-xs leading-4">REQUIRED</div>}
         </div>
         <textarea
           id={textId}

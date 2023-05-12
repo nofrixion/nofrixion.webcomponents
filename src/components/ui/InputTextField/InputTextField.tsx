@@ -2,11 +2,11 @@ import React, { useId } from 'react';
 
 export interface InputTextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  optional?: boolean;
+  required?: boolean;
 }
 
 const InputTextField = React.forwardRef<HTMLInputElement, InputTextFieldProps>(
-  ({ label, optional, maxLength, value, onChange, ...props }, ref) => {
+  ({ label, required, maxLength, value, onChange, ...props }, ref) => {
     const textId = useId();
 
     return (
@@ -16,7 +16,7 @@ const InputTextField = React.forwardRef<HTMLInputElement, InputTextFieldProps>(
             {label}
           </label>
 
-          {optional && <div className="text-greyText font-normal text-xs leading-4">OPTIONAL</div>}
+          {required && <div className="text-greyText font-normal text-xs leading-4">REQUIRED</div>}
         </div>
         <input
           ref={ref}
