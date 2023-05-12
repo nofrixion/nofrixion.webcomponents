@@ -90,7 +90,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
 
   const onConfrimClicked = () => {
     const paymentRequestToCreate: LocalPaymentRequestCreate = {
-      amount: parseInt(amount),
+      amount: Number(amount),
       currency: currency as Currency,
       productOrService,
       description,
