@@ -180,11 +180,17 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                             <div className="pt-20 pb-28">
                               <div className="flex items-center">
                                 <button className="inline-block ml-[3.25rem]" onClick={onClose}>
-                                  <img
-                                    src={BackButtonIcon}
-                                    alt="Back button"
-                                    className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem]"
-                                  />
+                                  <svg
+                                    className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] transition stroke-controlGrey hover:stroke-controlGreyHover"
+                                    width="26"
+                                    height="22"
+                                    viewBox="0 0 26 22"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path d="M11 21L1 11L11 1" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M1 11.082H25" stroke-linecap="round" stroke-linejoin="round" />
+                                  </svg>
                                 </button>
                                 <Dialog.Title
                                   as="h3"
@@ -193,15 +199,17 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                   New payment request
                                 </Dialog.Title>
                               </div>
-                              <div className="mt-14 ml-32 pr-10">
-                                <InputAmountField
-                                  value={amount}
-                                  onChange={(e) => setAmount(e.target.value)}
-                                  onCurrencyChange={onCurrencyChange}
-                                  currency={currency}
-                                />
+                              <div className="ml-[7.625rem] pr-10 space-y-10">
+                                <div className="mt-8">
+                                  <InputAmountField
+                                    value={amount}
+                                    onChange={(e) => setAmount(e.target.value)}
+                                    onCurrencyChange={onCurrencyChange}
+                                    currency={currency}
+                                  />
+                                </div>
 
-                                <div className="mt-11">
+                                <div>
                                   <InputTextField
                                     label="Product or service"
                                     maxLength={40}
@@ -210,7 +218,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                   />
                                 </div>
 
-                                <div className="mt-[3.75rem]">
+                                <div>
                                   <InputTextAreaField
                                     label="Description"
                                     maxLength={140}
@@ -220,7 +228,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                   />
                                 </div>
 
-                                <div className="mt-6">
+                                <div>
                                   <InputTextField
                                     label="First name"
                                     autoComplete="given-name"
@@ -230,7 +238,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                   />
                                 </div>
 
-                                <div className="mt-10">
+                                <div>
                                   <InputTextField
                                     label="Last name"
                                     autoComplete="family-name"
@@ -240,7 +248,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                   />
                                 </div>
 
-                                <div className="mt-11">
+                                <div>
                                   <InputTextField
                                     label="Email"
                                     autoComplete="email"
@@ -251,7 +259,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                   />
                                 </div>
 
-                                <div className="mt-14">
+                                <div>
                                   <h4 className="text-lg/6 font-semibold mb-6">Settings</h4>
                                   <div className="w-[27rem] space-y-2">
                                     <EditOptionCard
@@ -332,9 +340,9 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                         <AnimatePresence>
                           {currency && amount && (
                             <AnimateHeightWrapper layoutId="amount">
-                              <div className="flex overflow-hidden">
-                                <span className="leading-6 text-greyText w-1/2">Request</span>
-                                <span className="font-semibold text-[2rem]/8 w-1/2">
+                              <div className="flex overflow-hidden items-baseline">
+                                <span className="leading-6 text-greyText w-40 shrink-0">Request</span>
+                                <span className="font-semibold text-[2rem]/8 w-full">
                                   {currency == 'GBP' ? '£' : '€'} {amount}
                                 </span>
                               </div>
@@ -346,21 +354,21 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                         <AnimatePresence>
                           {(productOrService || description) && (
                             <AnimateHeightWrapper layoutId="product-or-service-wrapper">
-                              <div className="flex">
-                                <motion.span layout="position" className="leading-6 text-greyText w-1/2">
+                              <div className="flex items-baseline">
+                                <motion.span layout="position" className="leading-6 text-greyText w-40 shrink-0">
                                   For
                                 </motion.span>
 
-                                <div className="flex flex-col w-1/2">
+                                <div className="flex flex-col w-full">
                                   <AnimatePresence>
                                     {productOrService && (
                                       <AnimateHeightWrapper layoutId="product-or-service">
-                                        <motion.p
+                                        <motion.span
                                           layout="position"
-                                          className="font-semibold w-[17.5rem] break-words text-lg/5 mb-2"
+                                          className="font-semibold w-40 break-words text-lg/5 mb-2"
                                         >
                                           {productOrService}
-                                        </motion.p>
+                                        </motion.span>
                                       </AnimateHeightWrapper>
                                     )}
                                   </AnimatePresence>
@@ -370,7 +378,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                       <AnimateHeightWrapper layoutId="description">
                                         <motion.p
                                           layout="position"
-                                          className="text-sm/5 max-w-[17.5rem] w-full text-ellipsis break-words"
+                                          className="text-sm/5 w-[17.5rem] text-ellipsis break-words"
                                         >
                                           {description}
                                         </motion.p>
@@ -387,16 +395,16 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                         <AnimatePresence>
                           {(firstName || lastName || email) && (
                             <AnimateHeightWrapper layoutId="from">
-                              <div className="flex">
+                              <div className="flex items-baseline">
                                 {(firstName || lastName || email) && (
-                                  <span className="leading-6 text-greyText w-1/2">From</span>
+                                  <span className="leading-6 text-greyText w-40 shrink-0 break-words">From</span>
                                 )}
 
-                                <div className="flex flex-col w-1/2">
+                                <div className="flex flex-col w-[17.5rem]">
                                   <AnimatePresence>
                                     {(firstName || lastName) && (
                                       <AnimateHeightWrapper layoutId="name">
-                                        <p className="font-semibold text-lg/5 mb-2">
+                                        <p className="font-semibold text-lg/5 mb-2 break-words">
                                           {firstName} {lastName}
                                         </p>
                                       </AnimateHeightWrapper>
@@ -405,7 +413,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                   <AnimatePresence>
                                     {email && (
                                       <AnimateHeightWrapper layoutId="email">
-                                        <p className="text-sm/5">{email}</p>
+                                        <p className="text-sm/5 break-words">{email}</p>
                                       </AnimateHeightWrapper>
                                     )}
                                   </AnimatePresence>
@@ -428,9 +436,9 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                             }}
                           >
                             <div className="h-px w-full bg-borderGrey mt-12"></div>
-                            <div className="flex overflow-hidden mt-12">
-                              <span className="leading-6 text-greyText w-1/2">Settings</span>
-                              <div className="flex flex-col w-1/2 space-y-6">
+                            <div className="flex overflow-hidden mt-12 items-baseline">
+                              <span className="leading-6 text-greyText w-40 shrink-0">Settings</span>
+                              <div className="flex flex-col w-full space-y-6">
                                 <span className="text-sm/6">Single full payment.</span>
 
                                 <div className="flex items-center space-x-3">
@@ -499,18 +507,34 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                       <AnimatePresence>
                         {currency && amount && productOrService && (
                           <motion.div
-                            className="flex h-12 !mt-20 justify-center"
+                            className="flex flex-col !mt-20 justify-center space-y-7"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                           >
+                            {/* Confirm PR */}
+                            <AnimatePresence>
+                              {isReviewing && (
+                                <motion.button
+                                  type="button"
+                                  className="w-full whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-white font-semibold cursor-pointer hover:bg-[#144752]"
+                                  initial={{ opacity: 0 }}
+                                  animate={{ opacity: 1 }}
+                                  exit={{}}
+                                  onClick={onConfrimClicked}
+                                >
+                                  Confirm payment request
+                                </motion.button>
+                              )}
+                            </AnimatePresence>
+
                             {/* Edit button */}
                             {isReviewing && (
                               <motion.button
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                className="w-52 py-3 bg-[#DEE5ED] rounded-full mr-5"
+                                className="w-full py-3 bg-[#DEE5ED] transition hover:bg-[#BDCCDB] rounded-full mr-5"
                                 onClick={() => setIsReviewing(false)}
                               >
                                 Edit
@@ -521,7 +545,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                             {!isReviewing && (
                               <motion.button
                                 type="button"
-                                className="w-full px-16 whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-sm text-white font-semibold cursor-pointer hover:bg-[#144752]"
+                                className="w-full h-12 px-16 whitespace-nowrap flex justify-center items-center rounded-full py-3 text-sm font-semibold cursor-pointer bg-[#DEE5ED] transition hover:bg-[#BDCCDB]"
                                 onClick={onReviewClicked}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
@@ -529,29 +553,9 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                               >
                                 <span className="py-3">Review payment request</span>
 
-                                <img
-                                  src={NextIcon}
-                                  alt="Arrow right"
-                                  className="ml-2 w-6 h-6 min-w-[1.5rem] min-h-[1.5rem]"
-                                />
+                                <img src={NextIcon} alt="Arrow right" className="ml-2 w-4 h-4" />
                               </motion.button>
                             )}
-
-                            {/* Confirm PR */}
-                            <AnimatePresence>
-                              {isReviewing && (
-                                <motion.button
-                                  type="button"
-                                  className="w-72 whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-sm text-white font-semibold cursor-pointer hover:bg-[#144752]"
-                                  initial={{ opacity: 0 }}
-                                  animate={{ opacity: 1 }}
-                                  exit={{}}
-                                  onClick={onConfrimClicked}
-                                >
-                                  <span className="py-3">Confirm payment request</span>
-                                </motion.button>
-                              )}
-                            </AnimatePresence>
                           </motion.div>
                         )}
                       </AnimatePresence>
