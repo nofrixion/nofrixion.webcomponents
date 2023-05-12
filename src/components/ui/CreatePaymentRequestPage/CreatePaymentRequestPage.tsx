@@ -363,12 +363,12 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                   <AnimatePresence>
                                     {productOrService && (
                                       <AnimateHeightWrapper layoutId="product-or-service">
-                                        <motion.span
+                                        <motion.p
                                           layout="position"
-                                          className="font-semibold w-40 break-words text-lg/5 mb-2"
+                                          className="font-semibold w-full break-words text-lg/5 mb-2"
                                         >
                                           {productOrService}
-                                        </motion.span>
+                                        </motion.p>
                                       </AnimateHeightWrapper>
                                     )}
                                   </AnimatePresence>
@@ -378,7 +378,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                       <AnimateHeightWrapper layoutId="description">
                                         <motion.p
                                           layout="position"
-                                          className="text-sm/5 w-[17.5rem] text-ellipsis break-words"
+                                          className="text-sm/5 w-full text-ellipsis break-words"
                                         >
                                           {description}
                                         </motion.p>
@@ -400,7 +400,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                   <span className="leading-6 text-greyText w-40 shrink-0 break-words">From</span>
                                 )}
 
-                                <div className="flex flex-col w-[17.5rem]">
+                                <div className="flex flex-col w-full">
                                   <AnimatePresence>
                                     {(firstName || lastName) && (
                                       <AnimateHeightWrapper layoutId="name">
@@ -545,7 +545,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                             {!isReviewing && (
                               <motion.button
                                 type="button"
-                                className="w-full h-12 px-16 whitespace-nowrap flex justify-center items-center rounded-full py-3 text-sm font-semibold cursor-pointer bg-[#DEE5ED] transition hover:bg-[#BDCCDB]"
+                                className="w-full h-12 px-16 whitespace-nowrap flex justify-center items-center rounded-full py-3 text-sm cursor-pointer bg-[#DEE5ED] transition hover:bg-[#BDCCDB]"
                                 onClick={onReviewClicked}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
