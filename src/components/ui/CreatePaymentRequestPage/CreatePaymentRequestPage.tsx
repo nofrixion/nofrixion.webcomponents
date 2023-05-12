@@ -169,171 +169,152 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                   <AnimatePresence initial={false}>
                     {!isReviewing && (
                       <motion.div
-                        className="w-1/2 overflow-hidden"
+                        className="w-1/2"
                         initial={{ opacity: 0, width: 0 }}
                         animate={{ opacity: 1, width: '50%', transition: { duration: 0.3 } }}
                         exit={{ opacity: 0, width: 0, flex: 0, transition: { duration: 0.3 } }}
                       >
                         {/* Left side */}
-                        <ScrollArea.Root className="w-full h-screen overflow-hidden">
-                          <ScrollArea.Viewport className="w-full h-full">
-                            <div className="pt-20 pb-28">
-                              <div className="flex items-center">
-                                <button className="inline-block ml-[3.25rem]" onClick={onClose}>
-                                  <svg
-                                    className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] transition stroke-controlGrey hover:stroke-controlGreyHover"
-                                    width="26"
-                                    height="22"
-                                    viewBox="0 0 26 22"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path d="M11 21L1 11L11 1" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M1 11.082H25" stroke-linecap="round" stroke-linejoin="round" />
-                                  </svg>
-                                </button>
-                                <Dialog.Title
-                                  as="h3"
-                                  className="text-[1.75rem]/8 font-semibold inline-block ml-[2.875rem] text-clip whitespace-nowrap"
+                        <div className="w-full pt-20 pb-28">
+                          <div className="flex items-center">
+                            <button className="inline-block ml-[3.25rem]" onClick={onClose}>
+                              <svg
+                                className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] transition stroke-controlGrey hover:stroke-controlGreyHover"
+                                width="26"
+                                height="22"
+                                viewBox="0 0 26 22"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path d="M11 21L1 11L11 1" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M1 11.082H25" stroke-linecap="round" stroke-linejoin="round" />
+                              </svg>
+                            </button>
+                            <Dialog.Title
+                              as="h3"
+                              className="text-[1.75rem]/8 font-semibold inline-block ml-[2.875rem] text-clip whitespace-nowrap"
+                            >
+                              New payment request
+                            </Dialog.Title>
+                          </div>
+                          <div className="ml-[7.625rem] pr-10 space-y-10">
+                            <div className="mt-8">
+                              <InputAmountField
+                                value={amount}
+                                onChange={(e) => setAmount(e.target.value)}
+                                onCurrencyChange={onCurrencyChange}
+                                currency={currency}
+                              />
+                            </div>
+
+                            <div>
+                              <InputTextField
+                                label="Product or service"
+                                maxLength={40}
+                                value={productOrService}
+                                onChange={(e) => setProductOrService(e.target.value)}
+                              />
+                            </div>
+
+                            <div>
+                              <InputTextAreaField
+                                label="Description"
+                                maxLength={140}
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                optional
+                              />
+                            </div>
+
+                            <div>
+                              <InputTextField
+                                label="First name"
+                                autoComplete="given-name"
+                                optional
+                                value={firstName}
+                                onChange={(e) => setFirstName(e.target.value)}
+                              />
+                            </div>
+
+                            <div>
+                              <InputTextField
+                                label="Last name"
+                                autoComplete="family-name"
+                                optional
+                                value={lastName}
+                                onChange={(e) => setLastName(e.target.value)}
+                              />
+                            </div>
+
+                            <div>
+                              <InputTextField
+                                label="Email"
+                                autoComplete="email"
+                                optional
+                                value={email}
+                                type="email"
+                                onChange={(e) => setEmail(e.target.value)}
+                              />
+                            </div>
+
+                            <div>
+                              <h4 className="text-lg/6 font-semibold mb-6">Settings</h4>
+                              <div className="w-[27rem] space-y-2">
+                                <EditOptionCard
+                                  label="Payment conditions"
+                                  value={
+                                    !paymentConditionsFormValue.allowPartialPayments
+                                      ? 'Single full payment'
+                                      : 'Partial payments'
+                                  }
+                                  onClick={() => {
+                                    setIsPaymentConditionsModalOpen(true);
+                                  }}
+                                />
+                                <EditOptionCard
+                                  label="Payment methods"
+                                  details={availableMethodsDetails}
+                                  onClick={() => {
+                                    setIsPaymentMethodsModalOpen(true);
+                                  }}
                                 >
-                                  New payment request
-                                </Dialog.Title>
-                              </div>
-                              <div className="ml-[7.625rem] pr-10 space-y-10">
-                                <div className="mt-8">
-                                  <InputAmountField
-                                    value={amount}
-                                    onChange={(e) => setAmount(e.target.value)}
-                                    onCurrencyChange={onCurrencyChange}
-                                    currency={currency}
-                                  />
-                                </div>
-
-                                <div>
-                                  <InputTextField
-                                    label="Product or service"
-                                    maxLength={40}
-                                    value={productOrService}
-                                    onChange={(e) => setProductOrService(e.target.value)}
-                                  />
-                                </div>
-
-                                <div>
-                                  <InputTextAreaField
-                                    label="Description"
-                                    maxLength={140}
-                                    value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
-                                    optional
-                                  />
-                                </div>
-
-                                <div>
-                                  <InputTextField
-                                    label="First name"
-                                    autoComplete="given-name"
-                                    optional
-                                    value={firstName}
-                                    onChange={(e) => setFirstName(e.target.value)}
-                                  />
-                                </div>
-
-                                <div>
-                                  <InputTextField
-                                    label="Last name"
-                                    autoComplete="family-name"
-                                    optional
-                                    value={lastName}
-                                    onChange={(e) => setLastName(e.target.value)}
-                                  />
-                                </div>
-
-                                <div>
-                                  <InputTextField
-                                    label="Email"
-                                    autoComplete="email"
-                                    optional
-                                    value={email}
-                                    type="email"
-                                    onChange={(e) => setEmail(e.target.value)}
-                                  />
-                                </div>
-
-                                <div>
-                                  <h4 className="text-lg/6 font-semibold mb-6">Settings</h4>
-                                  <div className="w-[27rem] space-y-2">
-                                    <EditOptionCard
-                                      label="Payment conditions"
-                                      value={
-                                        !paymentConditionsFormValue.allowPartialPayments
-                                          ? 'Single full payment'
-                                          : 'Partial payments'
-                                      }
-                                      onClick={() => {
-                                        setIsPaymentConditionsModalOpen(true);
-                                      }}
+                                  <div className="flex items-center space-x-3">
+                                    <img
+                                      src={paymentMethodsFormValue.isBankEnabled ? BankIcon : BankDisabledIcon}
+                                      alt="Bank"
+                                      className="w-6 h-6"
                                     />
-                                    <EditOptionCard
-                                      label="Payment methods"
-                                      details={availableMethodsDetails}
-                                      onClick={() => {
-                                        setIsPaymentMethodsModalOpen(true);
-                                      }}
-                                    >
-                                      <div className="flex items-center space-x-3">
-                                        <img
-                                          src={paymentMethodsFormValue.isBankEnabled ? BankIcon : BankDisabledIcon}
-                                          alt="Bank"
-                                          className="w-6 h-6"
-                                        />
-                                        <img
-                                          src={paymentMethodsFormValue.isCardEnabled ? CardIcon : CardDisabledIcon}
-                                          alt="Card"
-                                          className="w-6 h-6"
-                                        />
-                                        <img
-                                          src={
-                                            paymentMethodsFormValue.isWalletEnabled ? WalletIcon : WalletDisabledIcon
-                                          }
-                                          alt="Apple Pay"
-                                          className="w-6 h-6"
-                                        />
-                                        <img
-                                          src={
-                                            paymentMethodsFormValue.isLightningEnabled
-                                              ? BitcoinLightningIcon
-                                              : BitcoinDisabledIcon
-                                          }
-                                          alt="Bitcoin"
-                                          className="w-6 h-6"
-                                        />
-                                      </div>
-                                    </EditOptionCard>
+                                    <img
+                                      src={paymentMethodsFormValue.isCardEnabled ? CardIcon : CardDisabledIcon}
+                                      alt="Card"
+                                      className="w-6 h-6"
+                                    />
+                                    <img
+                                      src={paymentMethodsFormValue.isWalletEnabled ? WalletIcon : WalletDisabledIcon}
+                                      alt="Apple Pay"
+                                      className="w-6 h-6"
+                                    />
+                                    <img
+                                      src={
+                                        paymentMethodsFormValue.isLightningEnabled
+                                          ? BitcoinLightningIcon
+                                          : BitcoinDisabledIcon
+                                      }
+                                      alt="Bitcoin"
+                                      className="w-6 h-6"
+                                    />
                                   </div>
-                                </div>
+                                </EditOptionCard>
                               </div>
                             </div>
-                          </ScrollArea.Viewport>
-                          <ScrollArea.Scrollbar
-                            className="flex select-none touch-none p-0.5 bg-black bg-opacity-10 transition-colors duration-[160ms] ease-out hover:bg-opacity-25 data-[orientation=vertical]:w-2.5 data-[orientation=horizontal]:flex-col data-[orientation=horizontal]:h-2.5"
-                            orientation="vertical"
-                          >
-                            <ScrollArea.Thumb className="flex-1 bg-gray-400 rounded-[10px] relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:w-full before:h-full before:min-w-[44px] before:min-h-[44px]" />
-                          </ScrollArea.Scrollbar>
-                          <ScrollArea.Scrollbar
-                            className="flex select-none touch-none p-0.5 bg-black bg-opacity-10 transition-colors duration-[160ms] ease-out hover:bg-opacity-25 data-[orientation=vertical]:w-2.5 data-[orientation=horizontal]:flex-col data-[orientation=horizontal]:h-2.5"
-                            orientation="horizontal"
-                          >
-                            <ScrollArea.Thumb className="flex-1 bg-gray-400 rounded-[10px] relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:w-full before:h-full before:min-w-[44px] before:min-h-[44px]" />
-                          </ScrollArea.Scrollbar>
-                          <ScrollArea.Corner className="bg-opacity-25" />
-                        </ScrollArea.Root>
+                          </div>
+                        </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
 
                   {/* Right side */}
-                  <div className="flex-1 bg-mainGrey min-h-screen pl-[8.25rem] pr-32 py-44">
+                  <div className="flex-1 bg-mainGrey sticky inset-0 h-screen pl-[8.25rem] pr-32 py-44">
                     <div className="w-full max-w-lg mx-auto">
                       <div className="space-y-10">
                         {/* Amount */}
