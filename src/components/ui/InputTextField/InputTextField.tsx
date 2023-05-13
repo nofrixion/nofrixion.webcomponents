@@ -10,7 +10,7 @@ const InputTextField = React.forwardRef<HTMLInputElement, InputTextFieldProps>(
     const textId = useId();
 
     return (
-      <div className="flex flex-col w-fit">
+      <div className="flex flex-col">
         <div className="py-2 flex justify-between">
           <label htmlFor={textId} className="text-defaultText font-semibold text-sm leading-4">
             {label}
@@ -25,7 +25,7 @@ const InputTextField = React.forwardRef<HTMLInputElement, InputTextFieldProps>(
           type="text"
           value={value}
           onChange={onChange}
-          className="pl-3 border border-borderGrey rounded-[0.25rem] h-12 w-[27rem] inline-block font-normal text-sm/6 text-defaultText"
+          className="pl-3 border border-borderGrey rounded-[0.25rem] h-12 w-full inline-block font-normal text-sm/6 text-defaultText"
           {...props}
         />
         {maxLength && (

@@ -57,7 +57,7 @@ const InputAmountField: React.FC<InputAmountFieldProps> = ({ currency, onCurrenc
   }, [selectedCurrency]);
 
   return (
-    <div className="flex w-[13.938rem] h-12 border border-borderGrey rounded justify-between">
+    <div className="flex w-full h-12 border border-borderGrey rounded justify-between">
       <div className="flex relative">
         <span className="flex absolute inset-y-0 pointer-events-none items-center ml-3 font-normal text-sm text-greyText">
           {selectedCurrency.symbol}

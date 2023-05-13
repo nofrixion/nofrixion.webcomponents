@@ -218,8 +218,8 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                               New payment request
                             </Dialog.Title>
                           </div>
-                          <div className="ml-[7.625rem] pr-10 space-y-10">
-                            <div className="mt-8">
+                          <div className="ml-[7.625rem] space-y-10 w-[27rem]">
+                            <div className="w-[13.938rem] mt-8">
                               <InputAmountField
                                 value={amount}
                                 onChange={(e) => setAmount(e.target.value)}

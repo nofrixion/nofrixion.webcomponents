@@ -10,7 +10,7 @@ const InputTextAreaField = React.forwardRef<HTMLTextAreaElement, InputTextAreaFi
     const textId = useId();
 
     return (
-      <div className="flex flex-col w-fit">
+      <div className="flex flex-col">
         <div className="py-2 flex justify-between">
           <label htmlFor={textId} className="text-defaultText font-semibold text-sm leading-4">
             {label}
@@ -20,7 +20,7 @@ const InputTextAreaField = React.forwardRef<HTMLTextAreaElement, InputTextAreaFi
         </div>
         <textarea
           id={textId}
-          className="resize-none pl-3 pt-3 border border-borderGrey rounded-[0.25rem] h-28 w-[27rem] inline-block font-normal text-sm text-defaultText"
+          className="resize-none pl-3 pt-3 border border-borderGrey rounded-[0.25rem] h-28 inline-block font-normal text-sm text-defaultText"
           ref={ref}
           onChange={onChange}
           value={value}
