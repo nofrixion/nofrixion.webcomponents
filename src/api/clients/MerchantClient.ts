@@ -1,4 +1,4 @@
-import { ApiError, MerchantBankSettings } from '../types/ApiResponses';
+import { ApiError, MerchantBankSettings, Tag } from '../types/ApiResponses';
 import { HttpMethod } from '../types/Enums';
 import { BaseApiClient } from './BaseApiClient';
 
@@ -33,5 +33,46 @@ export class MerchantClient extends BaseApiClient {
     const response = await this.httpRequest<MerchantBankSettings>(`${this.apiUrl}/banksettings`, HttpMethod.GET);
 
     return response;
+  }
+
+  /**
+   * Gets the tags for the merchant
+   * @returns A list of tags if successful. An ApiError if not successful.
+   */
+  async getTags(): Promise<{
+    data?: Tag[];
+    error?: ApiError;
+  }> {
+    const response = await this.httpRequest<Tag[]>(`${this.apiUrl}/tags`, HttpMethod.GET);
+
+    return response;
+  }
+
+  /**
+   * Adds a tag to the merchant
+   * @param tag The tag to add
+   * @returns True if successfull. An ApiError if not successful.
+   */
+  async addTag(tag: Tag): Promise<{
+    data?: Tag;
+    error?: ApiError;
+  }> {
+    const response = await this.httpRequest<Tag>(`${this.apiUrl}/tags`, HttpMethod.POST, tag);
+
+    return response;
+  }
+
+  /**
+   * Deletes a Tag
+   * @param tagId The Tag Id
+   * @returns True if successfull. An ApiError if not successful.
+   */
+  async deleteTag(tagId: string): Promise<{
+    success?: boolean;
+    error?: ApiError;
+  }> {
+    const response = await this.httpRequest(`${this.apiUrl}/tags/${tagId}`, HttpMethod.DELETE);
+
+    return !response.error ? { success: true } : { success: false, error: response.error };
   }
 }

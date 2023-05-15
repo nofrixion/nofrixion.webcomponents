@@ -99,6 +99,7 @@ export type PaymentRequestCreate = {
   shippingEmail?: string;
   priorityBankID?: string;
   title?: string;
+  tagIds?: string[];
 };
 
 export type PaymentRequestAddress = {
