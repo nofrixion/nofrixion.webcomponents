@@ -40,6 +40,8 @@ interface CreatePaymentRequestPageProps {
   onClose: () => void;
 }
 
+const durationAnimationWidth = 0.3;
+
 const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreatePaymentRequestPageProps) => {
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState<'EUR' | 'GBP'>('EUR');
@@ -85,6 +87,10 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
   };
 
   const onReviewClicked = () => {
+    if (email && !validateEmail(email)) {
+      return;
+    }
+
     setIsReviewing(true);
   };
 
@@ -193,8 +199,8 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                       <motion.div
                         className="w-1/2"
                         initial={{ opacity: 0, width: 0 }}
-                        animate={{ opacity: 1, width: '50%', transition: { duration: 0.3 } }}
-                        exit={{ opacity: 0, width: 0, flex: 0, transition: { duration: 0.3 } }}
+                        animate={{ opacity: 1, width: '50%', transition: { duration: durationAnimationWidth } }}
+                        exit={{ opacity: 0, width: 0, flex: 0, transition: { duration: durationAnimationWidth } }}
                       >
                         <div className="w-full pt-20 pb-28">
                           <div className="flex items-center">
@@ -486,26 +492,24 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                           {/* Buttons */}
                           {currency && amount && productOrService && (
                             <LayoutWrapper key="buttons" className="flex flex-col !mt-20 justify-center">
-                              {/* Review PR */}
-                              {!isReviewing && (
-                                <button
-                                  type="button"
-                                  className="w-full h-12 px-16 whitespace-nowrap flex justify-center items-center rounded-full py-3 text-sm cursor-pointer bg-[#DEE5ED] transition hover:bg-[#BDCCDB]"
-                                  onClick={() => {
-                                    if (email && !validateEmail(email)) {
-                                      return;
-                                    }
+                              <AnimatePresence initial={false}>
+                                {/* Review PR */}
+                                {!isReviewing && (
+                                  <motion.button
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ delay: durationAnimationWidth / 1.5 }}
+                                    key="review-pr"
+                                    type="button"
+                                    className="w-full h-12 px-16 whitespace-nowrap flex justify-center items-center rounded-full py-3 text-sm cursor-pointer bg-[#DEE5ED] transition hover:bg-[#BDCCDB]"
+                                    onClick={onReviewClicked}
+                                  >
+                                    <span className="py-3">Review payment request</span>
 
-                                    onReviewClicked();
-                                  }}
-                                >
-                                  <span className="py-3">Review payment request</span>
+                                    <img src={NextIcon} alt="Arrow right" className="ml-2 w-4 h-4" />
+                                  </motion.button>
+                                )}
 
-                                  <img src={NextIcon} alt="Arrow right" className="ml-2 w-4 h-4" />
-                                </button>
-                              )}
-
-                              <AnimatePresence>
                                 {/* Confirm PR */}
                                 {isReviewing && (
                                   <LayoutWrapper
@@ -513,6 +517,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                     className="space-y-7"
                                     animateOnExit={false}
                                     duration={0.6}
+                                    delay={durationAnimationWidth / 1.5}
                                   >
                                     <button
                                       className="w-full whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-white font-semibold cursor-pointer hover:bg-[#144752]"

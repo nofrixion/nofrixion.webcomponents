@@ -7,6 +7,7 @@ interface LayoutWrapperProps {
   animateOnExit?: boolean;
   layout?: boolean | 'position' | 'size' | 'preserve-aspect';
   duration?: number;
+  delay?: number;
 }
 
 const LayoutWrapper: React.FC<LayoutWrapperProps> = ({
@@ -15,6 +16,7 @@ const LayoutWrapper: React.FC<LayoutWrapperProps> = ({
   animateOnExit = true,
   layout = 'position',
   duration = 0.2,
+  delay = 0,
 }) => (
   <motion.div
     layout={layout}
@@ -23,6 +25,7 @@ const LayoutWrapper: React.FC<LayoutWrapperProps> = ({
       opacity: 1,
       transition: {
         duration: duration,
+        delay: delay,
       },
     }}
     exit={animateOnExit ? { opacity: 0 } : undefined}
