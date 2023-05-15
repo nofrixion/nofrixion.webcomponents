@@ -1,6 +1,5 @@
 import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import * as ScrollArea from '@radix-ui/react-scroll-area';
 import InputAmountField from '../InputAmountField/InputAmountField';
 import InputTextField from '../InputTextField/InputTextField';
 import EditOptionCard from '../EditOptionCard/EditOptionCard';
@@ -10,6 +9,7 @@ import NextIcon from '../../../assets/icons/next-icon.svg';
 import InputTextAreaField from '../InputTextAreaField/InputTextAreaField';
 import { AnimatePresence, motion } from 'framer-motion';
 import AnimateHeightWrapper from '../utils/AnimateHeight';
+import LayoutWrapper from '../utils/LayoutWrapper';
 import PaymentMethodsModal from '../Modals/PaymentMethodsModal/PaymentMethodsModal';
 import { Currency } from '../../../api/types/Enums';
 import {
@@ -187,6 +187,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel className="w-full transform bg-white text-left align-middle transition-all min-h-screen flex">
+                  {/* Left side */}
                   <AnimatePresence initial={false}>
                     {!isReviewing && (
                       <motion.div
@@ -195,7 +196,6 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                         animate={{ opacity: 1, width: '50%', transition: { duration: 0.3 } }}
                         exit={{ opacity: 0, width: 0, flex: 0, transition: { duration: 0.3 } }}
                       >
-                        {/* Left side */}
                         <div className="w-full pt-20 pb-28">
                           <div className="flex items-center">
                             <button className="inline-block ml-[3.25rem]" onClick={onClose}>
@@ -352,245 +352,189 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                   <div className="flex-1 bg-mainGrey sticky inset-0 h-screen pl-[8.25rem] pr-32 py-44">
                     <div className="w-full max-w-lg mx-auto">
                       <div className="space-y-10">
-                        {/* Amount */}
                         <AnimatePresence>
+                          {/* Amount */}
                           {currency && amount && (
-                            <AnimateHeightWrapper layoutId="amount">
-                              <div className="flex overflow-hidden items-baseline">
-                                <span className="leading-6 text-greyText w-40 shrink-0">Request</span>
-                                <span className="font-semibold text-[2rem]/8 w-full">
-                                  {currency == 'GBP' ? '£' : '€'} {amount}
-                                </span>
-                              </div>
-                            </AnimateHeightWrapper>
+                            <LayoutWrapper key="amount" className="flex overflow-hidden items-baseline">
+                              <span className="leading-6 text-greyText w-40 shrink-0">Request</span>
+                              <span className="font-semibold text-[2rem]/8 w-full">
+                                {currency == 'GBP' ? '£' : '€'} {amount}
+                              </span>
+                            </LayoutWrapper>
                           )}
-                        </AnimatePresence>
 
-                        {/* For */}
-                        <AnimatePresence>
+                          {/* Product or service + description */}
                           {(productOrService || description) && (
-                            <AnimateHeightWrapper layoutId="product-or-service-wrapper">
-                              <div className="flex items-baseline">
-                                <motion.span layout="position" className="leading-6 text-greyText w-40 shrink-0">
-                                  For
-                                </motion.span>
+                            <LayoutWrapper key="product-or-service-wrapper" className="flex items-baseline">
+                              <span className="leading-6 text-greyText w-40 shrink-0">For</span>
 
-                                <div className="flex flex-col w-full">
-                                  <AnimatePresence>
-                                    {productOrService && (
-                                      <AnimateHeightWrapper layoutId="product-or-service">
-                                        <motion.p
-                                          layout="position"
-                                          className="font-semibold w-full break-words text-lg/5 mb-2"
-                                        >
-                                          {productOrService}
-                                        </motion.p>
-                                      </AnimateHeightWrapper>
-                                    )}
-                                  </AnimatePresence>
-
-                                  <AnimatePresence>
-                                    {description && (
-                                      <AnimateHeightWrapper layoutId="description">
-                                        <motion.p
-                                          layout="position"
-                                          className="text-sm/5 w-full text-ellipsis break-words"
-                                        >
-                                          {description}
-                                        </motion.p>
-                                      </AnimateHeightWrapper>
-                                    )}
-                                  </AnimatePresence>
-                                </div>
-                              </div>
-                            </AnimateHeightWrapper>
-                          )}
-                        </AnimatePresence>
-
-                        {/* From */}
-                        <AnimatePresence>
-                          {(firstName || lastName || email) && (
-                            <AnimateHeightWrapper layoutId="from">
-                              <div className="flex items-baseline">
-                                {(firstName || lastName || email) && (
-                                  <span className="leading-6 text-greyText w-40 shrink-0 break-words">From</span>
+                              <div className="flex flex-col w-full">
+                                {productOrService && (
+                                  <LayoutWrapper key="product-or-service">
+                                    <p className="font-semibold w-full break-words text-lg/5 mb-2">
+                                      {productOrService}
+                                    </p>
+                                  </LayoutWrapper>
                                 )}
 
-                                <div className="flex flex-col w-full">
-                                  <AnimatePresence>
-                                    {(firstName || lastName) && (
-                                      <AnimateHeightWrapper layoutId="name">
-                                        <p className="font-semibold text-lg/5 mb-2 break-words">
-                                          {firstName} {lastName}
-                                        </p>
-                                      </AnimateHeightWrapper>
-                                    )}
-                                  </AnimatePresence>
-                                  <AnimatePresence>
-                                    {email && (
-                                      <AnimateHeightWrapper layoutId="email">
-                                        <div
-                                          className={classNames('flex items-center w-fit', {
-                                            'p-1 bg-[#FCF5CF]': hasEmailError,
-                                          })}
-                                        >
-                                          <p className="text-sm/5 break-words">{email}</p>
-                                          {hasEmailError && (
-                                            <img src={AlertIcon} alt="Alert icon" className="w-4 h-4 ml-2" />
-                                          )}
-                                        </div>
-                                      </AnimateHeightWrapper>
-                                    )}
-                                  </AnimatePresence>
+                                {description && (
+                                  <LayoutWrapper key="description">
+                                    <p className="text-sm/5 w-full text-ellipsis break-words">{description}</p>
+                                  </LayoutWrapper>
+                                )}
+                              </div>
+                            </LayoutWrapper>
+                          )}
+
+                          {/* Name */}
+                          {(firstName || lastName || email) && (
+                            <LayoutWrapper key="from" className="flex items-baseline">
+                              <span className="leading-6 text-greyText w-40 shrink-0 break-words">From</span>
+
+                              <div className="flex flex-col w-full">
+                                {(firstName || lastName) && (
+                                  <motion.p layout="position" className="font-semibold text-lg/5 mb-2 break-words">
+                                    {firstName} {lastName}
+                                  </motion.p>
+                                )}
+
+                                {email && (
+                                  <motion.div
+                                    layout="position"
+                                    className={classNames('flex items-center w-fit', {
+                                      'p-1 bg-[#FCF5CF]': hasEmailError,
+                                    })}
+                                  >
+                                    <p className="text-sm/5 break-words">{email}</p>
+                                    {hasEmailError && <img src={AlertIcon} alt="Alert icon" className="w-4 h-4 ml-2" />}
+                                  </motion.div>
+                                )}
+                              </div>
+                            </LayoutWrapper>
+                          )}
+
+                          {/* Settings */}
+                          {isReviewing && (
+                            <LayoutWrapper key="settings" animateOnExit={false} duration={0.6}>
+                              <div className="h-px w-full bg-borderGrey mt-12"></div>
+                              <div className="flex overflow-hidden mt-12 items-baseline">
+                                <span className="leading-6 text-greyText w-40 shrink-0">Settings</span>
+                                <div className="flex flex-col w-full space-y-6">
+                                  <span className="text-sm/6">Single full payment.</span>
+
+                                  <div className="flex items-center space-x-3">
+                                    <InfoTooltip
+                                      content={getIconDescription('Bank', paymentMethodsFormValue.isBankEnabled)}
+                                    >
+                                      <img
+                                        src={paymentMethodsFormValue.isBankEnabled ? BankIcon : BankDisabledIcon}
+                                        alt="Bank"
+                                        className="w-6 h-6"
+                                      />
+                                    </InfoTooltip>
+                                    <InfoTooltip
+                                      content={getIconDescription('Card', paymentMethodsFormValue.isCardEnabled)}
+                                    >
+                                      <img
+                                        src={paymentMethodsFormValue.isCardEnabled ? CardIcon : CardDisabledIcon}
+                                        alt="Card"
+                                        className="w-6 h-6"
+                                      />
+                                    </InfoTooltip>
+                                    <InfoTooltip
+                                      content={getIconDescription(
+                                        'Apple Pay / Google Pay',
+                                        paymentMethodsFormValue.isWalletEnabled,
+                                      )}
+                                    >
+                                      <img
+                                        src={paymentMethodsFormValue.isWalletEnabled ? WalletIcon : WalletDisabledIcon}
+                                        alt="Apple Pay"
+                                        className="w-6 h-6"
+                                      />
+                                    </InfoTooltip>
+                                    <InfoTooltip
+                                      content={getIconDescription(
+                                        'Bitcoin Lightning',
+                                        paymentMethodsFormValue.isLightningEnabled,
+                                      )}
+                                    >
+                                      <img
+                                        src={
+                                          paymentMethodsFormValue.isLightningEnabled
+                                            ? BitcoinLightningIcon
+                                            : BitcoinDisabledIcon
+                                        }
+                                        alt="Bitcoin Lightning"
+                                        className="w-6 h-6"
+                                      />
+                                    </InfoTooltip>
+                                  </div>
+
+                                  {availableMethodsDetails.length > 0 && (
+                                    <div className="flex flex-col text-greyText text-xs">
+                                      {availableMethodsDetails?.map((detail, index) => {
+                                        return <span key={`detail-${index}`}>{parseBoldText(detail)}</span>;
+                                      })}
+                                    </div>
+                                  )}
                                 </div>
                               </div>
-                            </AnimateHeightWrapper>
+                            </LayoutWrapper>
+                          )}
+
+                          {/* Buttons */}
+                          {currency && amount && productOrService && (
+                            <LayoutWrapper key="buttons" className="flex flex-col !mt-20 justify-center">
+                              {/* Review PR */}
+                              {!isReviewing && (
+                                <button
+                                  type="button"
+                                  className="w-full h-12 px-16 whitespace-nowrap flex justify-center items-center rounded-full py-3 text-sm cursor-pointer bg-[#DEE5ED] transition hover:bg-[#BDCCDB]"
+                                  onClick={() => {
+                                    if (email && !validateEmail(email)) {
+                                      return;
+                                    }
+
+                                    onReviewClicked();
+                                  }}
+                                >
+                                  <span className="py-3">Review payment request</span>
+
+                                  <img src={NextIcon} alt="Arrow right" className="ml-2 w-4 h-4" />
+                                </button>
+                              )}
+
+                              <AnimatePresence>
+                                {/* Confirm PR */}
+                                {isReviewing && (
+                                  <LayoutWrapper
+                                    layout={false}
+                                    className="space-y-7"
+                                    animateOnExit={false}
+                                    duration={0.6}
+                                  >
+                                    <button
+                                      className="w-full whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-white font-semibold cursor-pointer hover:bg-[#144752]"
+                                      onClick={onConfrimClicked}
+                                    >
+                                      Confirm payment request
+                                    </button>
+
+                                    {/* Edit button */}
+                                    <button
+                                      className="w-full py-3 bg-[#DEE5ED] transition hover:bg-[#BDCCDB] rounded-full mr-5"
+                                      onClick={() => setIsReviewing(false)}
+                                    >
+                                      Edit
+                                    </button>
+                                  </LayoutWrapper>
+                                )}
+                              </AnimatePresence>
+                            </LayoutWrapper>
                           )}
                         </AnimatePresence>
                       </div>
-
-                      {/* Settings */}
-                      <AnimatePresence>
-                        {isReviewing && (
-                          <motion.div
-                            initial={{
-                              opacity: 0,
-                            }}
-                            animate={{
-                              opacity: 1,
-                            }}
-                          >
-                            <div className="h-px w-full bg-borderGrey mt-12"></div>
-                            <div className="flex overflow-hidden mt-12 items-baseline">
-                              <span className="leading-6 text-greyText w-40 shrink-0">Settings</span>
-                              <div className="flex flex-col w-full space-y-6">
-                                <span className="text-sm/6">Single full payment.</span>
-
-                                <div className="flex items-center space-x-3">
-                                  <InfoTooltip
-                                    content={getIconDescription('Bank', paymentMethodsFormValue.isBankEnabled)}
-                                  >
-                                    <img
-                                      src={paymentMethodsFormValue.isBankEnabled ? BankIcon : BankDisabledIcon}
-                                      alt="Bank"
-                                      className="w-6 h-6"
-                                    />
-                                  </InfoTooltip>
-                                  <InfoTooltip
-                                    content={getIconDescription('Card', paymentMethodsFormValue.isCardEnabled)}
-                                  >
-                                    <img
-                                      src={paymentMethodsFormValue.isCardEnabled ? CardIcon : CardDisabledIcon}
-                                      alt="Card"
-                                      className="w-6 h-6"
-                                    />
-                                  </InfoTooltip>
-                                  <InfoTooltip
-                                    content={getIconDescription(
-                                      'Apple Pay / Google Pay',
-                                      paymentMethodsFormValue.isWalletEnabled,
-                                    )}
-                                  >
-                                    <img
-                                      src={paymentMethodsFormValue.isWalletEnabled ? WalletIcon : WalletDisabledIcon}
-                                      alt="Apple Pay"
-                                      className="w-6 h-6"
-                                    />
-                                  </InfoTooltip>
-                                  <InfoTooltip
-                                    content={getIconDescription(
-                                      'Bitcoin Lightning',
-                                      paymentMethodsFormValue.isLightningEnabled,
-                                    )}
-                                  >
-                                    <img
-                                      src={
-                                        paymentMethodsFormValue.isLightningEnabled
-                                          ? BitcoinLightningIcon
-                                          : BitcoinDisabledIcon
-                                      }
-                                      alt="Bitcoin Lightning"
-                                      className="w-6 h-6"
-                                    />
-                                  </InfoTooltip>
-                                </div>
-
-                                {availableMethodsDetails.length > 0 && (
-                                  <div className="flex flex-col text-greyText text-xs">
-                                    {availableMethodsDetails?.map((detail, index) => {
-                                      return <span key={`detail-${index}`}>{parseBoldText(detail)}</span>;
-                                    })}
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-
-                      {/* Buttons */}
-                      <AnimatePresence>
-                        {currency && amount && productOrService && (
-                          <motion.div
-                            className="flex flex-col !mt-20 justify-center space-y-7"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                          >
-                            {/* Confirm PR */}
-                            <AnimatePresence>
-                              {isReviewing && (
-                                <motion.button
-                                  type="button"
-                                  className="w-full whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-white font-semibold cursor-pointer hover:bg-[#144752]"
-                                  initial={{ opacity: 0 }}
-                                  animate={{ opacity: 1 }}
-                                  exit={{}}
-                                  onClick={onConfrimClicked}
-                                  disabled={email ? !validateEmail(email) : false}
-                                >
-                                  Confirm payment request
-                                </motion.button>
-                              )}
-                            </AnimatePresence>
-
-                            {/* Edit button */}
-                            {isReviewing && (
-                              <motion.button
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                className="w-full py-3 bg-[#DEE5ED] transition hover:bg-[#BDCCDB] rounded-full mr-5"
-                                onClick={() => setIsReviewing(false)}
-                              >
-                                Edit
-                              </motion.button>
-                            )}
-
-                            {/* Review PR */}
-                            {!isReviewing && (
-                              <motion.button
-                                type="button"
-                                className="w-full h-12 px-16 whitespace-nowrap flex justify-center items-center rounded-full py-3 text-sm cursor-pointer bg-[#DEE5ED] transition hover:bg-[#BDCCDB]"
-                                onClick={() => {
-                                  if (email && !validateEmail(email)) {
-                                    return;
-                                  }
-
-                                  onReviewClicked();
-                                }}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                              >
-                                <span className="py-3">Review payment request</span>
-
-                                <img src={NextIcon} alt="Arrow right" className="ml-2 w-4 h-4" />
-                              </motion.button>
-                            )}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
                     </div>
                   </div>
                 </Dialog.Panel>
