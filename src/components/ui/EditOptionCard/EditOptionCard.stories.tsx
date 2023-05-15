@@ -23,8 +23,8 @@ PaymentConditions.args = {
   details: ['*Bank of Ireland* set up as priority bank.', "Don't capture funds on cards is on."],
 };
 
-export const AvailableMethods = Template.bind({});
-AvailableMethods.args = {
-  label: 'Available methods',
+export const PaymentMethods = Template.bind({});
+PaymentMethods.args = {
+  label: 'Payment methods',
   value: 'Bank and cards',
 };

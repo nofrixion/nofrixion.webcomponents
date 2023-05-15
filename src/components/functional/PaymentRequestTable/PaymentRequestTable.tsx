@@ -9,10 +9,15 @@ import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient'
 
 interface PaymentRequestTableProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
+  merchantId: string; // Example: "bf9e1828-c6a1-4cc5-a012-08daf2ff1b2d"
   apiUrl?: string; // Example: "https://api.nofrixion.com/api/v1"
 }
 
-const PaymentRequestTable = ({ token, apiUrl = 'https://api.nofrixion.com/api/v1' }: PaymentRequestTableProps) => {
+const PaymentRequestTable = ({
+  token,
+  merchantId,
+  apiUrl = 'https://api.nofrixion.com/api/v1',
+}: PaymentRequestTableProps) => {
   const [page, setPage] = useState(1);
   const [statusSortDirection, setStatusSortDirection] = useState<SortDirection>(SortDirection.NONE);
   const [createdSortDirection, setCreatedSortDirection] = useState<SortDirection>(SortDirection.NONE);
@@ -20,11 +25,12 @@ const PaymentRequestTable = ({ token, apiUrl = 'https://api.nofrixion.com/api/v1
   const [amountSortDirection, setAmountSortDirection] = useState<SortDirection>(SortDirection.NONE);
 
   const pageSize = 20;
-  const client = new PaymentRequestClient(apiUrl, token);
+  const client = new PaymentRequestClient(apiUrl, token, merchantId);
 
   const { paymentRequests, totalRecords, fetchPaymentRequests } = usePaymentRequests(
     apiUrl,
     token,
+    merchantId,
     statusSortDirection,
     createdSortDirection,
     contactSortDirection,

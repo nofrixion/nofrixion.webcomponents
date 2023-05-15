@@ -13,7 +13,7 @@ module.exports = {
       },
     },
   ],
-  framework: '@storybook/web-components',
+  framework: '@storybook/web-components-vite',
   core: {
     builder: '@storybook/builder-vite',
   },

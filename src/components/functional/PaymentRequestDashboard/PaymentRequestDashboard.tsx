@@ -1,18 +1,19 @@
 import { PaymentRequestStatus } from '../../../api/types/Enums';
-import Tab from '../Tab/Tab';
+import Tab from '../../ui/Tab/Tab';
 import * as Tabs from '@radix-ui/react-tabs';
 import { useEffect, useState } from 'react';
-import DateRangePicker, { DateRange } from '../DateRangePicker/DateRangePicker';
-import PrimaryButton from '../PrimaryButton/PrimaryButton';
+import DateRangePicker, { DateRange } from '../../ui/DateRangePicker/DateRangePicker';
+import PrimaryButton from '../../ui/PrimaryButton/PrimaryButton';
 import { usePaymentRequestMetrics } from '../../../api/hooks/usePaymentRequestMetrics';
-import PaymentRequestTable from '../PaymentRequestTable/PaymentRequestTable';
-import { SortDirection } from '../ColumnHeader/ColumnHeader';
+import PaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTable';
+import { SortDirection } from '../../ui/ColumnHeader/ColumnHeader';
 import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
 import { usePaymentRequests } from '../../../api/hooks/usePaymentRequests';
 import { LocalPaymentRequest } from '../../../api/types/LocalTypes';
-import { makeToast } from '../Toast/Toast';
+import { makeToast } from '../../ui/Toast/Toast';
 import { RemotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
 import classNames from 'classnames';
+import CreatePaymentRequestPage from '../../functional/CreatePaymentRequestPage/CreatePaymentRequestPage';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -36,6 +37,8 @@ const PaymentRequestDashboard = ({
     fromDate: new Date(),
     toDate: new Date(),
   });
+
+  let [isCreatePaymentRequestOpen, setIsCreatePaymentRequestOpen] = useState(false);
 
   const tabsTriggerClassNames = (status: PaymentRequestStatus) => {
     return classNames(
@@ -108,7 +111,21 @@ const PaymentRequestDashboard = ({
   };
 
   const onCreatePaymentRequest = () => {
-    console.log('Create payment request clicked.');
+    setIsCreatePaymentRequestOpen(true);
+  };
+
+  // TODO: We'd receive the payment request created
+  // from the create payment request page component
+  // and would be good add it to the table. For now, we just refresh the table.
+  // Also, when the page exits we don't know for sure
+  // if the PR was created. We need to handle
+  // the loading and error states inside the page.
+  const onCloseCreatePaymentRequest = async () => {
+    setIsCreatePaymentRequestOpen(false);
+
+    // Refresh the payment requests table
+    // TODO: Table is not refreshing
+    await fetchPaymentRequests();
   };
 
   useEffect(() => {
@@ -144,7 +161,7 @@ const PaymentRequestDashboard = ({
             <PrimaryButton
               label="Settings"
               className="text-defaultText hover:bg-greyBg font-normal"
-              onClick={() => onCreatePaymentRequest()}
+              onClick={() => {}}
             ></PrimaryButton>
           </div>
           <div className="pt-16 pl-2">
@@ -247,12 +264,21 @@ const PaymentRequestDashboard = ({
           </Tabs.Content>
         </Tabs.Root>
       </div>
+
+      <CreatePaymentRequestPage
+        isOpen={isCreatePaymentRequestOpen}
+        onClose={onCloseCreatePaymentRequest}
+        token={token}
+        merchantId={merchantId}
+        apiUrl={apiUrl}
+      />
     </div>
   );
 };
 
 PaymentRequestDashboard.componentProps = {
   token: String,
+  merchantId: String,
   apiUrl: String,
 };
 
