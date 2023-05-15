@@ -6,16 +6,22 @@ import { useState } from 'react';
 
 interface InfoTooltipProps {
   content: string;
+  children?: React.ReactNode;
 }
 
-const InfoTooltip = ({ content }: InfoTooltipProps) => {
+const InfoTooltip = ({ content, children }: InfoTooltipProps) => {
   const [open, setOpen] = useState(false);
 
   return (
     <Tooltip.Provider delayDuration={0}>
       <Tooltip.Root open={open} onOpenChange={setOpen}>
-        <Tooltip.Trigger asChild>
-          <img src={InfoIcon} className="cursor-pointer w-4 h-4" alt="Info icon" />
+        <Tooltip.Trigger>
+          <>
+            {/* If no children show img */}
+            {!children && <img src={InfoIcon} className="cursor-pointer w-4 h-4" alt="Info icon" />}
+
+            {children}
+          </>
         </Tooltip.Trigger>
         <AnimatePresence>
           {open && (

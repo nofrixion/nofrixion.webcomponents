@@ -79,7 +79,7 @@ export type PaymentRequestCreate = {
   paymentMethodTypes: string;
   description?: string;
   pispAccountID?: string;
-  baseOriginUrl: string;
+  baseOriginUrl?: string;
   callbackUrl?: string;
   successWebHookUrl?: string;
   cardAuthorizeOnly: boolean;
@@ -183,4 +183,22 @@ export type UserPaymentDefaults = {
   cardAuthorizeOnly: boolean;
   applePay: boolean;
   lightning: boolean;
+};
+
+export type MerchantBankSettings = {
+  merchantID: string;
+  payByBankSettings: BankSettings[];
+};
+
+export type BankSettings = {
+  bankID: string;
+  bankName: string;
+  order: number;
+  logo: string;
+  currency: Currency;
+  processor: PaymentProcessor;
+  personalInstitutionID?: string;
+  businessInstitutionID?: string;
+  message?: string;
+  messageImageUrl?: string;
 };

@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ResizableComponent from '../ResizableComponent/ResizableComponent';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { motion } from 'framer-motion';
@@ -9,8 +9,7 @@ import { localCurrency } from '../../../utils/constants';
 import MaskedInput from 'react-text-mask';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 
-export interface InputAmountFieldProps extends React.HTMLAttributes<HTMLInputElement> {
-  value: string;
+export interface InputAmountFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   currency: string;
   onCurrencyChange: (currency: string) => void;
 }
@@ -29,8 +28,7 @@ const actionItem = cva(actionItemClassNames, {
     intent: 'neutral',
   },
 });
-
-const InputAmountField = ({ value, currency, onCurrencyChange, ...props }: InputAmountFieldProps) => {
+const InputAmountField: React.FC<InputAmountFieldProps> = ({ currency, onCurrencyChange, ...props }) => {
   const [selectedCurrency, setSelectedCurrency] = useState(localCurrency.eur);
 
   const maskOptions = {
@@ -59,7 +57,7 @@ const InputAmountField = ({ value, currency, onCurrencyChange, ...props }: Input
   }, [selectedCurrency]);
 
   return (
-    <div className="flex w-[13.938rem] h-12 border border-borderGrey rounded justify-between">
+    <div className="flex w-full h-12 border border-borderGrey rounded justify-between">
       <div className="flex relative">
         <span className="flex absolute inset-y-0 pointer-events-none items-center ml-3 font-normal text-sm text-greyText">
           {selectedCurrency.symbol}
@@ -67,7 +65,6 @@ const InputAmountField = ({ value, currency, onCurrencyChange, ...props }: Input
         <MaskedInput
           className="w-full pl-7 mr-1 rounded font-normal text-sm text-defaultText appearance-none"
           mask={currencyMask}
-          value={value}
           {...props}
         />
       </div>
@@ -85,7 +82,7 @@ const InputAmountField = ({ value, currency, onCurrencyChange, ...props }: Input
         </DropdownMenu.Trigger>
 
         <DropdownMenu.Portal>
-          <DropdownMenu.Content asChild forceMount sideOffset={5} className="px-6">
+          <DropdownMenu.Content asChild forceMount sideOffset={5} className="px-6 z-10">
             <motion.div
               className="bg-white rounded-md shadow-[0px_0px_8px_rgba(4,_41,_49,_0.1)] p-4 space-y-4"
               initial={{ opacity: 0.5, y: -5, scaleX: 1, scaleY: 1 }}

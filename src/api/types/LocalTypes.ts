@@ -17,3 +17,47 @@ export interface LocalPaymentRequest {
   currency: Currency;
   tags: Tag[];
 }
+
+export interface LocalPaymentRequestCreate {
+  amount: number;
+  currency: Currency;
+  productOrService: string;
+  description?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  paymentConditions: {
+    allowPartialPayments: boolean;
+  };
+  paymentMethods: {
+    bank: {
+      active: boolean;
+      priority?: {
+        id: string;
+        name: string;
+      };
+    };
+    card: {
+      active: boolean;
+      captureFunds: boolean;
+    };
+    wallet: boolean;
+    lightning: boolean;
+  };
+}
+
+export interface LocalPaymentConditionsFormValue {
+  allowPartialPayments: boolean;
+}
+
+export interface LocalPaymentMethodsFormValue {
+  isBankEnabled: boolean;
+  isCardEnabled: boolean;
+  isWalletEnabled: boolean;
+  isLightningEnabled: boolean;
+  isCaptureFundsEnabled: boolean;
+  priorityBank?: {
+    id: string;
+    name: string;
+  };
+}
