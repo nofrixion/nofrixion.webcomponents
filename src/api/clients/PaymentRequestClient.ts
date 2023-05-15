@@ -98,6 +98,20 @@ export class PaymentRequestClient extends BaseApiClient {
   }
 
   /**
+   * Updates a Payment request
+   * @param paymentRequest The Payment Request to update
+   * @returns The updated PaymentRequest if successful. An ApiError if not successful.
+   */
+  async update(paymentRequest: PaymentRequestCreate): Promise<{
+    data?: PaymentRequest;
+    error?: ApiError;
+  }> {
+    const response = await this.httpRequest<PaymentRequest>(this.apiUrl, HttpMethod.PUT, paymentRequest);
+
+    return response;
+  }
+
+  /**
    * Get a minimal representation of the Payment request
    * @param paymentRequestId The Payment Request Id
    * @returns A PaymentRequestMinimal if successful. An ApiError if not successful.
