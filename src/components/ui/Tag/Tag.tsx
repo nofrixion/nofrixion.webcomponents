@@ -9,12 +9,8 @@ interface TagProps {
 }
 
 const Tag = ({ id, label, onDelete }: TagProps) => {
-  const [text, setText] = useState(label);
   const [deleteMode, setDeleteMode] = useState(false);
-
-  useEffect(() => {
-    deleteMode ? setText('Delete?') : setText(label);
-  }, [deleteMode]);
+  const text = !deleteMode ? label : 'Delete?';
 
   return (
     <div
@@ -64,10 +60,6 @@ const Tag = ({ id, label, onDelete }: TagProps) => {
       </svg>
     </div>
   );
-};
-
-Tag.componentProps = {
-  label: String,
 };
 
 export default Tag;
