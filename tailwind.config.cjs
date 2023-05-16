@@ -19,6 +19,7 @@ module.exports = {
         primaryGreen: '#40BFBF',
         primaryGreenHover: '#00807F',
         borderGrey: '#D5DBDD',
+        errorBg: '#FEE7EB',
       },
       fontSize: {
         '13px': '0.8125rem',
