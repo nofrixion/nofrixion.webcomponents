@@ -1,33 +1,67 @@
-import html2canvas from 'html2canvas';
 import { useRef, useState } from 'react';
 import QRCodeComponent from 'react-qr-code';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const QRCode = ({ url }: { url: string }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const qrCodeRef = useRef<HTMLDivElement>(null);
+  const largeQrCodeCanvasRef = useRef<HTMLCanvasElement>(null);
+  const qrCodeSvgRef = useRef<HTMLDivElement>(null);
 
   const downloadAsImage = () => {
-    const element = qrCodeRef.current as HTMLDivElement;
+    const largeQRCodeCanvas = largeQrCodeCanvasRef.current as HTMLCanvasElement;
 
-    html2canvas(element).then((canvas) => {
-      const link = document.createElement('a');
-      link.download = 'nfPaymentRequest.png';
-      link.href = canvas.toDataURL();
-      link.click();
-      link.remove();
-    });
+    // Get the canvas context in 2D
+    var ctx = largeQRCodeCanvas.getContext('2d');
+
+    if (ctx) {
+      // Get QR code svg generated through QRCodeComponent
+      const qrCodeSvg = qrCodeSvgRef.current?.firstChild as HTMLElement;
+
+      // Get the SVG XML code
+      const qrCodeSvgXml = new XMLSerializer().serializeToString(qrCodeSvg);
+
+      // Convert the svg to image to be able to draw on canvas
+      const img = new Image();
+      img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(qrCodeSvgXml)));
+
+      // Draw the SVG on the canvas when the image is loaded
+      img.onload = () => {
+        // The downloaded image should have a width of 1024px and height of 1024px
+        ctx?.drawImage(img, 0, 0, 1024, 1024);
+        const link = document.createElement('a');
+        link.download = getQRCodeFileName();
+        link.href = largeQRCodeCanvas.toDataURL();
+        link.click();
+        link.remove();
+      };
+    }
+  };
+
+  const getQRCodeFileName = (): string => {
+    const now = new Date();
+
+    const year = now.getFullYear().toString().padStart(4, '0');
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const day = now.getDate().toString().padStart(2, '0');
+
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+
+    return `QR-${day}-${month}-${year}-${hours}${minutes}${seconds}`;
   };
 
   return (
     <>
+      <canvas ref={largeQrCodeCanvasRef} height="1024" width="1024" className="hidden"></canvas>
+
       <div
         className="w-20 h-20 relative"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div ref={qrCodeRef}>
-          <QRCodeComponent value={url} className="w-20 h-20" />
+        <div ref={qrCodeSvgRef}>
+          <QRCodeComponent value={url} className="w-full h-full" />
         </div>
 
         <AnimatePresence>
