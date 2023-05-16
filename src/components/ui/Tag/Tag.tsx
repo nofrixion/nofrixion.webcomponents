@@ -43,8 +43,8 @@ const Tag = ({ id, label, onDelete }: TagProps) => {
           <path
             d="M6 10.2369L8.84211 13.079L15 6.92114"
             stroke="#F32448"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
       )}
