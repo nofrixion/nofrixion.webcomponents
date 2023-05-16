@@ -180,7 +180,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-[9999]" onClose={() => {}}>
+        <Dialog as="div" className="relative" onClose={() => {}}>
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center text-center">
               <Transition.Child
@@ -197,8 +197,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                   <AnimatePresence initial={false}>
                     {!isReviewing && (
                       <motion.div
-                        className="w-1/2"
-                        initial={{ opacity: 0, width: 0 }}
+                        initial={{ opacity: 0, width: '0' }}
                         animate={{ opacity: 1, width: '50%', transition: { duration: durationAnimationWidth } }}
                         exit={{ opacity: 0, width: 0, flex: 0, transition: { duration: durationAnimationWidth } }}
                       >

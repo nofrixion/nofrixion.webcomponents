@@ -11,7 +11,7 @@ export default defineConfig(() => ({
   build: {
     lib: {
       formats: ['es'], // We can also build for UMD adding 'umd' to the array
-      entry: resolve(__dirname, 'src/index.ts'),
+      entry: resolve(__dirname, 'out/index.ts'),
       name: 'web-components',
     },
   },
