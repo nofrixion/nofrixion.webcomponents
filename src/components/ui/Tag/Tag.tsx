@@ -66,8 +66,4 @@ const Tag = ({ id, label, onDelete }: TagProps) => {
   );
 };
 
-Tag.componentProps = {
-  label: String,
-};
-
 export default Tag;

@@ -8,7 +8,7 @@ export default {
   component: Tag,
   argTypes: {
     id: { control: 'text' },
-    label: { control: { disable: true } },
+    label: { control: 'text' },
     onDelete: { action: 'Delete clicked' },
   },
 } as Meta<typeof Tag>;
