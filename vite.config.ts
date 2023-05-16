@@ -1,12 +1,13 @@
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
+import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 
 // We could explore to create a npm package
 // Here's an interesting link: https://www.bitovi.com/blog/react-everywhere-with-vite-and-react-to-webcomponent
 
 export default defineConfig(() => ({
-  plugins: [react()],
+  plugins: [react(), cssInjectedByJsPlugin()],
   build: {
     lib: {
       formats: ['es'], // We can also build for UMD adding 'umd' to the array

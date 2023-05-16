@@ -4,4 +4,4 @@ import './index.css'; // Import Tailwind CSS
 // need to be imported here
 import './web-components/Title/WebTitle';
 import './web-components/Card/WebCard';
-import './web-components/PaymentRequestTable/WebPaymentRequestTable';
+import './web-components/PaymentRequestDashboard/WebPaymentRequestDashboard';
