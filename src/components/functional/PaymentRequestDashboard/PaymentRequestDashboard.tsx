@@ -14,6 +14,7 @@ import { makeToast } from '../../ui/Toast/Toast';
 import { RemotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
 import classNames from 'classnames';
 import CreatePaymentRequestPage from '../../functional/CreatePaymentRequestPage/CreatePaymentRequestPage';
+import { add, startOfDay } from 'date-fns';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -34,7 +35,7 @@ const PaymentRequestDashboard = ({
   const [selectedTab, setSelectedTab] = useState('allTab');
   const [status, setStatus] = useState<PaymentRequestStatus>(PaymentRequestStatus.All);
   const [dateRange, setDateRange] = useState<DateRange>({
-    fromDate: new Date(),
+    fromDate: startOfDay(add(new Date(), { days: -90 })), // Last 90 days as default
     toDate: new Date(),
   });
 
