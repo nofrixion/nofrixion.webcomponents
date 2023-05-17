@@ -21,15 +21,15 @@ const Template: StoryFn<typeof PaymentRequestStatusBadge> = (args) => <PaymentRe
 
 export const UnpaidBadge = Template.bind({});
 UnpaidBadge.args = {
-  status: statuses.unpaid,
+  status: 'unpaid',
 };
 
 export const PartiallyPaidBadge = Template.bind({});
 PartiallyPaidBadge.args = {
-  status: statuses.partial,
+  status: 'partial',
 };
 
 export const PaidBadge = Template.bind({});
 PaidBadge.args = {
-  status: statuses.paid,
+  status: 'paid',
 };

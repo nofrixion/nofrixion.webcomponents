@@ -42,7 +42,7 @@ const PaymentRequestDashboard = ({
 
   const tabsTriggerClassNames = (status: PaymentRequestStatus) => {
     return classNames(
-      "text-greyText hover:text-defaultText hover:bg-[#F0F2F5] hover:cursor-pointer pt-0 h-20 data-[state='active']:text-defaultText data-[state='active']:bg-white data-[state='active']:cursor-default data-[disabled]:pointer-events-none data-[disabled]:cursor-not-allowed focus:relative",
+      "text-greyText hover:text-defaultText hover:bg-[#F0F2F5] hover:cursor-pointer pt-0 h-20 transition data-[state='active']:text-defaultText data-[state='active']:bg-white data-[state='active']:cursor-default data-[disabled]:pointer-events-none data-[disabled]:cursor-not-allowed focus:relative",
       {
         "data-[state='active']:shadow-[inset_0_2px_0px_#00B2B2]": status === PaymentRequestStatus.All,
         "data-[state='active']:shadow-[inset_0_2px_0px_#E88C30]": status === PaymentRequestStatus.PartiallyPaid,

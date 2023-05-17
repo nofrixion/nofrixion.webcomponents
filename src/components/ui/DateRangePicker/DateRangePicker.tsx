@@ -150,7 +150,6 @@ const DateRangePicker = ({ onDateChange }: DateRangeFilterProps) => {
           render={(value: string[], openCalendar: () => void) => {
             return <DateRangeInput value={value} openCalendar={openCalendar} />;
           }}
-          className="green"
           arrow={false}
           weekDays={weekDays}
           offsetY={13}
