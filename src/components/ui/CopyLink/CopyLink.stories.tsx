@@ -1,5 +1,3 @@
-// write a story component for CopyLink component
-
 import { StoryFn, Meta } from '@storybook/react';
 import { CopyLink } from './CopyLink';
 
