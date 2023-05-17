@@ -197,8 +197,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                   <AnimatePresence initial={false}>
                     {!isReviewing && (
                       <motion.div
-                        className="w-1/2"
-                        initial={{ opacity: 0, width: 0 }}
+                        initial={{ opacity: 0, width: '0' }}
                         animate={{ opacity: 1, width: '50%', transition: { duration: durationAnimationWidth } }}
                         exit={{ opacity: 0, width: 0, flex: 0, transition: { duration: durationAnimationWidth } }}
                       >

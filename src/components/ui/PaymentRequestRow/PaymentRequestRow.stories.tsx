@@ -1,7 +1,31 @@
-import React from 'react';
 import { StoryFn, Meta } from '@storybook/react';
 
 import PaymentRequestRow from './PaymentRequestRow';
+import { Currency } from '../../../api/types/Enums';
+
+const tags = [
+  {
+    ID: '1',
+    merchantID: '1',
+    name: 'Tag 1',
+    colourHex: '#FF0000',
+    description: 'This is a tag',
+  },
+  {
+    ID: '2',
+    merchantID: '1',
+    name: 'Another tag',
+    colourHex: '#00FF00',
+    description: 'This is another tag',
+  },
+  {
+    ID: '3',
+    merchantID: '1',
+    name: 'Third tag',
+    colourHex: '#0000FF',
+    description: 'This is a third tag',
+  },
+];
 
 export default {
   title: 'UI/Payment Request Row',
@@ -94,8 +118,8 @@ Playground.args = {
     email: 'dkowalski@email.com',
   },
   amount: 29,
-  currency: 'EUR',
-  tags: [{ name: 'Tag 1' }, { name: 'Another tag' }, { name: 'Third tag' }],
+  currency: Currency.EUR,
+  tags: tags,
 };
 
 export const ExampleToday = Template.bind({});
@@ -107,58 +131,58 @@ ExampleToday.args = {
     email: 'dkowalski@email.com',
   },
   amount: 29,
-  currency: 'EUR',
-  tags: [{ name: 'Tag 1' }, { name: 'Another tag' }],
+  currency: Currency.EUR,
+  tags: tags,
 };
 
 export const ExampleYesterday = Template.bind({});
 ExampleYesterday.args = {
   status: 'partial',
-  createdAt: new Date().setDate(new Date().getDate() - 1), // Yesterday
+  createdAt: new Date(new Date().setDate(new Date().getDate() - 1)), // Yesterday
   contact: {
     name: 'Daniel Kowalski',
     email: 'dkowalski@email.com',
   },
   amount: 115949,
-  currency: 'EUR',
-  tags: [{ name: 'Tag 1' }, { name: 'Another tag' }],
+  currency: Currency.EUR,
+  tags: tags,
 };
 
 export const ExampleTwoDaysAgo = Template.bind({});
 ExampleTwoDaysAgo.args = {
   status: 'paid',
-  createdAt: new Date().setDate(new Date().getDate() - 2), // 2 days ago
+  createdAt: new Date(new Date().setDate(new Date().getDate() - 2)), // 2 days ago
   contact: {
     name: 'Daniel Kowalski',
     email: 'dkowalski@email.com',
   },
   amount: 115.5,
-  currency: 'EUR',
-  tags: [{ name: 'Tag 1' }, { name: 'Another tag' }],
+  currency: Currency.EUR,
+  tags: tags,
 };
 
 export const ExampleTwoYearsAgo = Template.bind({});
 ExampleTwoYearsAgo.args = {
   status: 'paid',
-  createdAt: new Date().setFullYear(new Date().getFullYear() - 2), // 2 years ago
+  createdAt: new Date(new Date().setFullYear(new Date().getFullYear() - 2)), // 2 years ago
   contact: {
     name: 'Daniel Kowalski',
     email: 'dkowalski@email.com',
   },
   amount: 89.99,
-  currency: 'GBP',
-  tags: [{ name: 'Tag 1' }, { name: 'Another tag' }],
+  currency: Currency.GBP,
+  tags: tags,
 };
 
 export const ExampleGBP = Template.bind({});
 ExampleGBP.args = {
   status: 'unpaid',
-  createdAt: new Date().setMonth(new Date().getMonth() - 2), // 2 months ago
+  createdAt: new Date(new Date().setMonth(new Date().getMonth() - 2)), // 2 months ago
   contact: {
     name: 'Daniel Kowalski',
     email: 'dkowalski@email.com',
   },
   amount: 89.99,
-  currency: 'GBP',
-  tags: [{ name: 'Tag 1' }, { name: 'Another tag' }],
+  currency: Currency.GBP,
+  tags: tags,
 };

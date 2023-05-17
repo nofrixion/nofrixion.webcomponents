@@ -25,7 +25,11 @@ export default {
 
 //👇 We create a “template” of how args map to rendering
 const Template = ({ token, merchantId, apiUrl }) =>
-  html`<payment-request-dashboard .token=${token} .merchantId=${merchantId} .apiUrl=${apiUrl}></payment-request-table>`;
+  html`<payment-request-dashboard
+    .token=${token}
+    .merchantId=${merchantId}
+    .apiUrl=${apiUrl}
+  ></payment-request-dashboard>`;
 
 //👇 Each story then reuses that template
 export const Showcase = Template.bind({});
