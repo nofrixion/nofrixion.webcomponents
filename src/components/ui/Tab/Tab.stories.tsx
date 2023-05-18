@@ -19,8 +19,6 @@ export const Showcase = Template.bind({});
 Showcase.args = {
   status: PaymentRequestStatus.All,
   totalRecords: 233,
-  selected: true,
-  onSelect: action('Tab Changed'),
 };
 
 export const All = Template.bind({});
@@ -28,8 +26,6 @@ export const All = Template.bind({});
 All.args = {
   status: PaymentRequestStatus.All,
   totalRecords: 112,
-  selected: true,
-  onSelect: action('Tab Changed'),
 };
 
 export const Unpaid = Template.bind({});
@@ -37,8 +33,6 @@ export const Unpaid = Template.bind({});
 Unpaid.args = {
   status: PaymentRequestStatus.None,
   totalRecords: 112,
-  selected: false,
-  onSelect: action('Tab Changed'),
 };
 
 export const PartiallyPaid = Template.bind({});
@@ -46,8 +40,6 @@ export const PartiallyPaid = Template.bind({});
 PartiallyPaid.args = {
   status: PaymentRequestStatus.PartiallyPaid,
   totalRecords: 89,
-  selected: false,
-  onSelect: action('Tab Changed'),
 };
 
 export const Paid = Template.bind({});
@@ -55,6 +47,4 @@ export const Paid = Template.bind({});
 Paid.args = {
   status: PaymentRequestStatus.FullyPaid,
   totalRecords: 47,
-  selected: false,
-  onSelect: action('Tab Changed'),
 };

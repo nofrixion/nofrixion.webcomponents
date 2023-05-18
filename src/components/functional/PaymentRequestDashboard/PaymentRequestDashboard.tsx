@@ -14,6 +14,7 @@ import { makeToast } from '../../ui/Toast/Toast';
 import { RemotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
 import classNames from 'classnames';
 import CreatePaymentRequestPage from '../../functional/CreatePaymentRequestPage/CreatePaymentRequestPage';
+import { add, startOfDay } from 'date-fns';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -34,7 +35,7 @@ const PaymentRequestDashboard = ({
   const [selectedTab, setSelectedTab] = useState('allTab');
   const [status, setStatus] = useState<PaymentRequestStatus>(PaymentRequestStatus.All);
   const [dateRange, setDateRange] = useState<DateRange>({
-    fromDate: new Date(),
+    fromDate: startOfDay(add(new Date(), { days: -90 })), // Last 90 days as default
     toDate: new Date(),
   });
 
@@ -42,7 +43,7 @@ const PaymentRequestDashboard = ({
 
   const tabsTriggerClassNames = (status: PaymentRequestStatus) => {
     return classNames(
-      "text-greyText hover:text-defaultText hover:bg-[#F0F2F5] hover:cursor-pointer pt-0 h-20 data-[state='active']:text-defaultText data-[state='active']:bg-white data-[state='active']:cursor-default data-[disabled]:pointer-events-none data-[disabled]:cursor-not-allowed focus:relative",
+      "text-greyText hover:text-defaultText hover:bg-[#F0F2F5] hover:cursor-pointer pt-0 h-20 transition data-[state='active']:text-defaultText data-[state='active']:bg-white data-[state='active']:cursor-default data-[disabled]:pointer-events-none data-[disabled]:cursor-not-allowed focus:relative",
       {
         "data-[state='active']:shadow-[inset_0_2px_0px_#00B2B2]": status === PaymentRequestStatus.All,
         "data-[state='active']:shadow-[inset_0_2px_0px_#E88C30]": status === PaymentRequestStatus.PartiallyPaid,
