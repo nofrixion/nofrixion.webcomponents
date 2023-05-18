@@ -23,8 +23,8 @@ const AmountPaid = ({
           {amountPaid === 0 ? totalAmount : amountPaid.toFixed(2)}
         </span>
         <div className="flex flex-row h-[0.125rem]">
-          <div className="bg-[#40BFBF]" style={{ flexGrow: `${percentagePaid}` }}></div>
-          <div className="bg-[#EDF2F7]" style={{ flexGrow: `${100 - percentagePaid}` }}></div>
+          <div className="bg-[#40BFBF] rounded-l-sm" style={{ flexGrow: `${percentagePaid}` }}></div>
+          <div className="bg-[#EDF2F7] rounded-r-sm" style={{ flexGrow: `${100 - percentagePaid}` }}></div>
         </div>
         {amountPaid > 0 && (
           <span className="text-sm leading-[1.063rem] text-[#73808C] font-medium mt-2">
