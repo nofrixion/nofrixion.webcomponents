@@ -20,9 +20,9 @@ export const CopyLink = ({ link }: { link: string }) => {
   };
 
   return (
-    <div className="flex items-center gap-[10px] h-10 rounded-full justify-between px-2 pr-4 shadow-[0_0_8px_rgba(4,41,49,0.15)] text-[13px] relative">
+    <div className="flex items-center h-10 rounded-full justify-between px-2 pr-4 shadow-[0_0_0.5rem_rgba(4,41,49,0.15)] text-[0.813rem] relative">
       <div className="whitespace-nowrap overflow-x-clip">{link}</div>
-      <div className="w-14 h-6 bg-gradient-to-l from-white right-[88px] absolute"></div>
+      <div className="w-14 h-6 bg-gradient-to-l from-white right-[5.5rem] absolute"></div>
       <AnimatePresence>
         {!copied ? (
           <motion.div
@@ -31,7 +31,7 @@ export const CopyLink = ({ link }: { link: string }) => {
             initial={{ opacity: 1 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex items-center gap-[4.5px] rounded-full py-1 px-2 bg-white hover:bg-[#DEE5ED] transition duration-300 cursor-pointer z-0 absolute right-0 mr-2"
+            className="flex items-center gap-[0.281rem] rounded-full py-1 px-2 bg-white hover:bg-[#DEE5ED] transition duration-300 cursor-pointer z-0 absolute right-0 mr-2"
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -55,7 +55,7 @@ export const CopyLink = ({ link }: { link: string }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="ml-2 flex items-center gap-[5.67px] rounded-full py-1 px-4 bg-[#CFFCED] z-50 absolute right-0 mr-2"
+            className="ml-2 flex items-center gap-[0.354rem] rounded-full py-1 px-4 bg-[#CFFCED] z-50 absolute right-0 mr-2"
           >
             <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
