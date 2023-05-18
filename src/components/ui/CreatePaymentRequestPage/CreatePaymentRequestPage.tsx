@@ -212,8 +212,8 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                 fill="none"
                                 xmlns="http://www.w3.org/2000/svg"
                               >
-                                <path d="M11 21L1 11L11 1" stroke-linecap="round" stroke-linejoin="round" />
-                                <path d="M1 11.082H25" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M11 21L1 11L11 1" strokeLinecap="round" stroke-linejoin="round" />
+                                <path d="M1 11.082H25" strokeLinecap="round" stroke-linejoin="round" />
                               </svg>
                             </button>
                             <Dialog.Title
