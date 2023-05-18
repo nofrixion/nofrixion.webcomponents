@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Tag } from '../../../api/types/ApiResponses';
 import Downshift from 'downshift';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, LayoutGroup } from 'framer-motion';
+import LayoutWrapper from '../utils/LayoutWrapper';
 
 interface TagProps {
   tags: Tag[];
@@ -66,7 +67,7 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
       )}
 
       {editMode && (
-        <div className="relative justify-end inline-flex items-center space-x-1 text-defaultText transition px-2 py-2 rounded-full border-borderGrey border-[1px] border-solid h-10 text-sm whitespace-nowrap align-middle select-none">
+        <div className="relative inline-flex items-center space-x-1 text-defaultText transition px-2 py-2 rounded-full border-borderGrey border-[1px] border-solid h-10 text-sm whitespace-nowrap align-middle select-none">
           <Downshift
             onInputValueChange={(inputValue) => {
               inputValue.length > 0 ? setSaveMode(true) : setSaveMode(false);
@@ -77,7 +78,12 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
             stateReducer={stateReducer}
           >
             {({ getInputProps, getMenuProps, getRootProps, getItemProps, isOpen, highlightedIndex, inputValue }) => (
-              <div>
+              <motion.div
+                layout="position"
+                transition={{
+                  layout: { duration: 0.2 },
+                }}
+              >
                 <div {...getRootProps({}, { suppressRefError: true })}>
                   <input
                     {...getInputProps()}
@@ -121,31 +127,48 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
                     </motion.ul>
                   )}
                 </AnimatePresence>
-              </div>
+              </motion.div>
             )}
           </Downshift>
+          {/* <AnimatePresence> */}
           {saveMode && (
-            <div>
-              <svg
-                className="cursor-pointer"
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                onClick={() => saveTag()}
-              >
-                <circle cx="10" cy="10" r="10" fill="#CFFCED" />
-                <path
-                  d="M6 10.2369L8.84211 13.079L15 6.92114"
-                  stroke="#29A37A"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
+            // <motion.div
+            //   layout="position"
+            //   initial={{ opacity: 0 }}
+            //   animate={{ opacity: 1 }}
+            //   exit={{ opacity: 0 }}
+            //   transition={{
+            //     duration: 0.2,
+            //     layout: { duration: 0.2 },
+            //   }}
+            // >
+            <svg
+              className="cursor-pointer"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              onClick={() => saveTag()}
+            >
+              <circle cx="10" cy="10" r="10" fill="#CFFCED" />
+              <path
+                d="M6 10.2369L8.84211 13.079L15 6.92114"
+                stroke="#29A37A"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            // </motion.div>
           )}
-          <div>
+          {/* </AnimatePresence> */}
+
+          <motion.div
+            layout="position"
+            transition={{
+              layout: { duration: 0.2 },
+            }}
+          >
             <svg
               className="cursor-pointer"
               width="20"
@@ -159,7 +182,7 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
               <path d="M6 6L14 14" stroke="#ABB3BA" strokeLinecap="round" />
               <path d="M14 6L6 14" stroke="#ABB3BA" strokeLinecap="round" />
             </svg>
-          </div>
+          </motion.div>
         </div>
       )}
     </>

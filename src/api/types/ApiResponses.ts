@@ -164,7 +164,7 @@ export type ApiResponse<T> = {
 export type Tag = {
   ID?: string;
   merchantID?: string;
-  name?: string;
+  name: string;
   colourHex?: string;
   description?: string;
 };
