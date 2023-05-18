@@ -15,7 +15,7 @@ const AmountPaid = ({
     <>
       <div className="flex flex-col">
         <span
-          className={`text-2xl tabular-nums font-semibold leading-8 mb-4  ${
+          className={`text-[2rem] tabular-nums font-semibold leading-8 mb-4  ${
             amountPaid === 0 ? 'text-[#73808C]' : 'text-[#00264D]'
           }`}
         >
@@ -27,7 +27,7 @@ const AmountPaid = ({
           <div className="bg-[#EDF2F7]" style={{ flexGrow: `${100 - percentagePaid}` }}></div>
         </div>
         {amountPaid > 0 && (
-          <span className="text-sm leading-5 text-[#73808C] font-medium mt-2">
+          <span className="text-sm leading-[1.063rem] text-[#73808C] font-medium mt-2">
             {currency == Currency.GBP ? '£' : '€'}
             <span className="tabular-nums">{outstandingAmount.toFixed(2)}</span> outstanding
           </span>
