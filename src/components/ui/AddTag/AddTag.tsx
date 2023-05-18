@@ -67,7 +67,13 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
       )}
 
       {editMode && (
-        <div className="relative inline-flex items-center space-x-1 text-defaultText transition px-2 py-2 rounded-full border-borderGrey border-[1px] border-solid h-10 text-sm whitespace-nowrap align-middle select-none">
+        <motion.div
+          className="relative inline-flex items-center space-x-1 text-defaultText transition px-2 py-2 rounded-full border-borderGrey border-[1px] border-solid h-10 text-sm whitespace-nowrap align-middle select-none"
+          layout="size"
+          transition={{
+            layout: { duration: 0.2 },
+          }}
+        >
           <Downshift
             onInputValueChange={(inputValue) => {
               inputValue.length > 0 ? setSaveMode(true) : setSaveMode(false);
@@ -183,7 +189,7 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
               <path d="M14 6L6 14" stroke="#ABB3BA" strokeLinecap="round" />
             </svg>
           </motion.div>
-        </div>
+        </motion.div>
       )}
     </>
   );
