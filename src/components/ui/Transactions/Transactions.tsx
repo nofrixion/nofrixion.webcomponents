@@ -89,7 +89,7 @@ const Transactions = ({ transactions }: { transactions: Transaction[] }) => {
                 </div>
               </td>
               <td className="pl-6 pb-2 pt-6">
-                <div className="w-[60px] text-[0.813rem] h-6 ">
+                <div className="w-[3.75rem] text-[0.813rem] h-6 ">
                   <AnimatePresence>
                     {hoveredRow === index && (
                       <motion.div
