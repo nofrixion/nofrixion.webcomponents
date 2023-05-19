@@ -12,7 +12,7 @@ interface CardProps {
  */
 const Card = ({ name, size, imageSrc, imageAlt, href, description }: CardProps) => {
   return (
-    <div key={name} className={`group relative ${size == 'medium' ? 'max-w-lg' : 'max-w-3xl'}`}>
+    <div key={name} className={`group font-inter relative ${size == 'medium' ? 'max-w-lg' : 'max-w-3xl'}`}>
       <div className="relative h-80 w-full overflow-hidden rounded-lg bg-white group-hover:opacity-75 sm:aspect-w-2 sm:aspect-h-1 sm:h-64 lg:aspect-w-1 lg:aspect-h-1">
         <img src={imageSrc} alt={imageAlt} className="h-full w-full object-cover object-center" />
       </div>

@@ -6,7 +6,7 @@ interface TitleProps {
  * Primary UI component for user interaction
  */
 const Title = ({ label }: TitleProps) => {
-  return <h1>{label}</h1>;
+  return <h1 className="font-inter">{label}</h1>;
 };
 
 Title.componentProps = {
