@@ -6,9 +6,10 @@ import Tag from '../Tag/Tag';
 interface TagManagerProps {
   tags: LocalTag[];
   onDelete?: (id: string) => void;
+  onAdded?: (id: string) => void;
 }
 
-const TagManager = ({ tags, onDelete }: TagManagerProps) => {
+const TagManager = ({ tags, onDelete, onAdded }: TagManagerProps) => {
   const [tagsArray, setTagsArray] = useState(tags);
 
   const handleDelete = (id: string) => {
@@ -22,6 +23,10 @@ const TagManager = ({ tags, onDelete }: TagManagerProps) => {
 
     if (index === -1) {
       setTagsArray([...tagsArray, tag]);
+
+      // TODO: Call API to add tag?
+
+      onAdded && onAdded(tag.ID);
     }
   };
 
