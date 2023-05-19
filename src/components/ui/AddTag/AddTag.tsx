@@ -101,7 +101,7 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
                         {...getInputProps()}
                         autoFocus
                         type="text"
-                        className="appearance-none border-none min-w-[3rem] max-w-[10rem] inline-block font-normal text-sm/6 text-defaultText"
+                        className="appearance-none outline-none border-none min-w-[3rem] max-w-[10rem] inline-block font-normal text-sm/6 text-defaultText"
                         style={{ width: `${tagName.length * 8}px` }}
                       />
                     </div>
