@@ -151,7 +151,6 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
                       onClick={() => saveTag()}
-                      tabIndex={1}
                     >
                       <circle cx="10" cy="10" r="10" fill="#CFFCED" />
                       <path
