@@ -11,8 +11,7 @@ interface TagProps {
 
 const AddTag = ({ tags, onTagAdded }: TagProps) => {
   const [editMode, setEditMode] = useState(false);
-  const [saveMode, setSaveMode] = useState(false); // Change this
-  const [tagname, setTagName] = useState('');
+  const [tagName, setTagName] = useState('');
   const [ref, { width }] = useMeasure();
 
   const animationDuration = 0.2;
@@ -24,16 +23,15 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
   const reset = () => {
     setTagName('');
     setEditMode(false);
-    setSaveMode(false);
   };
 
   const saveTag = () => {
-    var existingTag = tags.find((tag) => tag.name?.toLowerCase() === tagname.toLowerCase());
+    var existingTag = tags.find((tag) => tag.name?.toLowerCase() === tagName.toLowerCase());
 
     if (existingTag) {
       onTagAdded && onTagAdded(existingTag);
     } else {
-      onTagAdded && onTagAdded({ name: tagname });
+      onTagAdded && onTagAdded({ name: tagName });
     }
     reset();
   };
@@ -82,7 +80,6 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
             <div ref={ref} className="inline-flex items-center space-x-1 pl-3">
               <Downshift
                 onInputValueChange={(inputValue) => {
-                  inputValue.length > 0 ? setSaveMode(true) : setSaveMode(false);
                   setTagName(inputValue);
                 }}
                 onChange={(selectedItem) => selectedItem && setTagName(selectedItem.value)}
@@ -105,7 +102,7 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
                         autoFocus
                         type="text"
                         className="appearance-none border-none min-w-[3rem] max-w-[10rem] inline-block font-normal text-sm/6 text-defaultText"
-                        style={{ width: `${tagname.length * 8}px` }}
+                        style={{ width: `${tagName.length * 8}px` }}
                       />
                     </div>
                     {isOpen && (
@@ -144,7 +141,7 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
                 )}
               </Downshift>
               <AnimatePresence>
-                {saveMode && (
+                {tagName.length > 0 && (
                   <Layout key="save">
                     <svg
                       className="cursor-pointer"
