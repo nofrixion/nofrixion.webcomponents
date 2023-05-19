@@ -162,11 +162,11 @@ export type ApiResponse<T> = {
 };
 
 export type Tag = {
-  ID: string;
-  merchantID: string;
+  ID?: string;
+  merchantID?: string;
   name: string;
-  colourHex: string;
-  description: string;
+  colourHex?: string;
+  description?: string;
 };
 
 export type PaymentRequestMetrics = {
