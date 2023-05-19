@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Tag } from '../../../api/types/ApiResponses';
 import Downshift from 'downshift';
-import { AnimatePresence, motion, LayoutGroup } from 'framer-motion';
-import LayoutWrapper from '../utils/LayoutWrapper';
+import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
+import useMeasure from 'react-use-measure';
 
 interface TagProps {
   tags: Tag[];
@@ -13,6 +13,13 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
   const [editMode, setEditMode] = useState(false);
   const [saveMode, setSaveMode] = useState(false); // Change this
   const [tagname, setTagName] = useState('');
+  const [ref, { width }] = useMeasure();
+
+  const animationDuration = 0.2;
+
+  const Layout = ({ children }: { children: React.ReactNode }) => {
+    return <motion.div layout="position">{children}</motion.div>;
+  };
 
   const reset = () => {
     setTagName('');
@@ -67,129 +74,121 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
       )}
 
       {editMode && (
-        <motion.div
-          className="relative inline-flex items-center space-x-1 text-defaultText transition px-2 py-2 rounded-full border-borderGrey border-[1px] border-solid h-10 text-sm whitespace-nowrap align-middle select-none"
-          layout="size"
-          transition={{
-            layout: { duration: 0.2 },
-          }}
-        >
-          <Downshift
-            onInputValueChange={(inputValue) => {
-              inputValue.length > 0 ? setSaveMode(true) : setSaveMode(false);
-              setTagName(inputValue);
-            }}
-            onChange={(selectedItem) => selectedItem && setTagName(selectedItem.value)}
-            itemToString={(item) => (item ? item.value : '')}
-            stateReducer={stateReducer}
-          >
-            {({ getInputProps, getMenuProps, getRootProps, getItemProps, isOpen, highlightedIndex, inputValue }) => (
-              <motion.div
-                layout="position"
-                transition={{
-                  layout: { duration: 0.2 },
-                }}
-              >
-                <div {...getRootProps({}, { suppressRefError: true })}>
-                  <input
-                    {...getInputProps()}
-                    autoFocus
-                    type="text"
-                    className="appearance-none border-none min-w-[3rem] max-w-[10rem] inline-block font-normal text-sm/6 text-defaultText"
-                    style={{ width: `${tagname.length}ch` }}
-                  />
-                </div>
-                <AnimatePresence>
-                  {isOpen && (
-                    <motion.ul
-                      initial={'closed'}
-                      animate={'open'}
-                      exit={'closed'}
-                      variants={variants}
-                      {...getMenuProps()}
-                      className="absolute overflow-x-auto overflow-y-auto max-h-60 w-fit rounded-md bg-white shadow-lg ring-black ring-opacity-5 focus:outline-none text-sm/4"
-                    >
-                      {isOpen
-                        ? items
-                            .filter(
-                              (item) => !inputValue || (item.value && item.value.toLowerCase().includes(inputValue)),
-                            )
-                            .map((item, index) => (
-                              <li
-                                className="cursor-default select-none py-2 px-4 whitespace-nowrap w-fit"
-                                {...getItemProps({
-                                  key: item.value,
-                                  index,
-                                  item,
-                                  style: {
-                                    backgroundColor: highlightedIndex === index ? '#EDF2F7' : 'white',
-                                  },
-                                })}
-                              >
-                                {item.value}
-                              </li>
-                            ))
-                        : null}
-                    </motion.ul>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            )}
-          </Downshift>
-          {/* <AnimatePresence> */}
-          {saveMode && (
-            // <motion.div
-            //   layout="position"
-            //   initial={{ opacity: 0 }}
-            //   animate={{ opacity: 1 }}
-            //   exit={{ opacity: 0 }}
-            //   transition={{
-            //     duration: 0.2,
-            //     layout: { duration: 0.2 },
-            //   }}
-            // >
-            <svg
-              className="cursor-pointer"
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              onClick={() => saveTag()}
-            >
-              <circle cx="10" cy="10" r="10" fill="#CFFCED" />
-              <path
-                d="M6 10.2369L8.84211 13.079L15 6.92114"
-                stroke="#29A37A"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            // </motion.div>
-          )}
-          {/* </AnimatePresence> */}
-
+        <MotionConfig transition={{ duration: animationDuration }}>
           <motion.div
-            layout="position"
-            transition={{
-              layout: { duration: 0.2 },
-            }}
+            animate={{ width: width + 8 }}
+            className="relative inline-flex text-defaultText transition py-2 rounded-full border-borderGrey border-[1px] border-solid h-10 text-sm whitespace-nowrap align-middle select-none"
           >
-            <svg
-              className="cursor-pointer"
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              onClick={() => reset()}
-            >
-              <circle cx="10" cy="10" r="10" fill="#F6F9F9" />
-              <path d="M6 6L14 14" stroke="#ABB3BA" strokeLinecap="round" />
-              <path d="M14 6L6 14" stroke="#ABB3BA" strokeLinecap="round" />
-            </svg>
+            <div ref={ref} className="inline-flex items-center space-x-1 pl-3">
+              <Downshift
+                onInputValueChange={(inputValue) => {
+                  inputValue.length > 0 ? setSaveMode(true) : setSaveMode(false);
+                  setTagName(inputValue);
+                }}
+                onChange={(selectedItem) => selectedItem && setTagName(selectedItem.value)}
+                itemToString={(item) => (item ? item.value : '')}
+                stateReducer={stateReducer}
+              >
+                {({
+                  getInputProps,
+                  getMenuProps,
+                  getRootProps,
+                  getItemProps,
+                  isOpen,
+                  highlightedIndex,
+                  inputValue,
+                }) => (
+                  <div>
+                    <div {...getRootProps({}, { suppressRefError: true })}>
+                      <input
+                        {...getInputProps()}
+                        autoFocus
+                        type="text"
+                        className="appearance-none border-none min-w-[3rem] max-w-[10rem] inline-block font-normal text-sm/6 text-defaultText"
+                        style={{ width: `${tagname.length * 8}px` }}
+                      />
+                    </div>
+                    {isOpen && (
+                      <motion.ul
+                        initial={'closed'}
+                        animate={'open'}
+                        exit={'closed'}
+                        variants={variants}
+                        {...getMenuProps()}
+                        className="absolute overflow-x-auto overflow-y-auto max-h-60 w-fit rounded-md bg-white shadow-lg ring-black ring-opacity-5 focus:outline-none text-sm/4"
+                      >
+                        {isOpen
+                          ? items
+                              .filter(
+                                (item) => !inputValue || (item.value && item.value.toLowerCase().includes(inputValue)),
+                              )
+                              .map((item, index) => (
+                                <li
+                                  className="cursor-default select-none py-2 px-4 whitespace-nowrap w-fit"
+                                  {...getItemProps({
+                                    key: item.value,
+                                    index,
+                                    item,
+                                    style: {
+                                      backgroundColor: highlightedIndex === index ? '#EDF2F7' : 'white',
+                                    },
+                                  })}
+                                >
+                                  {item.value}
+                                </li>
+                              ))
+                          : null}
+                      </motion.ul>
+                    )}
+                  </div>
+                )}
+              </Downshift>
+              <AnimatePresence>
+                {saveMode && (
+                  <Layout key="save">
+                    <svg
+                      className="cursor-pointer"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      onClick={() => saveTag()}
+                    >
+                      <circle cx="10" cy="10" r="10" fill="#CFFCED" />
+                      <path
+                        d="M6 10.2369L8.84211 13.079L15 6.92114"
+                        stroke="#29A37A"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </Layout>
+                )}
+                <motion.div
+                  layout="position"
+                  transition={{
+                    layout: { duration: 0.2 },
+                  }}
+                >
+                  <svg
+                    className="cursor-pointer"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    onClick={() => reset()}
+                  >
+                    <circle cx="10" cy="10" r="10" fill="#F6F9F9" />
+                    <path d="M6 6L14 14" stroke="#ABB3BA" strokeLinecap="round" />
+                    <path d="M14 6L6 14" stroke="#ABB3BA" strokeLinecap="round" />
+                  </svg>
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </motion.div>
-        </motion.div>
+        </MotionConfig>
       )}
     </>
   );
