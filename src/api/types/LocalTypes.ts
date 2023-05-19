@@ -61,3 +61,11 @@ export interface LocalPaymentMethodsFormValue {
     name: string;
   };
 }
+
+export interface LocalTag {
+  ID: string;
+  merchantID?: string;
+  name: string;
+  colourHex?: string;
+  description?: string;
+}

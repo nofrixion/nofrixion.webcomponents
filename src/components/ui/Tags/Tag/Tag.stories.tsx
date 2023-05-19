@@ -4,7 +4,7 @@ import { StoryFn, Meta } from '@storybook/react';
 import Tag from './Tag';
 
 export default {
-  title: 'UI/Tag',
+  title: 'UI/Tags/Tag',
   component: Tag,
   argTypes: {
     id: { control: 'text' },

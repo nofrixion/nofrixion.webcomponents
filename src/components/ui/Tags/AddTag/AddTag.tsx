@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import { Tag } from '../../../api/types/ApiResponses';
+import { Tag } from '../../../../api/types/ApiResponses';
 import Downshift from 'downshift';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import useMeasure from 'react-use-measure';
+import { LocalTag } from '../../../../api/types/LocalTypes';
+import uuid from 'react-uuid';
 
 interface TagProps {
-  tags: Tag[];
-  onTagAdded?: (tag: Tag) => void;
+  tags: LocalTag[];
+  onTagAdded?: (tag: LocalTag) => void;
 }
 
 const AddTag = ({ tags, onTagAdded }: TagProps) => {
@@ -31,7 +33,11 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
     if (existingTag) {
       onTagAdded && onTagAdded(existingTag);
     } else {
-      onTagAdded && onTagAdded({ name: tagName });
+      onTagAdded &&
+        onTagAdded({
+          name: tagName,
+          ID: uuid(),
+        });
     }
     reset();
   };

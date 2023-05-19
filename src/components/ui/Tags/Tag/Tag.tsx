@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import ResizableComponent from '../ResizableComponent/ResizableComponent';
+import ResizableComponent from '../../ResizableComponent/ResizableComponent';
 import classNames from 'classnames';
 
 interface TagProps {

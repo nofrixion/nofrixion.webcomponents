@@ -1,11 +1,9 @@
-import React from 'react';
 import { StoryFn, Meta } from '@storybook/react';
 
 import AddTag from './AddTag';
-import Tag from '../Tag/Tag';
 
 export default {
-  title: 'UI/AddTag',
+  title: 'UI/Tags/AddTag',
   component: AddTag,
   argTypes: {
     id: { control: 'text' },
