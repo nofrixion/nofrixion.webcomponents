@@ -1,5 +1,5 @@
-import { Tag } from './ApiResponses';
-import { Currency } from './Enums';
+import { Tag } from '../api/types/ApiResponses';
+import { Currency } from '../api/types/Enums';
 
 export interface LocalContact {
   name: string;

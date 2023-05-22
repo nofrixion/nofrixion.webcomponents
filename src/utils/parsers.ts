@@ -1,6 +1,6 @@
 import { PaymentRequest } from '../api/types/ApiResponses';
 import { PaymentResult } from '../api/types/Enums';
-import { LocalPaymentRequest, LocalPaymentStatus } from '../api/types/LocalTypes';
+import { LocalPaymentRequest, LocalPaymentStatus } from '../types/LocalTypes';
 
 const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: PaymentRequest): LocalPaymentRequest => {
   const { addresses, inserted, customerEmailAddress, amount, currency, status, tags } = remotePaymentRequest;

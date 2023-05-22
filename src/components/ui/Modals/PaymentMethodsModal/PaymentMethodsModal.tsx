@@ -10,7 +10,7 @@ import Checkbox from '../../Checkbox/Checkbox';
 import { AnimatePresence } from 'framer-motion';
 import Select from '../../Select/Select';
 import AnimateHeightWrapper from '../../utils/AnimateHeight';
-import { LocalPaymentMethodsFormValue } from '../../../../api/types/LocalTypes';
+import { LocalPaymentMethodsFormValue } from '../../../../types/LocalTypes';
 import { BankSettings } from '../../../../api/types/ApiResponses';
 
 interface PaymentMethodsModalProps extends BaseModalProps {

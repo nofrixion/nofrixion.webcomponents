@@ -16,7 +16,7 @@ import {
   LocalPaymentConditionsFormValue,
   LocalPaymentMethodsFormValue,
   LocalPaymentRequestCreate,
-} from '../../../api/types/LocalTypes';
+} from '../../../types/LocalTypes';
 import classNames from 'classnames';
 import PaymentConditionsModal from '../Modals/PaymentConditionsModal/PaymentConditionsModal';
 

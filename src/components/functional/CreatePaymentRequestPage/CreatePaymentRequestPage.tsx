@@ -1,6 +1,6 @@
 import UICreatePaymentRequestPage from '../../ui/CreatePaymentRequestPage/CreatePaymentRequestPage';
 
-import { LocalPaymentRequestCreate } from '../../../api/types/LocalTypes';
+import { LocalPaymentRequestCreate } from '../../../types/LocalTypes';
 import { makeToast } from '../../ui/Toast/Toast';
 import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
 import { PaymentRequestCreate } from '../../../api/types/ApiResponses';

@@ -1,12 +1,13 @@
 import { Currency } from '../../../api/types/Enums';
-import { PaymentMethod } from '../../../types/PaymentMethodsEnum';
+import { PaymentMethod } from '../../../types/LocalEnums';
 import CardIcon from '../../../assets/icons/card-icon.svg';
 import BankIcon from '../../../assets/icons/bank-icon.svg';
 import WalletIcon from '../../../assets/icons/wallet-icon.svg';
 import { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { format } from 'date-fns';
 
 export interface Transaction {
+  paymentAttemptID: string;
   occurredAt: Date;
   paymentMethod: PaymentMethod;
   amount: number;
@@ -14,6 +15,11 @@ export interface Transaction {
   processor: string;
   last4DigitsOfCardNumber?: string;
 }
+
+const handleRefund = (paymentAttemptID: string) => {
+  //TODO: implement refund
+  console.log('refund processed' + paymentAttemptID);
+};
 
 const PaymentMethodIcon = ({ paymentMethod }: { paymentMethod: PaymentMethod }) => {
   switch (paymentMethod) {
@@ -29,79 +35,44 @@ const PaymentMethodIcon = ({ paymentMethod }: { paymentMethod: PaymentMethod }) 
   }
 };
 
-const formatDate = (date: Date): string => {
-  const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' };
-  const formattedDate = new Date(date).toLocaleString('en-US', options);
-
-  const day = new Date(date).getDate();
-  const daySuffix = getDaySuffix(day);
-
-  return `${formattedDate}${daySuffix}, ${new Date(date).getFullYear()}`;
-};
-
-const getDaySuffix = (day: number) => {
-  if (day >= 11 && day <= 13) {
-    return 'th';
-  }
-
-  switch (day % 10) {
-    case 1:
-      return 'st';
-    case 2:
-      return 'nd';
-    case 3:
-      return 'rd';
-    default:
-      return 'th';
-  }
-};
 const Transactions = ({ transactions }: { transactions: Transaction[] }) => {
-  const [hoveredRow, setHoveredRow] = useState<number | null>(null);
-
   return (
-    <div className="px-4 pb-4 ">
+    <div>
       <table>
         <tbody>
           {transactions.map((transaction, index) => (
-            <tr
-              key={index}
-              className="mb-2 border-b"
-              onMouseEnter={() => setHoveredRow(index)}
-              onMouseLeave={() => setHoveredRow(null)}
-            >
-              <td className="text-[0.813rem] pb-2 pt-6">{formatDate(transaction.occurredAt)}</td>
-              <td className="pl-6 pb-2 pt-6">
-                <span className="mr-2 text-sm tabular-nums font-medium">
-                  {new Intl.NumberFormat(navigator.language).format(transaction.amount)}
+            <tr key={index} className="mb-2 border-b group">
+              <td className="text-[0.813rem] pb-2 pt-2 leading-6">{format(transaction.occurredAt, 'MMMM do, yyyy')}</td>
+              <td className="pl-6 pb-2 pt-2 text-right">
+                <span className="mr-2 text-sm tabular-nums font-medium leading-6">
+                  {new Intl.NumberFormat(navigator.language).format(Number(transaction.amount.toFixed(2)))}
                 </span>
-                <span className="text-greyText font-normal text-[0.813rem]">{transaction.currency}</span>
               </td>
-
-              <td className="pl-6 pb-2 pt-6">
-                <div className="flex flex-row">
+              <td>
+                <span className="text-greyText font-normal text-[0.813rem] leading-6">{transaction.currency}</span>
+              </td>
+              <td className="pl-6 pb-2 pt-2 ">
+                <div className="flex flex-row items-center">
                   <span className="mr-2">
                     <PaymentMethodIcon paymentMethod={transaction.paymentMethod}></PaymentMethodIcon>
                   </span>
-                  <span className="text-sm">{transaction.processor}</span>
+                  <span className="text-sm leading-6">{transaction.processor}</span>
                   {transaction.paymentMethod === PaymentMethod.Card && transaction.last4DigitsOfCardNumber && (
-                    <span className="text-sm ml-1">.... .... .... {transaction.last4DigitsOfCardNumber}</span>
+                    <div className="text-sm ml-1 items-center flex">
+                      <span className="text-[0.375rem] mr-1">&#8226;&#8226;&#8226;&#8226;</span>
+                      <span>{transaction.last4DigitsOfCardNumber}</span>
+                    </div>
                   )}
                 </div>
               </td>
-              <td className="pl-6 pb-2 pt-6">
+              <td className="pl-6 pb-2 pt-2 leading-6">
                 <div className="w-[3.75rem] text-[0.813rem] h-6 ">
-                  <AnimatePresence>
-                    {hoveredRow === index && (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="text-[0.813rem] px-2 py-1 rounded-full bg-[#DEE6ED] leading-4 cursor-pointer"
-                      >
-                        Refund
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  <div
+                    className="text-[0.813rem] px-2 py-1 rounded-full bg-[#DEE6ED] leading-4 cursor-pointer opacity-0 transition duration-500 group-hover:opacity-100 hover:bg-[#BDCCDB]"
+                    onClick={() => handleRefund(transaction.paymentAttemptID)}
+                  >
+                    Refund
+                  </div>
                 </div>
               </td>
             </tr>

@@ -1,7 +1,7 @@
 import CustomModal, { BaseModalProps } from '../../CustomModal/CustomModal';
 import { useState } from 'react';
 import Checkbox from '../../Checkbox/Checkbox';
-import { LocalPaymentConditionsFormValue } from '../../../../api/types/LocalTypes';
+import { LocalPaymentConditionsFormValue } from '../../../../types/LocalTypes';
 
 interface PaymentConditionsModalProps extends BaseModalProps {
   onApply: (data: LocalPaymentConditionsFormValue) => void;

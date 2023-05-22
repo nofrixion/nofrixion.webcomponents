@@ -3,7 +3,7 @@ import { usePaymentRequests } from '../../../api/hooks/usePaymentRequests';
 import UIPaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTable';
 import { RemotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
 import { SortDirection } from '../../ui/ColumnHeader/ColumnHeader';
-import { LocalPaymentRequest } from '../../../api/types/LocalTypes';
+import { LocalPaymentRequest } from '../../../types/LocalTypes';
 import { makeToast } from '../../ui/Toast/Toast';
 import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
 
