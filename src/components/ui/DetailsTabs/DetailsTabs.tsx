@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
 import classNames from 'classnames';
+import PaymentInfo from '../PaymentInfo/PaymentInfo';
+import { PaymentRequest } from '../../../api/types/ApiResponses';
 
 const tabs = ['History', 'Payment info'];
 
@@ -31,7 +33,11 @@ const TabContent: React.FC<TabProps> = ({ value, selectedTab, children }) => {
 // Get type of classnames
 const underlineClasses = 'w-full h-px absolute bottom-0';
 
-const DetailsTabs: React.FC<{}> = ({}) => {
+interface DetailsTabsProps {
+  paymentRequest: PaymentRequest;
+}
+
+const DetailsTabs: React.FC<DetailsTabsProps> = ({ paymentRequest }) => {
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
 
   return (
@@ -67,8 +73,7 @@ const DetailsTabs: React.FC<{}> = ({}) => {
           <div className="h-80 bg-blue-200" />
         </TabContent>
         <TabContent value={tabs[1]} selectedTab={selectedTab}>
-          {/* TODO: Replace with Payment info component */}
-          <div className="h-80 bg-yellow-200" />
+          <PaymentInfo paymentRequest={paymentRequest} />
         </TabContent>
       </Tabs.Root>
     </MotionConfig>

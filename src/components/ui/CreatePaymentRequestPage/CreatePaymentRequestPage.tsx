@@ -20,18 +20,9 @@ import {
 import classNames from 'classnames';
 import PaymentConditionsModal from '../Modals/PaymentConditionsModal/PaymentConditionsModal';
 
-import BankIcon from '../../../assets/icons/bank-icon.svg';
-import CardIcon from '../../../assets/icons/card-icon.svg';
-import WalletIcon from '../../../assets/icons/wallet-icon.svg';
-import BitcoinLightningIcon from '../../../assets/icons/bitcoin-icon.svg';
-
-import BankDisabledIcon from '../../../assets/icons/bank-disabled.svg';
-import CardDisabledIcon from '../../../assets/icons/card-disabled.svg';
-import WalletDisabledIcon from '../../../assets/icons/wallet-disabled.svg';
-import BitcoinDisabledIcon from '../../../assets/icons/bitcoin-disabled.svg';
 import { parseBoldText } from '../../../utils/uiFormaters';
 import { BankSettings } from '../../../api/types/ApiResponses';
-import InfoTooltip from '../InfoTooltip/InfoTooltip';
+import PaymentMethodIcon from '../utils/PaymentMethodIcon';
 
 interface CreatePaymentRequestPageProps {
   banks: BankSettings[];
@@ -212,8 +203,8 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                 fill="none"
                                 xmlns="http://www.w3.org/2000/svg"
                               >
-                                <path d="M11 21L1 11L11 1" strokeLinecap="round" stroke-linejoin="round" />
-                                <path d="M1 11.082H25" strokeLinecap="round" stroke-linejoin="round" />
+                                <path d="M11 21L1 11L11 1" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M1 11.082H25" strokeLinecap="round" strokeLinejoin="round" />
                               </svg>
                             </button>
                             <Dialog.Title
@@ -319,29 +310,25 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                   }}
                                 >
                                   <div className="flex items-center space-x-3">
-                                    <img
-                                      src={paymentMethodsFormValue.isBankEnabled ? BankIcon : BankDisabledIcon}
-                                      alt="Bank"
-                                      className="w-6 h-6"
+                                    <PaymentMethodIcon
+                                      showInfoTooltip={false}
+                                      paymentMethod="bank"
+                                      enabled={paymentMethodsFormValue.isBankEnabled}
                                     />
-                                    <img
-                                      src={paymentMethodsFormValue.isCardEnabled ? CardIcon : CardDisabledIcon}
-                                      alt="Card"
-                                      className="w-6 h-6"
+                                    <PaymentMethodIcon
+                                      showInfoTooltip={false}
+                                      paymentMethod="card"
+                                      enabled={paymentMethodsFormValue.isCardEnabled}
                                     />
-                                    <img
-                                      src={paymentMethodsFormValue.isWalletEnabled ? WalletIcon : WalletDisabledIcon}
-                                      alt="Apple Pay"
-                                      className="w-6 h-6"
+                                    <PaymentMethodIcon
+                                      showInfoTooltip={false}
+                                      paymentMethod="wallet"
+                                      enabled={paymentMethodsFormValue.isWalletEnabled}
                                     />
-                                    <img
-                                      src={
-                                        paymentMethodsFormValue.isLightningEnabled
-                                          ? BitcoinLightningIcon
-                                          : BitcoinDisabledIcon
-                                      }
-                                      alt="Bitcoin"
-                                      className="w-6 h-6"
+                                    <PaymentMethodIcon
+                                      showInfoTooltip={false}
+                                      paymentMethod="lightning"
+                                      enabled={paymentMethodsFormValue.isLightningEnabled}
                                     />
                                   </div>
                                 </EditOptionCard>
@@ -428,52 +415,22 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                   <span className="text-sm/6">Single full payment.</span>
 
                                   <div className="flex items-center space-x-3">
-                                    <InfoTooltip
-                                      content={getIconDescription('Bank', paymentMethodsFormValue.isBankEnabled)}
-                                    >
-                                      <img
-                                        src={paymentMethodsFormValue.isBankEnabled ? BankIcon : BankDisabledIcon}
-                                        alt="Bank"
-                                        className="w-6 h-6"
-                                      />
-                                    </InfoTooltip>
-                                    <InfoTooltip
-                                      content={getIconDescription('Card', paymentMethodsFormValue.isCardEnabled)}
-                                    >
-                                      <img
-                                        src={paymentMethodsFormValue.isCardEnabled ? CardIcon : CardDisabledIcon}
-                                        alt="Card"
-                                        className="w-6 h-6"
-                                      />
-                                    </InfoTooltip>
-                                    <InfoTooltip
-                                      content={getIconDescription(
-                                        'Apple Pay / Google Pay',
-                                        paymentMethodsFormValue.isWalletEnabled,
-                                      )}
-                                    >
-                                      <img
-                                        src={paymentMethodsFormValue.isWalletEnabled ? WalletIcon : WalletDisabledIcon}
-                                        alt="Apple Pay"
-                                        className="w-6 h-6"
-                                      />
-                                    </InfoTooltip>
-                                    <InfoTooltip
-                                      content={getIconDescription(
-                                        'Bitcoin Lightning',
-                                        paymentMethodsFormValue.isLightningEnabled,
-                                      )}
-                                    >
-                                      <img
-                                        src={
-                                          paymentMethodsFormValue.isLightningEnabled
-                                            ? BitcoinLightningIcon
-                                            : BitcoinDisabledIcon
-                                        }
-                                        alt="Bitcoin Lightning"
-                                        className="w-6 h-6"
-                                      />
-                                    </InfoTooltip>
+                                    <PaymentMethodIcon
+                                      paymentMethod="bank"
+                                      enabled={paymentMethodsFormValue.isBankEnabled}
+                                    />
+                                    <PaymentMethodIcon
+                                      paymentMethod="card"
+                                      enabled={paymentMethodsFormValue.isCardEnabled}
+                                    />
+                                    <PaymentMethodIcon
+                                      paymentMethod="wallet"
+                                      enabled={paymentMethodsFormValue.isWalletEnabled}
+                                    />
+                                    <PaymentMethodIcon
+                                      paymentMethod="lightning"
+                                      enabled={paymentMethodsFormValue.isLightningEnabled}
+                                    />
                                   </div>
 
                                   {availableMethodsDetails.length > 0 && (

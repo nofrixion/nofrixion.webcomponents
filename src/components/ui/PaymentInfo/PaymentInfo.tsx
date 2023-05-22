@@ -1,0 +1,105 @@
+import PaymentMethodIcon from '../utils/PaymentMethodIcon';
+import { PaymentRequest } from '../../../api/types/ApiResponses';
+import { format } from 'date-fns';
+import { AddressType } from '../../../api/types/Enums';
+
+interface PaymentInfoRowProps {
+  label: string;
+  content?: (string | undefined)[];
+  children?: React.ReactNode;
+}
+
+const PaymentInfoRow: React.FC<PaymentInfoRowProps> = ({ label, content, children }) => {
+  return (
+    <div className="text-sm/6 flex">
+      <span className="text-greyText w-36 mr-4 block">{label}</span>
+
+      {!children && content && content.length > 0 && (
+        <div className="flex flex-col">
+          {content
+            .filter((x) => x)
+            .map((value, index) => (
+              <span key={`py-${index}`}>{value}</span>
+            ))}
+        </div>
+      )}
+
+      {children}
+    </div>
+  );
+};
+
+interface PaymentInfoProps {
+  paymentRequest: PaymentRequest;
+}
+
+const PaymentInfo = ({ paymentRequest: { id, inserted, paymentMethodTypes, addresses } }: PaymentInfoProps) => {
+  // Parsed date should follow the following format: Dec 22nd, 2022
+  const formattedDate = format(inserted, 'MMM do, yyyy');
+
+  const paymentMethods = paymentMethodTypes.split(', ');
+
+  const isBankEnabled = paymentMethods.includes('pisp');
+  const isCardEnabled = paymentMethods.includes('card');
+  const isWalletEnabled = paymentMethods.includes('applePay') || paymentMethods.includes('googlePay');
+  const isLightningEnabled = paymentMethods.includes('lightning');
+
+  const shippingAddresses = addresses?.filter((address) => address.addressType === AddressType.Shipping);
+
+  const shippingAddress = shippingAddresses?.length > 0 ? shippingAddresses[0] : undefined;
+
+  return (
+    <div className="space-y-6">
+      <PaymentInfoRow label="Payment request ID" content={[id]} />
+      <PaymentInfoRow label="Created" content={[formattedDate]} />
+      <PaymentInfoRow label="Payment methods">
+        <div className="flex space-x-3">
+          <PaymentMethodIcon paymentMethod="bank" enabled={isBankEnabled} />
+          <PaymentMethodIcon paymentMethod="card" enabled={isCardEnabled} />
+          <PaymentMethodIcon paymentMethod="wallet" enabled={isWalletEnabled} />
+          <PaymentMethodIcon paymentMethod="lightning" enabled={isLightningEnabled} />
+        </div>
+      </PaymentInfoRow>
+
+      {shippingAddress && (
+        <PaymentInfoRow
+          label="Shipping address"
+          content={[
+            shippingAddress?.addressLine1,
+            shippingAddress?.addressLine2,
+
+            // If address has City and County, display them as "{City}, {County}"
+            // If address only has one of them, only display that value
+            // If address has neither, display nothing
+            `${
+              shippingAddress?.addressCity && shippingAddress?.addressCounty
+                ? `${shippingAddress?.addressCity}, County ${shippingAddress?.addressCounty}`
+                : shippingAddress?.addressCity
+                ? shippingAddress?.addressCity
+                : shippingAddress?.addressCounty
+                ? `County ${shippingAddress?.addressCounty}`
+                : ''
+            }`,
+
+            // If address has Post Code and Country Code, display them as "{Post Code}, {Country Code}"
+            // If address only has one of them, only display that value
+            // If address has neither, display nothing
+            `${
+              shippingAddress?.addressPostCode && shippingAddress?.addressCountryCode
+                ? `${shippingAddress?.addressPostCode}, ${shippingAddress?.addressCountryCode}`
+                : shippingAddress?.addressPostCode
+                ? shippingAddress?.addressPostCode
+                : shippingAddress?.addressCountryCode
+                ? shippingAddress?.addressCountryCode
+                : ''
+            }`,
+            shippingAddress?.phone,
+            shippingAddress?.email,
+          ]}
+        />
+      )}
+    </div>
+  );
+};
+
+export default PaymentInfo;
