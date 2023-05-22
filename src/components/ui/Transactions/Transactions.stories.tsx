@@ -70,8 +70,10 @@ const Template: StoryFn<typeof Transactions> = (args) => {
     </>
   );
 };
-
 export const Showcase = Template.bind({});
 Showcase.args = {
   transactions: transactions,
+  onRefundClicked: () => {
+    console.log('Refund clicked for paymentAttemptID: ');
+  },
 };
