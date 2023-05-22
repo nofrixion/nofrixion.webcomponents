@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import ResizableComponent from '../../ResizableComponent/ResizableComponent';
 import classNames from 'classnames';
+import { motion } from 'framer-motion';
 
 interface TagProps {
   id: string;
@@ -8,12 +9,16 @@ interface TagProps {
   onDelete?: (id: string) => void;
 }
 
+const animationDuration = 0.2;
+
 const Tag = ({ id, label, onDelete }: TagProps) => {
   const [deleteMode, setDeleteMode] = useState(false);
   const text = !deleteMode ? label : 'Delete?';
 
   return (
-    <div
+    <motion.div
+      layout
+      transition={{ duration: animationDuration }}
       className={classNames(
         'inline-flex items-center space-x-2 text-defaultText transition px-3 py-2 rounded-full text-sm whitespace-nowrap align-middle w-fit select-none',
         {
@@ -58,7 +63,7 @@ const Tag = ({ id, label, onDelete }: TagProps) => {
         <path d="M1 0.5L9 8.5" />
         <path d="M9 0.5L1 8.5" />
       </svg>
-    </div>
+    </motion.div>
   );
 };
 

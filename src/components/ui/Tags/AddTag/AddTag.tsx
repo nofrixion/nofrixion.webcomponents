@@ -7,11 +7,11 @@ import { LocalTag } from '../../../../api/types/LocalTypes';
 import uuid from 'react-uuid';
 
 interface TagProps {
-  tags: LocalTag[];
+  availableTags: LocalTag[];
   onTagAdded?: (tag: LocalTag) => void;
 }
 
-const AddTag = ({ tags, onTagAdded }: TagProps) => {
+const AddTag = ({ availableTags, onTagAdded }: TagProps) => {
   const [editMode, setEditMode] = useState(false);
   const [tagName, setTagName] = useState('');
   const [ref, { width }] = useMeasure();
@@ -28,7 +28,7 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
   };
 
   const saveTag = () => {
-    var existingTag = tags.find((tag) => tag.name?.toLowerCase() === tagName.toLowerCase());
+    var existingTag = availableTags.find((tag) => tag.name?.toLowerCase() === tagName.toLowerCase());
 
     if (existingTag) {
       onTagAdded && onTagAdded(existingTag);
@@ -36,13 +36,13 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
       onTagAdded &&
         onTagAdded({
           name: tagName,
-          ID: uuid(), // For uniqueness
+          ID: '',
         });
     }
     reset();
   };
 
-  const items = tags.map((tag) => ({ value: tag.name }));
+  const items = availableTags.map((tag) => ({ value: tag.name }));
 
   const stateReducer = (state: any, changes: any) => {
     switch (changes.type) {
@@ -70,11 +70,15 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
   return (
     <>
       {!editMode && (
-        <div className="inline-flex items-center space-x-1 text-greyText hover:text-defaultText transition h-10 px-3 py-2 rounded-full border-borderGrey border-[1px] border-dashed hover:border-solid hover:border-controlGreyHover text-sm whitespace-nowrap align-middle select-none cursor-pointer">
+        <motion.div
+          layout
+          transition={{ duration: animationDuration }}
+          className="inline-flex items-center space-x-1 text-greyText hover:text-defaultText transition h-10 px-3 py-2 rounded-full border-borderGrey border-[1px] border-dashed hover:border-solid hover:border-controlGreyHover text-sm whitespace-nowrap align-middle select-none cursor-pointer"
+        >
           <div onClick={() => setEditMode(true)}>
             <span>Add tag</span>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {editMode && (
@@ -109,16 +113,6 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
                         type="text"
                         className="appearance-none outline-none border-none min-w-[3rem] max-w-[10rem] inline-block font-normal text-sm/6 text-defaultText"
                         style={{ width: `${tagName.length * 8}px` }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            e.preventDefault();
-                            saveTag();
-                          }
-                          if (e.key === 'Escape') {
-                            e.preventDefault();
-                            reset();
-                          }
-                        }}
                       />
                     </div>
                     {isOpen && (
@@ -133,7 +127,9 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
                         {isOpen
                           ? items
                               .filter(
-                                (item) => !inputValue || (item.value && item.value.toLowerCase().includes(inputValue)),
+                                (item) =>
+                                  !inputValue ||
+                                  (item.value && item.value.toLowerCase().includes(inputValue.toLowerCase())),
                               )
                               .map((item, index) => (
                                 <li

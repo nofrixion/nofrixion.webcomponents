@@ -2,14 +2,16 @@ import { useState } from 'react';
 import { LocalTag } from '../../../../api/types/LocalTypes';
 import AddTag from '../AddTag/AddTag';
 import Tag from '../Tag/Tag';
+import { AnimatePresence } from 'framer-motion';
 
 interface TagManagerProps {
   tags: LocalTag[];
+  availableTags: LocalTag[];
   onDelete: (id: string) => void;
   onAdded: (tag: LocalTag) => void;
 }
 
-const TagManager = ({ tags, onDelete, onAdded }: TagManagerProps) => {
+const TagManager = ({ tags, availableTags, onDelete, onAdded }: TagManagerProps) => {
   const [tagsArray, setTagsArray] = useState(tags);
 
   const handleDelete = (id: string) => {
@@ -30,10 +32,12 @@ const TagManager = ({ tags, onDelete, onAdded }: TagManagerProps) => {
 
   return (
     <div className="flex flex-wrap w-auto gap-x-2 gap-y-2">
-      {tagsArray.map((tag) => (
-        <Tag key={tag.name} id={tag.ID} label={tag.name} onDelete={handleDelete} />
-      ))}
-      <AddTag tags={tags} onTagAdded={handleTagAdded} />
+      <AnimatePresence>
+        {tagsArray.map((tag) => (
+          <Tag key={tag.name} id={tag.ID} label={tag.name} onDelete={handleDelete} />
+        ))}
+        <AddTag key="addtag" availableTags={availableTags} onTagAdded={handleTagAdded} />
+      </AnimatePresence>
     </div>
   );
 };

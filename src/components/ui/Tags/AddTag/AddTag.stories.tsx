@@ -16,7 +16,7 @@ const Template: StoryFn<typeof AddTag> = (args) => <AddTag {...args} />;
 
 export const Regular = Template.bind({});
 Regular.args = {
-  tags: [
+  availableTags: [
     {
       ID: 'A4A87832-873F-403D-9F08-D8CE40D80B2E',
       merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
