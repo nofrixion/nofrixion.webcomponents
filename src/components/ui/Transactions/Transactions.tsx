@@ -41,7 +41,7 @@ const Transactions = ({
       <tbody>
         {transactions.map((transaction, index) => (
           <tr key={index} className="border-b group">
-            <td className="text-[0.813rem] pb-2 pt-2 leading-6">{format(transaction.occurredAt, 'MMMM do, yyyy')}</td>
+            <td className="text-[0.813rem] pb-2 pt-2 leading-6">{format(transaction.occurredAt, 'MMM do, yyyy')}</td>
             <td className="pl-6 pb-2 pt-2 text-right">
               <span className="mr-2 text-sm tabular-nums font-medium leading-6">
                 {new Intl.NumberFormat(navigator.language).format(Number(transaction.amount.toFixed(2)))}
