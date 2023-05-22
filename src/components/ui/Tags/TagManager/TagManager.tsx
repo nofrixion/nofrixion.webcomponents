@@ -5,8 +5,8 @@ import Tag from '../Tag/Tag';
 
 interface TagManagerProps {
   tags: LocalTag[];
-  onDelete?: (id: string) => void;
-  onAdded?: (tag: LocalTag) => void;
+  onDelete: (id: string) => void;
+  onAdded: (tag: LocalTag) => void;
 }
 
 const TagManager = ({ tags, onDelete, onAdded }: TagManagerProps) => {
@@ -15,7 +15,7 @@ const TagManager = ({ tags, onDelete, onAdded }: TagManagerProps) => {
   const handleDelete = (id: string) => {
     setTagsArray(tagsArray.filter((item) => item.ID !== id));
 
-    onDelete && onDelete(id);
+    onDelete(id);
   };
 
   const handleTagAdded = (tag: LocalTag) => {
@@ -24,7 +24,7 @@ const TagManager = ({ tags, onDelete, onAdded }: TagManagerProps) => {
     if (index === -1) {
       setTagsArray([...tagsArray, tag]);
 
-      onAdded && onAdded(tag);
+      onAdded(tag);
     }
   };
 

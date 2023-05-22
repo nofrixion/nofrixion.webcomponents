@@ -70,7 +70,7 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
   return (
     <>
       {!editMode && (
-        <div className="inline-flex items-center space-x-1 text-defaultText transition h-10 px-3 py-2 rounded-full border-borderGrey border-[1px] border-dashed hover:border-solid hover:border-controlGreyHover text-sm whitespace-nowrap align-middle select-none cursor-pointer">
+        <div className="inline-flex items-center space-x-1 text-greyText hover:text-defaultText transition h-10 px-3 py-2 rounded-full border-borderGrey border-[1px] border-dashed hover:border-solid hover:border-controlGreyHover text-sm whitespace-nowrap align-middle select-none cursor-pointer">
           <div onClick={() => setEditMode(true)}>
             <span>Add tag</span>
           </div>

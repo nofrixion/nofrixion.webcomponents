@@ -33,7 +33,6 @@ export default {
       control: {
         type: 'object',
       },
-      onDeleted: { action: 'Tag deleted' },
     },
   },
 } as Meta<typeof TagManager>;
