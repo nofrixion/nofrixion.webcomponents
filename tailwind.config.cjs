@@ -25,6 +25,14 @@ module.exports = {
       fontSize: {
         '13px': '0.8125rem',
       },
+      fontFamily: {
+        inter: [
+          'Inter, sans-serif',
+          {
+            fontFeatureSettings: '"cv01", "cv02", "cv03", "cv04"',
+          },
+        ],
+      },
     },
   },
   plugins: [],
