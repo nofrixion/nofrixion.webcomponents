@@ -6,6 +6,9 @@ import { Currency } from '../../../api/types/Enums';
 export default {
   title: 'UI/Transactions',
   component: Transactions,
+  argTypes: {
+    onRefundClicked: { action: 'refund clicked' },
+  },
 } as Meta<typeof Transactions>;
 const transactions: Transaction[] = [
   {
@@ -63,17 +66,8 @@ const transactions: Transaction[] = [
   // Add more transactions as needed
 ];
 
-const Template: StoryFn<typeof Transactions> = (args) => {
-  return (
-    <>
-      <Transactions {...args} />
-    </>
-  );
-};
+const Template: StoryFn<typeof Transactions> = (args) => <Transactions {...args} />;
 export const Showcase = Template.bind({});
 Showcase.args = {
   transactions: transactions,
-  onRefundClicked: (paymentAttemptID: string) => {
-    console.log('Refund clicked for paymentAttemptID: ' + paymentAttemptID);
-  },
 };
