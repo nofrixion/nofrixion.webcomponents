@@ -147,7 +147,7 @@ const PaymentRequestDashboard = ({
   }, [selectedTab]);
 
   return (
-    <div className="bg-mainGrey text-defaultText h-full pl-8 pr-8 pb-10">
+    <div className="font-inter bg-mainGrey text-defaultText h-full pl-8 pr-8 pb-10">
       <div className="flex justify-between">
         <div className="flex">
           <div className="pl-4 pt-[72px] pb-[68px] leading-8 font-medium text-[1.75rem]">
