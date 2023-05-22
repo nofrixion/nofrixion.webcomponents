@@ -44,6 +44,7 @@ export interface LocalPaymentRequestCreate {
     wallet: boolean;
     lightning: boolean;
   };
+  tagIds?: string[];
 }
 
 export interface LocalPaymentConditionsFormValue {

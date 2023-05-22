@@ -36,7 +36,7 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
       onTagAdded &&
         onTagAdded({
           name: tagName,
-          ID: uuid(),
+          ID: uuid(), // For uniqueness
         });
     }
     reset();
@@ -70,7 +70,7 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
   return (
     <>
       {!editMode && (
-        <div className="inline-flex items-center space-x-1 text-defaultText transition h-10 px-3 py-2 rounded-full border-borderGrey border-[1px] border-dashed hover:border-solid hover:border-controlGreyHover text-sm whitespace-nowrap align-middle select-none">
+        <div className="inline-flex items-center space-x-1 text-defaultText transition h-10 px-3 py-2 rounded-full border-borderGrey border-[1px] border-dashed hover:border-solid hover:border-controlGreyHover text-sm whitespace-nowrap align-middle select-none cursor-pointer">
           <div onClick={() => setEditMode(true)}>
             <span>Add tag</span>
           </div>
@@ -109,6 +109,16 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
                         type="text"
                         className="appearance-none outline-none border-none min-w-[3rem] max-w-[10rem] inline-block font-normal text-sm/6 text-defaultText"
                         style={{ width: `${tagName.length * 8}px` }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            saveTag();
+                          }
+                          if (e.key === 'Escape') {
+                            e.preventDefault();
+                            reset();
+                          }
+                        }}
                       />
                     </div>
                     {isOpen && (
@@ -127,7 +137,7 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
                               )
                               .map((item, index) => (
                                 <li
-                                  className="cursor-default select-none py-2 px-4 whitespace-nowrap w-fit"
+                                  className="cursor-default select-none py-2 px-4 whitespace-nowrap w-full"
                                   {...getItemProps({
                                     key: item.value,
                                     index,
