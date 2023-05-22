@@ -1,4 +1,4 @@
-import { LocalContact } from '../../../api/types/LocalTypes';
+import { LocalContact } from '../../../types/LocalTypes';
 
 const Contact = ({ name, email }: LocalContact) => {
   return (

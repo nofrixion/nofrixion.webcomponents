@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { LocalPaymentRequest } from '../../../api/types/LocalTypes';
+import { LocalPaymentRequest } from '../../../types/LocalTypes';
 import { formatAmount, formatDate } from '../../../utils/formatters';
 import Chip from '../Chip/Chip';
 import Contact from '../Contact/Contact';
