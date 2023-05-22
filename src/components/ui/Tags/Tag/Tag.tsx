@@ -18,6 +18,11 @@ const Tag = ({ id, label, onDelete }: TagProps) => {
   return (
     <motion.div
       layout
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{
+        opacity: 0,
+      }}
       transition={{ duration: animationDuration }}
       className={classNames(
         'inline-flex items-center space-x-2 text-defaultText transition px-3 py-2 rounded-full text-sm whitespace-nowrap align-middle w-fit select-none',
