@@ -23,9 +23,13 @@ const TagManager = ({ tags, availableTags, onDelete, onAdded }: TagManagerProps)
   const handleTagAdded = (tag: LocalTag) => {
     var index = tagsArray.findIndex((item) => item.name === tag.name);
 
-    if (index === -1) {
-      setTagsArray([...tagsArray, tag]);
+    if (index !== -1) {
+      tag.disabled = true;
+    }
 
+    setTagsArray([...tagsArray, tag]);
+
+    if (index === -1) {
       onAdded(tag);
     }
   };

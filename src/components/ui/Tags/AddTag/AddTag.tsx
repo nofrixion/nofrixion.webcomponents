@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Downshift from 'downshift';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import useMeasure from 'react-use-measure';
 import { LocalTag } from '../../../../types/LocalTypes';
+import { useRef } from 'react';
+import { useOnClickOutside } from 'usehooks-ts';
+import { useEscapeKey } from '../../../../hooks/useEscapeKey';
 
 interface TagProps {
   availableTags: LocalTag[];
@@ -13,6 +16,19 @@ const AddTag = ({ availableTags, onTagAdded }: TagProps) => {
   const [editMode, setEditMode] = useState(false);
   const [tagName, setTagName] = useState('');
   const [ref, { width }] = useMeasure();
+  const componentRef = useRef(null);
+
+  const escapePressed = useEscapeKey();
+
+  useEffect(() => {
+    reset();
+  }, [escapePressed]);
+
+  const handleClickOutside = () => {
+    reset();
+  };
+
+  useOnClickOutside(componentRef, handleClickOutside);
 
   const animationDuration = 0.2;
 
@@ -35,6 +51,7 @@ const AddTag = ({ availableTags, onTagAdded }: TagProps) => {
         onTagAdded({
           name: tagName,
           ID: '',
+          disabled: false,
         });
     }
     reset();
@@ -89,6 +106,7 @@ const AddTag = ({ availableTags, onTagAdded }: TagProps) => {
           <motion.div
             animate={{ width: width + 8 }}
             className="relative inline-flex text-defaultText py-2 rounded-full border-borderGrey border-[1px] border-solid h-10 text-sm whitespace-nowrap align-middle select-none"
+            ref={componentRef}
           >
             <div ref={ref} className="inline-flex items-center space-x-1 pl-3">
               <Downshift

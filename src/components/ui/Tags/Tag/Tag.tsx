@@ -1,21 +1,36 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
+import { useRef } from 'react';
+import { useOnClickOutside } from 'usehooks-ts';
+import { useEscapeKey } from '../../../../hooks/useEscapeKey';
 
 interface TagProps {
   id: string;
   label: string;
+  disabled: boolean;
   onDelete?: (id: string) => void;
 }
 
-const animationDuration = 0.2;
-
-const Tag = ({ id, label, onDelete }: TagProps) => {
+const Tag = ({ id, label, disabled = false, onDelete }: TagProps) => {
   const [deleteMode, setDeleteMode] = useState(false);
   const text = !deleteMode ? label : 'Delete?';
+  const ref = useRef(null);
+
+  const escapePressed = useEscapeKey();
+
+  useEffect(() => {
+    setDeleteMode(false);
+  }, [escapePressed]);
+
+  const handleClickOutside = () => {
+    setDeleteMode(false);
+  };
+
+  useOnClickOutside(ref, handleClickOutside);
 
   return (
-    <MotionConfig transition={{ duration: animationDuration }}>
+    <MotionConfig transition={{ duration: 0.2 }}>
       <motion.div
         layout
         initial={{ opacity: 0 }}
@@ -30,6 +45,7 @@ const Tag = ({ id, label, onDelete }: TagProps) => {
             'text-negativeRed bg-errorBg': deleteMode,
           },
         )}
+        ref={ref}
       >
         <motion.span
           key={text}

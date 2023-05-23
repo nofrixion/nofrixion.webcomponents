@@ -69,4 +69,5 @@ export interface LocalTag {
   name: string;
   colourHex?: string;
   description?: string;
+  disabled: boolean;
 }
