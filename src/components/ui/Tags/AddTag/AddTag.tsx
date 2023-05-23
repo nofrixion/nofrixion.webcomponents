@@ -1,10 +1,8 @@
 import { useState } from 'react';
-import { Tag } from '../../../../api/types/ApiResponses';
 import Downshift from 'downshift';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import useMeasure from 'react-use-measure';
-import { LocalTag } from '../../../../api/types/LocalTypes';
-import uuid from 'react-uuid';
+import { LocalTag } from '../../../../types/LocalTypes';
 
 interface TagProps {
   availableTags: LocalTag[];
