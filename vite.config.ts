@@ -14,9 +14,10 @@ export default defineConfig(() => ({
     banner(`NoFrixion Web Components - Version ${process.env.npm_package_version}`),
   ],
   build: {
+    minify: 'terser',
     lib: {
-      formats: ['es'], // We can also build for UMD adding 'umd' to the array
-      entry: resolve(__dirname, 'out/index.ts'),
+      formats: ['umd'], // We can also build for ES adding 'es' to the array
+      entry: resolve(__dirname, 'src/index.ts'),
       name: 'web-components',
     },
   },

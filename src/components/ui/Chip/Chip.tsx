@@ -10,8 +10,4 @@ const Chip = ({ label }: ChipProps) => {
   );
 };
 
-Chip.componentProps = {
-  label: String,
-};
-
 export default Chip;

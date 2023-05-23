@@ -84,9 +84,4 @@ const PaymentRequestTable = ({
   );
 };
 
-PaymentRequestTable.componentProps = {
-  token: String,
-  apiUrl: String,
-};
-
 export default PaymentRequestTable;

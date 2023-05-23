@@ -93,10 +93,4 @@ const CreatePaymentRequestPage = ({
   );
 };
 
-CreatePaymentRequestPage.componentProps = {
-  token: String,
-  merchantId: String,
-  apiUrl: String,
-};
-
 export default CreatePaymentRequestPage;

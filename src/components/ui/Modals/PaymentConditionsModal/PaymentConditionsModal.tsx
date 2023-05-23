@@ -39,8 +39,4 @@ const PaymentConditionsModal = ({ open, onDismiss, onApply }: PaymentConditionsM
   );
 };
 
-PaymentConditionsModal.componentProps = {
-  label: String,
-};
-
 export default PaymentConditionsModal;

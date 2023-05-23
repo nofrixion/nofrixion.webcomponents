@@ -277,10 +277,4 @@ const PaymentRequestDashboard = ({
   );
 };
 
-PaymentRequestDashboard.componentProps = {
-  token: String,
-  merchantId: String,
-  apiUrl: String,
-};
-
 export default PaymentRequestDashboard;
