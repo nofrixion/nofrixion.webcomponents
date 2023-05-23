@@ -15,8 +15,8 @@ export const usePaymentRequests = (
   amountSortDirection: SortDirection,
   page: number,
   pageSize?: number,
-  fromDate?: Date,
-  toDate?: Date,
+  fromDateMs?: number,
+  toDateMs?: number,
   status?: PaymentRequestStatus,
 ) => {
   const client = new MoneyMoovApiClient(apiUrl, authToken, merchantId);
@@ -27,7 +27,14 @@ export const usePaymentRequests = (
   const [apiError, setApiError] = useState<ApiError>();
 
   const fetchPaymentRequests = async () => {
-    const response = await client.PaymentRequests.getAll(page, pageSize, sortExpression, fromDate, toDate, status);
+    const response = await client.PaymentRequests.getAll(
+      page,
+      pageSize,
+      sortExpression,
+      new Date(fromDateMs ?? 0),
+      new Date(toDateMs ?? 0),
+      status,
+    );
 
     if (response.data) {
       setPaymentRequests(response.data.content);
@@ -58,8 +65,8 @@ export const usePaymentRequests = (
     createdSortDirection,
     contactSortDirection,
     amountSortDirection,
-    fromDate,
-    toDate,
+    fromDateMs,
+    toDateMs,
     status,
   ]);
 

@@ -14,7 +14,7 @@ import { makeToast } from '../../ui/Toast/Toast';
 import { RemotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
 import classNames from 'classnames';
 import CreatePaymentRequestPage from '../../functional/CreatePaymentRequestPage/CreatePaymentRequestPage';
-import { add, startOfDay } from 'date-fns';
+import { add, startOfDay, endOfDay } from 'date-fns';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -36,7 +36,7 @@ const PaymentRequestDashboard = ({
   const [status, setStatus] = useState<PaymentRequestStatus>(PaymentRequestStatus.All);
   const [dateRange, setDateRange] = useState<DateRange>({
     fromDate: startOfDay(add(new Date(), { days: -90 })), // Last 90 days as default
-    toDate: new Date(),
+    toDate: endOfDay(new Date()),
   });
 
   let [isCreatePaymentRequestOpen, setIsCreatePaymentRequestOpen] = useState(false);
@@ -70,8 +70,8 @@ const PaymentRequestDashboard = ({
     amountSortDirection,
     page,
     pageSize,
-    dateRange.fromDate,
-    dateRange.toDate,
+    dateRange.fromDate.getTime(),
+    dateRange.toDate.getTime(),
     status,
   );
 
@@ -83,8 +83,8 @@ const PaymentRequestDashboard = ({
     apiUrl,
     token,
     merchantId,
-    dateRange.fromDate,
-    dateRange.toDate,
+    dateRange.fromDate.getTime(),
+    dateRange.toDate.getTime(),
   );
 
   const onDeletePaymentRequest = async (paymentRequest: LocalPaymentRequest) => {
