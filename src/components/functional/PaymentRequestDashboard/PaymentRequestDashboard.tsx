@@ -9,7 +9,7 @@ import PaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTabl
 import { SortDirection } from '../../ui/ColumnHeader/ColumnHeader';
 import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
 import { usePaymentRequests } from '../../../api/hooks/usePaymentRequests';
-import { LocalPaymentRequest } from '../../../api/types/LocalTypes';
+import { LocalPaymentRequest } from '../../../types/LocalTypes';
 import { makeToast } from '../../ui/Toast/Toast';
 import { RemotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
 import classNames from 'classnames';
@@ -275,12 +275,6 @@ const PaymentRequestDashboard = ({
       />
     </div>
   );
-};
-
-PaymentRequestDashboard.componentProps = {
-  token: String,
-  merchantId: String,
-  apiUrl: String,
 };
 
 export default PaymentRequestDashboard;

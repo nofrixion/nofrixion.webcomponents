@@ -1,6 +1,15 @@
 import React from 'react';
-import * as ReactDOM from 'react-dom/client';
-import { register } from 'react-to-html-element';
+import ReactDOM from 'react-dom/client';
 import PaymentRequestDashboard from '../../components/functional/PaymentRequestDashboard/PaymentRequestDashboard';
 
-register(PaymentRequestDashboard, 'payment-request-dashboard', React, ReactDOM);
+import r2wc from 'react-to-webcomponent';
+
+const WebPaymentRequestDashboard = r2wc(PaymentRequestDashboard, React, ReactDOM, {
+  props: {
+    token: 'string',
+    apiUrl: 'string',
+    merchantId: 'string',
+  },
+});
+
+customElements.define('payment-request-dashboard', WebPaymentRequestDashboard);

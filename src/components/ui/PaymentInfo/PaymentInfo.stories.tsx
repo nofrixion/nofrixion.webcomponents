@@ -1,13 +1,14 @@
-import { Meta, StoryFn } from '@storybook/react';
-import DetailsTabs from './DetailsTabs';
+import { StoryFn, Meta } from '@storybook/react';
+
+import PaymentInfo from './PaymentInfo';
 import mockedData from '../../../utils/mockedData';
 
 export default {
-  title: 'UI/Details Tabs',
-  component: DetailsTabs,
-} as Meta<typeof DetailsTabs>;
+  title: 'UI/PaymentInfo',
+  component: PaymentInfo,
+} as Meta<typeof PaymentInfo>;
 
-const Template: StoryFn<typeof DetailsTabs> = (args) => <DetailsTabs {...args} />;
+const Template: StoryFn<typeof PaymentInfo> = (args) => <PaymentInfo {...args} />;
 
 export const Showcase = Template.bind({});
 Showcase.args = {

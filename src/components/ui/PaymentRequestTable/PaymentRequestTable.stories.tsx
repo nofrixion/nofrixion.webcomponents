@@ -2,7 +2,7 @@ import React from 'react';
 import { StoryFn, Meta } from '@storybook/react';
 
 import PaymentRequestTable from './PaymentRequestTable';
-import { LocalPaymentRequest } from '../../../api/types/LocalTypes';
+import { LocalPaymentRequest } from '../../../types/LocalTypes';
 import { Currency } from '../../../api/types/Enums';
 
 const tags = [

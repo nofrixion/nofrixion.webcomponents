@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import Pager from '../Pager/Pager';
 import PaymentRequestRow from '../PaymentRequestRow/PaymentRequestRow';
 import ColumnHeader, { SortDirection } from '../ColumnHeader/ColumnHeader';
-import { LocalPaymentRequest } from '../../../api/types/LocalTypes';
+import { LocalPaymentRequest } from '../../../types/LocalTypes';
 import { Toaster } from '../Toast/Toast';
 
 interface PaymentRequestTableProps {
