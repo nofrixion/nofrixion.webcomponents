@@ -72,8 +72,13 @@ const AddTag = ({ availableTags, onTagAdded }: TagProps) => {
       {!editMode && (
         <motion.div
           layout
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{
+            opacity: 0,
+          }}
           transition={{ duration: animationDuration }}
-          className="inline-flex items-center space-x-1 text-greyText hover:text-defaultText transition h-10 px-3 py-2 rounded-full border-borderGrey border-[1px] border-dashed hover:border-solid hover:border-controlGreyHover text-sm whitespace-nowrap align-middle select-none cursor-pointer"
+          className="inline-flex items-center space-x-1 text-greyText hover:text-defaultText h-10 px-3 py-2 rounded-full border-borderGrey border-[1px] border-dashed hover:border-solid hover:border-controlGreyHover text-sm whitespace-nowrap align-middle select-none cursor-pointer"
         >
           <div onClick={() => setEditMode(true)}>
             <span>Add tag</span>
@@ -85,7 +90,7 @@ const AddTag = ({ availableTags, onTagAdded }: TagProps) => {
         <MotionConfig transition={{ duration: animationDuration }}>
           <motion.div
             animate={{ width: width + 8 }}
-            className="relative inline-flex text-defaultText transition py-2 rounded-full border-borderGrey border-[1px] border-solid h-10 text-sm whitespace-nowrap align-middle select-none"
+            className="relative inline-flex text-defaultText py-2 rounded-full border-borderGrey border-[1px] border-solid h-10 text-sm whitespace-nowrap align-middle select-none"
           >
             <div ref={ref} className="inline-flex items-center space-x-1 pl-3">
               <Downshift
