@@ -33,12 +33,14 @@ const ColumnHeader = ({ label, onSort }: ColumnHeaderProps) => {
     <div className="columnSort group" onClick={doSort}>
       <span className="select-none uppercase">{label}</span>
 
-      <div className="ml-2.5 space-y-1 w-2.5">
+      <div
+        className="ml-2.5 space-y-1 w-2.5 transition opacity-0 group-hover:opacity-100 data-[direction-selected='true']:opacity-100"
+        data-direction-selected={sortDirection != SortDirection.NONE}
+      >
         <svg
-          className={classNames('group-hover:block', {
+          className={classNames({
             'stroke-controlGreyHover': sortDirection === SortDirection.ASC,
             'stroke-controlGrey': sortDirection === SortDirection.NONE || sortDirection === SortDirection.DESC,
-            hidden: sortDirection === SortDirection.NONE,
           })}
           width="10"
           height="6"
@@ -49,10 +51,9 @@ const ColumnHeader = ({ label, onSort }: ColumnHeaderProps) => {
           <path d="M1 5L5 1L9 5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
         <svg
-          className={classNames('group-hover:block', {
+          className={classNames({
             'stroke-controlGreyHover': sortDirection === SortDirection.DESC,
             'stroke-controlGrey': sortDirection === SortDirection.NONE || sortDirection === SortDirection.ASC,
-            hidden: sortDirection === SortDirection.NONE,
           })}
           width="10"
           height="6"
