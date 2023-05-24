@@ -297,7 +297,7 @@ Showcase.args = {
 
 export const Loading = Template.bind({});
 Loading.args = {
-  paymentRequests: paymentRequests,
+  paymentRequests: [],
   pageSize: 5,
   totalRecords: 12,
   isLoading: true,

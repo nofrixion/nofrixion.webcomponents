@@ -196,7 +196,7 @@ const PaymentRequestDashboard = ({
             </Tabs.Trigger>
           </Tabs.List>
           <Tabs.Content className={tabsContentClasses} value="allTab">
-            <div>
+            <div className="min-h-[18rem]">
               <PaymentRequestTable
                 paymentRequests={localPaymentRequests}
                 pageSize={pageSize}
@@ -227,6 +227,7 @@ const PaymentRequestDashboard = ({
                 onPaymentRequestDuplicateClicked={onDuplicatePaymentRequest}
                 onPaymentRequestDeleteClicked={onDeletePaymentRequest}
                 onPaymentRequestCopyLinkClicked={onCopyPaymentRequestLink}
+                isLoading={isLoading}
               />
             </div>
           </Tabs.Content>
@@ -244,6 +245,7 @@ const PaymentRequestDashboard = ({
                 onPaymentRequestDuplicateClicked={onDuplicatePaymentRequest}
                 onPaymentRequestDeleteClicked={onDeletePaymentRequest}
                 onPaymentRequestCopyLinkClicked={onCopyPaymentRequestLink}
+                isLoading={isLoading}
               />
             </div>
           </Tabs.Content>
@@ -261,6 +263,7 @@ const PaymentRequestDashboard = ({
                 onPaymentRequestDuplicateClicked={onDuplicatePaymentRequest}
                 onPaymentRequestDeleteClicked={onDeletePaymentRequest}
                 onPaymentRequestCopyLinkClicked={onCopyPaymentRequestLink}
+                isLoading={isLoading}
               />
             </div>
           </Tabs.Content>
