@@ -7,11 +7,12 @@ export interface TabProps {
   totalRecords: number;
 }
 
-const ellipseClassNames = (status: string) => {
+const getSpecificStatusClasses = (status: PaymentRequestStatus) => {
   return classNames({
-    'fill-[#ABB2BA]': status === PaymentRequestStatus.None,
-    'fill-[#E88C30]': status === PaymentRequestStatus.PartiallyPaid,
-    'fill-[#00CC88]': status === PaymentRequestStatus.FullyPaid,
+    "fill-[#ABB2BA] data-[state='active']:border-[#73808C]": status === PaymentRequestStatus.None,
+    "fill-[#ABB2BA] data-[state='active']:border-[#40BFBF]": status === PaymentRequestStatus.All,
+    "fill-[#E88C30] data-[state='active']:border-[#E88C30]": status === PaymentRequestStatus.PartiallyPaid,
+    "fill-[#00CC88] data-[state='active']:border-[#29A37A]": status === PaymentRequestStatus.FullyPaid,
   });
 };
 
@@ -44,8 +45,8 @@ const Tab = ({ status, totalRecords }: TabProps) => {
     <Tabs.Trigger
       value={status}
       className={classNames(
-        ellipseClassNames(status),
-        "flex flex-col items-center px-8 rounded-lg pt-6 pb-8 bg-white border-2 border-transparent transition w-full data-[state='active']:border-primaryGreen",
+        'flex flex-col items-center px-8 rounded-lg pt-6 pb-8 bg-white border-2 border-transparent transition w-full hover:border-borderGrey',
+        getSpecificStatusClasses(status),
       )}
     >
       <span className="text-sm/6 font-normal flex items-center">
