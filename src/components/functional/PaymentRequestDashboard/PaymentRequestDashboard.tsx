@@ -1,7 +1,7 @@
 import { PaymentRequestStatus } from '../../../api/types/Enums';
 import Tab from '../../ui/Tab/Tab';
 import * as Tabs from '@radix-ui/react-tabs';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import DateRangePicker, { DateRange } from '../../ui/DateRangePicker/DateRangePicker';
 import PrimaryButton from '../../ui/PrimaryButton/PrimaryButton';
 import { usePaymentRequestMetrics } from '../../../api/hooks/usePaymentRequestMetrics';
@@ -12,7 +12,6 @@ import { usePaymentRequests } from '../../../api/hooks/usePaymentRequests';
 import { LocalPaymentRequest } from '../../../types/LocalTypes';
 import { makeToast } from '../../ui/Toast/Toast';
 import { RemotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
-import classNames from 'classnames';
 import CreatePaymentRequestPage from '../../functional/CreatePaymentRequestPage/CreatePaymentRequestPage';
 import { add, startOfDay, endOfDay } from 'date-fns';
 
@@ -32,7 +31,6 @@ const PaymentRequestDashboard = ({
   const [createdSortDirection, setCreatedSortDirection] = useState<SortDirection>(SortDirection.NONE);
   const [contactSortDirection, setContactSortDirection] = useState<SortDirection>(SortDirection.NONE);
   const [amountSortDirection, setAmountSortDirection] = useState<SortDirection>(SortDirection.NONE);
-  const [selectedTab, setSelectedTab] = useState(PaymentRequestStatus.All);
   const [status, setStatus] = useState<PaymentRequestStatus>(PaymentRequestStatus.All);
   const [dateRange, setDateRange] = useState<DateRange>({
     fromDate: startOfDay(add(new Date(), { days: -90 })), // Last 90 days as default
