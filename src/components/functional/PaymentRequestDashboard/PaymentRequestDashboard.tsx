@@ -39,8 +39,6 @@ const PaymentRequestDashboard = ({
 
   let [isCreatePaymentRequestOpen, setIsCreatePaymentRequestOpen] = useState(false);
 
-  const tabsContentClasses = 'bg-white p-6 h-full';
-
   const pageSize = 20;
   const nextGenUrl = `${apiUrl}/nextgen/pay`;
 
