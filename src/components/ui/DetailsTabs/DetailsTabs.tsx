@@ -3,7 +3,8 @@ import * as Tabs from '@radix-ui/react-tabs';
 import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
 import classNames from 'classnames';
 import PaymentInfo from '../PaymentInfo/PaymentInfo';
-import { PaymentRequest } from '../../../api/types/ApiResponses';
+import Transactions from '../Transactions/Transactions';
+import { LocalPaymentRequest } from '../../../types/LocalTypes';
 
 const tabs = ['History', 'Payment info'];
 
@@ -34,10 +35,11 @@ const TabContent: React.FC<TabProps> = ({ value, selectedTab, children }) => {
 const underlineClasses = 'w-full h-px absolute bottom-0';
 
 interface DetailsTabsProps {
-  paymentRequest: PaymentRequest;
+  paymentRequest: LocalPaymentRequest;
+  onRefundClick: (paymentAttemptID: string) => void;
 }
 
-const DetailsTabs: React.FC<DetailsTabsProps> = ({ paymentRequest }) => {
+const DetailsTabs: React.FC<DetailsTabsProps> = ({ paymentRequest, onRefundClick }) => {
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
 
   return (
@@ -69,8 +71,7 @@ const DetailsTabs: React.FC<DetailsTabsProps> = ({ paymentRequest }) => {
           })}
         </Tabs.List>
         <TabContent value={tabs[0]} selectedTab={selectedTab}>
-          {/* TODO: Replace with Transactions history component */}
-          <div className="h-80 bg-blue-200" />
+          <Transactions transactions={paymentRequest.paymentAttempts} onRefundClicked={onRefundClick}></Transactions>
         </TabContent>
         <TabContent value={tabs[1]} selectedTab={selectedTab}>
           <PaymentInfo paymentRequest={paymentRequest} />

@@ -5,6 +5,9 @@ import mockedData from '../../../utils/mockedData';
 export default {
   title: 'UI/Details Tabs',
   component: DetailsTabs,
+  argTypes: {
+    onRefundClick: { action: 'refund clicked' },
+  },
 } as Meta<typeof DetailsTabs>;
 
 const Template: StoryFn<typeof DetailsTabs> = (args) => <DetailsTabs {...args} />;
