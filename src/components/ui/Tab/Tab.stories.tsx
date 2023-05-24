@@ -1,8 +1,7 @@
-import { action } from '@storybook/addon-actions';
 import { Meta, StoryFn } from '@storybook/react';
-import React from 'react';
 import { PaymentRequestStatus } from '../../../api/types/Enums';
 import Tab from './Tab';
+import * as Tabs from '@radix-ui/react-tabs';
 
 export default {
   title: 'UI/Tab',
@@ -12,7 +11,17 @@ export default {
   },
 } as Meta<typeof Tab>;
 
-const Template: StoryFn<typeof Tab> = (args) => <Tab {...args} />;
+const Template: StoryFn<typeof Tab> = (args) => {
+  return (
+    <Tabs.Root onValueChange={() => {}}>
+      {/* Keep the Tab to still get accessibility functions through the keyboard */}
+      <Tabs.List className="flex shrink-0 gap-x-4 mb-4">
+        <Tab {...args}></Tab>
+      </Tabs.List>
+      <Tabs.Content value=""></Tabs.Content>
+    </Tabs.Root>
+  );
+};
 
 export const Showcase = Template.bind({});
 
