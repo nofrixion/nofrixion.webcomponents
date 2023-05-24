@@ -60,7 +60,7 @@ const PaymentRequestDashboard = ({
 
   const client = new PaymentRequestClient(apiUrl, token, merchantId);
 
-  const { paymentRequests, totalRecords, fetchPaymentRequests } = usePaymentRequests(
+  const { paymentRequests, totalRecords, fetchPaymentRequests, isLoading } = usePaymentRequests(
     apiUrl,
     token,
     merchantId,
@@ -74,10 +74,10 @@ const PaymentRequestDashboard = ({
     dateRange.toDate.getTime(),
     status,
   );
+  console.log('isLoading', isLoading);
 
-  const localPaymentRequests: LocalPaymentRequest[] = paymentRequests.map((paymentRequest) =>
-    RemotePaymentRequestToLocalPaymentRequest(paymentRequest),
-  );
+  const localPaymentRequests: LocalPaymentRequest[] =
+    paymentRequests?.map((paymentRequest) => RemotePaymentRequestToLocalPaymentRequest(paymentRequest)) ?? [];
 
   const { metrics, apiError } = usePaymentRequestMetrics(
     apiUrl,
@@ -209,6 +209,7 @@ const PaymentRequestDashboard = ({
                 onPaymentRequestDuplicateClicked={onDuplicatePaymentRequest}
                 onPaymentRequestDeleteClicked={onDeletePaymentRequest}
                 onPaymentRequestCopyLinkClicked={onCopyPaymentRequestLink}
+                isLoading={isLoading}
               />
             </div>
           </Tabs.Content>

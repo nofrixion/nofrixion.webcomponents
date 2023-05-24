@@ -18,6 +18,7 @@ interface PaymentRequestTableProps {
   setCreatedSortDirection?: (sortDirection: SortDirection) => void;
   setContactSortDirection?: (sortDirection: SortDirection) => void;
   setAmountSortDirection?: (sortDirection: SortDirection) => void;
+  isLoading?: boolean;
 }
 
 const commonThClasses = 'px-4 pb-4 font-normal';
@@ -35,6 +36,7 @@ const PaymentRequestTable = ({
   setCreatedSortDirection,
   setContactSortDirection,
   setAmountSortDirection,
+  isLoading = false,
 }: PaymentRequestTableProps) => {
   return (
     <>
@@ -93,6 +95,44 @@ const PaymentRequestTable = ({
           </tr>
         </thead>
         <tbody>
+          {isLoading &&
+            // Create array of 12 empty rows
+            // to display a loading skeleton
+            // while the data is being fetched
+            // from the server
+            Array.from(Array(12)).map(() => (
+              <tr className="animate-pulse border-b border-[#F1F2F3]">
+                {/* Status */}
+                <td className="py-6">
+                  <div className="w-1/2 ml-4 h-2 bg-[#EFF4F5] rounded-lg" />
+                </td>
+
+                {/* Created */}
+                <td>
+                  <div className="w-1/2 ml-4 h-2 bg-[#EFF4F5] rounded-lg" />
+                </td>
+
+                {/* Contact */}
+                <td>
+                  <div className="w-full ml-4 h-2 bg-[#EFF4F5] rounded-lg" />
+                </td>
+
+                {/* Amount */}
+                <td className="p-0">
+                  <div className="w-3/4 ml-auto h-2 bg-[#EFF4F5] rounded-l-lg" />
+                </td>
+
+                <td className="p-0">
+                  <div className="w-1/2 h-2 bg-[#EFF4F5] rounded-r-lg mr-4" />
+                </td>
+
+                {/* Extra */}
+                <td>
+                  <div className="w-1/2 ml-auto h-2 bg-[#EFF4F5] rounded-lg" />
+                </td>
+              </tr>
+            ))}
+
           {paymentRequests.map((paymentRequest, index) => (
             <PaymentRequestRow
               key={`pr-${index}`}

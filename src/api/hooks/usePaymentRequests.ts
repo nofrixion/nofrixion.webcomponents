@@ -21,7 +21,7 @@ export const usePaymentRequests = (
 ) => {
   const client = new MoneyMoovApiClient(apiUrl, authToken, merchantId);
 
-  const [paymentRequests, setPaymentRequests] = useState<PaymentRequest[]>([]);
+  const [paymentRequests, setPaymentRequests] = useState<PaymentRequest[] | undefined>(undefined);
   const [pageNumber, setPageNumber] = useState(1);
   const [totalRecords, setTotalRecords] = useState(1);
   const [apiError, setApiError] = useState<ApiError>();
@@ -76,5 +76,6 @@ export const usePaymentRequests = (
     totalRecords,
     apiError,
     fetchPaymentRequests,
+    isLoading: !paymentRequests && !apiError,
   };
 };
