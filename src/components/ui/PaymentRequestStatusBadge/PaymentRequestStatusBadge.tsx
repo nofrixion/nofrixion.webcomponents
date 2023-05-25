@@ -1,7 +1,7 @@
 import unpaidIcon from '../../../assets/images/paymentrequest_status_unpaid.svg';
 import paidIcon from '../../../assets/images/paymentrequest_status_paid.svg';
 import partiallyPaidIcon from '../../../assets/images/paymentrequest_status_partial.svg';
-import { cva } from 'class-variance-authority';
+import { VariantProps, cva } from 'class-variance-authority';
 import { LocalPaymentStatus } from '../../../types/LocalTypes';
 
 const badge = cva('rounded-full  space-x-2 inline-flex items-center', {
@@ -37,10 +37,10 @@ const icon = cva('w-auto', {
 
 interface PaymentRequestStatusBadgeProps {
   status: LocalPaymentStatus;
-  size: 'small' | 'large';
+  size: VariantProps<typeof badge>['size'];
 }
 
-const getIconForStatus = (status: LocalPaymentStatus, size: 'small' | 'large') => {
+const getIconForStatus = (status: LocalPaymentStatus) => {
   switch (status) {
     case 'partial':
       return partiallyPaidIcon;
@@ -56,7 +56,7 @@ const getIconForStatus = (status: LocalPaymentStatus, size: 'small' | 'large') =
 const PaymentRequestStatusBadge = ({ status, size }: PaymentRequestStatusBadgeProps) => {
   return (
     <div className={badge({ intent: status, size: size })}>
-      <img className={icon({ size: size })} src={getIconForStatus(status, size)} alt={status} />
+      <img className={icon({ size: size })} src={getIconForStatus(status)} alt={status} />
       <span className="uppercase">{size === 'large' && status === 'partial' ? 'partially paid' : status}</span>
     </div>
   );

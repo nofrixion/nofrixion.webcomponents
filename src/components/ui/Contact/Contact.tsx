@@ -1,6 +1,5 @@
-import { cva } from 'class-variance-authority';
+import { VariantProps, cva } from 'class-variance-authority';
 import { LocalContact } from '../../../types/LocalTypes';
-import classNames from 'classnames';
 
 const nameVariants = cva('', {
   variants: {
@@ -27,7 +26,7 @@ const emailVariants = cva('text-greyText', {
 });
 
 interface ContactProps extends LocalContact {
-  size: 'small' | 'large';
+  size: VariantProps<typeof nameVariants>['size'];
 }
 
 const Contact = ({ name, email, size }: ContactProps) => {

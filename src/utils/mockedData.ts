@@ -138,11 +138,22 @@ const regular: LocalPaymentRequest = {
   paymentAttempts: mockPaymentAttempts,
 };
 
-const partiallyPaidPaymentRequest = (): LocalPaymentRequest => {
-  const partiallyPaid: LocalPaymentRequest = { ...regular };
-  partiallyPaid.paymentAttempts = partiallyPaidMockPaymentAttempts;
-  partiallyPaid.status = 'partial';
-  return partiallyPaid;
+const partiallyPaidPaymentRequest: LocalPaymentRequest = {
+  ...regular,
+  paymentAttempts: partiallyPaidMockPaymentAttempts,
+  status: 'partial',
+};
+
+const unpaidPaymentRequest: LocalPaymentRequest = {
+  ...regular,
+  paymentAttempts: [],
+  status: 'unpaid',
+};
+
+const overpaidPaymentRequest: LocalPaymentRequest = {
+  ...regular,
+  paymentAttempts: overpaidMockPaymentAttempts,
+  status: 'overpaid',
 };
 
 const noShippingAddress: LocalPaymentRequest = {
@@ -174,5 +185,7 @@ export default {
     regular,
     noShippingAddress,
     partiallyPaidPaymentRequest,
+    unpaidPaymentRequest,
+    overpaidPaymentRequest,
   },
 };

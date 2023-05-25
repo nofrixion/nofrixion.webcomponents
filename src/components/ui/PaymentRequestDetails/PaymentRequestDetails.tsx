@@ -9,7 +9,7 @@ import AddTag from '../AddTag/AddTag';
 import { Tag } from '../../../api/types/ApiResponses';
 import DetailsTabs from '../DetailsTabs/DetailsTabs';
 
-const PaymentRequestDetailsModal = ({
+const PaymentRequestDetails = ({
   paymentRequest,
   onRefundClick,
   onTagAdded,
@@ -21,7 +21,7 @@ const PaymentRequestDetailsModal = ({
   return (
     <>
       <div className="bg-[#F6F9F9] pl-8 pr-7 relative mb-[4.875rem]">
-        <div className="flex justify-between pb-[2.625rem] pt-3 items-center">
+        <div className="flex justify-between pb-[2.625rem] pt-6 items-center">
           <Contact name={paymentRequest.contact.name} email={paymentRequest.contact.email} size="large"></Contact>
           <QRCode url={paymentRequest.hostedPayCheckoutUrl}></QRCode>
         </div>
@@ -58,4 +58,4 @@ const PaymentRequestDetailsModal = ({
   );
 };
 
-export default PaymentRequestDetailsModal;
+export default PaymentRequestDetails;
