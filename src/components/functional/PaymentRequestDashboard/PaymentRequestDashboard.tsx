@@ -119,7 +119,7 @@ const PaymentRequestDashboard = ({
     await fetchPaymentRequests();
   };
 
-  console.log('LALA: ', isLoadingMetrics || (metrics && metrics?.all > 0));
+  const isInitialState = !isLoadingMetrics && (!metrics || metrics?.all > 0);
 
   return (
     <div className="font-inter bg-mainGrey text-defaultText h-full pl-8 pr-8 pb-10">
@@ -128,9 +128,13 @@ const PaymentRequestDashboard = ({
           <div className="pl-4 pt-[72px] pb-[68px] leading-8 font-medium text-[1.75rem]">
             <span>Payment requests</span>
           </div>
-          <div className="pl-12 pt-[69px]">
-            <DateRangePicker onDateChange={(dateRange) => setDateRange(dateRange)}></DateRangePicker>
-          </div>
+          <AnimatePresence>
+            {!isInitialState && (
+              <LayoutWrapper className="pl-12 pt-[69px]">
+                <DateRangePicker onDateChange={(dateRange) => setDateRange(dateRange)}></DateRangePicker>
+              </LayoutWrapper>
+            )}
+          </AnimatePresence>
         </div>
         <div className="flex pr-6">
           <LayoutGroup>
@@ -142,7 +146,7 @@ const PaymentRequestDashboard = ({
               ></PrimaryButton>
             </LayoutWrapper>
             <AnimatePresence initial={false}>
-              {(isLoadingMetrics || (metrics && metrics?.all > 0)) && (
+              {!isInitialState && (
                 <LayoutWrapper className="pt-16 pl-2">
                   <PrimaryButton
                     label="Create payment request"
@@ -206,7 +210,7 @@ const PaymentRequestDashboard = ({
             onPaymentRequestDeleteClicked={onDeletePaymentRequest}
             onPaymentRequestCopyLinkClicked={onCopyPaymentRequestLink}
             isLoading={isLoadingPaymentRequests}
-            isEmpty={!metrics || metrics?.all === 0}
+            isEmpty={isInitialState}
             onCreatePaymentRequest={onCreatePaymentRequest}
           />
         </LayoutWrapper>

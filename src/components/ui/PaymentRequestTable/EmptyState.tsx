@@ -7,7 +7,7 @@ interface EmptyStateProps {
 }
 
 const EmptyState: React.FC<EmptyStateProps> = ({ state, onCreatePaymentRequest }) => {
-  const title = state === 'nothingFound' ? 'Nothing found here' : 'No payment requests yet';
+  const title = state === 'nothingFound' ? 'Nothing found here' : 'This list is empty';
   const description =
     state === 'nothingFound'
       ? 'No payment requests match this criteria.'
@@ -15,7 +15,9 @@ const EmptyState: React.FC<EmptyStateProps> = ({ state, onCreatePaymentRequest }
 
   return (
     <div className="flex flex-col items-center justify-center text-center my-16">
-      <img className="mx-auto mb-6" src={emptyStateIllustration} alt="Emtpy static illustration" />
+      <div className="w-auto h-[9.375rem] mx-auto mb-6">
+        <img className="object-cover" src={emptyStateIllustration} alt="Emtpy static illustration" />
+      </div>
       <p className="text-xl/6 mb-2 font-semibold">{title}</p>
       <p className="text-sm/4 text-greyText">{description}</p>
 
