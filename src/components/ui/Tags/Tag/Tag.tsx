@@ -41,8 +41,10 @@ const Tag = ({ id, label, enabled = true, onDelete }: TagProps) => {
         className={classNames(
           'inline-flex items-center space-x-2 text-defaultText px-3 py-2 rounded-full text-sm whitespace-nowrap align-middle w-fit select-none',
           {
-            'bg-greyBg hover:bg-[#BDCCDB]': !deleteMode,
+            'bg-greyBg': !deleteMode,
             'text-negativeRed bg-errorBg': deleteMode,
+            'hover:bg-[#BDCCDB]': enabled && !deleteMode,
+            'text-disabledText': !enabled,
           },
         )}
         ref={ref}

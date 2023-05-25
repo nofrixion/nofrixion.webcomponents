@@ -6,13 +6,15 @@ import { LocalTag } from '../../../../types/LocalTypes';
 import { useRef } from 'react';
 import { useOnClickOutside } from 'usehooks-ts';
 import { useEscapeKey } from '../../../../hooks/useEscapeKey';
+import { v4 as uuidv4 } from 'uuid';
 
 interface TagProps {
   availableTags: LocalTag[];
   onTagAdded?: (tag: LocalTag) => void;
+  onTagCreated?: (tag: LocalTag) => void;
 }
 
-const AddTag = ({ availableTags, onTagAdded }: TagProps) => {
+const AddTag = ({ availableTags, onTagAdded, onTagCreated }: TagProps) => {
   const [editMode, setEditMode] = useState(false);
   const [tagName, setTagName] = useState('');
   const [ref, { width }] = useMeasure();
@@ -47,11 +49,11 @@ const AddTag = ({ availableTags, onTagAdded }: TagProps) => {
     if (existingTag) {
       onTagAdded && onTagAdded(existingTag);
     } else {
-      onTagAdded &&
-        onTagAdded({
+      onTagCreated &&
+        onTagCreated({
           name: tagName,
-          ID: '',
-          enabled: false,
+          ID: uuidv4(), // This is here to make sure the tag key is unique in the list
+          enabled: true,
         });
     }
     reset();
