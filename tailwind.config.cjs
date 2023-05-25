@@ -21,6 +21,7 @@ module.exports = {
         primaryGreenHover: '#00807F',
         borderGrey: '#D5DBDD',
         errorBg: '#FEE7EB',
+        disabledText: '#C7CCD1',
       },
       fontSize: {
         '13px': '0.8125rem',
