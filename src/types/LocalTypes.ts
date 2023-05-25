@@ -1,4 +1,3 @@
-import { Tag } from '../api/types/ApiResponses';
 import { Currency } from '../api/types/Enums';
 import { LocalAddressType, LocalPaymentMethodTypes } from './LocalEnums';
 
@@ -16,7 +15,7 @@ export interface LocalPaymentRequest {
   contact: LocalContact;
   amount: number;
   currency: Currency;
-  tags: Tag[];
+  tags: LocalTag[];
   paymentMethodTypes: LocalPaymentMethodTypes[];
   addresses: LocalAddress[];
   description: string;
@@ -93,7 +92,7 @@ export interface LocalPaymentMethodsFormValue {
 }
 
 export interface LocalTag {
-  ID: string;
+  ID?: string;
   merchantID?: string;
   name: string;
   colourHex?: string;

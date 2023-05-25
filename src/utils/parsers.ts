@@ -1,7 +1,7 @@
-import { PaymentRequest, PaymentRequestAddress } from '../api/types/ApiResponses';
+import { PaymentRequest, PaymentRequestAddress, Tag } from '../api/types/ApiResponses';
 import { PaymentResult } from '../api/types/Enums';
 import { LocalAddressType, LocalPaymentMethodTypes } from '../types/LocalEnums';
-import { LocalAddress, LocalPaymentRequest, LocalPaymentStatus } from '../types/LocalTypes';
+import { LocalAddress, LocalPaymentRequest, LocalPaymentStatus, LocalTag } from '../types/LocalTypes';
 
 const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: PaymentRequest): LocalPaymentRequest => {
   const { addresses, inserted, customerEmailAddress, amount, currency, status, tags } = remotePaymentRequest;
@@ -86,6 +86,16 @@ const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     };
   };
 
+  const parseApiTagToLocalTag = (tag: Tag): LocalTag => {
+    return {
+      ID: tag.ID,
+      name: tag.name,
+      colourHex: tag.colourHex,
+      description: tag.description,
+      merchantID: tag.merchantID,
+    };
+  };
+
   return {
     id: remotePaymentRequest.id,
     status: parseApiStatusToLocalStatus(status),
@@ -96,7 +106,7 @@ const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     },
     amount: amount,
     currency: currency,
-    tags: tags,
+    tags: tags.map((tag) => parseApiTagToLocalTag(tag)),
     paymentMethodTypes: parseApiPaymentMethodTypesToLocalPaymentMethodTypes(remotePaymentRequest.paymentMethodTypes),
     addresses: addresses.map((address) => parseApiAddressToLocalAddress(address)),
     description: remotePaymentRequest.description ?? '',

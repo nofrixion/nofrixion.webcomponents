@@ -19,19 +19,23 @@ const Template: StoryFn<typeof PaymentRequestDetails> = (args) => (
 export const FullyPaid = Template.bind({});
 FullyPaid.args = {
   paymentRequest: mockedData.paymentRequests.regular,
+  merchantTags: mockedData.merchantTags,
 };
 
 export const PartiallyPaidPaymentRequest = Template.bind({});
 PartiallyPaidPaymentRequest.args = {
   paymentRequest: mockedData.paymentRequests.partiallyPaidPaymentRequest,
+  merchantTags: mockedData.merchantTags,
 };
 
 export const UnpaidPaymentRequest = Template.bind({});
 UnpaidPaymentRequest.args = {
   paymentRequest: mockedData.paymentRequests.unpaidPaymentRequest,
+  merchantTags: mockedData.merchantTags,
 };
 
 export const OverpaidPaymentRequest = Template.bind({});
 OverpaidPaymentRequest.args = {
   paymentRequest: mockedData.paymentRequests.overpaidPaymentRequest,
+  merchantTags: mockedData.merchantTags,
 };

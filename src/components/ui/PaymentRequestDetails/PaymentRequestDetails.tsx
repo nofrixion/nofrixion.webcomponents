@@ -1,22 +1,27 @@
 import Contact from '../Contact/Contact';
-import { LocalPaymentRequest } from '../../../types/LocalTypes';
+import { LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
 import QRCode from '../QRCode/QRCode';
 import { CopyLink } from '../CopyLink/CopyLink';
 import AmountPaid from '../AmountPaid/AmountPaid';
 import { Currency } from '../../../api/types/Enums';
 import StatusBadge from '../PaymentRequestStatusBadge/PaymentRequestStatusBadge';
-import AddTag from '../AddTag/AddTag';
-import { Tag } from '../../../api/types/ApiResponses';
 import DetailsTabs from '../DetailsTabs/DetailsTabs';
+import TagManager from '../Tags/TagManager/TagManager';
 
 const PaymentRequestDetails = ({
   paymentRequest,
+  merchantTags,
   onRefundClick,
   onTagAdded,
+  onTagDeleted,
+  onTagCreated,
 }: {
   paymentRequest: LocalPaymentRequest;
+  merchantTags: LocalTag[];
   onRefundClick: (paymentAttemptID: string) => void;
-  onTagAdded: (tag: Tag) => void;
+  onTagAdded: (tag: LocalTag) => void;
+  onTagDeleted: (id: string) => void;
+  onTagCreated: (tag: LocalTag) => void;
 }) => {
   return (
     <>
@@ -47,8 +52,13 @@ const PaymentRequestDetails = ({
             <span className="text-base leading-[1.188rem] font-medium">{paymentRequest.productOrService}</span>
             <span className="text-sm leading-[1.313rem] font-normal text-greyText">{paymentRequest.description}</span>
           </div>
-          {/* Replace with tag management component when it's ready */}
-          <AddTag tags={paymentRequest.tags} onTagAdded={onTagAdded}></AddTag>
+          <TagManager
+            availableTags={merchantTags}
+            tags={paymentRequest.tags}
+            onAdded={onTagAdded}
+            onDeleted={onTagDeleted}
+            onCreated={onTagCreated}
+          ></TagManager>
         </div>
         <div>
           <DetailsTabs paymentRequest={paymentRequest} onRefundClick={onRefundClick}></DetailsTabs>

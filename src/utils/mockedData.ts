@@ -1,6 +1,73 @@
+import { mock } from 'node:test';
 import { Currency } from '../api/types/Enums';
 import { LocalAddressType, LocalPaymentMethodTypes } from '../types/LocalEnums';
 import { LocalPaymentAttempt, LocalPaymentRequest } from '../types/LocalTypes';
+
+export const mockTags = [
+  {
+    ID: '1',
+    merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
+    name: 'A tag',
+  },
+  {
+    ID: '2',
+    merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
+    name: 'Another tag',
+  },
+  {
+    ID: '3',
+    merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
+    name: 'A reeeeallllly long tag name',
+  },
+  {
+    ID: '4',
+    merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
+    name: 'You get the idea',
+  },
+];
+
+export const mockMerchantTags = [
+  {
+    ID: '1',
+    merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
+    name: 'A tag',
+  },
+  {
+    ID: '2',
+    merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
+    name: 'Another tag',
+  },
+  {
+    ID: '3',
+    merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
+    name: 'A reeeeallllly long tag name',
+  },
+  {
+    ID: '4',
+    merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
+    name: 'You get the idea',
+  },
+  {
+    ID: '5',
+    merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
+    name: 'A merchant tag 1',
+  },
+  {
+    ID: '6',
+    merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
+    name: 'A merchant tag 2',
+  },
+  {
+    ID: '7',
+    merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
+    name: 'A merchant tag 3',
+  },
+  {
+    ID: '8',
+    merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
+    name: 'A merchant tag 4',
+  },
+];
 
 export const mockPaymentAttempts: LocalPaymentAttempt[] = [
   {
@@ -126,7 +193,7 @@ const regular: LocalPaymentRequest = {
   ],
   status: 'paid',
   createdAt: new Date('2023-05-17T19:02:37.8484876+00:00'),
-  tags: [],
+  tags: mockTags,
   contact: {
     name: 'John Doe',
     email: 'johndoe@email.com',
@@ -188,4 +255,5 @@ export default {
     unpaidPaymentRequest,
     overpaidPaymentRequest,
   },
+  merchantTags: mockTags,
 };
