@@ -119,7 +119,7 @@ const PaymentRequestDashboard = ({
     await fetchPaymentRequests();
   };
 
-  const isInitialState = !isLoadingMetrics && (!metrics || metrics?.all > 0);
+  const isInitialState = !isLoadingMetrics && (!metrics || metrics?.all === 0);
 
   return (
     <div className="font-inter bg-mainGrey text-defaultText h-full pl-8 pr-8 pb-10">
