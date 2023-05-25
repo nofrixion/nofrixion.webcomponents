@@ -3,25 +3,28 @@ import classNames from 'classnames';
 import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
 import { useRef } from 'react';
 import { useOnClickOutside } from 'usehooks-ts';
-import { useEscapeKey } from '../../../../hooks/useEscapeKey';
 
 interface TagProps {
   id: string;
   label: string;
-  enabled: boolean;
   onDelete?: (id: string) => void;
 }
 
-const Tag = ({ id, label, enabled = true, onDelete }: TagProps) => {
+const Tag = ({ id, label, onDelete }: TagProps) => {
   const [deleteMode, setDeleteMode] = useState(false);
   const text = !deleteMode ? label : 'Delete?';
   const ref = useRef(null);
 
-  const escapePressed = useEscapeKey();
-
   useEffect(() => {
-    setDeleteMode(false);
-  }, [escapePressed]);
+    function handleEscapeKey(event: KeyboardEvent) {
+      if (event.code === 'Escape') {
+        setDeleteMode(false);
+      }
+    }
+
+    document.addEventListener('keydown', handleEscapeKey);
+    return () => document.removeEventListener('keydown', handleEscapeKey);
+  }, []);
 
   const handleClickOutside = () => {
     setDeleteMode(false);
@@ -39,12 +42,10 @@ const Tag = ({ id, label, enabled = true, onDelete }: TagProps) => {
           opacity: 0,
         }}
         className={classNames(
-          'inline-flex items-center space-x-2 text-defaultText px-3 py-2 rounded-full text-sm whitespace-nowrap align-middle w-fit select-none',
+          'inline-flex items-center space-x-2 text-defaultText min-h-[2.0625rem] max-h-[2.0625rem] px-3 py-2 rounded-full text-sm leading-4 whitespace-nowrap align-middle w-fit select-none',
           {
             'bg-greyBg': !deleteMode,
             'text-negativeRed bg-errorBg': deleteMode,
-            'hover:bg-[#BDCCDB]': enabled && !deleteMode,
-            'text-disabledText': !enabled,
           },
         )}
         ref={ref}
@@ -83,24 +84,23 @@ const Tag = ({ id, label, enabled = true, onDelete }: TagProps) => {
               />
             </motion.svg>
           )}
-          {enabled && (
-            <motion.svg
-              key="edit"
-              layout="position"
-              className={classNames('hover:cursor-pointer stroke-[#454D54]', {
-                'stroke-[#A3747C]': deleteMode,
-              })}
-              width="10"
-              height="9"
-              viewBox="0 0 10 9"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              onClick={() => setDeleteMode(!deleteMode)}
-            >
-              <path d="M1 0.5L9 8.5" />
-              <path d="M9 0.5L1 8.5" />
-            </motion.svg>
-          )}
+
+          <motion.svg
+            key="edit"
+            layout="position"
+            className={classNames('hover:cursor-pointer stroke-[#454D54]', {
+              'stroke-[#A3747C]': deleteMode,
+            })}
+            width="10"
+            height="9"
+            viewBox="0 0 10 9"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            onClick={() => setDeleteMode(!deleteMode)}
+          >
+            <path d="M1 0.5L9 8.5" />
+            <path d="M9 0.5L1 8.5" />
+          </motion.svg>
         </AnimatePresence>
       </motion.div>
     </MotionConfig>

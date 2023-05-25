@@ -5,26 +5,37 @@ import useMeasure from 'react-use-measure';
 import { LocalTag } from '../../../../types/LocalTypes';
 import { useRef } from 'react';
 import { useOnClickOutside } from 'usehooks-ts';
-import { useEscapeKey } from '../../../../hooks/useEscapeKey';
 import { v4 as uuidv4 } from 'uuid';
+import classNames from 'classnames';
 
 interface TagProps {
+  tags: LocalTag[];
   availableTags: LocalTag[];
   onTagAdded?: (tag: LocalTag) => void;
   onTagCreated?: (tag: LocalTag) => void;
 }
 
-const AddTag = ({ availableTags, onTagAdded, onTagCreated }: TagProps) => {
+const AddTag = ({ tags, availableTags, onTagAdded, onTagCreated }: TagProps) => {
   const [editMode, setEditMode] = useState(false);
   const [tagName, setTagName] = useState('');
   const [ref, { width }] = useMeasure();
   const componentRef = useRef(null);
 
-  const escapePressed = useEscapeKey();
+  const reset = () => {
+    setTagName('');
+    setEditMode(false);
+  };
 
   useEffect(() => {
-    reset();
-  }, [escapePressed]);
+    function handleEscapeKey(event: KeyboardEvent) {
+      if (event.code === 'Escape') {
+        reset();
+      }
+    }
+
+    document.addEventListener('keydown', handleEscapeKey);
+    return () => document.removeEventListener('keydown', handleEscapeKey);
+  }, []);
 
   const handleClickOutside = () => {
     reset();
@@ -38,11 +49,6 @@ const AddTag = ({ availableTags, onTagAdded, onTagCreated }: TagProps) => {
     return <motion.div layout="position">{children}</motion.div>;
   };
 
-  const reset = () => {
-    setTagName('');
-    setEditMode(false);
-  };
-
   const saveTag = () => {
     var existingTag = availableTags.find((tag) => tag.name?.toLowerCase() === tagName.toLowerCase());
 
@@ -53,7 +59,6 @@ const AddTag = ({ availableTags, onTagAdded, onTagCreated }: TagProps) => {
         onTagCreated({
           name: tagName,
           ID: uuidv4(), // This is here to make sure the tag key is unique in the list
-          enabled: true,
         });
     }
     reset();
@@ -73,6 +78,10 @@ const AddTag = ({ availableTags, onTagAdded, onTagCreated }: TagProps) => {
       default:
         return changes;
     }
+  };
+
+  const itemEnabled = (item: string): boolean => {
+    return tags.findIndex((tag) => tag.name === item) === -1;
   };
 
   const variants = {
@@ -95,7 +104,7 @@ const AddTag = ({ availableTags, onTagAdded, onTagCreated }: TagProps) => {
             opacity: 0,
           }}
           transition={{ duration: animationDuration }}
-          className="inline-flex items-center space-x-1 text-greyText hover:text-defaultText h-10 px-3 py-2 rounded-full border-borderGrey border-[1px] border-dashed hover:border-solid hover:border-controlGreyHover text-sm whitespace-nowrap align-middle select-none cursor-pointer"
+          className="inline-flex items-center space-x-1 max-h-[2.0625rem] text-greyText hover:text-defaultText px-3 py-2 rounded-full text-sm leading-4 border-borderGrey border-[1px] border-dashed hover:border-solid hover:border-controlGreyHover whitespace-nowrap align-middle select-none cursor-pointer"
         >
           <div onClick={() => setEditMode(true)}>
             <span>Add tag</span>
@@ -107,7 +116,7 @@ const AddTag = ({ availableTags, onTagAdded, onTagCreated }: TagProps) => {
         <MotionConfig transition={{ duration: animationDuration }}>
           <motion.div
             animate={{ width: width + 8 }}
-            className="relative inline-flex text-defaultText py-2 rounded-full border-borderGrey border-[1px] border-solid h-10 text-sm whitespace-nowrap align-middle select-none"
+            className="relative inline-flex text-defaultText min-h-[2.0625rem] max-h-[2.0625rem] py-2 rounded-full border-borderGrey border-[1px] border-solid text-sm leading-4 whitespace-nowrap align-middle select-none"
             ref={componentRef}
           >
             <div ref={ref} className="inline-flex items-center space-x-1 pl-3">
@@ -134,7 +143,7 @@ const AddTag = ({ availableTags, onTagAdded, onTagCreated }: TagProps) => {
                         {...getInputProps()}
                         autoFocus
                         type="text"
-                        className="appearance-none outline-none border-none min-w-[3rem] max-w-[10rem] inline-block font-normal text-sm/6 text-defaultText"
+                        className="appearance-none outline-none border-none min-w-[3rem] max-w-[10rem] inline-block text-sm leading-4 text-defaultText"
                         style={{ width: `${tagName.length * 8}px` }}
                       />
                     </div>
@@ -156,7 +165,12 @@ const AddTag = ({ availableTags, onTagAdded, onTagCreated }: TagProps) => {
                               )
                               .map((item, index) => (
                                 <li
-                                  className="cursor-default select-none py-2 px-4 whitespace-nowrap w-full"
+                                  className={classNames(
+                                    'cursor-default select-none py-2 px-4 whitespace-nowrap w-full',
+                                    {
+                                      'pointer-events-none text-disabledText': !itemEnabled(item.value),
+                                    },
+                                  )}
                                   {...getItemProps({
                                     key: item.value,
                                     index,
