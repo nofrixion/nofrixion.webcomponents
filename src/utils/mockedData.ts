@@ -255,5 +255,5 @@ export default {
     unpaidPaymentRequest,
     overpaidPaymentRequest,
   },
-  merchantTags: mockTags,
+  merchantTags: mockMerchantTags,
 };

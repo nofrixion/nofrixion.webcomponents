@@ -60,8 +60,10 @@ const PaymentRequestDetails = ({
             onCreated={onTagCreated}
           ></TagManager>
         </div>
-        <div>
-          <DetailsTabs paymentRequest={paymentRequest} onRefundClick={onRefundClick}></DetailsTabs>
+        <div className="relative">
+          <div className="absolute z-0 left-0 right-0">
+            <DetailsTabs paymentRequest={paymentRequest} onRefundClick={onRefundClick}></DetailsTabs>
+          </div>
         </div>
       </div>
     </>
