@@ -1,11 +1,9 @@
-import React from 'react';
 import { StoryFn, Meta } from '@storybook/react';
 
 import AddTag from './AddTag';
-import Tag from '../Tag/Tag';
 
 export default {
-  title: 'UI/AddTag',
+  title: 'UI/Tags/AddTag',
   component: AddTag,
   argTypes: {
     id: { control: 'text' },
@@ -18,7 +16,7 @@ const Template: StoryFn<typeof AddTag> = (args) => <AddTag {...args} />;
 
 export const Regular = Template.bind({});
 Regular.args = {
-  tags: [
+  availableTags: [
     {
       ID: 'A4A87832-873F-403D-9F08-D8CE40D80B2E',
       merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
