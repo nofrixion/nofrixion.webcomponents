@@ -1,18 +1,47 @@
-import { useState } from 'react';
-import { Tag } from '../../../api/types/ApiResponses';
+import { useEffect, useState } from 'react';
 import Downshift from 'downshift';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import useMeasure from 'react-use-measure';
+import { LocalTag } from '../../../../types/LocalTypes';
+import { useRef } from 'react';
+import { useOnClickOutside } from 'usehooks-ts';
+import { v4 as uuidv4 } from 'uuid';
+import classNames from 'classnames';
 
 interface TagProps {
-  tags: Tag[];
-  onTagAdded?: (tag: Tag) => void;
+  tags: LocalTag[];
+  availableTags: LocalTag[];
+  onTagAdded?: (tag: LocalTag) => void;
+  onTagCreated?: (tag: LocalTag) => void;
 }
 
-const AddTag = ({ tags, onTagAdded }: TagProps) => {
+const AddTag = ({ tags, availableTags, onTagAdded, onTagCreated }: TagProps) => {
   const [editMode, setEditMode] = useState(false);
   const [tagName, setTagName] = useState('');
   const [ref, { width }] = useMeasure();
+  const componentRef = useRef(null);
+
+  const reset = () => {
+    setTagName('');
+    setEditMode(false);
+  };
+
+  useEffect(() => {
+    function handleEscapeKey(event: KeyboardEvent) {
+      if (event.code === 'Escape') {
+        reset();
+      }
+    }
+
+    document.addEventListener('keydown', handleEscapeKey);
+    return () => document.removeEventListener('keydown', handleEscapeKey);
+  }, []);
+
+  const handleClickOutside = () => {
+    reset();
+  };
+
+  useOnClickOutside(componentRef, handleClickOutside);
 
   const animationDuration = 0.2;
 
@@ -20,23 +49,22 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
     return <motion.div layout="position">{children}</motion.div>;
   };
 
-  const reset = () => {
-    setTagName('');
-    setEditMode(false);
-  };
-
   const saveTag = () => {
-    var existingTag = tags.find((tag) => tag.name?.toLowerCase() === tagName.toLowerCase());
+    var existingTag = availableTags.find((tag) => tag.name?.toLowerCase() === tagName.toLowerCase());
 
     if (existingTag) {
       onTagAdded && onTagAdded(existingTag);
     } else {
-      onTagAdded && onTagAdded({ name: tagName });
+      onTagCreated &&
+        onTagCreated({
+          name: tagName,
+          ID: uuidv4(), // This is here to make sure the tag key is unique in the list
+        });
     }
     reset();
   };
 
-  const items = tags.map((tag) => ({ value: tag.name }));
+  const items = availableTags.map((tag) => ({ value: tag.name }));
 
   const stateReducer = (state: any, changes: any) => {
     switch (changes.type) {
@@ -52,6 +80,10 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
     }
   };
 
+  const itemEnabled = (item: string): boolean => {
+    return tags.findIndex((tag) => tag.name === item) === -1;
+  };
+
   const variants = {
     open: { opacity: 1, scale: 1, transition: { ease: 'easeOut', duration: 0.1 } },
     closed: {
@@ -64,18 +96,28 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
   return (
     <>
       {!editMode && (
-        <div className="inline-flex items-center space-x-1 text-defaultText transition h-10 px-3 py-2 rounded-full border-borderGrey border-[1px] border-dashed hover:border-solid hover:border-controlGreyHover text-sm whitespace-nowrap align-middle select-none">
+        <motion.div
+          layout
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{
+            opacity: 0,
+          }}
+          transition={{ duration: animationDuration }}
+          className="inline-flex items-center space-x-1 max-h-[2.0625rem] text-greyText hover:text-defaultText px-3 py-2 rounded-full text-sm leading-4 border-borderGrey border-[1px] border-dashed hover:border-solid hover:border-controlGreyHover whitespace-nowrap align-middle select-none cursor-pointer"
+        >
           <div onClick={() => setEditMode(true)}>
             <span>Add tag</span>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {editMode && (
         <MotionConfig transition={{ duration: animationDuration }}>
           <motion.div
             animate={{ width: width + 8 }}
-            className="relative inline-flex text-defaultText transition py-2 rounded-full border-borderGrey border-[1px] border-solid h-10 text-sm whitespace-nowrap align-middle select-none"
+            className="relative inline-flex text-defaultText min-h-[2.0625rem] max-h-[2.0625rem] py-2 rounded-full border-borderGrey border-[1px] border-solid text-sm leading-4 whitespace-nowrap align-middle select-none"
+            ref={componentRef}
           >
             <div ref={ref} className="inline-flex items-center space-x-1 pl-3">
               <Downshift
@@ -101,7 +143,7 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
                         {...getInputProps()}
                         autoFocus
                         type="text"
-                        className="appearance-none outline-none border-none min-w-[3rem] max-w-[10rem] inline-block font-normal text-sm/6 text-defaultText"
+                        className="appearance-none outline-none border-none min-w-[3rem] max-w-[10rem] inline-block text-sm leading-4 text-defaultText"
                         style={{ width: `${tagName.length * 8}px` }}
                       />
                     </div>
@@ -117,11 +159,18 @@ const AddTag = ({ tags, onTagAdded }: TagProps) => {
                         {isOpen
                           ? items
                               .filter(
-                                (item) => !inputValue || (item.value && item.value.toLowerCase().includes(inputValue)),
+                                (item) =>
+                                  !inputValue ||
+                                  (item.value && item.value.toLowerCase().includes(inputValue.toLowerCase())),
                               )
                               .map((item, index) => (
                                 <li
-                                  className="cursor-default select-none py-2 px-4 whitespace-nowrap w-fit"
+                                  className={classNames(
+                                    'cursor-default select-none py-2 px-4 whitespace-nowrap w-full',
+                                    {
+                                      'pointer-events-none text-disabledText': !itemEnabled(item.value),
+                                    },
+                                  )}
                                   {...getItemProps({
                                     key: item.value,
                                     index,
