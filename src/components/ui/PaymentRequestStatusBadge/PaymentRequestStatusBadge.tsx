@@ -8,7 +8,7 @@ const badge = cva('rounded-full  space-x-2 inline-flex items-center', {
   variants: {
     intent: {
       paid: ['bg-[#D8F2EA]', 'text-[#004D33]'],
-      partial: ['bg-[#F2EED8]', 'text-[#663300]'],
+      partial: ['bg-[#FCF5CF]', 'text-[#663300]'],
       unpaid: ['bg-[#F1F3F4]', 'text-defaultText'],
       overpaid: ['bg-[#D8F2EA]', 'text-[#004D33]'],
     },
