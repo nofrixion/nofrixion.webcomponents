@@ -8,11 +8,11 @@ import { useEscapeKey } from '../../../../hooks/useEscapeKey';
 interface TagProps {
   id: string;
   label: string;
-  disabled: boolean;
+  enabled: boolean;
   onDelete?: (id: string) => void;
 }
 
-const Tag = ({ id, label, disabled = false, onDelete }: TagProps) => {
+const Tag = ({ id, label, enabled = true, onDelete }: TagProps) => {
   const [deleteMode, setDeleteMode] = useState(false);
   const text = !deleteMode ? label : 'Delete?';
   const ref = useRef(null);
@@ -81,22 +81,24 @@ const Tag = ({ id, label, disabled = false, onDelete }: TagProps) => {
               />
             </motion.svg>
           )}
-          <motion.svg
-            key="edit"
-            layout="position"
-            className={classNames('hover:cursor-pointer stroke-[#454D54]', {
-              'stroke-[#A3747C]': deleteMode,
-            })}
-            width="10"
-            height="9"
-            viewBox="0 0 10 9"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            onClick={() => setDeleteMode(!deleteMode)}
-          >
-            <path d="M1 0.5L9 8.5" />
-            <path d="M9 0.5L1 8.5" />
-          </motion.svg>
+          {enabled && (
+            <motion.svg
+              key="edit"
+              layout="position"
+              className={classNames('hover:cursor-pointer stroke-[#454D54]', {
+                'stroke-[#A3747C]': deleteMode,
+              })}
+              width="10"
+              height="9"
+              viewBox="0 0 10 9"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              onClick={() => setDeleteMode(!deleteMode)}
+            >
+              <path d="M1 0.5L9 8.5" />
+              <path d="M9 0.5L1 8.5" />
+            </motion.svg>
+          )}
         </AnimatePresence>
       </motion.div>
     </MotionConfig>

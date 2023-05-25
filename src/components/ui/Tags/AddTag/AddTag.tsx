@@ -51,7 +51,7 @@ const AddTag = ({ availableTags, onTagAdded }: TagProps) => {
         onTagAdded({
           name: tagName,
           ID: '',
-          disabled: false,
+          enabled: false,
         });
     }
     reset();

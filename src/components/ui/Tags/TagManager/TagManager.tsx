@@ -24,7 +24,7 @@ const TagManager = ({ tags, availableTags, onDelete, onAdded }: TagManagerProps)
     var index = tagsArray.findIndex((item) => item.name === tag.name);
 
     if (index !== -1) {
-      tag.disabled = true;
+      tag.enabled = false;
     }
 
     setTagsArray([...tagsArray, tag]);
@@ -38,7 +38,7 @@ const TagManager = ({ tags, availableTags, onDelete, onAdded }: TagManagerProps)
     <div className="flex flex-wrap w-auto gap-x-2 gap-y-2">
       <AnimatePresence>
         {tagsArray.map((tag) => (
-          <Tag key={tag.name} id={tag.ID} label={tag.name} onDelete={handleDelete} />
+          <Tag key={tag.name} id={tag.ID} label={tag.name} enabled={tag.enabled} onDelete={handleDelete} />
         ))}
         <AddTag key="addtag" availableTags={availableTags} onTagAdded={handleTagAdded} />
       </AnimatePresence>
