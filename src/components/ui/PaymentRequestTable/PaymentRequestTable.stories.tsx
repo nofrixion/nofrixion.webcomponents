@@ -52,13 +52,20 @@ export default {
       control: {
         type: 'boolean',
       },
-      value: false,
+    },
+    isEmpty: {
+      control: {
+        type: 'boolean',
+      },
     },
     onPaymentRequestClicked: {
       action: 'Payment Request Clicked',
     },
     onPageChanged: {
       action: 'Page Changed',
+    },
+    onCreatePaymentRequest: {
+      action: 'Create Payment Request Clicked',
     },
   },
 } as Meta<typeof PaymentRequestTable>;
@@ -301,4 +308,19 @@ Loading.args = {
   pageSize: 5,
   totalRecords: 12,
   isLoading: true,
+};
+
+export const Empty = Template.bind({});
+Empty.args = {
+  paymentRequests: [],
+  pageSize: 5,
+  totalRecords: 12,
+};
+
+export const InitialState = Template.bind({});
+InitialState.args = {
+  paymentRequests: [],
+  pageSize: 5,
+  totalRecords: 0,
+  isEmpty: true,
 };

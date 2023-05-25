@@ -11,7 +11,7 @@ export const usePaymentRequestMetrics = (
 ) => {
   const [metrics, setMetrics] = useState<PaymentRequestMetrics>();
   const [apiError, setApiError] = useState<ApiError>();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchPaymentRequestMetrics = async () => {

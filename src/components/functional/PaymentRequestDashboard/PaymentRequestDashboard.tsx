@@ -14,6 +14,8 @@ import { makeToast } from '../../ui/Toast/Toast';
 import { RemotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
 import CreatePaymentRequestPage from '../../functional/CreatePaymentRequestPage/CreatePaymentRequestPage';
 import { add, startOfDay, endOfDay } from 'date-fns';
+import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
+import LayoutWrapper from '../../ui/utils/LayoutWrapper';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -117,6 +119,8 @@ const PaymentRequestDashboard = ({
     await fetchPaymentRequests();
   };
 
+  console.log('LALA: ', isLoadingMetrics || (metrics && metrics?.all > 0));
+
   return (
     <div className="font-inter bg-mainGrey text-defaultText h-full pl-8 pr-8 pb-10">
       <div className="flex justify-between">
@@ -129,63 +133,84 @@ const PaymentRequestDashboard = ({
           </div>
         </div>
         <div className="flex pr-6">
-          <div className="pl-12 pt-16 font-medium text-base cursor-pointer">
-            <PrimaryButton
-              label="Settings"
-              className="text-defaultText hover:bg-greyBg font-normal"
-              onClick={() => {}}
-            ></PrimaryButton>
-          </div>
-          <div className="pt-16 pl-2">
-            <PrimaryButton
-              label="Create payment request"
-              className="text-white bg-primaryGreen hover:bg-primaryGreenHover"
-              onClick={() => onCreatePaymentRequest()}
-            ></PrimaryButton>
-          </div>
+          <LayoutGroup>
+            <LayoutWrapper className="pl-12 pt-16 font-medium text-base cursor-pointer">
+              <PrimaryButton
+                label="Settings"
+                className="text-defaultText hover:bg-greyBg font-normal"
+                onClick={() => {}}
+              ></PrimaryButton>
+            </LayoutWrapper>
+            <AnimatePresence initial={false}>
+              {(isLoadingMetrics || (metrics && metrics?.all > 0)) && (
+                <LayoutWrapper className="pt-16 pl-2">
+                  <PrimaryButton
+                    label="Create payment request"
+                    className="text-white bg-primaryGreen hover:bg-primaryGreenHover"
+                    onClick={onCreatePaymentRequest}
+                  ></PrimaryButton>
+                </LayoutWrapper>
+              )}
+            </AnimatePresence>
+          </LayoutGroup>
         </div>
       </div>
 
-      <div className="h-full">
-        <Tabs.Root
-          defaultValue={PaymentRequestStatus.All}
-          onValueChange={(value) => setStatus(value as PaymentRequestStatus)}
-        >
-          {/* Keep the Tab to still get accessibility functions through the keyboard */}
-          <Tabs.List className="flex shrink-0 gap-x-4 mb-4">
-            <Tab status={PaymentRequestStatus.All} isLoading={isLoadingMetrics} totalRecords={metrics?.all ?? 0} />
-            <Tab status={PaymentRequestStatus.None} isLoading={isLoadingMetrics} totalRecords={metrics?.unpaid ?? 0} />
-            <Tab
-              status={PaymentRequestStatus.PartiallyPaid}
-              isLoading={isLoadingMetrics}
-              totalRecords={metrics?.partiallyPaid ?? 0}
-            />
-            <Tab
-              status={PaymentRequestStatus.FullyPaid}
-              isLoading={isLoadingMetrics}
-              totalRecords={metrics?.paid ?? 0}
-            />
-          </Tabs.List>
-          <Tabs.Content value=""></Tabs.Content>
-
-          <div className="bg-white min-h-[18rem] py-10 px-6 rounded-lg">
-            <PaymentRequestTable
-              paymentRequests={localPaymentRequests}
-              pageSize={pageSize}
-              totalRecords={totalRecords}
-              onPageChanged={setPage}
-              setStatusSortDirection={setStatusSortDirection}
-              setCreatedSortDirection={setCreatedSortDirection}
-              setContactSortDirection={setContactSortDirection}
-              setAmountSortDirection={setAmountSortDirection}
-              onPaymentRequestDuplicateClicked={onDuplicatePaymentRequest}
-              onPaymentRequestDeleteClicked={onDeletePaymentRequest}
-              onPaymentRequestCopyLinkClicked={onCopyPaymentRequestLink}
-              isLoading={isLoadingPaymentRequests}
-            />
-          </div>
-        </Tabs.Root>
-      </div>
+      <LayoutGroup>
+        <AnimatePresence initial={false}>
+          {(isLoadingMetrics || (metrics && metrics?.all > 0)) && (
+            <LayoutWrapper className="h-full">
+              <Tabs.Root
+                defaultValue={PaymentRequestStatus.All}
+                onValueChange={(value) => setStatus(value as PaymentRequestStatus)}
+              >
+                {/* Keep the Tab to still get accessibility functions through the keyboard */}
+                <Tabs.List className="flex shrink-0 gap-x-4 mb-4">
+                  <Tab
+                    status={PaymentRequestStatus.All}
+                    isLoading={isLoadingMetrics}
+                    totalRecords={metrics?.all ?? 0}
+                  />
+                  <Tab
+                    status={PaymentRequestStatus.None}
+                    isLoading={isLoadingMetrics}
+                    totalRecords={metrics?.unpaid ?? 0}
+                  />
+                  <Tab
+                    status={PaymentRequestStatus.PartiallyPaid}
+                    isLoading={isLoadingMetrics}
+                    totalRecords={metrics?.partiallyPaid ?? 0}
+                  />
+                  <Tab
+                    status={PaymentRequestStatus.FullyPaid}
+                    isLoading={isLoadingMetrics}
+                    totalRecords={metrics?.paid ?? 0}
+                  />
+                </Tabs.List>
+                <Tabs.Content value=""></Tabs.Content>
+              </Tabs.Root>
+            </LayoutWrapper>
+          )}
+        </AnimatePresence>
+        <LayoutWrapper className="bg-white min-h-[18rem] py-10 px-6 rounded-lg">
+          <PaymentRequestTable
+            paymentRequests={localPaymentRequests}
+            pageSize={pageSize}
+            totalRecords={totalRecords}
+            onPageChanged={setPage}
+            setStatusSortDirection={setStatusSortDirection}
+            setCreatedSortDirection={setCreatedSortDirection}
+            setContactSortDirection={setContactSortDirection}
+            setAmountSortDirection={setAmountSortDirection}
+            onPaymentRequestDuplicateClicked={onDuplicatePaymentRequest}
+            onPaymentRequestDeleteClicked={onDeletePaymentRequest}
+            onPaymentRequestCopyLinkClicked={onCopyPaymentRequestLink}
+            isLoading={isLoadingPaymentRequests}
+            isEmpty={!metrics || metrics?.all === 0}
+            onCreatePaymentRequest={onCreatePaymentRequest}
+          />
+        </LayoutWrapper>
+      </LayoutGroup>
 
       <CreatePaymentRequestPage
         isOpen={isCreatePaymentRequestOpen}
