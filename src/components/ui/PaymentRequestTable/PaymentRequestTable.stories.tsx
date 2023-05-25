@@ -48,6 +48,12 @@ export default {
         type: 'number',
       },
     },
+    isLoading: {
+      control: {
+        type: 'boolean',
+      },
+      value: false,
+    },
     onPaymentRequestClicked: {
       action: 'Payment Request Clicked',
     },
@@ -287,4 +293,12 @@ Showcase.args = {
   paymentRequests: paymentRequests,
   pageSize: 5,
   totalRecords: 12,
+};
+
+export const Loading = Template.bind({});
+Loading.args = {
+  paymentRequests: [],
+  pageSize: 5,
+  totalRecords: 12,
+  isLoading: true,
 };

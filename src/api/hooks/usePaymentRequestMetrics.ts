@@ -11,9 +11,11 @@ export const usePaymentRequestMetrics = (
 ) => {
   const [metrics, setMetrics] = useState<PaymentRequestMetrics>();
   const [apiError, setApiError] = useState<ApiError>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchPaymentRequestMetrics = async () => {
+      setIsLoading(true);
       const client = new PaymentRequestClient(apiUrl, authToken, merchantId);
       const response = await client.metrics(new Date(fromDateMs ?? 0), new Date(toDateMs ?? 0));
 
@@ -22,6 +24,7 @@ export const usePaymentRequestMetrics = (
       } else if (response.error) {
         setApiError(response.error);
       }
+      setIsLoading(false);
     };
 
     fetchPaymentRequestMetrics();
@@ -30,5 +33,6 @@ export const usePaymentRequestMetrics = (
   return {
     metrics,
     apiError,
+    isLoading,
   };
 };
