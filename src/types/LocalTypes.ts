@@ -1,12 +1,12 @@
-import { Tag } from '../api/types/ApiResponses';
 import { Currency } from '../api/types/Enums';
+import { LocalAddressType, LocalPaymentMethodTypes } from './LocalEnums';
 
 export interface LocalContact {
   name: string;
   email: string;
 }
 
-export type LocalPaymentStatus = 'paid' | 'partial' | 'unpaid';
+export type LocalPaymentStatus = 'paid' | 'partial' | 'unpaid' | 'overpaid';
 
 export interface LocalPaymentRequest {
   id: string;
@@ -15,8 +15,36 @@ export interface LocalPaymentRequest {
   contact: LocalContact;
   amount: number;
   currency: Currency;
-  tags: Tag[];
+  tags: LocalTag[];
+  paymentMethodTypes: LocalPaymentMethodTypes[];
+  addresses: LocalAddress[];
+  description: string;
+  productOrService: string;
+  hostedPayCheckoutUrl: string;
+  paymentAttempts: LocalPaymentAttempt[];
 }
+
+export interface LocalPaymentAttempt {
+  paymentAttemptID: string;
+  occurredAt: Date;
+  paymentMethod: LocalPaymentMethodTypes;
+  amount: number;
+  currency: Currency.EUR | Currency.GBP;
+  processor: string;
+  last4DigitsOfCardNumber?: string;
+}
+
+export type LocalAddress = {
+  addressLine1?: string;
+  addressLine2?: string;
+  addressCity?: string;
+  addressCounty?: string;
+  addressPostCode?: string;
+  addressCountryCode?: string;
+  phone?: string;
+  email?: string;
+  addressType: LocalAddressType;
+};
 
 export interface LocalPaymentRequestCreate {
   amount: number;
@@ -64,7 +92,7 @@ export interface LocalPaymentMethodsFormValue {
 }
 
 export interface LocalTag {
-  ID: string;
+  ID?: string;
   merchantID?: string;
   name: string;
   colourHex?: string;

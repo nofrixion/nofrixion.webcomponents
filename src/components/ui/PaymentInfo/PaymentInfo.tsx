@@ -2,6 +2,8 @@ import PaymentMethodIcon from '../utils/PaymentMethodIcon';
 import { PaymentRequest } from '../../../api/types/ApiResponses';
 import { format } from 'date-fns';
 import { AddressType } from '../../../api/types/Enums';
+import { LocalPaymentRequest } from '../../../types/LocalTypes';
+import { LocalAddressType, LocalPaymentMethodTypes } from '../../../types/LocalEnums';
 
 interface PaymentInfoRowProps {
   label: string;
@@ -30,21 +32,23 @@ const PaymentInfoRow: React.FC<PaymentInfoRowProps> = ({ label, content, childre
 };
 
 interface PaymentInfoProps {
-  paymentRequest: PaymentRequest;
+  paymentRequest: LocalPaymentRequest;
 }
 
-const PaymentInfo = ({ paymentRequest: { id, inserted, paymentMethodTypes, addresses } }: PaymentInfoProps) => {
+const PaymentInfo = ({ paymentRequest: { id, createdAt, paymentMethodTypes, addresses } }: PaymentInfoProps) => {
   // Parsed date should follow the following format: Dec 22nd, 2022
-  const formattedDate = format(inserted, 'MMM do, yyyy');
+  const formattedDate = format(createdAt, 'MMM do, yyyy');
 
-  const paymentMethods = paymentMethodTypes.split(', ');
+  const paymentMethods = paymentMethodTypes;
 
-  const isBankEnabled = paymentMethods.includes('pisp');
-  const isCardEnabled = paymentMethods.includes('card');
-  const isWalletEnabled = paymentMethods.includes('applePay') || paymentMethods.includes('googlePay');
-  const isLightningEnabled = paymentMethods.includes('lightning');
+  const isBankEnabled = paymentMethods.includes(LocalPaymentMethodTypes.Pisp);
+  const isCardEnabled = paymentMethods.includes(LocalPaymentMethodTypes.Card);
+  const isWalletEnabled =
+    paymentMethods.includes(LocalPaymentMethodTypes.ApplePay) ||
+    paymentMethods.includes(LocalPaymentMethodTypes.GooglePay);
+  const isLightningEnabled = paymentMethods.includes(LocalPaymentMethodTypes.Lightning);
 
-  const shippingAddresses = addresses?.filter((address) => address.addressType === AddressType.Shipping);
+  const shippingAddresses = addresses?.filter((address) => address.addressType === LocalAddressType.Shipping);
 
   const shippingAddress = shippingAddresses?.length > 0 ? shippingAddresses[0] : undefined;
 

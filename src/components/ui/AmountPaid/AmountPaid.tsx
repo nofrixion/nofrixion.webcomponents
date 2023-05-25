@@ -21,7 +21,7 @@ const AmountPaid = ({
         })}
       >
         {currency == Currency.GBP ? '£' : '€'}
-        {amountPaid === 0 ? totalAmount : amountPaid.toFixed(2)}
+        {totalAmount.toFixed(2)}
       </span>
       <div className="flex flex-row h-[0.125rem]">
         {percentagePaid !== 0 && (
