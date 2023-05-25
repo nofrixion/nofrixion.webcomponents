@@ -44,7 +44,12 @@ const PaymentRequestDashboard = ({
 
   const client = new PaymentRequestClient(apiUrl, token, merchantId);
 
-  const { paymentRequests, totalRecords, fetchPaymentRequests, isLoading } = usePaymentRequests(
+  const {
+    paymentRequests,
+    totalRecords,
+    fetchPaymentRequests,
+    isLoading: isLoadingPaymentRequests,
+  } = usePaymentRequests(
     apiUrl,
     token,
     merchantId,
@@ -62,7 +67,7 @@ const PaymentRequestDashboard = ({
   const localPaymentRequests: LocalPaymentRequest[] =
     paymentRequests?.map((paymentRequest) => RemotePaymentRequestToLocalPaymentRequest(paymentRequest)) ?? [];
 
-  const { metrics, apiError } = usePaymentRequestMetrics(
+  const { metrics, isLoading: isLoadingMetrics } = usePaymentRequestMetrics(
     apiUrl,
     token,
     merchantId,
@@ -148,10 +153,18 @@ const PaymentRequestDashboard = ({
         >
           {/* Keep the Tab to still get accessibility functions through the keyboard */}
           <Tabs.List className="flex shrink-0 gap-x-4 mb-4">
-            <Tab status={PaymentRequestStatus.All} totalRecords={metrics?.all ?? 0}></Tab>
-            <Tab status={PaymentRequestStatus.None} totalRecords={metrics?.unpaid ?? 0}></Tab>
-            <Tab status={PaymentRequestStatus.PartiallyPaid} totalRecords={metrics?.partiallyPaid ?? 0}></Tab>
-            <Tab status={PaymentRequestStatus.FullyPaid} totalRecords={metrics?.paid ?? 0}></Tab>
+            <Tab status={PaymentRequestStatus.All} isLoading={isLoadingMetrics} totalRecords={metrics?.all ?? 0} />
+            <Tab status={PaymentRequestStatus.None} isLoading={isLoadingMetrics} totalRecords={metrics?.unpaid ?? 0} />
+            <Tab
+              status={PaymentRequestStatus.PartiallyPaid}
+              isLoading={isLoadingMetrics}
+              totalRecords={metrics?.partiallyPaid ?? 0}
+            />
+            <Tab
+              status={PaymentRequestStatus.FullyPaid}
+              isLoading={isLoadingMetrics}
+              totalRecords={metrics?.paid ?? 0}
+            />
           </Tabs.List>
           <Tabs.Content value=""></Tabs.Content>
 
@@ -168,7 +181,7 @@ const PaymentRequestDashboard = ({
               onPaymentRequestDuplicateClicked={onDuplicatePaymentRequest}
               onPaymentRequestDeleteClicked={onDeletePaymentRequest}
               onPaymentRequestCopyLinkClicked={onCopyPaymentRequestLink}
-              isLoading={isLoading}
+              isLoading={isLoadingPaymentRequests}
             />
           </div>
         </Tabs.Root>

@@ -8,6 +8,10 @@ export default {
   component: Tab,
   argTypes: {
     totalRecords: { control: 'number' },
+    isLoading: { control: 'boolean' },
+  },
+  args: {
+    isLoading: false,
   },
 } as Meta<typeof Tab>;
 
@@ -35,6 +39,14 @@ export const All = Template.bind({});
 All.args = {
   status: PaymentRequestStatus.All,
   totalRecords: 112,
+};
+
+export const AllLoading = Template.bind({});
+
+AllLoading.args = {
+  status: PaymentRequestStatus.All,
+  totalRecords: 182,
+  isLoading: true,
 };
 
 export const Unpaid = Template.bind({});
