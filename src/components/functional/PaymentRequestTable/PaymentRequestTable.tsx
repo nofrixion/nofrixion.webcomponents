@@ -39,9 +39,8 @@ const PaymentRequestTable = ({
     pageSize,
   );
 
-  const localPaymentRequests: LocalPaymentRequest[] = paymentRequests.map((paymentRequest) =>
-    RemotePaymentRequestToLocalPaymentRequest(paymentRequest),
-  );
+  const localPaymentRequests: LocalPaymentRequest[] =
+    paymentRequests?.map((paymentRequest) => RemotePaymentRequestToLocalPaymentRequest(paymentRequest)) ?? [];
 
   const onDeletePaymentRequest = async (paymentRequest: LocalPaymentRequest) => {
     const response = await client.delete(paymentRequest.id);

@@ -21,12 +21,14 @@ export const usePaymentRequests = (
 ) => {
   const client = new MoneyMoovApiClient(apiUrl, authToken, merchantId);
 
-  const [paymentRequests, setPaymentRequests] = useState<PaymentRequest[]>([]);
+  const [paymentRequests, setPaymentRequests] = useState<PaymentRequest[] | undefined>(undefined);
   const [pageNumber, setPageNumber] = useState(1);
   const [totalRecords, setTotalRecords] = useState(1);
   const [apiError, setApiError] = useState<ApiError>();
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchPaymentRequests = async () => {
+    setIsLoading(true);
     const response = await client.PaymentRequests.getAll(
       page,
       pageSize,
@@ -43,6 +45,8 @@ export const usePaymentRequests = (
     } else if (response.error) {
       setApiError(response.error);
     }
+
+    setIsLoading(false);
   };
 
   // Build the sort expression
@@ -76,5 +80,6 @@ export const usePaymentRequests = (
     totalRecords,
     apiError,
     fetchPaymentRequests,
+    isLoading,
   };
 };

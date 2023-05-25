@@ -17,7 +17,7 @@ export default defineConfig(() => ({
     minify: 'terser',
     lib: {
       formats: ['umd'], // We can also build for ES adding 'es' to the array
-      entry: resolve(__dirname, 'src/index.ts'),
+      entry: resolve(__dirname, 'out/index.ts'),
       name: 'web-components',
     },
   },

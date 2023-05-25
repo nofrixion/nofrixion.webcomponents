@@ -60,42 +60,14 @@ const PaymentRequestActionMenu = ({ onDuplicate, onCopyLink, onDelete, onBlur }:
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button
-          className="rounded-full w-6 h-6 p-1 inline-flex items-center justify-center outline-none cursor-pointer align-middle hover:bg-greyBg group"
+          className="rounded-full w-6 h-6 p-1 inline-flex items-center justify-center outline-none cursor-pointer align-middle hover:bg-greyBg fill-[#8F99A3] hover:fill-[#454D54] data-[state='open']:fill-[#454D54]"
           aria-label="Actions"
           onBlur={onBlur}
         >
-          <svg
-            width="15"
-            height="15"
-            viewBox="0 0 15 15"
-            fill="none"
-            className="group [&>circle]:fill-[#8F99A3] w-4 h-4"
-            version="1.1"
-          >
-            <circle
-              cx="7.5"
-              cy="1.5"
-              r="1.5"
-              fill="none"
-              className="group-hover:fill-[#454D54] group-data-[state='open']:fill-[#454D54]"
-              id="circle2"
-            />
-            <circle
-              cx="7.5"
-              cy="7.5"
-              r="1.5"
-              fill="none"
-              className="group-hover:fill-[#454D54] group-data-[state='open']:fill-[#454D54]"
-              id="circle4"
-            />
-            <circle
-              cx="7.5"
-              cy="13.5"
-              r="1.5"
-              fill="none"
-              className="group-hover:fill-[#454D54] group-data-[state='open']:fill-[#454D54]"
-              id="circle6"
-            />
+          <svg width="15" height="15" viewBox="0 0 15 15" className="w-4 h-4" version="1.1">
+            <circle cx="7.5" cy="1.5" r="1.5" className="currentColor" id="circle2" />
+            <circle cx="7.5" cy="7.5" r="1.5" className="currentColor" id="circle4" />
+            <circle cx="7.5" cy="13.5" r="1.5" className="currentColor" id="circle6" />
           </svg>
         </button>
       </DropdownMenu.Trigger>
