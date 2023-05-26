@@ -37,7 +37,7 @@ const icon = cva('w-auto', {
 
 interface PaymentRequestStatusBadgeProps {
   status: LocalPaymentStatus;
-  size: VariantProps<typeof badge>['size'];
+  size?: VariantProps<typeof badge>['size'];
 }
 
 const getIconForStatus = (status: LocalPaymentStatus) => {
@@ -53,7 +53,7 @@ const getIconForStatus = (status: LocalPaymentStatus) => {
   }
 };
 
-const PaymentRequestStatusBadge = ({ status, size }: PaymentRequestStatusBadgeProps) => {
+const PaymentRequestStatusBadge = ({ status, size = 'small' }: PaymentRequestStatusBadgeProps) => {
   return (
     <div className={badge({ intent: status, size: size })}>
       <img className={icon({ size: size })} src={getIconForStatus(status)} alt={status} />

@@ -12,10 +12,10 @@ const Template: StoryFn<typeof PaymentInfo> = (args) => <PaymentInfo {...args} /
 
 export const Showcase = Template.bind({});
 Showcase.args = {
-  paymentRequest: mockedData.paymentRequests.regular,
+  paymentRequest: mockedData.paymentRequest.regular,
 };
 
 export const NoShippingAddress = Template.bind({});
 NoShippingAddress.args = {
-  paymentRequest: mockedData.paymentRequests.noShippingAddress,
+  paymentRequest: mockedData.paymentRequest.noShippingAddress,
 };

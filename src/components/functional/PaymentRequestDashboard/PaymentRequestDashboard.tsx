@@ -16,6 +16,7 @@ import CreatePaymentRequestPage from '../../functional/CreatePaymentRequestPage/
 import { add, startOfDay, endOfDay } from 'date-fns';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import LayoutWrapper from '../../ui/utils/LayoutWrapper';
+import { PaymentRequestMetrics } from '../../../api/types/ApiResponses';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -69,6 +70,8 @@ const PaymentRequestDashboard = ({
   const localPaymentRequests: LocalPaymentRequest[] =
     paymentRequests?.map((paymentRequest) => RemotePaymentRequestToLocalPaymentRequest(paymentRequest)) ?? [];
 
+  const [firstMetrics, setFirstMetrics] = useState<PaymentRequestMetrics | undefined>();
+
   const { metrics, isLoading: isLoadingMetrics } = usePaymentRequestMetrics(
     apiUrl,
     token,
@@ -119,7 +122,15 @@ const PaymentRequestDashboard = ({
     await fetchPaymentRequests();
   };
 
-  const isInitialState = !isLoadingMetrics && (!metrics || metrics?.all === 0);
+  // tore the results of the first execution of the metrics
+  // and use them as the initial state of the metrics.
+  // This way, when they change the dates
+  // we don't see the metrics disappear
+  if (metrics && !firstMetrics) {
+    setFirstMetrics(metrics);
+  }
+
+  const isInitialState = !isLoadingMetrics && (!firstMetrics || firstMetrics?.all === 0);
 
   return (
     <div className="font-inter bg-mainGrey text-defaultText h-full pl-8 pr-8 pb-10">
@@ -162,7 +173,7 @@ const PaymentRequestDashboard = ({
 
       <LayoutGroup>
         <AnimatePresence initial={false}>
-          {(isLoadingMetrics || (metrics && metrics?.all > 0)) && (
+          {!isInitialState && (
             <LayoutWrapper className="h-full">
               <Tabs.Root
                 defaultValue={PaymentRequestStatus.All}

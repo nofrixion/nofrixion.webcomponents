@@ -26,10 +26,10 @@ const emailVariants = cva('text-greyText', {
 });
 
 interface ContactProps extends LocalContact {
-  size: VariantProps<typeof nameVariants>['size'];
+  size?: VariantProps<typeof nameVariants>['size'];
 }
 
-const Contact = ({ name, email, size }: ContactProps) => {
+const Contact = ({ name, email, size = 'small' }: ContactProps) => {
   return (
     <div className="flex flex-col">
       <span className={nameVariants({ size: size })}>{name}</span>

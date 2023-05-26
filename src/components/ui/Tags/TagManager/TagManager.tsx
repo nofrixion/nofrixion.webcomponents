@@ -41,7 +41,7 @@ const TagManager = ({ tags, availableTags, onDeleted, onAdded, onCreated }: TagM
     <div className="flex flex-wrap w-auto gap-x-2 gap-y-2">
       <AnimatePresence>
         {tagsArray.map((tag) => (
-          <Tag key={tag.ID} id={tag.ID} label={tag.name} onDelete={handleDelete} />
+          <Tag key={tag.ID} id={tag.ID!} label={tag.name} onDelete={handleDelete} />
         ))}
         <AddTag
           key="addtag"
