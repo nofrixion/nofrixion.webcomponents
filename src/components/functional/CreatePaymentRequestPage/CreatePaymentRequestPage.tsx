@@ -3,9 +3,10 @@ import UICreatePaymentRequestPage from '../../ui/CreatePaymentRequestPage/Create
 import { LocalPaymentRequestCreate } from '../../../types/LocalTypes';
 import { makeToast } from '../../ui/Toast/Toast';
 import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
-import { PaymentRequestCreate } from '../../../api/types/ApiResponses';
+import { PaymentRequestCreate, UserPaymentDefaults } from '../../../api/types/ApiResponses';
 import { CardTokenCreateModes, PartialPaymentMethods } from '../../../api/types/Enums';
 import { useBanks } from '../../../api/hooks/useBanks';
+import { useUserPaymentDefaults } from '../../../api/hooks/useUserPaymentDefaults';
 
 interface CreatePaymentRequesPageProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -25,6 +26,7 @@ const CreatePaymentRequestPage = ({
   const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId);
 
   const { banks } = useBanks(apiUrl, token, merchantId);
+  const { userPaymentDefaults } = useUserPaymentDefaults(apiUrl, token);
 
   const parseLocalPaymentRequestCreateToRemotePaymentRequest = (
     merchantId: string,
@@ -89,6 +91,7 @@ const CreatePaymentRequestPage = ({
       onClose={onClose}
       banks={banks ?? []}
       onConfirm={onCreatePaymentRequest}
+      userPaymentDefaults={userPaymentDefaults}
     />
   );
 };

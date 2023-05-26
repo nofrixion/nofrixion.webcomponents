@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import InputAmountField from '../InputAmountField/InputAmountField';
 import InputTextField from '../InputTextField/InputTextField';
@@ -21,11 +21,12 @@ import classNames from 'classnames';
 import PaymentConditionsModal from '../Modals/PaymentConditionsModal/PaymentConditionsModal';
 
 import { parseBoldText } from '../../../utils/uiFormaters';
-import { BankSettings } from '../../../api/types/ApiResponses';
+import { BankSettings, UserPaymentDefaults } from '../../../api/types/ApiResponses';
 import PaymentMethodIcon from '../utils/PaymentMethodIcon';
 
 interface CreatePaymentRequestPageProps {
   banks: BankSettings[];
+  userPaymentDefaults?: UserPaymentDefaults;
   onConfirm: (data: LocalPaymentRequestCreate) => void;
   isOpen: boolean;
   onClose: () => void;
@@ -33,7 +34,13 @@ interface CreatePaymentRequestPageProps {
 
 const durationAnimationWidth = 0.3;
 
-const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreatePaymentRequestPageProps) => {
+const CreatePaymentRequestPage = ({
+  banks,
+  userPaymentDefaults,
+  onConfirm,
+  isOpen,
+  onClose,
+}: CreatePaymentRequestPageProps) => {
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState<'EUR' | 'GBP'>('EUR');
   const [productOrService, setProductOrService] = useState('');
@@ -44,16 +51,35 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
 
   const [hasEmailError, setHasEmailError] = useState(false);
 
+  // If userPaymentDefaults is defined then set the default values
   const [paymentMethodsFormValue, setPaymentMethodsFormValue] = useState<LocalPaymentMethodsFormValue>({
-    isBankEnabled: true,
-    isCardEnabled: true,
-    isWalletEnabled: true,
-    isLightningEnabled: false,
-    isCaptureFundsEnabled: true,
+    isBankEnabled: userPaymentDefaults?.paymentMethodsDefaults
+      ? userPaymentDefaults?.paymentMethodsDefaults.pisp
+      : true,
+    isCardEnabled: userPaymentDefaults?.paymentMethodsDefaults
+      ? userPaymentDefaults?.paymentMethodsDefaults.card
+      : true,
+    isWalletEnabled: userPaymentDefaults?.paymentMethodsDefaults
+      ? userPaymentDefaults?.paymentMethodsDefaults.wallet
+      : true,
+    isLightningEnabled: userPaymentDefaults?.paymentMethodsDefaults
+      ? userPaymentDefaults?.paymentMethodsDefaults.lightning
+      : false,
+    isCaptureFundsEnabled: userPaymentDefaults?.paymentMethodsDefaults
+      ? !userPaymentDefaults?.paymentMethodsDefaults.cardAuthorizeOnly
+      : true,
+    priorityBank: userPaymentDefaults?.paymentMethodsDefaults
+      ? { id: userPaymentDefaults?.paymentMethodsDefaults.pispPriorityBankID, name: '' }
+      : undefined,
+    isDefault: userPaymentDefaults?.paymentMethodsDefaults ? true : false,
   });
 
+  // If userPaymentDefaults is defined then set the default values
   const [paymentConditionsFormValue, setPaymentConditionsFormValue] = useState<LocalPaymentConditionsFormValue>({
-    allowPartialPayments: false,
+    allowPartialPayments: userPaymentDefaults?.paymentConditionsDefaults
+      ? userPaymentDefaults?.paymentConditionsDefaults.allowPartialPayments
+      : false,
+    isDefault: userPaymentDefaults?.paymentConditionsDefaults ? true : false,
   });
 
   const [isPaymentMethodsModalOpen, setIsPaymentMethodsModalOpen] = useState(false);
@@ -69,12 +95,46 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
     setIsPaymentMethodsModalOpen(false);
 
     setPaymentMethodsFormValue(data);
+
+    if (!userPaymentDefaults) {
+      userPaymentDefaults = {};
+    }
+
+    if (data.isDefault) {
+      userPaymentDefaults.paymentMethodsDefaults = {
+        pisp: data.isBankEnabled,
+        card: data.isCardEnabled,
+        wallet: data.isWalletEnabled,
+        lightning: data.isLightningEnabled,
+        cardAuthorizeOnly: !data.isCaptureFundsEnabled,
+        pispPriorityBank: data.priorityBank ? true : false,
+        pispPriorityBankID: data.priorityBank?.id ?? '',
+      };
+
+      console.log('userPaymentDefaults', userPaymentDefaults);
+    } else {
+      userPaymentDefaults.paymentMethodsDefaults = undefined;
+    }
   };
 
   const onConditionsReceived = (data: LocalPaymentConditionsFormValue) => {
     setIsPaymentConditionsModalOpen(false);
 
     setPaymentConditionsFormValue(data);
+
+    if (!userPaymentDefaults) {
+      userPaymentDefaults = {};
+    }
+
+    if (data.isDefault) {
+      userPaymentDefaults.paymentConditionsDefaults = {
+        allowPartialPayments: data.allowPartialPayments,
+      };
+
+      console.log('userPaymentDefaults', userPaymentDefaults);
+    } else {
+      userPaymentDefaults.paymentConditionsDefaults = undefined;
+    }
   };
 
   const onReviewClicked = () => {
@@ -132,9 +192,11 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
       isWalletEnabled: true,
       isLightningEnabled: false,
       isCaptureFundsEnabled: true,
+      isDefault: false,
     });
     setPaymentConditionsFormValue({
       allowPartialPayments: false,
+      isDefault: false,
     });
     setIsReviewing(false);
   };
@@ -513,6 +575,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
 
           <PaymentConditionsModal
             open={isPaymentConditionsModalOpen}
+            value={paymentConditionsFormValue}
             onDismiss={() => {}}
             onApply={onConditionsReceived}
           />

@@ -11,7 +11,7 @@ import { AnimatePresence } from 'framer-motion';
 import Select from '../../Select/Select';
 import AnimateHeightWrapper from '../../utils/AnimateHeight';
 import { LocalPaymentMethodsFormValue } from '../../../../types/LocalTypes';
-import { BankSettings } from '../../../../api/types/ApiResponses';
+import { BankSettings, UserPaymentDefaults } from '../../../../api/types/ApiResponses';
 
 interface PaymentMethodsModalProps extends BaseModalProps {
   banks: BankSettings[];
@@ -29,10 +29,10 @@ const PaymentMethodsModal = ({ open, banks, value, onDismiss, onApply }: Payment
 
   const [priorityBank, setPriorityBank] = useState<BankSettings | undefined>();
 
-  const [isCaptureFundsEnabled, setIsCaptureFundsEnabled] = useState<boolean>(value.isCardEnabled);
+  const [isCaptureFundsEnabled, setIsCaptureFundsEnabled] = useState<boolean>(value.isCaptureFundsEnabled);
 
   // When the user clicks on the Apply button, we need to send the data to the parent component
-  const onApplyClicked = () => {
+  const onApplyClicked = (data: any) => {
     const formData: LocalPaymentMethodsFormValue = {
       isBankEnabled,
       isCardEnabled,
@@ -46,6 +46,7 @@ const PaymentMethodsModal = ({ open, banks, value, onDismiss, onApply }: Payment
               name: priorityBank.bankName,
             }
           : undefined,
+      isDefault: data.isDefaultChecked,
     };
 
     onApply(formData);
@@ -54,7 +55,14 @@ const PaymentMethodsModal = ({ open, banks, value, onDismiss, onApply }: Payment
   };
 
   return (
-    <CustomModal title="Payment methods" open={open} enableUseAsDefault onDismiss={onDismiss} onApply={onApplyClicked}>
+    <CustomModal
+      title="Payment methods"
+      open={open}
+      enableUseAsDefault
+      isDefault={value.isDefault}
+      onDismiss={onDismiss}
+      onApply={onApplyClicked}
+    >
       <div className="divide-y">
         <div className="py-4">
           <Switch icon={BankIcon} label="Bank transfer" value={isBankEnabled} onChange={setIsBankEnabled} />

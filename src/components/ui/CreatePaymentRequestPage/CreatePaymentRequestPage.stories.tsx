@@ -14,6 +14,12 @@ export default {
         type: 'array',
       },
     },
+    // userPaymentDefaults: {
+    //   control: {
+    //     type: 'check',
+    //     options: ['pisp', 'card', 'wallet'],
+    //   },
+    // },
   },
 } as Meta<typeof CreatePaymentRequestPage>;
 
@@ -143,4 +149,19 @@ Showcase.args = {
       message: 'After pressing continue you will be redirected to your bank to complete your payment.',
     },
   ],
+  userPaymentDefaults: {
+    paymentMethodsDefaults: {
+      pisp: true,
+      pispPriorityBank: true,
+      pispPriorityBankID: 'faef567d-0772-4ac6-ad4b-b8b0ec09be55',
+      card: true,
+      cardAuthorizeOnly: false,
+      wallet: false,
+      lightning: false,
+    },
+    paymentConditionsDefaults: {
+      allowPartialPayments: true,
+    },
+  },
+  // userPaymentDefaults: undefined,
 };

@@ -77,6 +77,7 @@ export interface LocalPaymentRequestCreate {
 
 export interface LocalPaymentConditionsFormValue {
   allowPartialPayments: boolean;
+  isDefault: boolean;
 }
 
 export interface LocalPaymentMethodsFormValue {
@@ -89,6 +90,7 @@ export interface LocalPaymentMethodsFormValue {
     id: string;
     name: string;
   };
+  isDefault: boolean;
 }
 
 export interface LocalTag {
