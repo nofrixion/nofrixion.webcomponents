@@ -54,51 +54,34 @@ const CreatePaymentRequestPage = ({
   const [hasEmailError, setHasEmailError] = useState(false);
   const [defaultsChanged, setDefaultsChanged] = useState(false);
 
+  const findBank = (bankID: string | undefined) => {
+    if (!bankID) {
+      return undefined;
+    }
+    const bank = banks.find((b) => b.bankID === bankID);
+    return bank ? { id: bank.bankID, name: bank.bankName } : undefined;
+  };
   const [paymentMethodsFormValue, setPaymentMethodsFormValue] = useState<LocalPaymentMethodsFormValue>({
-    isBankEnabled: true,
-    isCardEnabled: true,
-    isWalletEnabled: true,
-    isLightningEnabled: false,
-    isCaptureFundsEnabled: true,
-    isDefault: false,
+    isBankEnabled: userPaymentDefaults?.paymentMethodsDefaults ? userPaymentDefaults.paymentMethodsDefaults.pisp : true,
+    isCardEnabled: userPaymentDefaults?.paymentMethodsDefaults ? userPaymentDefaults.paymentMethodsDefaults.card : true,
+    isWalletEnabled: userPaymentDefaults?.paymentMethodsDefaults
+      ? userPaymentDefaults.paymentMethodsDefaults.wallet
+      : true,
+    isLightningEnabled: userPaymentDefaults?.paymentMethodsDefaults
+      ? userPaymentDefaults.paymentMethodsDefaults.lightning
+      : true,
+    isCaptureFundsEnabled: userPaymentDefaults?.paymentMethodsDefaults
+      ? !userPaymentDefaults.paymentMethodsDefaults.cardAuthorizeOnly
+      : true,
+    isDefault: userPaymentDefaults?.paymentMethodsDefaults ? true : false,
+    priorityBank: findBank(userPaymentDefaults?.paymentMethodsDefaults?.pispPriorityBankID),
   });
 
-  useEffect(() => {
-    if (userPaymentDefaults) {
-      if (userPaymentDefaults.paymentMethodsDefaults) {
-        const defaults: LocalPaymentMethodsFormValue = {
-          isBankEnabled: userPaymentDefaults.paymentMethodsDefaults.pisp,
-          isCardEnabled: userPaymentDefaults.paymentMethodsDefaults.card,
-          isWalletEnabled: userPaymentDefaults.paymentMethodsDefaults.wallet,
-          isLightningEnabled: userPaymentDefaults.paymentMethodsDefaults.lightning,
-          isCaptureFundsEnabled: !userPaymentDefaults.paymentMethodsDefaults.cardAuthorizeOnly,
-          priorityBank: undefined,
-          isDefault: true,
-        };
-
-        if (userPaymentDefaults.paymentMethodsDefaults.pispPriorityBankID) {
-          const bank = banks.find((b) => b.bankID === userPaymentDefaults.paymentMethodsDefaults?.pispPriorityBankID);
-          if (bank) {
-            defaults.priorityBank = { id: bank.bankID, name: bank.bankName };
-          }
-        }
-
-        setPaymentMethodsFormValue(defaults);
-      }
-
-      if (userPaymentDefaults.paymentConditionsDefaults) {
-        setPaymentConditionsFormValue({
-          allowPartialPayments: userPaymentDefaults.paymentConditionsDefaults.allowPartialPayments,
-          isDefault: true,
-        });
-      }
-    }
-  }, [userPaymentDefaults]);
-
-  // If paymentConditionsDefaults is defined then use them. Otherwise set the default values
   const [paymentConditionsFormValue, setPaymentConditionsFormValue] = useState<LocalPaymentConditionsFormValue>({
-    allowPartialPayments: false,
-    isDefault: false,
+    allowPartialPayments: userPaymentDefaults?.paymentConditionsDefaults
+      ? userPaymentDefaults.paymentConditionsDefaults.allowPartialPayments
+      : true,
+    isDefault: userPaymentDefaults?.paymentConditionsDefaults ? true : false,
   });
 
   const [isPaymentMethodsModalOpen, setIsPaymentMethodsModalOpen] = useState(false);
