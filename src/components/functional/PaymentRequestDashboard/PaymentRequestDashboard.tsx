@@ -43,7 +43,6 @@ const PaymentRequestDashboard = ({
   let [isCreatePaymentRequestOpen, setIsCreatePaymentRequestOpen] = useState(false);
 
   const pageSize = 20;
-  const nextGenUrl = `${apiUrl}/nextgen/pay`;
 
   const client = new PaymentRequestClient(apiUrl, token, merchantId);
 
@@ -94,7 +93,7 @@ const PaymentRequestDashboard = ({
   };
 
   const onCopyPaymentRequestLink = async (paymentRequest: LocalPaymentRequest) => {
-    let link = `${nextGenUrl}/${paymentRequest.id}`;
+    let link = `${paymentRequest.hostedPayCheckoutUrl}/nextgen`;
     await navigator.clipboard.writeText(link);
 
     makeToast('success', 'Link copied into clipboard.');
