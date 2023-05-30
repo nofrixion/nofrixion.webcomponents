@@ -4,7 +4,6 @@ const AnimateHeightWrapper = ({ children, layoutId }: { children: React.ReactNod
   return (
     <motion.div
       layoutId={layoutId}
-      className="overflow-hidden"
       initial={{ opacity: 0, height: 0 }}
       animate={{
         opacity: 1,
