@@ -20,33 +20,22 @@ interface PaymentMethodsModalProps extends BaseModalProps {
 }
 
 const PaymentMethodsModal = ({ open, banks, userDefaults, onDismiss, onApply }: PaymentMethodsModalProps) => {
-  const [isBankEnabled, setIsBankEnabled] = useState<boolean>(true);
-  const [isCardEnabled, setIsCardEnabled] = useState<boolean>(true);
-  const [isWalletEnabled, setIsWalletEnabled] = useState<boolean>(true);
-  const [isLightningEnabled, setIsLightningEnabled] = useState<boolean>(false);
-  const [isPriorityBankEnabled, setIsPriorityBankEnabled] = useState<boolean>(false);
+  const [isBankEnabled, setIsBankEnabled] = useState<boolean>(userDefaults?.pisp ?? true);
+  const [isCardEnabled, setIsCardEnabled] = useState<boolean>(userDefaults?.card ?? true);
+  const [isWalletEnabled, setIsWalletEnabled] = useState<boolean>(userDefaults?.wallet ?? true);
+  const [isLightningEnabled, setIsLightningEnabled] = useState<boolean>(userDefaults?.lightning ?? false);
+  const [isPriorityBankEnabled, setIsPriorityBankEnabled] = useState<boolean>(userDefaults?.pispPriorityBank ?? false);
+  const [isCaptureFundsEnabled, setIsCaptureFundsEnabled] = useState<boolean>(!userDefaults?.cardAuthorizeOnly ?? true);
+  const [isDefault, setIsDefault] = useState<boolean>(userDefaults ? true : false);
   const [priorityBank, setPriorityBank] = useState<BankSettings | undefined>();
-  const [isCaptureFundsEnabled, setIsCaptureFundsEnabled] = useState<boolean>(true);
-  const [isDefault, setIsDefault] = useState<boolean>(false);
 
   useEffect(() => {
-    // If there are user defauts then set the user defaults
-    if (userDefaults) {
-      setIsBankEnabled(userDefaults.pisp);
-      setIsCardEnabled(userDefaults.card);
-      setIsWalletEnabled(userDefaults.wallet);
-      setIsLightningEnabled(userDefaults.lightning);
-      setIsCaptureFundsEnabled(!userDefaults.cardAuthorizeOnly);
-
-      if (userDefaults.pispPriorityBank && userDefaults.pispPriorityBankID) {
-        const bank = banks.find((bank) => bank.bankID === userDefaults.pispPriorityBankID);
-        setPriorityBank(bank);
-        setIsPriorityBankEnabled(true);
-      }
-
-      setIsDefault(true);
+    if (userDefaults?.pispPriorityBank && userDefaults?.pispPriorityBankID) {
+      const bank = banks.find((bank) => bank.bankID === userDefaults.pispPriorityBankID);
+      setPriorityBank(bank);
+      setIsPriorityBankEnabled(true);
     }
-  }, [userDefaults]);
+  }, []);
 
   // When the user clicks on the Apply button, we need to send the data to the parent component
   const onApplyClicked = (data: any) => {

@@ -10,15 +10,10 @@ interface PaymentConditionsModalProps extends BaseModalProps {
 }
 
 const PaymentConditionsModal = ({ open, userDefaults, onDismiss, onApply }: PaymentConditionsModalProps) => {
-  const [isAllowPartialEnabled, setIsAllowPartialEnabled] = useState<boolean>(false);
-  const [isDefault, setIsDefault] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (userDefaults) {
-      setIsAllowPartialEnabled(userDefaults.allowPartialPayments);
-      setIsDefault(true);
-    }
-  }, [userDefaults]);
+  const [isAllowPartialEnabled, setIsAllowPartialEnabled] = useState<boolean>(
+    userDefaults ? userDefaults.allowPartialPayments : false,
+  );
+  const [isDefault, setIsDefault] = useState<boolean>(userDefaults ? true : false);
 
   // When the user clicks on the Apply button, we need to send the data to the parent component
   const onApplyClicked = (data: any) => {

@@ -7,7 +7,6 @@ import { PaymentRequestCreate, UserPaymentDefaults } from '../../../api/types/Ap
 import { CardTokenCreateModes, PartialPaymentMethods } from '../../../api/types/Enums';
 import { useBanks } from '../../../api/hooks/useBanks';
 import { useUserPaymentDefaults } from '../../../api/hooks/useUserPaymentDefaults';
-import { useEffect } from 'react';
 import { ClientSettingsClient } from '../../../api/clients/ClientSettingsClient';
 
 interface CreatePaymentRequesPageProps {
@@ -27,7 +26,7 @@ const CreatePaymentRequestPage = ({
 }: CreatePaymentRequesPageProps) => {
   const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId);
 
-  const { userPaymentDefaults } = useUserPaymentDefaults(apiUrl, token);
+  const { userPaymentDefaults, isLoading } = useUserPaymentDefaults(apiUrl, token);
   const { banks } = useBanks(apiUrl, token, merchantId);
 
   const parseLocalPaymentRequestCreateToRemotePaymentRequest = (
@@ -98,14 +97,18 @@ const CreatePaymentRequestPage = ({
   };
 
   return (
-    <UICreatePaymentRequestPage
-      isOpen={isOpen}
-      onClose={onClose}
-      banks={banks ?? []}
-      onConfirm={onCreatePaymentRequest}
-      userPaymentDefaults={userPaymentDefaults ?? {}}
-      onDefaultsChanged={onSaveUserPaymentDefaults}
-    />
+    <>
+      {!isLoading && (
+        <UICreatePaymentRequestPage
+          isOpen={isOpen}
+          onClose={onClose}
+          banks={banks ?? []}
+          onConfirm={onCreatePaymentRequest}
+          userPaymentDefaults={userPaymentDefaults ?? {}}
+          onDefaultsChanged={onSaveUserPaymentDefaults}
+        />
+      )}
+    </>
   );
 };
 

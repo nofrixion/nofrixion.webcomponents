@@ -10,6 +10,7 @@ export default {
   component: CreatePaymentRequestPage,
   argTypes: {
     onConfirm: { action: 'onConfirm' },
+    onDefaultsChanged: { action: 'Defaults changed' },
     banks: {
       control: {
         type: 'array',
@@ -43,13 +44,7 @@ const Template: StoryFn<typeof CreatePaymentRequestPage> = (args) => {
           Open create payment request page
         </button>
       </div>
-      <CreatePaymentRequestPage
-        {...args}
-        isOpen={isOpen}
-        onConfirm={onCreatePaymentRequest}
-        onClose={onClose}
-        onDefaultsChanged={action('Defaults changed')}
-      />
+      <CreatePaymentRequestPage {...args} isOpen={isOpen} onConfirm={onCreatePaymentRequest} onClose={onClose} />
     </>
   );
 };

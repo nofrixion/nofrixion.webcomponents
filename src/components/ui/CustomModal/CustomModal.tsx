@@ -26,10 +26,6 @@ const CustomModal = ({
 }: CustomModalProps) => {
   const [isDefaultChecked, setIsDefaultChecked] = useState<boolean>(isDefault);
 
-  useEffect(() => {
-    setIsDefaultChecked(isDefault);
-  }, [isDefault]);
-
   const onApplyClicked = () => {
     if (!onApply) return;
 
