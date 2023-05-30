@@ -96,8 +96,6 @@ const PaymentRequestDashboard = ({
     let link = `${paymentRequest.hostedPayCheckoutUrl}/nextgen`;
     await navigator.clipboard.writeText(link);
 
-    console.log(paymentRequest);
-
     makeToast('success', 'Link copied into clipboard.');
   };
 
