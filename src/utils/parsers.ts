@@ -140,7 +140,6 @@ const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
             currency,
             walletName,
           } = remotePaymentAttempt;
-          console.log(remotePaymentAttempt);
           localPaymentAttempts.push({
             attemptKey: attemptKey,
             occurredAt: new Date(settledAt ?? authorisedAt ?? 0),
