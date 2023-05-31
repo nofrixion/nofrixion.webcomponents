@@ -1,6 +1,7 @@
 import { parseBoldText } from '../../../utils/uiFormaters';
 
 import EditIcon from '../../../assets/icons/edit-icon.svg';
+import classNames from 'classnames';
 
 interface EditOptionCardProps {
   label: string;
@@ -13,14 +14,28 @@ interface EditOptionCardProps {
 
 // TODO: Disable edit mode when isLoading is true
 const EditOptionCard = ({ label, value, details, onClick, children, isLoading }: EditOptionCardProps) => {
+  const handleOnClick = () => {
+    if (!isLoading) {
+      onClick && onClick();
+    }
+  };
   return (
     <button
-      className="bg-mainGrey group rounded-lg p-4 w-full flex flex-col text-sm/6 transition ease-in-out hover:bg-greyBg"
-      onClick={onClick}
+      className={classNames('bg-mainGrey group rounded-lg p-4 w-full flex flex-col text-sm/6 transition ease-in-out', {
+        'hover:bg-greyBg': !isLoading,
+        'cursor-default': isLoading,
+      })}
+      onClick={handleOnClick}
     >
       <div className="flex w-full">
         <span className="text-greyText">{label}</span>
-        <img src={EditIcon} alt="Edit icon" className="ml-2 transition opacity-0 group-hover:opacity-100" />
+        <img
+          src={EditIcon}
+          alt="Edit icon"
+          className={classNames('ml-2 transition opacity-0', {
+            'group-hover:opacity-100': !isLoading,
+          })}
+        />
 
         {isLoading && (
           <div className="animate-pulse my-auto ml-auto flex justify-center items-center">
