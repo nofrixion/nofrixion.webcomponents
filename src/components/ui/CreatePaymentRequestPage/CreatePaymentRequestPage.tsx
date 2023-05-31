@@ -80,7 +80,7 @@ const CreatePaymentRequestPage = ({
   const [paymentConditionsFormValue, setPaymentConditionsFormValue] = useState<LocalPaymentConditionsFormValue>({
     allowPartialPayments: userPaymentDefaults?.paymentConditionsDefaults
       ? userPaymentDefaults.paymentConditionsDefaults.allowPartialPayments
-      : true,
+      : false,
     isDefault: userPaymentDefaults?.paymentConditionsDefaults ? true : false,
   });
 
