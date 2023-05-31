@@ -26,7 +26,7 @@ const CreatePaymentRequestPage = ({
 }: CreatePaymentRequesPageProps) => {
   const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId);
 
-  const { userPaymentDefaults, isLoading } = useUserPaymentDefaults(apiUrl, token);
+  const { userPaymentDefaults, isUserPaymentDefaultsLoading } = useUserPaymentDefaults(apiUrl, token);
   const { banks } = useBanks(apiUrl, token, merchantId);
 
   const parseLocalPaymentRequestCreateToRemotePaymentRequest = (
@@ -96,18 +96,37 @@ const CreatePaymentRequestPage = ({
     }
   };
 
+  const getDefaultUserPaymentDefaults = (): UserPaymentDefaults => {
+    return {
+      paymentMethodsDefaults: {
+        pisp: true,
+        pispPriorityBank: false,
+        pispPriorityBankID: '',
+        card: true,
+        wallet: true,
+        lightning: false,
+        cardAuthorizeOnly: false,
+      },
+      paymentConditionsDefaults: {
+        allowPartialPayments: false,
+      },
+      notificationEmailsDefaults: {
+        emailAddresses: '',
+      },
+    };
+  };
+
   return (
     <>
-      {!isLoading && (
-        <UICreatePaymentRequestPage
-          isOpen={isOpen}
-          onClose={onClose}
-          banks={banks ?? []}
-          onConfirm={onCreatePaymentRequest}
-          userPaymentDefaults={userPaymentDefaults ?? {}}
-          onDefaultsChanged={onSaveUserPaymentDefaults}
-        />
-      )}
+      <UICreatePaymentRequestPage
+        isOpen={isOpen}
+        onClose={onClose}
+        banks={banks ?? []}
+        onConfirm={onCreatePaymentRequest}
+        userPaymentDefaults={isUserPaymentDefaultsLoading ? getDefaultUserPaymentDefaults() : userPaymentDefaults}
+        onDefaultsChanged={onSaveUserPaymentDefaults}
+        isUserPaymentDefaultsLoading={isUserPaymentDefaultsLoading}
+      />
     </>
   );
 };

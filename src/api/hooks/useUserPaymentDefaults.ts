@@ -5,11 +5,11 @@ import { ClientSettingsClient } from '../clients/ClientSettingsClient';
 export const useUserPaymentDefaults = (apiUrl: string, authToken: string) => {
   const [userPaymentDefaults, setUserPaymentDefaults] = useState<UserPaymentDefaults>();
   const [apiError, setApiError] = useState<ApiError>();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isUserPaymentDefaultsLoading, setisUserPaymentDefaultsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchUserPaymentDefaults = async () => {
-      setIsLoading(true);
+      setisUserPaymentDefaultsLoading(true);
       const client = new ClientSettingsClient(apiUrl, authToken);
       const response = await client.getUserPaymentDefaults();
 
@@ -18,7 +18,7 @@ export const useUserPaymentDefaults = (apiUrl: string, authToken: string) => {
       } else if (response.error) {
         setApiError(response.error);
       }
-      setIsLoading(false);
+      setisUserPaymentDefaultsLoading(false);
     };
 
     fetchUserPaymentDefaults();
@@ -27,6 +27,6 @@ export const useUserPaymentDefaults = (apiUrl: string, authToken: string) => {
   return {
     userPaymentDefaults,
     apiError,
-    isLoading,
+    isUserPaymentDefaultsLoading,
   };
 };
