@@ -1,6 +1,6 @@
 import { PaymentRequest, PaymentRequestAddress, PaymentRequestPaymentAttempt, Tag } from '../api/types/ApiResponses';
-import { PaymentMethodTypes, PaymentResult } from '../api/types/Enums';
-import { LocalAddressType, LocalPaymentMethodTypes } from '../types/LocalEnums';
+import { PaymentMethodTypes, PaymentResult, Wallets } from '../api/types/Enums';
+import { LocalAddressType, LocalPaymentMethodTypes, LocalWallets } from '../types/LocalEnums';
 import {
   LocalAddress,
   LocalPaymentAttempt,
@@ -121,6 +121,17 @@ const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     };
   };
 
+  const parseApiWalletTypeToLocalWalletType = (walletType: Wallets): LocalWallets | undefined => {
+    switch (walletType) {
+      case Wallets.ApplePay:
+        return LocalWallets.ApplePay;
+      case Wallets.GooglePay:
+        return LocalWallets.GooglePay;
+      default:
+        return undefined;
+    }
+  };
+
   const parseApiPaymentAttemptsToLocalPaymentAttempts = (
     remotePaymentAttempts: PaymentRequestPaymentAttempt[],
   ): LocalPaymentAttempt[] => {
@@ -146,7 +157,7 @@ const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
             paymentMethod: parseApiPaymentMethodTypeToLocalMethodType(paymentMethod),
             amount: settledAmount > 0 ? settledAmount : authorisedAmount,
             currency: currency,
-            processor: walletName ?? '',
+            processor: walletName ? parseApiWalletTypeToLocalWalletType(walletName) : undefined,
           });
         }
       });

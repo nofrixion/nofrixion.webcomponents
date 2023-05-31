@@ -12,3 +12,8 @@ export enum LocalAddressType {
   Shipping = 'Shipping',
   Billing = 'Billing',
 }
+
+export enum LocalWallets {
+  ApplePay = 'Apple Pay',
+  GooglePay = 'Google Pay',
+}
