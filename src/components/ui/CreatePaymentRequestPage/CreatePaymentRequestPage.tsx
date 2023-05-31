@@ -91,6 +91,7 @@ const CreatePaymentRequestPage = ({
       isLightningEnabled: userPaymentDefaults?.paymentMethodsDefaults?.lightning ?? false,
       isCaptureFundsEnabled: !userPaymentDefaults?.paymentMethodsDefaults?.cardAuthorizeOnly ?? true,
       isDefault: !!!userPaymentDefaults?.paymentMethodsDefaults,
+      priorityBank: findBank(userPaymentDefaults?.paymentMethodsDefaults?.pispPriorityBankID),
     });
     setPaymentConditionsFormValue({
       allowPartialPayments: userPaymentDefaults?.paymentConditionsDefaults?.allowPartialPayments ?? false,
