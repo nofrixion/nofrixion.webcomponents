@@ -15,6 +15,7 @@ import { Currency } from '../../../api/types/Enums';
 import {
   LocalPaymentConditionsFormValue,
   LocalPaymentMethodsFormValue,
+  LocalPaymentNotificationsFormValue,
   LocalPaymentRequestCreate,
 } from '../../../types/LocalTypes';
 import classNames from 'classnames';
@@ -24,6 +25,7 @@ import { parseBoldText } from '../../../utils/uiFormaters';
 import { BankSettings, UserPaymentDefaults } from '../../../api/types/ApiResponses';
 import PaymentMethodIcon from '../utils/PaymentMethodIcon';
 import _ from 'lodash';
+import NotificationEmailsModal from '../Modals/NotificationEmailsModal/NotificationEmailsModal';
 
 interface CreatePaymentRequestPageProps {
   banks: BankSettings[];
@@ -84,9 +86,17 @@ const CreatePaymentRequestPage = ({
     isDefault: userPaymentDefaults?.paymentConditionsDefaults ? true : false,
   });
 
+  const [paymentNotificationsFormValue, setPaymentNotificationsFormValue] =
+    useState<LocalPaymentNotificationsFormValue>({
+      emailAddresses: userPaymentDefaults?.notificationEmailsDefaults
+        ? userPaymentDefaults.notificationEmailsDefaults.emailAddresses
+        : '',
+      isDefault: userPaymentDefaults?.notificationEmailsDefaults ? true : false,
+    });
+
   const [isPaymentMethodsModalOpen, setIsPaymentMethodsModalOpen] = useState(false);
   const [isPaymentConditionsModalOpen, setIsPaymentConditionsModalOpen] = useState(false);
-
+  const [isPaymentNotificationsModalOpen, setIsPaymentNotificationsModalOpen] = useState(false);
   const [isReviewing, setIsReviewing] = useState(false);
 
   const onCurrencyChange = (currency: string) => {
@@ -111,6 +121,17 @@ const CreatePaymentRequestPage = ({
 
     // Since there's no way to cancel the modal, we need to check if the data has changed
     if (!_.isEqual(data, paymentConditionsFormValue)) {
+      setDefaultsChanged(true);
+    }
+  };
+
+  const onPaymentNotificationsReceived = (data: LocalPaymentNotificationsFormValue) => {
+    setIsPaymentNotificationsModalOpen(false);
+
+    setPaymentNotificationsFormValue(data);
+
+    // Since there's no way to cancel the modal, we need to check if the data has changed
+    if (!_.isEqual(data, paymentNotificationsFormValue)) {
       setDefaultsChanged(true);
     }
   };
@@ -147,6 +168,7 @@ const CreatePaymentRequestPage = ({
         wallet: paymentMethodsFormValue.isWalletEnabled,
         lightning: paymentMethodsFormValue.isLightningEnabled,
       },
+      notificationEmailAddresses: paymentNotificationsFormValue.emailAddresses,
     };
 
     onConfirm(paymentRequestToCreate);
@@ -183,6 +205,14 @@ const CreatePaymentRequestPage = ({
       };
     } else {
       defaults.paymentConditionsDefaults = undefined;
+    }
+
+    if (paymentNotificationsFormValue.isDefault) {
+      defaults.notificationEmailsDefaults = {
+        emailAddresses: paymentNotificationsFormValue.emailAddresses,
+      };
+    } else {
+      defaults.notificationEmailsDefaults = undefined;
     }
 
     onDefaultsChanged(defaults);
@@ -404,6 +434,15 @@ const CreatePaymentRequestPage = ({
                                     />
                                   </div>
                                 </EditOptionCard>
+                                <EditOptionCard
+                                  label="Payment notifications"
+                                  value={
+                                    paymentNotificationsFormValue ? paymentNotificationsFormValue.emailAddresses : ''
+                                  }
+                                  onClick={() => {
+                                    setIsPaymentNotificationsModalOpen(true);
+                                  }}
+                                />
                               </div>
                             </div>
                           </div>
@@ -588,6 +627,13 @@ const CreatePaymentRequestPage = ({
             userDefaults={userPaymentDefaults?.paymentConditionsDefaults}
             onDismiss={() => {}}
             onApply={onConditionsReceived}
+          />
+
+          <NotificationEmailsModal
+            open={isPaymentNotificationsModalOpen}
+            userDefaults={userPaymentDefaults?.notificationEmailsDefaults}
+            onDismiss={() => {}}
+            onApply={onPaymentNotificationsReceived}
           />
         </Dialog>
       </Transition>
