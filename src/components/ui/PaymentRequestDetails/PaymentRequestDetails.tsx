@@ -30,7 +30,7 @@ const PaymentRequestDetails = ({
           <Contact name={paymentRequest.contact.name} email={paymentRequest.contact.email} size="large"></Contact>
           <QRCode url={paymentRequest.hostedPayCheckoutUrl}></QRCode>
         </div>
-        <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-opacity-100 z-10 w-[92%]">
+        <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-opacity-100 w-[92%]">
           <CopyLink link={paymentRequest.hostedPayCheckoutUrl}></CopyLink>
         </div>
       </div>
@@ -61,7 +61,7 @@ const PaymentRequestDetails = ({
           ></TagManager>
         </div>
         <div className="relative">
-          <div className="absolute z-0 left-0 right-0">
+          <div className="absolute left-0 right-0 mb-6">
             <DetailsTabs paymentRequest={paymentRequest} onRefundClick={onRefundClick}></DetailsTabs>
           </div>
         </div>

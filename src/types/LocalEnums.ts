@@ -1,4 +1,5 @@
 export enum LocalPaymentMethodTypes {
+  None = 'None',
   Card = 'card',
   Pisp = 'pisp',
   ApplePay = 'applepay',

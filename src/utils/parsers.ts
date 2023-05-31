@@ -1,7 +1,23 @@
-import { PaymentRequest, PaymentRequestAddress, Tag } from '../api/types/ApiResponses';
-import { PaymentResult } from '../api/types/Enums';
+import { PaymentRequest, PaymentRequestAddress, PaymentRequestPaymentAttempt, Tag } from '../api/types/ApiResponses';
+import { PaymentMethodTypes, PaymentResult } from '../api/types/Enums';
 import { LocalAddressType, LocalPaymentMethodTypes } from '../types/LocalEnums';
-import { LocalAddress, LocalPaymentRequest, LocalPaymentStatus, LocalTag } from '../types/LocalTypes';
+import {
+  LocalAddress,
+  LocalPaymentAttempt,
+  LocalPaymentRequest,
+  LocalPaymentStatus,
+  LocalTag,
+} from '../types/LocalTypes';
+
+const parseApiTagToLocalTag = (tag: Tag): LocalTag => {
+  return {
+    id: tag.id,
+    name: tag.name,
+    colourHex: tag.colourHex,
+    description: tag.description,
+    merchantID: tag.merchantID,
+  };
+};
 
 const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: PaymentRequest): LocalPaymentRequest => {
   const { addresses, inserted, customerEmailAddress, amount, currency, status, tags } = remotePaymentRequest;
@@ -16,6 +32,25 @@ const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
         return 'overpaid';
       default:
         return 'unpaid';
+    }
+  };
+
+  const parseApiPaymentMethodTypeToLocalMethodType = (
+    paymentMethodType: PaymentMethodTypes,
+  ): LocalPaymentMethodTypes => {
+    switch (paymentMethodType) {
+      case PaymentMethodTypes.Card:
+        return LocalPaymentMethodTypes.Card;
+      case PaymentMethodTypes.Pisp:
+        return LocalPaymentMethodTypes.Pisp;
+      case PaymentMethodTypes.ApplePay:
+        return LocalPaymentMethodTypes.ApplePay;
+      case PaymentMethodTypes.GooglePay:
+        return LocalPaymentMethodTypes.GooglePay;
+      case PaymentMethodTypes.Lightning:
+        return LocalPaymentMethodTypes.Lightning;
+      default:
+        return LocalPaymentMethodTypes.None;
     }
   };
 
@@ -86,14 +121,38 @@ const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     };
   };
 
-  const parseApiTagToLocalTag = (tag: Tag): LocalTag => {
-    return {
-      ID: tag.ID,
-      name: tag.name,
-      colourHex: tag.colourHex,
-      description: tag.description,
-      merchantID: tag.merchantID,
-    };
+  const parseApiPaymentAttemptsToLocalPaymentAttempts = (
+    remotePaymentAttempts: PaymentRequestPaymentAttempt[],
+  ): LocalPaymentAttempt[] => {
+    if (remotePaymentAttempts.length === 0) {
+      return [];
+    } else {
+      const localPaymentAttempts: LocalPaymentAttempt[] = [];
+      remotePaymentAttempts.map((remotePaymentAttempt) => {
+        if (remotePaymentAttempt.settledAt || remotePaymentAttempt.authorisedAt) {
+          const {
+            attemptKey,
+            authorisedAt,
+            settledAt,
+            paymentMethod,
+            authorisedAmount,
+            settledAmount,
+            currency,
+            walletName,
+          } = remotePaymentAttempt;
+          console.log(remotePaymentAttempt);
+          localPaymentAttempts.push({
+            attemptKey: attemptKey,
+            occurredAt: new Date(settledAt ?? authorisedAt ?? 0),
+            paymentMethod: parseApiPaymentMethodTypeToLocalMethodType(paymentMethod),
+            amount: settledAmount > 0 ? settledAmount : authorisedAmount,
+            currency: currency,
+            processor: walletName ?? '',
+          });
+        }
+      });
+      return localPaymentAttempts;
+    }
   };
 
   return {
@@ -112,8 +171,8 @@ const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     description: remotePaymentRequest.description ?? '',
     productOrService: remotePaymentRequest.title ?? '',
     hostedPayCheckoutUrl: remotePaymentRequest.hostedPayCheckoutUrl ?? '',
-    paymentAttempts: [],
+    paymentAttempts: parseApiPaymentAttemptsToLocalPaymentAttempts(remotePaymentRequest.paymentAttempts),
   };
 };
 
-export { RemotePaymentRequestToLocalPaymentRequest };
+export { RemotePaymentRequestToLocalPaymentRequest, parseApiTagToLocalTag };

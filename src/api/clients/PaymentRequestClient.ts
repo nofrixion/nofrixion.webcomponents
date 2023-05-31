@@ -4,6 +4,8 @@ import {
   PaymentRequestMetrics,
   PaymentRequestMinimal,
   PaymentRequestPageResponse,
+  PaymentRequest,
+  PaymentRequestUpdate,
 } from '../types/ApiResponses';
 import { HttpMethod, PaymentRequestStatus } from '../types/Enums';
 import { BaseApiClient } from './BaseApiClient';
@@ -99,14 +101,22 @@ export class PaymentRequestClient extends BaseApiClient {
 
   /**
    * Updates a Payment request
-   * @param paymentRequest The Payment Request to update
+   * @param paymentRequestId The ID of the Payment Request to update.
+   * @param paymentRequestUpdate The Payment Request update object with the updated values.
    * @returns The updated PaymentRequest if successful. An ApiError if not successful.
    */
-  async update(paymentRequest: PaymentRequestCreate): Promise<{
+  async update(
+    paymentRequestId: string,
+    paymentRequestUpdate: PaymentRequestUpdate,
+  ): Promise<{
     data?: PaymentRequest;
     error?: ApiError;
   }> {
-    const response = await this.httpRequest<PaymentRequest>(this.apiUrl, HttpMethod.PUT, paymentRequest);
+    const response = await this.httpRequest<PaymentRequest>(
+      `${this.apiUrl}/${paymentRequestId}`,
+      HttpMethod.PUT,
+      paymentRequestUpdate,
+    );
 
     return response;
   }

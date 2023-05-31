@@ -4,22 +4,22 @@ import { LocalPaymentAttempt, LocalPaymentRequest } from '../types/LocalTypes';
 
 export const mockTags = [
   {
-    ID: '1',
+    id: '1',
     merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
     name: 'A tag',
   },
   {
-    ID: '2',
+    id: '2',
     merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
     name: 'Another tag',
   },
   {
-    ID: '3',
+    id: '3',
     merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
     name: 'A reeeeallllly long tag name',
   },
   {
-    ID: '4',
+    id: '4',
     merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
     name: 'You get the idea',
   },
@@ -27,42 +27,42 @@ export const mockTags = [
 
 export const mockMerchantTags = [
   {
-    ID: '1',
+    id: '1',
     merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
     name: 'A tag',
   },
   {
-    ID: '2',
+    id: '2',
     merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
     name: 'Another tag',
   },
   {
-    ID: '3',
+    id: '3',
     merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
     name: 'A reeeeallllly long tag name',
   },
   {
-    ID: '4',
+    id: '4',
     merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
     name: 'You get the idea',
   },
   {
-    ID: '5',
+    id: '5',
     merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
     name: 'A merchant tag 1',
   },
   {
-    ID: '6',
+    id: '6',
     merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
     name: 'A merchant tag 2',
   },
   {
-    ID: '7',
+    id: '7',
     merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
     name: 'A merchant tag 3',
   },
   {
-    ID: '8',
+    id: '8',
     merchantID: '3780263C-5926-4B79-AC84-224D64290DBF',
     name: 'A merchant tag 4',
   },
@@ -70,7 +70,7 @@ export const mockMerchantTags = [
 
 export const mockPaymentAttempts: LocalPaymentAttempt[] = [
   {
-    paymentAttemptID: 'a3b752d2-c0a6-4846-90e5-d783bb4ec005',
+    attemptKey: 'a3b752d2-c0a6-4846-90e5-d783bb4ec005',
     occurredAt: new Date('2023-05-18'),
     paymentMethod: LocalPaymentMethodTypes.Card,
     amount: 20.02,
@@ -79,7 +79,7 @@ export const mockPaymentAttempts: LocalPaymentAttempt[] = [
     last4DigitsOfCardNumber: '1234',
   },
   {
-    paymentAttemptID: 'f4c6e747-6fd6-4a3c-be3b-4d3edd258b35',
+    attemptKey: 'f4c6e747-6fd6-4a3c-be3b-4d3edd258b35',
     occurredAt: new Date('2023-03-23'),
     paymentMethod: LocalPaymentMethodTypes.Card,
     amount: 30.57,
@@ -88,7 +88,7 @@ export const mockPaymentAttempts: LocalPaymentAttempt[] = [
     last4DigitsOfCardNumber: '1234',
   },
   {
-    paymentAttemptID: 'ca2eb453-9c12-4f8f-b8b2-7c1c6af842ba',
+    attemptKey: 'ca2eb453-9c12-4f8f-b8b2-7c1c6af842ba',
     occurredAt: new Date('2023-05-18'),
     paymentMethod: LocalPaymentMethodTypes.Pisp,
     amount: 5.34,
@@ -97,7 +97,7 @@ export const mockPaymentAttempts: LocalPaymentAttempt[] = [
     last4DigitsOfCardNumber: '1234',
   },
   {
-    paymentAttemptID: '43535f79-a9f2-4331-9a78-db731e467c49',
+    attemptKey: '43535f79-a9f2-4331-9a78-db731e467c49',
     occurredAt: new Date('2023-05-2'),
     paymentMethod: LocalPaymentMethodTypes.Pisp,
     amount: 7.9,
@@ -106,7 +106,7 @@ export const mockPaymentAttempts: LocalPaymentAttempt[] = [
     last4DigitsOfCardNumber: '1234',
   },
   {
-    paymentAttemptID: 'a9f6c19a-0172-47a6-803a-c3f59899cafc',
+    attemptKey: 'a9f6c19a-0172-47a6-803a-c3f59899cafc',
     occurredAt: new Date('2023-05-1'),
     paymentMethod: LocalPaymentMethodTypes.ApplePay,
     amount: 15.39,
@@ -114,7 +114,7 @@ export const mockPaymentAttempts: LocalPaymentAttempt[] = [
     processor: 'Apple Pay',
   },
   {
-    paymentAttemptID: '7bbb2998-8d78-4b2a-9334-84444c9915c8',
+    attemptKey: '7bbb2998-8d78-4b2a-9334-84444c9915c8',
     occurredAt: new Date('2023-05-18'),
     paymentMethod: LocalPaymentMethodTypes.GooglePay,
     amount: 20.78,
@@ -126,7 +126,7 @@ export const mockPaymentAttempts: LocalPaymentAttempt[] = [
 
 export const partiallyPaidMockPaymentAttempts: LocalPaymentAttempt[] = [
   {
-    paymentAttemptID: 'a3b752d2-c0a6-4846-90e5-d783bb4ec005',
+    attemptKey: 'a3b752d2-c0a6-4846-90e5-d783bb4ec005',
     occurredAt: new Date('2023-05-18'),
     paymentMethod: LocalPaymentMethodTypes.Card,
     amount: 20.02,
@@ -135,7 +135,7 @@ export const partiallyPaidMockPaymentAttempts: LocalPaymentAttempt[] = [
     last4DigitsOfCardNumber: '1234',
   },
   {
-    paymentAttemptID: 'f4c6e747-6fd6-4a3c-be3b-4d3edd258b35',
+    attemptKey: 'f4c6e747-6fd6-4a3c-be3b-4d3edd258b35',
     occurredAt: new Date('2023-03-23'),
     paymentMethod: LocalPaymentMethodTypes.Card,
     amount: 30.57,
@@ -147,7 +147,7 @@ export const partiallyPaidMockPaymentAttempts: LocalPaymentAttempt[] = [
 ];
 export const overpaidMockPaymentAttempts: LocalPaymentAttempt[] = [
   {
-    paymentAttemptID: 'a3b752d2-c0a6-4846-90e5-d783bb4ec005',
+    attemptKey: 'a3b752d2-c0a6-4846-90e5-d783bb4ec005',
     occurredAt: new Date('2023-05-18'),
     paymentMethod: LocalPaymentMethodTypes.Card,
     amount: 20.02,
@@ -156,7 +156,7 @@ export const overpaidMockPaymentAttempts: LocalPaymentAttempt[] = [
     last4DigitsOfCardNumber: '1234',
   },
   {
-    paymentAttemptID: 'f4c6e747-6fd6-4a3c-be3b-4d3edd258b35',
+    attemptKey: 'f4c6e747-6fd6-4a3c-be3b-4d3edd258b35',
     occurredAt: new Date('2023-03-23'),
     paymentMethod: LocalPaymentMethodTypes.Card,
     amount: 90.57,
@@ -259,14 +259,14 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     currency: Currency.EUR,
     tags: [
       {
-        ID: '1',
+        id: '1',
         description: 'Logo Design',
         colourHex: '#FF0000',
         name: 'Logo Design',
         merchantID: '1',
       },
       {
-        ID: '2',
+        id: '2',
         description: 'Web Design',
         colourHex: '#00FF00',
         name: 'Web Design',
@@ -292,21 +292,21 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     currency: Currency.EUR,
     tags: [
       {
-        ID: '3',
+        id: '3',
         description: 'App Development',
         colourHex: '#0000FF',
         name: 'App Development',
         merchantID: '1',
       },
       {
-        ID: '4',
+        id: '4',
         description: 'UI Design',
         colourHex: '#FF00FF',
         name: 'UI Design',
         merchantID: '1',
       },
       {
-        ID: '5',
+        id: '5',
         description: 'EU Client',
         colourHex: '#FFFF00',
         name: 'EU Client',
@@ -331,9 +331,9 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     amount: 2700,
     currency: Currency.GBP,
     tags: [
-      { ID: '6', description: 'ecommerce', colourHex: '#FF0000', name: 'ecommerce', merchantID: '1' },
-      { ID: '7', description: 'web-development', colourHex: '#00FF00', name: 'web-development', merchantID: '1' },
-      { ID: '8', description: 'London-client', colourHex: '#0000FF', name: 'London-client', merchantID: '1' },
+      { id: '6', description: 'ecommerce', colourHex: '#FF0000', name: 'ecommerce', merchantID: '1' },
+      { id: '7', description: 'web-development', colourHex: '#00FF00', name: 'web-development', merchantID: '1' },
+      { id: '8', description: 'London-client', colourHex: '#0000FF', name: 'London-client', merchantID: '1' },
     ],
     addresses: [],
     paymentMethodTypes: [LocalPaymentMethodTypes.Card, LocalPaymentMethodTypes.Pisp],
@@ -353,9 +353,9 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     amount: 2500,
     currency: Currency.GBP,
     tags: [
-      { ID: '9', description: 'web-design', colourHex: '#FF0000', name: 'web-design', merchantID: '1' },
-      { ID: '10', description: 'branding', colourHex: '#00FF00', name: 'branding', merchantID: '1' },
-      { ID: '11', description: 'London-client', colourHex: '#0000FF', name: 'London-client', merchantID: '1' },
+      { id: '9', description: 'web-design', colourHex: '#FF0000', name: 'web-design', merchantID: '1' },
+      { id: '10', description: 'branding', colourHex: '#00FF00', name: 'branding', merchantID: '1' },
+      { id: '11', description: 'London-client', colourHex: '#0000FF', name: 'London-client', merchantID: '1' },
     ],
     addresses: [],
     paymentMethodTypes: [LocalPaymentMethodTypes.Card, LocalPaymentMethodTypes.Pisp],
@@ -375,9 +375,9 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     amount: 3000,
     currency: Currency.GBP,
     tags: [
-      { ID: '7', description: 'web-development', colourHex: '#FF0000', name: 'web-development', merchantID: '1' },
-      { ID: '6', description: 'ecommerce', colourHex: '#00FF00', name: 'ecommerce', merchantID: '1' },
-      { ID: '11', description: 'London-client', colourHex: '#0000FF', name: 'London-client', merchantID: '1' },
+      { id: '7', description: 'web-development', colourHex: '#FF0000', name: 'web-development', merchantID: '1' },
+      { id: '6', description: 'ecommerce', colourHex: '#00FF00', name: 'ecommerce', merchantID: '1' },
+      { id: '11', description: 'London-client', colourHex: '#0000FF', name: 'London-client', merchantID: '1' },
     ],
     addresses: [],
     paymentMethodTypes: [LocalPaymentMethodTypes.Card, LocalPaymentMethodTypes.Pisp],
@@ -397,8 +397,8 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     amount: 1500,
     currency: Currency.GBP,
     tags: [
-      { ID: '7', description: 'web-development', colourHex: '#FF0000', name: 'web-development', merchantID: '1' },
-      { ID: '6', description: 'ecommerce', colourHex: '#00FF00', name: 'ecommerce', merchantID: '1' },
+      { id: '7', description: 'web-development', colourHex: '#FF0000', name: 'web-development', merchantID: '1' },
+      { id: '6', description: 'ecommerce', colourHex: '#00FF00', name: 'ecommerce', merchantID: '1' },
     ],
     addresses: [],
     paymentMethodTypes: [LocalPaymentMethodTypes.Card, LocalPaymentMethodTypes.Pisp],
@@ -418,9 +418,9 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     amount: 1200,
     currency: Currency.GBP,
     tags: [
-      { ID: '12', name: 'SEO', merchantID: '1', colourHex: '#000000', description: 'Search Engine Optimization' },
-      { ID: '13', name: 'content-creation', merchantID: '1', colourHex: '#000000', description: 'Content Creation' },
-      { ID: '14', name: 'London-client', merchantID: '1', colourHex: '#000000', description: 'London Client' },
+      { id: '12', name: 'SEO', merchantID: '1', colourHex: '#000000', description: 'Search Engine Optimization' },
+      { id: '13', name: 'content-creation', merchantID: '1', colourHex: '#000000', description: 'Content Creation' },
+      { id: '14', name: 'London-client', merchantID: '1', colourHex: '#000000', description: 'London Client' },
     ],
     addresses: [],
     paymentMethodTypes: [LocalPaymentMethodTypes.Card, LocalPaymentMethodTypes.Pisp],
@@ -440,9 +440,9 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     amount: 2300,
     currency: Currency.EUR,
     tags: [
-      { ID: '15', name: 'web-design', merchantID: '1', colourHex: '#000000', description: 'Web Design' },
-      { ID: '16', name: 'responsive-design', merchantID: '1', colourHex: '#000000', description: 'Responsive Design' },
-      { ID: '17', name: 'EU-client', merchantID: '1', colourHex: '#000000', description: 'EU Client' },
+      { id: '15', name: 'web-design', merchantID: '1', colourHex: '#000000', description: 'Web Design' },
+      { id: '16', name: 'responsive-design', merchantID: '1', colourHex: '#000000', description: 'Responsive Design' },
+      { id: '17', name: 'EU-client', merchantID: '1', colourHex: '#000000', description: 'EU Client' },
     ],
     addresses: [],
     paymentMethodTypes: [LocalPaymentMethodTypes.Card, LocalPaymentMethodTypes.Pisp],
@@ -462,9 +462,9 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     amount: 1000,
     currency: Currency.EUR,
     tags: [
-      { ID: '18', name: 'logo-design', merchantID: '1', colourHex: '#000000', description: 'Logo Design' },
-      { ID: '19', name: 'branding', merchantID: '1', colourHex: '#000000', description: 'Branding' },
-      { ID: '20', name: 'EU-client', merchantID: '1', colourHex: '#000000', description: 'EU Client' },
+      { id: '18', name: 'logo-design', merchantID: '1', colourHex: '#000000', description: 'Logo Design' },
+      { id: '19', name: 'branding', merchantID: '1', colourHex: '#000000', description: 'Branding' },
+      { id: '20', name: 'EU-client', merchantID: '1', colourHex: '#000000', description: 'EU Client' },
     ],
     addresses: [],
     paymentMethodTypes: [LocalPaymentMethodTypes.Card, LocalPaymentMethodTypes.Pisp],
@@ -484,9 +484,9 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     amount: 3500,
     currency: Currency.GBP,
     tags: [
-      { ID: '21', name: 'UX-design', merchantID: '1', colourHex: '#000000', description: 'UX Design' },
-      { ID: '22', name: 'app-development', merchantID: '1', colourHex: '#000000', description: 'App Development' },
-      { ID: '23', name: 'London-client', merchantID: '1', colourHex: '#000000', description: 'London Client' },
+      { id: '21', name: 'UX-design', merchantID: '1', colourHex: '#000000', description: 'UX Design' },
+      { id: '22', name: 'app-development', merchantID: '1', colourHex: '#000000', description: 'App Development' },
+      { id: '23', name: 'London-client', merchantID: '1', colourHex: '#000000', description: 'London Client' },
     ],
     addresses: [],
     paymentMethodTypes: [LocalPaymentMethodTypes.Card, LocalPaymentMethodTypes.Pisp],
@@ -506,9 +506,9 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     amount: 4200,
     currency: Currency.GBP,
     tags: [
-      { ID: '24', name: 'web-design', merchantID: '1', colourHex: '#000000', description: 'Web Design' },
-      { ID: '25', name: 'branding', merchantID: '1', colourHex: '#000000', description: 'Branding' },
-      { ID: '26', name: 'London-client', merchantID: '1', colourHex: '#000000', description: 'London Client' },
+      { id: '24', name: 'web-design', merchantID: '1', colourHex: '#000000', description: 'Web Design' },
+      { id: '25', name: 'branding', merchantID: '1', colourHex: '#000000', description: 'Branding' },
+      { id: '26', name: 'London-client', merchantID: '1', colourHex: '#000000', description: 'London Client' },
     ],
     addresses: [],
     paymentMethodTypes: [LocalPaymentMethodTypes.Card, LocalPaymentMethodTypes.Pisp],
@@ -528,9 +528,9 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     amount: 2200,
     currency: Currency.EUR,
     tags: [
-      { ID: '27', name: 'UI-design', merchantID: '1', colourHex: '#000000', description: 'UI Design' },
-      { ID: '28', name: 'app-development', merchantID: '1', colourHex: '#000000', description: 'App Development' },
-      { ID: '29', name: 'EU-client', merchantID: '1', colourHex: '#000000', description: 'EU Client' },
+      { id: '27', name: 'UI-design', merchantID: '1', colourHex: '#000000', description: 'UI Design' },
+      { id: '28', name: 'app-development', merchantID: '1', colourHex: '#000000', description: 'App Development' },
+      { id: '29', name: 'EU-client', merchantID: '1', colourHex: '#000000', description: 'EU Client' },
     ],
     addresses: [],
     paymentMethodTypes: [LocalPaymentMethodTypes.Card, LocalPaymentMethodTypes.Pisp],

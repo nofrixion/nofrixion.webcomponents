@@ -17,6 +17,7 @@ import { add, startOfDay, endOfDay } from 'date-fns';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import LayoutWrapper from '../../ui/utils/LayoutWrapper';
 import { PaymentRequestMetrics } from '../../../api/types/ApiResponses';
+import PaymentRequestDetailsModal from '../PaymentRequestDetailsModal/PaymentRequestDetailsModal';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -42,9 +43,22 @@ const PaymentRequestDashboard = ({
 
   let [isCreatePaymentRequestOpen, setIsCreatePaymentRequestOpen] = useState(false);
 
+  const [selectedPaymentRequest, setSelectedPaymentRequest] = useState<LocalPaymentRequest | null>(null);
+  const [showPaymentRequestDetailsModal, setShowPaymentRequestDetailsModal] = useState<boolean>(false);
+
   const pageSize = 20;
 
   const client = new PaymentRequestClient(apiUrl, token, merchantId);
+
+  const onPaymentRequestRowClicked = (paymentRequest: LocalPaymentRequest) => {
+    setSelectedPaymentRequest(paymentRequest);
+    setShowPaymentRequestDetailsModal(true);
+  };
+
+  const onPaymentRequestDetailsModalDismiss = () => {
+    setSelectedPaymentRequest(null);
+    setShowPaymentRequestDetailsModal(false);
+  };
 
   const {
     paymentRequests,
@@ -222,6 +236,7 @@ const PaymentRequestDashboard = ({
             isLoading={isLoadingPaymentRequests}
             isEmpty={isInitialState}
             onCreatePaymentRequest={onCreatePaymentRequest}
+            onPaymentRequestClicked={onPaymentRequestRowClicked}
           />
         </LayoutWrapper>
       </LayoutGroup>
@@ -233,6 +248,16 @@ const PaymentRequestDashboard = ({
         merchantId={merchantId}
         apiUrl={apiUrl}
       />
+      {selectedPaymentRequest && (
+        <PaymentRequestDetailsModal
+          token={token}
+          apiUrl={apiUrl}
+          merchantId={merchantId}
+          paymentRequestID={selectedPaymentRequest.id}
+          open={showPaymentRequestDetailsModal}
+          onDismiss={onPaymentRequestDetailsModalDismiss}
+        ></PaymentRequestDetailsModal>
+      )}
     </div>
   );
 };

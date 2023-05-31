@@ -1,4 +1,3 @@
-import { Currency } from '../../../api/types/Enums';
 import { LocalPaymentMethodTypes } from '../../../types/LocalEnums';
 import CardIcon from '../../../assets/icons/card-icon.svg';
 import BankIcon from '../../../assets/icons/bank-icon.svg';
@@ -34,7 +33,7 @@ const Transactions = ({
         {transactions.map((transaction, index) => (
           <tr key={index} className="border-b group">
             <td className={classNames('text-[0.813rem] pb-2 leading-6', { 'pt-2': index !== 0 })}>
-              {format(transaction.occurredAt, 'MMM do, yyyy')}
+              {transaction.occurredAt && format(transaction.occurredAt, 'MMM do, yyyy')}
             </td>
             <td className={classNames('pl-6 pb-2 text-right', { 'pt-2': index !== 0 })}>
               <span className="mr-2 text-sm tabular-nums font-medium leading-6">
@@ -62,7 +61,7 @@ const Transactions = ({
               <div className="w-[3.75rem] text-[0.813rem] h-6 ">
                 <div
                   className="text-[0.813rem] px-2 py-1 rounded-full bg-[#DEE6ED] leading-4 cursor-pointer opacity-0 transition group-hover:opacity-100 hover:bg-[#BDCCDB]"
-                  onClick={() => onRefundClicked(transaction.paymentAttemptID)}
+                  onClick={() => onRefundClicked(transaction.attemptKey)}
                 >
                   Refund
                 </div>

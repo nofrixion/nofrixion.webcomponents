@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { PaymentRequestClient } from '../clients/PaymentRequestClient';
-import { ApiError } from '../types/ApiResponses';
+import { ApiError, PaymentRequest } from '../types/ApiResponses';
 
 export const usePaymentRequest = (paymentRequestId: string, apiUrl: string, authToken: string, merchantId: string) => {
   const [paymentRequest, setPaymentRequest] = useState<PaymentRequest>();

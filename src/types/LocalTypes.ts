@@ -25,12 +25,12 @@ export interface LocalPaymentRequest {
 }
 
 export interface LocalPaymentAttempt {
-  paymentAttemptID: string;
+  attemptKey: string;
   occurredAt: Date;
   paymentMethod: LocalPaymentMethodTypes;
   amount: number;
   currency: Currency.EUR | Currency.GBP;
-  processor: string;
+  processor?: string;
   last4DigitsOfCardNumber?: string;
 }
 
@@ -92,7 +92,7 @@ export interface LocalPaymentMethodsFormValue {
 }
 
 export interface LocalTag {
-  ID?: string;
+  id: string;
   merchantID?: string;
   name: string;
   colourHex?: string;
