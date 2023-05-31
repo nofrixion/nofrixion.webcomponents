@@ -132,6 +132,17 @@ const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     }
   };
 
+  const parseWalletNameToPaymentMethodType = (walletName: Wallets): LocalPaymentMethodTypes => {
+    switch (walletName) {
+      case Wallets.ApplePay:
+        return LocalPaymentMethodTypes.ApplePay;
+      case Wallets.GooglePay:
+        return LocalPaymentMethodTypes.GooglePay;
+      default:
+        return LocalPaymentMethodTypes.None;
+    }
+  };
+
   const parseApiPaymentAttemptsToLocalPaymentAttempts = (
     remotePaymentAttempts: PaymentRequestPaymentAttempt[],
   ): LocalPaymentAttempt[] => {
@@ -154,7 +165,9 @@ const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
           localPaymentAttempts.push({
             attemptKey: attemptKey,
             occurredAt: new Date(settledAt ?? authorisedAt ?? 0),
-            paymentMethod: parseApiPaymentMethodTypeToLocalMethodType(paymentMethod),
+            paymentMethod: walletName
+              ? parseWalletNameToPaymentMethodType(walletName)
+              : parseApiPaymentMethodTypeToLocalMethodType(paymentMethod),
             amount: settledAmount > 0 ? settledAmount : authorisedAmount,
             currency: currency,
             processor: walletName ? parseApiWalletTypeToLocalWalletType(walletName) : undefined,
