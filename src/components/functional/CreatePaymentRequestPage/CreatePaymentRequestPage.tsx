@@ -8,6 +8,7 @@ import { CardTokenCreateModes, PartialPaymentMethods } from '../../../api/types/
 import { useBanks } from '../../../api/hooks/useBanks';
 import { useUserPaymentDefaults } from '../../../api/hooks/useUserPaymentDefaults';
 import { ClientSettingsClient } from '../../../api/clients/ClientSettingsClient';
+import { defaultUserPaymentDefaults } from '../../../utils/constants';
 
 interface CreatePaymentRequesPageProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -26,7 +27,7 @@ const CreatePaymentRequestPage = ({
 }: CreatePaymentRequesPageProps) => {
   const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId);
 
-  const { userPaymentDefaults, isLoading } = useUserPaymentDefaults(apiUrl, token);
+  const { userPaymentDefaults, isUserPaymentDefaultsLoading } = useUserPaymentDefaults(apiUrl, token);
   const { banks } = useBanks(apiUrl, token, merchantId);
 
   const parseLocalPaymentRequestCreateToRemotePaymentRequest = (
@@ -99,16 +100,15 @@ const CreatePaymentRequestPage = ({
 
   return (
     <>
-      {!isLoading && (
-        <UICreatePaymentRequestPage
-          isOpen={isOpen}
-          onClose={onClose}
-          banks={banks ?? []}
-          onConfirm={onCreatePaymentRequest}
-          userPaymentDefaults={userPaymentDefaults ?? {}}
-          onDefaultsChanged={onSaveUserPaymentDefaults}
-        />
-      )}
+      <UICreatePaymentRequestPage
+        isOpen={isOpen}
+        onClose={onClose}
+        banks={banks ?? []}
+        onConfirm={onCreatePaymentRequest}
+        userPaymentDefaults={isUserPaymentDefaultsLoading ? defaultUserPaymentDefaults : userPaymentDefaults}
+        onDefaultsChanged={onSaveUserPaymentDefaults}
+        isUserPaymentDefaultsLoading={isUserPaymentDefaultsLoading}
+      />
     </>
   );
 };

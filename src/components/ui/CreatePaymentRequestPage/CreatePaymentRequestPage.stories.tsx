@@ -51,6 +51,7 @@ const Template: StoryFn<typeof CreatePaymentRequestPage> = (args) => {
 
 export const Showcase = Template.bind({});
 Showcase.args = {
+  isUserPaymentDefaultsLoading: false,
   banks: [
     {
       bankID: 'abddb9c0-6c43-4e87-8381-1bd1db2204ad',
@@ -154,7 +155,7 @@ Showcase.args = {
       lightning: false,
     },
     paymentConditionsDefaults: {
-      allowPartialPayments: true,
+      allowPartialPayments: false,
     },
   },
 };
