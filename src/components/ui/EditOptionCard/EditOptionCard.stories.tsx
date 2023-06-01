@@ -21,10 +21,27 @@ PaymentConditions.args = {
   label: 'Payment conditions',
   value: 'Single payment',
   details: ['*Bank of Ireland* set up as priority bank.', "Don't capture funds on cards is on."],
+  isLoading: false,
+};
+
+export const PaymentConditionsLoading = Template.bind({});
+PaymentConditionsLoading.args = {
+  label: 'Payment conditions',
+  value: 'Single payment',
+  details: ['*Bank of Ireland* set up as priority bank.', "Don't capture funds on cards is on."],
+  isLoading: true,
 };
 
 export const PaymentMethods = Template.bind({});
 PaymentMethods.args = {
   label: 'Payment methods',
   value: 'Bank and cards',
+  isLoading: false,
+};
+
+export const PaymentMethodsLoading = Template.bind({});
+PaymentMethodsLoading.args = {
+  label: 'Payment methods',
+  value: 'Bank and cards',
+  isLoading: true,
 };

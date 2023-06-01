@@ -8,6 +8,7 @@ import { CardTokenCreateModes, PartialPaymentMethods } from '../../../api/types/
 import { useBanks } from '../../../api/hooks/useBanks';
 import { useUserPaymentDefaults } from '../../../api/hooks/useUserPaymentDefaults';
 import { ClientSettingsClient } from '../../../api/clients/ClientSettingsClient';
+import { defaultUserPaymentDefaults } from '../../../utils/constants';
 
 interface CreatePaymentRequesPageProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -96,26 +97,6 @@ const CreatePaymentRequestPage = ({
     }
   };
 
-  const getDefaultUserPaymentDefaults = (): UserPaymentDefaults => {
-    return {
-      paymentMethodsDefaults: {
-        pisp: true,
-        pispPriorityBank: false,
-        pispPriorityBankID: '',
-        card: true,
-        wallet: true,
-        lightning: false,
-        cardAuthorizeOnly: false,
-      },
-      paymentConditionsDefaults: {
-        allowPartialPayments: false,
-      },
-      notificationEmailsDefaults: {
-        emailAddresses: '',
-      },
-    };
-  };
-
   return (
     <>
       <UICreatePaymentRequestPage
@@ -123,7 +104,7 @@ const CreatePaymentRequestPage = ({
         onClose={onClose}
         banks={banks ?? []}
         onConfirm={onCreatePaymentRequest}
-        userPaymentDefaults={isUserPaymentDefaultsLoading ? getDefaultUserPaymentDefaults() : userPaymentDefaults}
+        userPaymentDefaults={isUserPaymentDefaultsLoading ? defaultUserPaymentDefaults : userPaymentDefaults}
         onDefaultsChanged={onSaveUserPaymentDefaults}
         isUserPaymentDefaultsLoading={isUserPaymentDefaultsLoading}
       />

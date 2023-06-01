@@ -12,7 +12,6 @@ interface EditOptionCardProps {
   isLoading: boolean;
 }
 
-// TODO: Disable edit mode when isLoading is true
 const EditOptionCard = ({ label, value, details, onClick, children, isLoading }: EditOptionCardProps) => {
   const handleOnClick = () => {
     if (!isLoading) {
