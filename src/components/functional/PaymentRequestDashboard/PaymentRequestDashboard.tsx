@@ -1,7 +1,7 @@
 import { PaymentRequestStatus } from '../../../api/types/Enums';
 import Tab from '../../ui/Tab/Tab';
 import * as Tabs from '@radix-ui/react-tabs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DateRangePicker, { DateRange } from '../../ui/DateRangePicker/DateRangePicker';
 import PrimaryButton from '../../ui/PrimaryButton/PrimaryButton';
 import { usePaymentRequestMetrics } from '../../../api/hooks/usePaymentRequestMetrics';
@@ -66,8 +66,7 @@ const PaymentRequestDashboard = ({
     status,
   );
 
-  const localPaymentRequests: LocalPaymentRequest[] =
-    paymentRequests?.map((paymentRequest) => RemotePaymentRequestToLocalPaymentRequest(paymentRequest)) ?? [];
+  const [localPaymentRequests, setLocalPaymentRequests] = useState<LocalPaymentRequest[]>([]);
 
   const [firstMetrics, setFirstMetrics] = useState<PaymentRequestMetrics | undefined>();
 
@@ -78,6 +77,12 @@ const PaymentRequestDashboard = ({
     dateRange.fromDate.getTime(),
     dateRange.toDate.getTime(),
   );
+
+  useEffect(() => {
+    setLocalPaymentRequests(
+      paymentRequests?.map((paymentRequest) => RemotePaymentRequestToLocalPaymentRequest(paymentRequest)) ?? [],
+    );
+  }, [paymentRequests]);
 
   const onDeletePaymentRequest = async (paymentRequest: LocalPaymentRequest) => {
     const response = await client.delete(paymentRequest.id);

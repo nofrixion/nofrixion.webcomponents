@@ -28,7 +28,7 @@ import _ from 'lodash';
 interface CreatePaymentRequestPageProps {
   banks: BankSettings[];
   userPaymentDefaults?: UserPaymentDefaults;
-  onConfirm: (data: LocalPaymentRequestCreate) => void;
+  onConfirm: (data: LocalPaymentRequestCreate) => Promise<void>;
   isOpen: boolean;
   onClose: () => void;
   onDefaultsChanged: (data: UserPaymentDefaults) => void;
@@ -133,7 +133,7 @@ const CreatePaymentRequestPage = ({
     setIsReviewing(true);
   };
 
-  const onConfirmClicked = () => {
+  const onConfirmClicked = async () => {
     const paymentRequestToCreate: LocalPaymentRequestCreate = {
       amount: Number(amount),
       currency: currency as Currency,
@@ -159,7 +159,7 @@ const CreatePaymentRequestPage = ({
       },
     };
 
-    onConfirm(paymentRequestToCreate);
+    await onConfirm(paymentRequestToCreate);
 
     if (defaultsChanged) {
       handleDefaultsChanged();
