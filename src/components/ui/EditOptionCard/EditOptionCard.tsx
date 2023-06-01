@@ -5,14 +5,14 @@ import classNames from 'classnames';
 
 interface EditOptionCardProps {
   label: string;
-  value?: string;
+  values?: string[];
   details?: string[];
   onClick?: () => void;
   children?: React.ReactNode;
   isLoading: boolean;
 }
 
-const EditOptionCard = ({ label, value, details, onClick, children, isLoading }: EditOptionCardProps) => {
+const EditOptionCard = ({ label, values, details, onClick, children, isLoading }: EditOptionCardProps) => {
   const handleOnClick = () => {
     if (!isLoading) {
       onClick && onClick();
@@ -28,13 +28,15 @@ const EditOptionCard = ({ label, value, details, onClick, children, isLoading }:
     >
       <div className="flex w-full">
         <span className="text-greyText">{label}</span>
-        <img
-          src={EditIcon}
-          alt="Edit icon"
-          className={classNames('ml-2 transition opacity-0', {
-            'group-hover:opacity-100': !isLoading,
-          })}
-        />
+        <div>
+          <img
+            src={EditIcon}
+            alt="Edit icon"
+            className={classNames('ml-2 transition opacity-0 mt-1', {
+              'group-hover:opacity-100': !isLoading,
+            })}
+          />
+        </div>
 
         {isLoading && (
           <div className="animate-pulse my-auto ml-auto flex justify-center items-center">
@@ -42,8 +44,15 @@ const EditOptionCard = ({ label, value, details, onClick, children, isLoading }:
           </div>
         )}
         {!isLoading && (
-          <div className="ml-auto flex justify-center items-center transition">
-            {value && <span>{value}</span>}
+          <div className="ml-auto flex-col grid justify-items-end transition">
+            {values &&
+              values.map((value, index) => {
+                return (
+                  <span className="flex" key={`value-${index}`}>
+                    {value}
+                  </span>
+                );
+              })}
             {children}
           </div>
         )}

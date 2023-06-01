@@ -5,13 +5,14 @@ import { NotificationEmailsDefaults } from '../../../../api/types/ApiResponses';
 import InputTextField from '../../InputTextField/InputTextField';
 import { AnimatePresence } from 'framer-motion';
 import AnimateHeightWrapper from '../../utils/AnimateHeight';
+import { validateEmail } from '../../../../utils/validation';
 
 interface NotificationEmailsModalProps extends BaseModalProps {
   userDefaults?: NotificationEmailsDefaults;
   onApply: (data: LocalPaymentNotificationsFormValue) => void;
 }
 
-const NotificationEmailsModal = ({ open, userDefaults, onDismiss, onApply }: NotificationEmailsModalProps) => {
+const PaymentNotificationsModal = ({ open, userDefaults, onDismiss, onApply }: NotificationEmailsModalProps) => {
   const [isDefault, setIsDefault] = useState<boolean>(userDefaults ? true : false);
   const [email, setEmail] = useState(userDefaults ? userDefaults.emailAddresses : '');
   const [hasEmailError, setHasEmailError] = useState(false);
@@ -28,23 +29,25 @@ const NotificationEmailsModal = ({ open, userDefaults, onDismiss, onApply }: Not
     return formData;
   };
 
-  const onValidateEmail = (email: string) => {
-    if (email && !validateEmail(email)) {
-      setHasEmailError(true);
-    }
-
-    if (!email) {
+  const onValidateEmails = (emails: string) => {
+    if (!emails) {
       setHasEmailError(false);
     }
 
-    if (email && validateEmail(email)) {
-      setHasEmailError(false);
-    }
-  };
+    let hasError = false;
 
-  const validateEmail = (email: string) => {
-    const re = /\S+@\S+\.\S+/;
-    return re.test(email);
+    if (emails) {
+      emails
+        .split(',')
+        .map((email) => email.trim())
+        .map((email) => {
+          if (!validateEmail(email)) {
+            hasError = true;
+          }
+        });
+    }
+
+    setHasEmailError(hasError);
   };
 
   return (
@@ -68,10 +71,10 @@ const NotificationEmailsModal = ({ open, userDefaults, onDismiss, onApply }: Not
           onChange={(e) => {
             setEmail(e.target.value);
             if (hasEmailError) {
-              onValidateEmail(e.target.value);
+              onValidateEmails(e.target.value);
             }
           }}
-          onBlur={(e) => onValidateEmail(e.target.value)}
+          onBlur={(e) => onValidateEmails(e.target.value)}
         />
 
         <AnimatePresence>
@@ -87,4 +90,4 @@ const NotificationEmailsModal = ({ open, userDefaults, onDismiss, onApply }: Not
   );
 };
 
-export default NotificationEmailsModal;
+export default PaymentNotificationsModal;
