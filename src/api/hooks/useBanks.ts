@@ -7,7 +7,7 @@ export const useBanks = (apiUrl: string, authToken: string, merchantId: string) 
   const [apiError, setApiError] = useState<ApiError>();
 
   useEffect(() => {
-    const fetchPaymentRequestMetrics = async () => {
+    const fetchBanks = async () => {
       const client = new MerchantClient(apiUrl, authToken, merchantId);
       const response = await client.getBankSettings();
 
@@ -18,7 +18,7 @@ export const useBanks = (apiUrl: string, authToken: string, merchantId: string) 
       }
     };
 
-    fetchPaymentRequestMetrics();
+    fetchBanks();
   }, [apiUrl, authToken, merchantId]);
 
   return {

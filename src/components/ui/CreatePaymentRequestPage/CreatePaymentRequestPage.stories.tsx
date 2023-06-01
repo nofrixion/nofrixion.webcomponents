@@ -3,12 +3,14 @@ import { StoryFn, Meta } from '@storybook/react';
 import CreatePaymentRequestPage from './CreatePaymentRequestPage';
 import { Currency, PaymentProcessor } from '../../../api/types/Enums';
 import { useState } from 'react';
+import { action } from '@storybook/addon-actions';
 
 export default {
   title: 'UI/CreatePaymentRequestPage',
   component: CreatePaymentRequestPage,
   argTypes: {
     onConfirm: { action: 'onConfirm' },
+    onDefaultsChanged: { action: 'Defaults changed' },
     banks: {
       control: {
         type: 'array',
@@ -16,8 +18,6 @@ export default {
     },
   },
 } as Meta<typeof CreatePaymentRequestPage>;
-
-// const Template: StoryFn<typeof CreatePaymentRequestPage> = (args) => <CreatePaymentRequestPage {...args} />;
 
 const Template: StoryFn<typeof CreatePaymentRequestPage> = (args) => {
   let [isOpen, setIsOpen] = useState(true);
@@ -51,6 +51,7 @@ const Template: StoryFn<typeof CreatePaymentRequestPage> = (args) => {
 
 export const Showcase = Template.bind({});
 Showcase.args = {
+  isUserPaymentDefaultsLoading: false,
   banks: [
     {
       bankID: 'abddb9c0-6c43-4e87-8381-1bd1db2204ad',
@@ -143,4 +144,18 @@ Showcase.args = {
       message: 'After pressing continue you will be redirected to your bank to complete your payment.',
     },
   ],
+  userPaymentDefaults: {
+    paymentMethodsDefaults: {
+      pisp: true,
+      pispPriorityBank: true,
+      pispPriorityBankID: 'faef567d-0772-4ac6-ad4b-b8b0ec09be55',
+      card: true,
+      cardAuthorizeOnly: false,
+      wallet: false,
+      lightning: false,
+    },
+    paymentConditionsDefaults: {
+      allowPartialPayments: false,
+    },
+  },
 };

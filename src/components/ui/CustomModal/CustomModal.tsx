@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import Checkbox from '../Checkbox/Checkbox';
 
@@ -6,6 +6,7 @@ interface CustomModalProps extends BaseModalProps {
   title: string;
   enableUseAsDefault?: boolean;
   children: React.ReactNode;
+  isDefault: boolean;
 }
 
 export interface BaseModalProps {
@@ -14,8 +15,16 @@ export interface BaseModalProps {
   onDismiss: () => void;
 }
 
-const CustomModal = ({ title, children, open, enableUseAsDefault, onApply, onDismiss }: CustomModalProps) => {
-  const [isDefaultChecked, setIsDefaultChecked] = useState<boolean>(false);
+const CustomModal = ({
+  title,
+  children,
+  open,
+  enableUseAsDefault,
+  isDefault,
+  onApply,
+  onDismiss,
+}: CustomModalProps) => {
+  const [isDefaultChecked, setIsDefaultChecked] = useState<boolean>(isDefault);
 
   const onApplyClicked = () => {
     if (!onApply) return;
@@ -27,7 +36,7 @@ const CustomModal = ({ title, children, open, enableUseAsDefault, onApply, onDis
 
     // Add the isDefaultChecked value to the formData
     const formData = {
-      isDefaultChecked,
+      isDefaultChecked: isDefaultChecked,
     };
 
     onApply(formData);

@@ -17,3 +17,21 @@ export const localCurrency = {
   gbp: { code: 'GBP', symbol: '£' },
   eur: { code: 'EUR', symbol: '€' },
 };
+
+export const defaultUserPaymentDefaults = {
+  paymentMethodsDefaults: {
+    pisp: true,
+    pispPriorityBank: false,
+    pispPriorityBankID: '',
+    card: true,
+    wallet: true,
+    lightning: false,
+    cardAuthorizeOnly: false,
+  },
+  paymentConditionsDefaults: {
+    allowPartialPayments: false,
+  },
+  notificationEmailsDefaults: {
+    emailAddresses: '',
+  },
+};

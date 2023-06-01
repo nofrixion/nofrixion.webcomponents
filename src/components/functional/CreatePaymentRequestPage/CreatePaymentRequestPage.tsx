@@ -3,9 +3,12 @@ import UICreatePaymentRequestPage from '../../ui/CreatePaymentRequestPage/Create
 import { LocalPaymentRequestCreate } from '../../../types/LocalTypes';
 import { makeToast } from '../../ui/Toast/Toast';
 import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
-import { PaymentRequestCreate } from '../../../api/types/ApiResponses';
+import { PaymentRequestCreate, UserPaymentDefaults } from '../../../api/types/ApiResponses';
 import { CardTokenCreateModes, PartialPaymentMethods } from '../../../api/types/Enums';
 import { useBanks } from '../../../api/hooks/useBanks';
+import { useUserPaymentDefaults } from '../../../api/hooks/useUserPaymentDefaults';
+import { ClientSettingsClient } from '../../../api/clients/ClientSettingsClient';
+import { defaultUserPaymentDefaults } from '../../../utils/constants';
 
 interface CreatePaymentRequesPageProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -24,6 +27,7 @@ const CreatePaymentRequestPage = ({
 }: CreatePaymentRequesPageProps) => {
   const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId);
 
+  const { userPaymentDefaults, isUserPaymentDefaultsLoading } = useUserPaymentDefaults(apiUrl, token);
   const { banks } = useBanks(apiUrl, token, merchantId);
 
   const parseLocalPaymentRequestCreateToRemotePaymentRequest = (
@@ -83,13 +87,28 @@ const CreatePaymentRequestPage = ({
     makeToast('success', 'Payment request successfully created.');
   };
 
+  const onSaveUserPaymentDefaults = async (userPaymentDefaults: UserPaymentDefaults) => {
+    const client = new ClientSettingsClient(apiUrl, token);
+    const response = await client.saveUserPaymentDefaults(userPaymentDefaults);
+
+    if (response.error) {
+      makeToast('error', response.error.title);
+      return;
+    }
+  };
+
   return (
-    <UICreatePaymentRequestPage
-      isOpen={isOpen}
-      onClose={onClose}
-      banks={banks ?? []}
-      onConfirm={onCreatePaymentRequest}
-    />
+    <>
+      <UICreatePaymentRequestPage
+        isOpen={isOpen}
+        onClose={onClose}
+        banks={banks ?? []}
+        onConfirm={onCreatePaymentRequest}
+        userPaymentDefaults={isUserPaymentDefaultsLoading ? defaultUserPaymentDefaults : userPaymentDefaults}
+        onDefaultsChanged={onSaveUserPaymentDefaults}
+        isUserPaymentDefaultsLoading={isUserPaymentDefaultsLoading}
+      />
+    </>
   );
 };
 

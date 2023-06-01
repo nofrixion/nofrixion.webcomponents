@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import InputAmountField from '../InputAmountField/InputAmountField';
 import InputTextField from '../InputTextField/InputTextField';
@@ -21,19 +21,31 @@ import classNames from 'classnames';
 import PaymentConditionsModal from '../Modals/PaymentConditionsModal/PaymentConditionsModal';
 
 import { parseBoldText } from '../../../utils/uiFormaters';
-import { BankSettings } from '../../../api/types/ApiResponses';
+import { BankSettings, UserPaymentDefaults } from '../../../api/types/ApiResponses';
 import PaymentMethodIcon from '../utils/PaymentMethodIcon';
+import _ from 'lodash';
 
 interface CreatePaymentRequestPageProps {
   banks: BankSettings[];
+  userPaymentDefaults?: UserPaymentDefaults;
   onConfirm: (data: LocalPaymentRequestCreate) => void;
   isOpen: boolean;
   onClose: () => void;
+  onDefaultsChanged: (data: UserPaymentDefaults) => void;
+  isUserPaymentDefaultsLoading: boolean;
 }
 
 const durationAnimationWidth = 0.3;
 
-const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreatePaymentRequestPageProps) => {
+const CreatePaymentRequestPage = ({
+  banks,
+  userPaymentDefaults,
+  onConfirm,
+  isOpen,
+  onClose,
+  onDefaultsChanged,
+  isUserPaymentDefaultsLoading,
+}: CreatePaymentRequestPageProps) => {
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState<'EUR' | 'GBP'>('EUR');
   const [productOrService, setProductOrService] = useState('');
@@ -41,8 +53,16 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-
   const [hasEmailError, setHasEmailError] = useState(false);
+  const [defaultsChanged, setDefaultsChanged] = useState(false);
+
+  const findBank = (bankID: string | undefined) => {
+    if (!bankID) {
+      return undefined;
+    }
+    const bank = banks.find((b) => b.bankID === bankID);
+    return bank ? { id: bank.bankID, name: bank.bankName } : undefined;
+  };
 
   const [paymentMethodsFormValue, setPaymentMethodsFormValue] = useState<LocalPaymentMethodsFormValue>({
     isBankEnabled: true,
@@ -50,16 +70,34 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
     isWalletEnabled: true,
     isLightningEnabled: false,
     isCaptureFundsEnabled: true,
+    isDefault: false,
   });
 
   const [paymentConditionsFormValue, setPaymentConditionsFormValue] = useState<LocalPaymentConditionsFormValue>({
     allowPartialPayments: false,
+    isDefault: false,
   });
 
   const [isPaymentMethodsModalOpen, setIsPaymentMethodsModalOpen] = useState(false);
   const [isPaymentConditionsModalOpen, setIsPaymentConditionsModalOpen] = useState(false);
 
   const [isReviewing, setIsReviewing] = useState(false);
+
+  useEffect(() => {
+    setPaymentMethodsFormValue({
+      isBankEnabled: userPaymentDefaults?.paymentMethodsDefaults?.pisp ?? true,
+      isCardEnabled: userPaymentDefaults?.paymentMethodsDefaults?.card ?? true,
+      isWalletEnabled: userPaymentDefaults?.paymentMethodsDefaults?.wallet ?? true,
+      isLightningEnabled: userPaymentDefaults?.paymentMethodsDefaults?.lightning ?? false,
+      isCaptureFundsEnabled: !userPaymentDefaults?.paymentMethodsDefaults?.cardAuthorizeOnly ?? true,
+      isDefault: !!!userPaymentDefaults?.paymentMethodsDefaults,
+      priorityBank: findBank(userPaymentDefaults?.paymentMethodsDefaults?.pispPriorityBankID),
+    });
+    setPaymentConditionsFormValue({
+      allowPartialPayments: userPaymentDefaults?.paymentConditionsDefaults?.allowPartialPayments ?? false,
+      isDefault: !!!userPaymentDefaults?.paymentConditionsDefaults,
+    });
+  }, [userPaymentDefaults]);
 
   const onCurrencyChange = (currency: string) => {
     setCurrency(currency as 'EUR' | 'GBP');
@@ -69,12 +107,22 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
     setIsPaymentMethodsModalOpen(false);
 
     setPaymentMethodsFormValue(data);
+
+    // Since there's no way to cancel the modal, we need to check if the data has changed
+    if (!_.isEqual(data, paymentMethodsFormValue)) {
+      setDefaultsChanged(true);
+    }
   };
 
   const onConditionsReceived = (data: LocalPaymentConditionsFormValue) => {
     setIsPaymentConditionsModalOpen(false);
 
     setPaymentConditionsFormValue(data);
+
+    // Since there's no way to cancel the modal, we need to check if the data has changed
+    if (!_.isEqual(data, paymentConditionsFormValue)) {
+      setDefaultsChanged(true);
+    }
   };
 
   const onReviewClicked = () => {
@@ -85,7 +133,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
     setIsReviewing(true);
   };
 
-  const onConfrimClicked = () => {
+  const onConfirmClicked = () => {
     const paymentRequestToCreate: LocalPaymentRequestCreate = {
       amount: Number(amount),
       currency: currency as Currency,
@@ -113,9 +161,41 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
 
     onConfirm(paymentRequestToCreate);
 
+    if (defaultsChanged) {
+      handleDefaultsChanged();
+    }
+
     // TODO: Remove this. This is just for demo purposes
     onClose();
     resetStates();
+  };
+
+  const handleDefaultsChanged = () => {
+    const defaults: UserPaymentDefaults = {};
+
+    if (paymentMethodsFormValue.isDefault) {
+      defaults.paymentMethodsDefaults = {
+        pisp: paymentMethodsFormValue.isBankEnabled,
+        card: paymentMethodsFormValue.isCardEnabled,
+        wallet: paymentMethodsFormValue.isWalletEnabled,
+        lightning: paymentMethodsFormValue.isLightningEnabled,
+        cardAuthorizeOnly: !paymentMethodsFormValue.isCaptureFundsEnabled,
+        pispPriorityBank: paymentMethodsFormValue.priorityBank ? true : false,
+        pispPriorityBankID: paymentMethodsFormValue.priorityBank?.id ?? '',
+      };
+    } else {
+      defaults.paymentMethodsDefaults = undefined;
+    }
+
+    if (paymentConditionsFormValue.isDefault) {
+      defaults.paymentConditionsDefaults = {
+        allowPartialPayments: paymentConditionsFormValue.allowPartialPayments,
+      };
+    } else {
+      defaults.paymentConditionsDefaults = undefined;
+    }
+
+    onDefaultsChanged(defaults);
   };
 
   const resetStates = () => {
@@ -132,9 +212,11 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
       isWalletEnabled: true,
       isLightningEnabled: false,
       isCaptureFundsEnabled: true,
+      isDefault: false,
     });
     setPaymentConditionsFormValue({
       allowPartialPayments: false,
+      isDefault: false,
     });
     setIsReviewing(false);
   };
@@ -301,6 +383,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                   onClick={() => {
                                     setIsPaymentConditionsModalOpen(true);
                                   }}
+                                  isLoading={isUserPaymentDefaultsLoading}
                                 />
                                 <EditOptionCard
                                   label="Payment methods"
@@ -308,6 +391,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                   onClick={() => {
                                     setIsPaymentMethodsModalOpen(true);
                                   }}
+                                  isLoading={isUserPaymentDefaultsLoading}
                                 >
                                   <div className="flex items-center space-x-3">
                                     <PaymentMethodIcon
@@ -412,7 +496,11 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                               <div className="flex overflow-hidden mt-12 items-baseline">
                                 <span className="leading-6 text-greyText w-40 shrink-0">Settings</span>
                                 <div className="flex flex-col w-full space-y-6">
-                                  <span className="text-sm/6">Single full payment.</span>
+                                  <span className="text-sm/6">
+                                    {!paymentConditionsFormValue.allowPartialPayments
+                                      ? 'Single full payment'
+                                      : 'Partial payments'}
+                                  </span>
 
                                   <div className="flex items-center space-x-3">
                                     <PaymentMethodIcon
@@ -477,7 +565,7 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
                                   >
                                     <button
                                       className="w-full whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-white font-semibold cursor-pointer hover:bg-[#144752]"
-                                      onClick={onConfrimClicked}
+                                      onClick={onConfirmClicked}
                                     >
                                       Confirm payment request
                                     </button>
@@ -503,19 +591,24 @@ const CreatePaymentRequestPage = ({ banks, onConfirm, isOpen, onClose }: CreateP
             </div>
           </div>
 
-          <PaymentMethodsModal
-            open={isPaymentMethodsModalOpen}
-            value={paymentMethodsFormValue}
-            onApply={onMethodsReceived}
-            onDismiss={() => {}}
-            banks={banks}
-          />
+          {!isUserPaymentDefaultsLoading && (
+            <PaymentMethodsModal
+              open={isPaymentMethodsModalOpen}
+              userDefaults={userPaymentDefaults?.paymentMethodsDefaults}
+              onApply={onMethodsReceived}
+              onDismiss={() => {}}
+              banks={banks}
+            />
+          )}
 
-          <PaymentConditionsModal
-            open={isPaymentConditionsModalOpen}
-            onDismiss={() => {}}
-            onApply={onConditionsReceived}
-          />
+          {!isUserPaymentDefaultsLoading && (
+            <PaymentConditionsModal
+              open={isPaymentConditionsModalOpen}
+              userDefaults={userPaymentDefaults?.paymentConditionsDefaults}
+              onDismiss={() => {}}
+              onApply={onConditionsReceived}
+            />
+          )}
         </Dialog>
       </Transition>
     </>
