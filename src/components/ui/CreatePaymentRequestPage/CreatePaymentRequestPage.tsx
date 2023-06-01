@@ -21,7 +21,7 @@ import {
 import classNames from 'classnames';
 import PaymentConditionsModal from '../Modals/PaymentConditionsModal/PaymentConditionsModal';
 
-import { parseBoldText } from '../../../utils/uiFormaters';
+import { formatEmailAddressesForSummary, parseBoldText } from '../../../utils/uiFormaters';
 import { BankSettings, UserPaymentDefaults } from '../../../api/types/ApiResponses';
 import PaymentMethodIcon from '../utils/PaymentMethodIcon';
 import _ from 'lodash';
@@ -93,23 +93,31 @@ const CreatePaymentRequestPage = ({
   const [isReviewing, setIsReviewing] = useState(false);
 
   useEffect(() => {
-    setPaymentMethodsFormValue({
-      isBankEnabled: userPaymentDefaults?.paymentMethodsDefaults?.pisp ?? true,
-      isCardEnabled: userPaymentDefaults?.paymentMethodsDefaults?.card ?? true,
-      isWalletEnabled: userPaymentDefaults?.paymentMethodsDefaults?.wallet ?? true,
-      isLightningEnabled: userPaymentDefaults?.paymentMethodsDefaults?.lightning ?? false,
-      isCaptureFundsEnabled: !userPaymentDefaults?.paymentMethodsDefaults?.cardAuthorizeOnly ?? true,
-      isDefault: !!!userPaymentDefaults?.paymentMethodsDefaults,
-      priorityBank: findBank(userPaymentDefaults?.paymentMethodsDefaults?.pispPriorityBankID),
-    });
-    setPaymentConditionsFormValue({
-      allowPartialPayments: userPaymentDefaults?.paymentConditionsDefaults?.allowPartialPayments ?? false,
-      isDefault: !!!userPaymentDefaults?.paymentConditionsDefaults,
-    });
-    setPaymentNotificationsFormValue({
-      emailAddresses: userPaymentDefaults?.notificationEmailsDefaults?.emailAddresses ?? '',
-      isDefault: !!!userPaymentDefaults?.paymentConditionsDefaults,
-    });
+    if (userPaymentDefaults?.paymentMethodsDefaults) {
+      setPaymentMethodsFormValue({
+        isBankEnabled: userPaymentDefaults.paymentMethodsDefaults.pisp ?? true,
+        isCardEnabled: userPaymentDefaults.paymentMethodsDefaults.card ?? true,
+        isWalletEnabled: userPaymentDefaults.paymentMethodsDefaults.wallet ?? true,
+        isLightningEnabled: userPaymentDefaults.paymentMethodsDefaults.lightning ?? false,
+        isCaptureFundsEnabled: !userPaymentDefaults.paymentMethodsDefaults.cardAuthorizeOnly ?? true,
+        priorityBank: findBank(userPaymentDefaults.paymentMethodsDefaults.pispPriorityBankID),
+        isDefault: true,
+      });
+    }
+
+    if (userPaymentDefaults?.paymentConditionsDefaults) {
+      setPaymentConditionsFormValue({
+        allowPartialPayments: userPaymentDefaults?.paymentConditionsDefaults?.allowPartialPayments ?? false,
+        isDefault: true,
+      });
+    }
+
+    if (userPaymentDefaults?.notificationEmailsDefaults) {
+      setPaymentNotificationsFormValue({
+        emailAddresses: userPaymentDefaults?.notificationEmailsDefaults?.emailAddresses ?? '',
+        isDefault: true,
+      });
+    }
   }, [userPaymentDefaults]);
 
   const onCurrencyChange = (currency: string) => {
@@ -565,6 +573,14 @@ const CreatePaymentRequestPage = ({
                                       {availableMethodsDetails?.map((detail, index) => {
                                         return <span key={`detail-${index}`}>{parseBoldText(detail)}</span>;
                                       })}
+                                    </div>
+                                  )}
+                                  {paymentNotificationsFormValue.emailAddresses && (
+                                    <div className="flex text-greyText text-xs">
+                                      <span>
+                                        Payment notification to{' '}
+                                        {formatEmailAddressesForSummary(paymentNotificationsFormValue.emailAddresses)}
+                                      </span>
                                     </div>
                                   )}
                                 </div>
