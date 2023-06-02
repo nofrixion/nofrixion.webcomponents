@@ -123,6 +123,7 @@ export type PaymentRequestCreate = {
   priorityBankID?: string;
   title?: string;
   tagIds?: string[];
+  notificationEmailAddresses?: string;
 };
 
 export type PaymentRequestUpdate = {
@@ -233,13 +234,27 @@ export type PaymentRequestMetrics = {
 };
 
 export type UserPaymentDefaults = {
+  paymentMethodsDefaults?: PaymentMethodsDefaults;
+  paymentConditionsDefaults?: PaymentConditionsDefaults;
+  notificationEmailsDefaults?: NotificationEmailsDefaults;
+};
+
+export type PaymentMethodsDefaults = {
   pisp: boolean;
   pispPriorityBank: boolean;
   pispPriorityBankID: string;
   card: boolean;
-  cardAuthorizeOnly: boolean;
-  applePay: boolean;
+  wallet: boolean;
   lightning: boolean;
+  cardAuthorizeOnly: boolean;
+};
+
+export type PaymentConditionsDefaults = {
+  allowPartialPayments: boolean;
+};
+
+export type NotificationEmailsDefaults = {
+  emailAddresses: string;
 };
 
 export type MerchantBankSettings = {

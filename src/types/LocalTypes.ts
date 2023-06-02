@@ -73,10 +73,12 @@ export interface LocalPaymentRequestCreate {
     lightning: boolean;
   };
   tagIds?: string[];
+  notificationEmailAddresses?: string;
 }
 
 export interface LocalPaymentConditionsFormValue {
   allowPartialPayments: boolean;
+  isDefault: boolean;
 }
 
 export interface LocalPaymentMethodsFormValue {
@@ -89,6 +91,12 @@ export interface LocalPaymentMethodsFormValue {
     id: string;
     name: string;
   };
+  isDefault: boolean;
+}
+
+export interface LocalPaymentNotificationsFormValue {
+  emailAddresses: string;
+  isDefault: boolean;
 }
 
 export interface LocalTag {

@@ -5,34 +5,40 @@ import BankIcon from '../../../../assets/icons/bank-icon.svg';
 import CardIcon from '../../../../assets/icons/card-icon.svg';
 import ApplePayIcon from '../../../../assets/icons/wallet-icon.svg';
 import BitcoinIcon from '../../../../assets/icons/bitcoin-icon.svg';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Checkbox from '../../Checkbox/Checkbox';
 import { AnimatePresence } from 'framer-motion';
 import Select from '../../Select/Select';
 import AnimateHeightWrapper from '../../utils/AnimateHeight';
 import { LocalPaymentMethodsFormValue } from '../../../../types/LocalTypes';
-import { BankSettings } from '../../../../api/types/ApiResponses';
+import { BankSettings, PaymentMethodsDefaults } from '../../../../api/types/ApiResponses';
 
 interface PaymentMethodsModalProps extends BaseModalProps {
   banks: BankSettings[];
-  value: LocalPaymentMethodsFormValue;
+  userDefaults?: PaymentMethodsDefaults;
   onApply: (data: LocalPaymentMethodsFormValue) => void;
 }
 
-const PaymentMethodsModal = ({ open, banks, value, onDismiss, onApply }: PaymentMethodsModalProps) => {
-  const [isBankEnabled, setIsBankEnabled] = useState<boolean>(value.isBankEnabled);
-  const [isCardEnabled, setIsCardEnabled] = useState<boolean>(value.isCardEnabled);
-  const [isWalletEnabled, setIsWalletEnabled] = useState<boolean>(value.isWalletEnabled);
-  const [isLightningEnabled, setIsLightningEnabled] = useState<boolean>(value.isLightningEnabled);
-
-  const [isPriorityBankEnabled, setIsPriorityBankEnabled] = useState<boolean>(false);
-
+const PaymentMethodsModal = ({ open, banks, userDefaults, onDismiss, onApply }: PaymentMethodsModalProps) => {
+  const [isBankEnabled, setIsBankEnabled] = useState<boolean>(userDefaults?.pisp ?? true);
+  const [isCardEnabled, setIsCardEnabled] = useState<boolean>(userDefaults?.card ?? true);
+  const [isWalletEnabled, setIsWalletEnabled] = useState<boolean>(userDefaults?.wallet ?? true);
+  const [isLightningEnabled, setIsLightningEnabled] = useState<boolean>(userDefaults?.lightning ?? false);
+  const [isPriorityBankEnabled, setIsPriorityBankEnabled] = useState<boolean>(userDefaults?.pispPriorityBank ?? false);
+  const [isCaptureFundsEnabled, setIsCaptureFundsEnabled] = useState<boolean>(!userDefaults?.cardAuthorizeOnly ?? true);
+  const [isDefault, setIsDefault] = useState<boolean>(userDefaults ? true : false);
   const [priorityBank, setPriorityBank] = useState<BankSettings | undefined>();
 
-  const [isCaptureFundsEnabled, setIsCaptureFundsEnabled] = useState<boolean>(value.isCardEnabled);
+  useEffect(() => {
+    if (userDefaults?.pispPriorityBank && userDefaults?.pispPriorityBankID) {
+      const bank = banks.find((bank) => bank.bankID === userDefaults.pispPriorityBankID);
+      setPriorityBank(bank);
+      setIsPriorityBankEnabled(true);
+    }
+  }, []);
 
   // When the user clicks on the Apply button, we need to send the data to the parent component
-  const onApplyClicked = () => {
+  const onApplyClicked = (data: any) => {
     const formData: LocalPaymentMethodsFormValue = {
       isBankEnabled,
       isCardEnabled,
@@ -46,7 +52,15 @@ const PaymentMethodsModal = ({ open, banks, value, onDismiss, onApply }: Payment
               name: priorityBank.bankName,
             }
           : undefined,
+      isDefault: data.isDefaultChecked,
     };
+
+    if (isPriorityBankEnabled && !priorityBank) {
+      formData.priorityBank = {
+        id: banks[0].bankID,
+        name: banks[0].bankName,
+      };
+    }
 
     onApply(formData);
 
@@ -54,7 +68,14 @@ const PaymentMethodsModal = ({ open, banks, value, onDismiss, onApply }: Payment
   };
 
   return (
-    <CustomModal title="Payment methods" open={open} enableUseAsDefault onDismiss={onDismiss} onApply={onApplyClicked}>
+    <CustomModal
+      title="Payment methods"
+      open={open}
+      enableUseAsDefault
+      isDefault={isDefault}
+      onDismiss={onDismiss}
+      onApply={onApplyClicked}
+    >
       <div className="divide-y">
         <div className="py-4">
           <Switch icon={BankIcon} label="Bank transfer" value={isBankEnabled} onChange={setIsBankEnabled} />

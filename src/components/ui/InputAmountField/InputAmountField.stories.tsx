@@ -20,7 +20,6 @@ const Template: StoryFn<InputAmountFieldProps> = (args) => {
   const [localValue, setValue] = useState<string>(args.value?.toString() || '');
 
   const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
     setValue(event.target.value);
   };
 
