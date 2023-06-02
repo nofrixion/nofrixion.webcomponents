@@ -100,6 +100,7 @@ export type PaymentRequestCreate = {
   priorityBankID?: string;
   title?: string;
   tagIds?: string[];
+  notificationEmailAddresses?: string;
 };
 
 export type PaymentRequestAddress = {

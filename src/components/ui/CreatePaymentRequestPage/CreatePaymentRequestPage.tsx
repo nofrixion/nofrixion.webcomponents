@@ -15,15 +15,18 @@ import { Currency } from '../../../api/types/Enums';
 import {
   LocalPaymentConditionsFormValue,
   LocalPaymentMethodsFormValue,
+  LocalPaymentNotificationsFormValue,
   LocalPaymentRequestCreate,
 } from '../../../types/LocalTypes';
 import classNames from 'classnames';
 import PaymentConditionsModal from '../Modals/PaymentConditionsModal/PaymentConditionsModal';
 
-import { parseBoldText } from '../../../utils/uiFormaters';
+import { formatEmailAddressesForSummary, parseBoldText } from '../../../utils/uiFormaters';
 import { BankSettings, UserPaymentDefaults } from '../../../api/types/ApiResponses';
 import PaymentMethodIcon from '../utils/PaymentMethodIcon';
 import _ from 'lodash';
+import PaymentNotificationsModal from '../Modals/PaymentNotificationsModal/PaymentNotificationsModal';
+import { validateEmail } from '../../../utils/validation';
 
 interface CreatePaymentRequestPageProps {
   banks: BankSettings[];
@@ -78,25 +81,43 @@ const CreatePaymentRequestPage = ({
     isDefault: false,
   });
 
+  const [paymentNotificationsFormValue, setPaymentNotificationsFormValue] =
+    useState<LocalPaymentNotificationsFormValue>({
+      emailAddresses: '',
+      isDefault: false,
+    });
+
   const [isPaymentMethodsModalOpen, setIsPaymentMethodsModalOpen] = useState(false);
   const [isPaymentConditionsModalOpen, setIsPaymentConditionsModalOpen] = useState(false);
-
+  const [isPaymentNotificationsModalOpen, setIsPaymentNotificationsModalOpen] = useState(false);
   const [isReviewing, setIsReviewing] = useState(false);
 
   useEffect(() => {
-    setPaymentMethodsFormValue({
-      isBankEnabled: userPaymentDefaults?.paymentMethodsDefaults?.pisp ?? true,
-      isCardEnabled: userPaymentDefaults?.paymentMethodsDefaults?.card ?? true,
-      isWalletEnabled: userPaymentDefaults?.paymentMethodsDefaults?.wallet ?? true,
-      isLightningEnabled: userPaymentDefaults?.paymentMethodsDefaults?.lightning ?? false,
-      isCaptureFundsEnabled: !userPaymentDefaults?.paymentMethodsDefaults?.cardAuthorizeOnly ?? true,
-      isDefault: !!!userPaymentDefaults?.paymentMethodsDefaults,
-      priorityBank: findBank(userPaymentDefaults?.paymentMethodsDefaults?.pispPriorityBankID),
-    });
-    setPaymentConditionsFormValue({
-      allowPartialPayments: userPaymentDefaults?.paymentConditionsDefaults?.allowPartialPayments ?? false,
-      isDefault: !!!userPaymentDefaults?.paymentConditionsDefaults,
-    });
+    if (userPaymentDefaults?.paymentMethodsDefaults) {
+      setPaymentMethodsFormValue({
+        isBankEnabled: userPaymentDefaults.paymentMethodsDefaults.pisp ?? true,
+        isCardEnabled: userPaymentDefaults.paymentMethodsDefaults.card ?? true,
+        isWalletEnabled: userPaymentDefaults.paymentMethodsDefaults.wallet ?? true,
+        isLightningEnabled: userPaymentDefaults.paymentMethodsDefaults.lightning ?? false,
+        isCaptureFundsEnabled: !userPaymentDefaults.paymentMethodsDefaults.cardAuthorizeOnly ?? true,
+        priorityBank: findBank(userPaymentDefaults.paymentMethodsDefaults.pispPriorityBankID),
+        isDefault: true,
+      });
+    }
+
+    if (userPaymentDefaults?.paymentConditionsDefaults) {
+      setPaymentConditionsFormValue({
+        allowPartialPayments: userPaymentDefaults?.paymentConditionsDefaults?.allowPartialPayments ?? false,
+        isDefault: true,
+      });
+    }
+
+    if (userPaymentDefaults?.notificationEmailsDefaults) {
+      setPaymentNotificationsFormValue({
+        emailAddresses: userPaymentDefaults?.notificationEmailsDefaults?.emailAddresses ?? '',
+        isDefault: true,
+      });
+    }
   }, [userPaymentDefaults]);
 
   const onCurrencyChange = (currency: string) => {
@@ -121,6 +142,17 @@ const CreatePaymentRequestPage = ({
 
     // Since there's no way to cancel the modal, we need to check if the data has changed
     if (!_.isEqual(data, paymentConditionsFormValue)) {
+      setDefaultsChanged(true);
+    }
+  };
+
+  const onPaymentNotificationsReceived = (data: LocalPaymentNotificationsFormValue) => {
+    setIsPaymentNotificationsModalOpen(false);
+
+    setPaymentNotificationsFormValue(data);
+
+    // Since there's no way to cancel the modal, we need to check if the data has changed
+    if (!_.isEqual(data, paymentNotificationsFormValue)) {
       setDefaultsChanged(true);
     }
   };
@@ -157,6 +189,7 @@ const CreatePaymentRequestPage = ({
         wallet: paymentMethodsFormValue.isWalletEnabled,
         lightning: paymentMethodsFormValue.isLightningEnabled,
       },
+      notificationEmailAddresses: paymentNotificationsFormValue.emailAddresses,
     };
 
     onConfirm(paymentRequestToCreate);
@@ -193,6 +226,14 @@ const CreatePaymentRequestPage = ({
       };
     } else {
       defaults.paymentConditionsDefaults = undefined;
+    }
+
+    if (paymentNotificationsFormValue.isDefault) {
+      defaults.notificationEmailsDefaults = {
+        emailAddresses: paymentNotificationsFormValue.emailAddresses,
+      };
+    } else {
+      defaults.notificationEmailsDefaults = undefined;
     }
 
     onDefaultsChanged(defaults);
@@ -241,14 +282,6 @@ const CreatePaymentRequestPage = ({
       setHasEmailError(false);
     }
   };
-
-  const validateEmail = (email: string) => {
-    const re = /\S+@\S+\.\S+/;
-    return re.test(email);
-  };
-
-  const getIconDescription = (paymentMethodName: string, enabled: boolean) =>
-    `${paymentMethodName} ${enabled ? 'enabled' : 'disabled'}`;
 
   return (
     <>
@@ -375,11 +408,11 @@ const CreatePaymentRequestPage = ({
                               <div className="w-[27rem] space-y-2">
                                 <EditOptionCard
                                   label="Payment conditions"
-                                  value={
+                                  values={[
                                     !paymentConditionsFormValue.allowPartialPayments
                                       ? 'Single full payment'
-                                      : 'Partial payments'
-                                  }
+                                      : 'Partial payments',
+                                  ]}
                                   onClick={() => {
                                     setIsPaymentConditionsModalOpen(true);
                                   }}
@@ -416,6 +449,20 @@ const CreatePaymentRequestPage = ({
                                     />
                                   </div>
                                 </EditOptionCard>
+                                <EditOptionCard
+                                  label="Payment notifications"
+                                  values={
+                                    paymentNotificationsFormValue
+                                      ? paymentNotificationsFormValue.emailAddresses
+                                          .split(',')
+                                          .map((email) => email.trim())
+                                      : []
+                                  }
+                                  onClick={() => {
+                                    setIsPaymentNotificationsModalOpen(true);
+                                  }}
+                                  isLoading={isUserPaymentDefaultsLoading}
+                                />
                               </div>
                             </div>
                           </div>
@@ -528,6 +575,14 @@ const CreatePaymentRequestPage = ({
                                       })}
                                     </div>
                                   )}
+                                  {paymentNotificationsFormValue.emailAddresses && (
+                                    <div className="flex text-greyText text-xs">
+                                      <span>
+                                        Payment notification to{' '}
+                                        {formatEmailAddressesForSummary(paymentNotificationsFormValue.emailAddresses)}
+                                      </span>
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             </LayoutWrapper>
@@ -607,6 +662,15 @@ const CreatePaymentRequestPage = ({
               userDefaults={userPaymentDefaults?.paymentConditionsDefaults}
               onDismiss={() => {}}
               onApply={onConditionsReceived}
+            />
+          )}
+
+          {!isUserPaymentDefaultsLoading && (
+            <PaymentNotificationsModal
+              open={isPaymentNotificationsModalOpen}
+              userDefaults={userPaymentDefaults?.notificationEmailsDefaults}
+              onDismiss={() => {}}
+              onApply={onPaymentNotificationsReceived}
             />
           )}
         </Dialog>

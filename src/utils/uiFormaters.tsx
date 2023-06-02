@@ -19,4 +19,32 @@ const parseHighlightedText = (text: string) => {
   });
 };
 
-export { parseHighlightedText as parseBoldText };
+const formatEmailAddressesForSummary = (emailAddresses: string) => {
+  return parseHighlightedText(
+    formatSentenceFromList(
+      emailAddresses
+        ?.split(',')
+        .map((email) => {
+          return `*${email.trim()}*`;
+        })
+        .join(', ')
+        .split(','),
+    ),
+  );
+};
+
+const formatSentenceFromList = (list: string[]) => {
+  if (list.length === 1) {
+    return list[0];
+  }
+
+  if (list.length === 2) {
+    return `${list[0]} and ${list[1]}`;
+  }
+
+  const lastItem = list.pop();
+
+  return `${list.join(', ')}, and ${lastItem}`;
+};
+
+export { parseHighlightedText as parseBoldText, formatEmailAddressesForSummary, formatSentenceFromList };

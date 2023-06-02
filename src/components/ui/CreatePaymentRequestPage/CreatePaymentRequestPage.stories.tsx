@@ -157,5 +157,8 @@ Showcase.args = {
     paymentConditionsDefaults: {
       allowPartialPayments: false,
     },
+    notificationEmailsDefaults: {
+      emailAddresses: 'rusty@nofrixion.com,jimbo@nofrixion.com,raul@nofrixion.com',
+    },
   },
 };
