@@ -51,6 +51,21 @@ const PaymentRequestDetailsModal = ({
             leaveTo="translate-x-full"
           >
             <Dialog.Panel>
+              <div className="absolute left-0 top-0 -ml-8 flex pr-2 pt-4 sm:-ml-10 sm:pr-4">
+                <button type="button" className="opacity-0 focus:outline-none" onClick={onDismiss}>
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
               <div className="bg-white max-h-screen overflow-auto w-[37.5rem]">
                 <div className="max-h-[63.5rem] h-screen ">
                   <div className="h-fit">
