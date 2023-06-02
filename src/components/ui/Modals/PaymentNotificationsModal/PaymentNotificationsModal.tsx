@@ -59,8 +59,8 @@ const PaymentNotificationsModal = ({ open, userDefaults, onDismiss, onApply }: N
       onApply={onApplyClicked}
       isDefault={isDefault}
     >
-      <div className="text-defaultText font-normal text-sm mb-12">
-        When the payment is done, an email notification will be sent to the following email addresses.
+      <div className="text-defaultText font-normal text-sm mb-6">
+        Send a notification to the specified email addresses when the payment is completed.
       </div>
       <div>
         <InputTextField
@@ -85,7 +85,7 @@ const PaymentNotificationsModal = ({ open, userDefaults, onDismiss, onApply }: N
           )}
         </AnimatePresence>
       </div>
-      <div className="mt-2 text-greyText font-normal text-xs">To include more than one separate them with a comma.</div>
+      <div className="mt-2 text-greyText font-normal text-xs">Use commas to include more than one email address.</div>
     </CustomModal>
   );
 };
