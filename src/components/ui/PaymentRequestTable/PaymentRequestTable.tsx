@@ -109,8 +109,8 @@ const PaymentRequestTable = ({
               // to display a loading skeleton
               // while the data is being fetched
               // from the server
-              Array.from(Array(12)).map(() => (
-                <tr className="animate-pulse border-b border-[#F1F2F3]">
+              Array.from(Array(12)).map((_, index) => (
+                <tr key={`pr-placeholder-${index}`} className="animate-pulse border-b border-[#F1F2F3]">
                   {/* Status */}
                   <td className="py-6">
                     <div className="w-1/2 ml-4 h-2 bg-[#E0E9EB] rounded-lg" />
