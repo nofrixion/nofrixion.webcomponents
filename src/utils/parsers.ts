@@ -24,7 +24,7 @@ const parseApiTagToLocalTag = (tag: Tag): LocalTag => {
   };
 };
 
-const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: PaymentRequest): LocalPaymentRequest => {
+const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: PaymentRequest): LocalPaymentRequest => {
   const { addresses, inserted, customerEmailAddress, amount, currency, status, tags } = remotePaymentRequest;
 
   const parseApiStatusToLocalStatus = (status: PaymentResult): LocalPaymentStatus => {
@@ -219,4 +219,4 @@ const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
   };
 };
 
-export { RemotePaymentRequestToLocalPaymentRequest, parseApiTagToLocalTag };
+export { remotePaymentRequestToLocalPaymentRequest, parseApiTagToLocalTag };

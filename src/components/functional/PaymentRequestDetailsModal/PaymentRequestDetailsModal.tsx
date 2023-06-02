@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useMerchantTags } from '../../../api/hooks/useMerchantTags';
 import UIPaymentRequestDetailsModal from '../../ui/PaymentRequestDetailsModal/PaymentRequestDetailsModal';
-import { RemotePaymentRequestToLocalPaymentRequest, parseApiTagToLocalTag } from '../../../utils/parsers';
+import { remotePaymentRequestToLocalPaymentRequest, parseApiTagToLocalTag } from '../../../utils/parsers';
 import { LocalTag } from '../../../types/LocalTypes';
 import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
 import { PaymentRequest, PaymentRequestUpdate } from '../../../api/types/ApiResponses';
@@ -111,7 +111,7 @@ const PaymentRequestDetailsModal = ({
       {paymentRequest && (
         <UIPaymentRequestDetailsModal
           merchantTags={localMerchantTags}
-          paymentRequest={RemotePaymentRequestToLocalPaymentRequest(paymentRequest)}
+          paymentRequest={remotePaymentRequestToLocalPaymentRequest(paymentRequest)}
           hostedPaymentLink={`${paymentRequest.hostedPayCheckoutUrl}/nextgen`}
           open={open}
           onRefundClick={onRefundClick}

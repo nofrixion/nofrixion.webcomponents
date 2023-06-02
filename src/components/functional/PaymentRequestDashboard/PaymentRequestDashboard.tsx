@@ -11,7 +11,7 @@ import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient'
 import { usePaymentRequests } from '../../../api/hooks/usePaymentRequests';
 import { LocalPaymentRequest } from '../../../types/LocalTypes';
 import { makeToast } from '../../ui/Toast/Toast';
-import { RemotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
+import { remotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
 import CreatePaymentRequestPage from '../../functional/CreatePaymentRequestPage/CreatePaymentRequestPage';
 import { add, startOfDay, endOfDay } from 'date-fns';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
@@ -43,18 +43,18 @@ const PaymentRequestDashboard = ({
 
   let [isCreatePaymentRequestOpen, setIsCreatePaymentRequestOpen] = useState(false);
 
-  const [selectedPaymentRequest, setSelectedPaymentRequest] = useState<LocalPaymentRequest | null>(null);
+  const [selectedPaymentRequestID, setSelectedPaymentRequestID] = useState<string | null>(null);
 
   const pageSize = 20;
 
   const client = new PaymentRequestClient(apiUrl, token, merchantId);
 
   const onPaymentRequestRowClicked = (paymentRequest: LocalPaymentRequest) => {
-    setSelectedPaymentRequest(paymentRequest);
+    setSelectedPaymentRequestID(paymentRequest.id);
   };
 
   const onPaymentRequestDetailsModalDismiss = () => {
-    setSelectedPaymentRequest(null);
+    setSelectedPaymentRequestID(null);
   };
 
   const {
@@ -78,7 +78,7 @@ const PaymentRequestDashboard = ({
   );
 
   const localPaymentRequests: LocalPaymentRequest[] =
-    paymentRequests?.map((paymentRequest) => RemotePaymentRequestToLocalPaymentRequest(paymentRequest)) ?? [];
+    paymentRequests?.map((paymentRequest) => remotePaymentRequestToLocalPaymentRequest(paymentRequest)) ?? [];
 
   const [firstMetrics, setFirstMetrics] = useState<PaymentRequestMetrics | undefined>();
 
@@ -245,13 +245,13 @@ const PaymentRequestDashboard = ({
         merchantId={merchantId}
         apiUrl={apiUrl}
       />
-      {selectedPaymentRequest && (
+      {selectedPaymentRequestID && (
         <PaymentRequestDetailsModal
           token={token}
           apiUrl={apiUrl}
           merchantId={merchantId}
-          paymentRequestID={selectedPaymentRequest.id}
-          open={selectedPaymentRequest !== undefined}
+          paymentRequestID={selectedPaymentRequestID}
+          open={selectedPaymentRequestID !== undefined}
           onDismiss={onPaymentRequestDetailsModalDismiss}
         ></PaymentRequestDetailsModal>
       )}
