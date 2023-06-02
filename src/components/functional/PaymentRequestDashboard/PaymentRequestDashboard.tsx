@@ -44,7 +44,6 @@ const PaymentRequestDashboard = ({
   let [isCreatePaymentRequestOpen, setIsCreatePaymentRequestOpen] = useState(false);
 
   const [selectedPaymentRequest, setSelectedPaymentRequest] = useState<LocalPaymentRequest | null>(null);
-  const [showPaymentRequestDetailsModal, setShowPaymentRequestDetailsModal] = useState<boolean>(false);
 
   const pageSize = 20;
 
@@ -52,12 +51,10 @@ const PaymentRequestDashboard = ({
 
   const onPaymentRequestRowClicked = (paymentRequest: LocalPaymentRequest) => {
     setSelectedPaymentRequest(paymentRequest);
-    setShowPaymentRequestDetailsModal(true);
   };
 
   const onPaymentRequestDetailsModalDismiss = () => {
     setSelectedPaymentRequest(null);
-    setShowPaymentRequestDetailsModal(false);
   };
 
   const {
@@ -254,7 +251,7 @@ const PaymentRequestDashboard = ({
           apiUrl={apiUrl}
           merchantId={merchantId}
           paymentRequestID={selectedPaymentRequest.id}
-          open={showPaymentRequestDetailsModal}
+          open={selectedPaymentRequest !== undefined}
           onDismiss={onPaymentRequestDetailsModalDismiss}
         ></PaymentRequestDetailsModal>
       )}

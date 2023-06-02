@@ -25,7 +25,7 @@ const PaymentRequestDetailsModal = ({
 }: PaymentRequestDetailsModalProps) => {
   const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId);
   const merchantClient = new MerchantClient(apiUrl, token, merchantId);
-  const merchantTags = useMerchantTags(token, merchantId, apiUrl);
+  const merchantTags = useMerchantTags(apiUrl, token, merchantId);
   const [localMerchantTags, setLocalMerchantTags] = useState<LocalTag[]>([] as LocalTag[]);
   const [paymentRequest, setPaymentRequest] = useState<PaymentRequest | undefined>();
 
@@ -112,7 +112,7 @@ const PaymentRequestDetailsModal = ({
         <UIPaymentRequestDetailsModal
           merchantTags={localMerchantTags}
           paymentRequest={RemotePaymentRequestToLocalPaymentRequest(paymentRequest)}
-          hostedPaymentLink={`${apiUrl}/nextgen/pay/${paymentRequest.id}`}
+          hostedPaymentLink={`${paymentRequest.hostedPayCheckoutUrl}/nextgen`}
           open={open}
           onRefundClick={onRefundClick}
           onTagAdded={onTagAdded}
