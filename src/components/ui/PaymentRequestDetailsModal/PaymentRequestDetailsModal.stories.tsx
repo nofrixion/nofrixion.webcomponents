@@ -47,4 +47,5 @@ Showcase.args = {
   open: false,
   paymentRequest: mockedData.paymentRequest.regular,
   merchantTags: mockedData.merchantTags,
+  hostedPaymentLink: 'https://api-dev.nofrixion.com/nextgen/pay/c4db21c3-17a4-4e3a-8b19-87b4e9c07766',
 };

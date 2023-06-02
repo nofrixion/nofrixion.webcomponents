@@ -6,7 +6,7 @@ import PaymentInfo from '../PaymentInfo/PaymentInfo';
 import Transactions from '../Transactions/Transactions';
 import { LocalPaymentRequest } from '../../../types/LocalTypes';
 
-const tabs = ['History', 'Payment info'];
+const tabs = ['Transactions', 'Payment info'];
 
 interface TabProps {
   value: string;

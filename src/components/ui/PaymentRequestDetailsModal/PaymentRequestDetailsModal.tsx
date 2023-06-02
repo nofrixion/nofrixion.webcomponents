@@ -1,12 +1,12 @@
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import Checkbox from '../Checkbox/Checkbox';
 import PaymentRequestDetails from '../PaymentRequestDetails/PaymentRequestDetails';
 import { LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
 
 export interface PaymentRequestDetailsModalProps {
   paymentRequest: LocalPaymentRequest;
   merchantTags: LocalTag[];
+  hostedPaymentLink: string;
   onRefundClick: (paymentAttemptID: string) => void;
   onTagAdded: (tag: LocalTag) => void;
   onTagDeleted: (id: string) => void;
@@ -18,6 +18,7 @@ export interface PaymentRequestDetailsModalProps {
 const PaymentRequestDetailsModal = ({
   paymentRequest,
   merchantTags,
+  hostedPaymentLink,
   onRefundClick,
   onTagAdded,
   onTagDeleted,
@@ -30,35 +31,40 @@ const PaymentRequestDetailsModal = ({
       <Dialog as="div" onClose={onDismiss}>
         <Transition.Child
           as={Fragment}
-          enter="ease-linear duration-300"
+          enter="ease-in-out duration-300"
           enterFrom="opacity-0"
           enterTo="opacity-100"
-          leave="ease-linear duration-200"
+          leave="ease-in-out duration-300"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black bg-opacity-5" />
+          <div className="fixed inset-0 bg-black bg-opacity-[15%]" />
         </Transition.Child>
-        <div className="fixed inset-0 overflow-y-auto">
+        <div className="fixed inset-y-0 right-0">
           <Transition.Child
             as={Fragment}
-            enter="duration-300 transform"
+            enter="transform transition ease-in-out duration-300"
             enterFrom="translate-x-full"
             enterTo="translate-x-0"
-            leave="duration-300 transform"
+            leave="transform transition ease-in-out duration-300"
             leaveFrom="translate-x-0"
             leaveTo="translate-x-full"
           >
             <Dialog.Panel>
-              <div className="w-[37.5rem] h-[63.438rem] overflow-auto float-right bg-white">
-                <PaymentRequestDetails
-                  paymentRequest={paymentRequest}
-                  merchantTags={merchantTags}
-                  onRefundClick={onRefundClick}
-                  onTagAdded={onTagAdded}
-                  onTagDeleted={onTagDeleted}
-                  onTagCreated={onTagCreated}
-                />
+              <div className="bg-white max-h-screen overflow-auto w-[37.5rem]">
+                <div className="max-h-[63.5rem] h-screen ">
+                  <div className="h-fit">
+                    <PaymentRequestDetails
+                      paymentRequest={paymentRequest}
+                      merchantTags={merchantTags}
+                      hostedPaymentLink={hostedPaymentLink}
+                      onRefundClick={onRefundClick}
+                      onTagAdded={onTagAdded}
+                      onTagDeleted={onTagDeleted}
+                      onTagCreated={onTagCreated}
+                    ></PaymentRequestDetails>
+                  </div>
+                </div>
               </div>
             </Dialog.Panel>
           </Transition.Child>

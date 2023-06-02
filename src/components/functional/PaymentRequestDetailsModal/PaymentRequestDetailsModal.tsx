@@ -112,6 +112,7 @@ const PaymentRequestDetailsModal = ({
         <UIPaymentRequestDetailsModal
           merchantTags={localMerchantTags}
           paymentRequest={RemotePaymentRequestToLocalPaymentRequest(paymentRequest)}
+          hostedPaymentLink={`${apiUrl}/nextgen/pay/${paymentRequest.id}`}
           open={open}
           onRefundClick={onRefundClick}
           onTagAdded={onTagAdded}

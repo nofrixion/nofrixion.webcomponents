@@ -1,6 +1,11 @@
 import { PaymentRequest, PaymentRequestAddress, PaymentRequestPaymentAttempt, Tag } from '../api/types/ApiResponses';
-import { PaymentMethodTypes, PaymentResult, Wallets } from '../api/types/Enums';
-import { LocalAddressType, LocalPaymentMethodTypes, LocalWallets } from '../types/LocalEnums';
+import { PartialPaymentMethods, PaymentMethodTypes, PaymentResult, Wallets } from '../api/types/Enums';
+import {
+  LocalAddressType,
+  LocalPartialPaymentMethods,
+  LocalPaymentMethodTypes,
+  LocalWallets,
+} from '../types/LocalEnums';
 import {
   LocalAddress,
   LocalPaymentAttempt,
@@ -143,6 +148,19 @@ const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     }
   };
 
+  const parseApiPartialPaymentMethodToLocalPartialPaymentMethod = (
+    partialPaymentMethod: PartialPaymentMethods,
+  ): LocalPartialPaymentMethods => {
+    switch (partialPaymentMethod) {
+      case PartialPaymentMethods.None:
+        return LocalPartialPaymentMethods.None;
+      case PartialPaymentMethods.Partial:
+        return LocalPartialPaymentMethods.Partial;
+      default:
+        return LocalPartialPaymentMethods.None;
+    }
+  };
+
   const parseApiPaymentAttemptsToLocalPaymentAttempts = (
     remotePaymentAttempts: PaymentRequestPaymentAttempt[],
   ): LocalPaymentAttempt[] => {
@@ -183,8 +201,8 @@ const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     status: parseApiStatusToLocalStatus(status),
     createdAt: new Date(inserted),
     contact: {
-      name: addresses.length ? `${addresses[0].firstName} ${addresses[0].lastName}` : '',
-      email: customerEmailAddress ?? '',
+      name: addresses.length ? `${addresses[0].firstName} ${addresses[0].lastName}` : undefined,
+      email: customerEmailAddress ?? undefined,
     },
     amount: amount,
     currency: currency,
@@ -194,6 +212,9 @@ const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     description: remotePaymentRequest.description ?? '',
     productOrService: remotePaymentRequest.title ?? '',
     hostedPayCheckoutUrl: remotePaymentRequest.hostedPayCheckoutUrl ?? '',
+    partialPaymentMethod: parseApiPartialPaymentMethodToLocalPartialPaymentMethod(
+      remotePaymentRequest.partialPaymentMethod,
+    ),
     paymentAttempts: parseApiPaymentAttemptsToLocalPaymentAttempts(remotePaymentRequest.paymentAttempts),
   };
 };

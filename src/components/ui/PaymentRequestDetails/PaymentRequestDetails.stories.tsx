@@ -20,22 +20,26 @@ export const FullyPaid = Template.bind({});
 FullyPaid.args = {
   paymentRequest: mockedData.paymentRequest.regular,
   merchantTags: mockedData.merchantTags,
+  hostedPaymentLink: 'https://api-dev.nofrixion.com/nextgen/pay/c4db21c3-17a4-4e3a-8b19-87b4e9c07766',
 };
 
 export const PartiallyPaidPaymentRequest = Template.bind({});
 PartiallyPaidPaymentRequest.args = {
   paymentRequest: mockedData.paymentRequest.partiallyPaidPaymentRequest,
   merchantTags: mockedData.merchantTags,
+  hostedPaymentLink: 'https://api-dev.nofrixion.com/nextgen/pay/c4db21c3-17a4-4e3a-8b19-87b4e9c07766',
 };
 
 export const UnpaidPaymentRequest = Template.bind({});
 UnpaidPaymentRequest.args = {
   paymentRequest: mockedData.paymentRequest.unpaidPaymentRequest,
   merchantTags: mockedData.merchantTags,
+  hostedPaymentLink: 'https://api-dev.nofrixion.com/nextgen/pay/c4db21c3-17a4-4e3a-8b19-87b4e9c07766',
 };
 
 export const OverpaidPaymentRequest = Template.bind({});
 OverpaidPaymentRequest.args = {
   paymentRequest: mockedData.paymentRequest.overpaidPaymentRequest,
   merchantTags: mockedData.merchantTags,
+  hostedPaymentLink: 'https://api-dev.nofrixion.com/nextgen/pay/c4db21c3-17a4-4e3a-8b19-87b4e9c07766',
 };

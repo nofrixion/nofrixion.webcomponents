@@ -1,9 +1,9 @@
 import { Currency } from '../api/types/Enums';
-import { LocalAddressType, LocalPaymentMethodTypes } from './LocalEnums';
+import { LocalAddressType, LocalPartialPaymentMethods, LocalPaymentMethodTypes } from './LocalEnums';
 
 export interface LocalContact {
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
 }
 
 export type LocalPaymentStatus = 'paid' | 'partial' | 'unpaid' | 'overpaid';
@@ -21,6 +21,7 @@ export interface LocalPaymentRequest {
   description: string;
   productOrService: string;
   hostedPayCheckoutUrl: string;
+  partialPaymentMethod: LocalPartialPaymentMethods;
   paymentAttempts: LocalPaymentAttempt[];
 }
 

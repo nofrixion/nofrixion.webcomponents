@@ -17,3 +17,8 @@ export enum LocalWallets {
   ApplePay = 'Apple Pay',
   GooglePay = 'Google Pay',
 }
+
+export enum LocalPartialPaymentMethods {
+  None = 'None',
+  Partial = 'Partial',
+}

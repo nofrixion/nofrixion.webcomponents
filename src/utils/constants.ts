@@ -35,3 +35,5 @@ export const defaultUserPaymentDefaults = {
     emailAddresses: '',
   },
 };
+
+export const defaultAnonymousUserName = 'Anonymous';
