@@ -79,6 +79,11 @@ const PaymentRequestDashboard = ({
   );
 
   useEffect(() => {
+    // This helps avoid resizing due to dynamic scrollbar visibility.
+    document.documentElement.style.scrollbarGutter = 'stable both-edges';
+  }, []);
+
+  useEffect(() => {
     setLocalPaymentRequests(
       paymentRequests?.map((paymentRequest) => RemotePaymentRequestToLocalPaymentRequest(paymentRequest)) ?? [],
     );
@@ -135,9 +140,6 @@ const PaymentRequestDashboard = ({
   }
 
   const isInitialState = !isLoadingMetrics && (!firstMetrics || firstMetrics?.all === 0);
-
-  // This helps avoid resizing due to dynamic scrollbar visibility.
-  document.documentElement.style.scrollbarGutter = 'stable both-edges';
 
   return (
     <div className="font-inter bg-mainGrey text-defaultText h-full pl-8 pr-8 pb-10">
