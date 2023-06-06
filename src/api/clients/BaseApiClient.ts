@@ -78,7 +78,13 @@ export abstract class BaseApiClient {
   }> {
     console.log(`Requesting: ${method} ${url}`);
 
-    const contentType = 'application/json';
+    let contentType = 'application/json';
+
+    // Send form encoding on POST and PUT
+    // Axios will automatically serialize the postData object to form urlencoded format
+    if (method === HttpMethod.POST || method === HttpMethod.PUT) {
+      contentType = 'application/x-www-form-urlencoded';
+    }
 
     try {
       const { data } = await axios<TResponse>({
