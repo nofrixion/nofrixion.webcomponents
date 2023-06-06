@@ -50,11 +50,10 @@ const PaymentRequestDetailsModal = ({
   };
 
   const updatePaymentRequests = (updatedPaymentRequest: PaymentRequest) => {
-    for (let i = 0; i < paymentRequests.length; i++) {
-      if (paymentRequests[i].id === selectedPaymentRequestID) {
-        paymentRequests[i].tags = updatedPaymentRequest.tags.map((tag) => parseApiTagToLocalTag(tag));
-        break;
-      }
+    const index = paymentRequests.findIndex((paymentRequest) => paymentRequest.id === selectedPaymentRequestID);
+
+    if (index !== -1) {
+      paymentRequests[index].tags = updatedPaymentRequest.tags.map((tag) => parseApiTagToLocalTag(tag));
     }
     setPaymentRequests(paymentRequests);
   };

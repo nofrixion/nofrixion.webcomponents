@@ -44,7 +44,7 @@ const PaymentRequestDashboard = ({
 
   let [isCreatePaymentRequestOpen, setIsCreatePaymentRequestOpen] = useState(false);
 
-  const [selectedPaymentRequestID, setSelectedPaymentRequestID] = useState<string | null>(null);
+  const [selectedPaymentRequestID, setSelectedPaymentRequestID] = useState<string | undefined>(undefined);
 
   const pageSize = 20;
 
@@ -55,7 +55,7 @@ const PaymentRequestDashboard = ({
   };
 
   const onPaymentRequestDetailsModalDismiss = () => {
-    setSelectedPaymentRequestID(null);
+    setSelectedPaymentRequestID(undefined);
   };
 
   const {
