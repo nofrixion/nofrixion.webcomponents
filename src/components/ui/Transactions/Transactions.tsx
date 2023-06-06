@@ -41,8 +41,11 @@ const Transactions = ({
                   {transaction.occurredAt && format(transaction.occurredAt, 'MMM do, yyyy')}
                 </td>
                 <td className={classNames('pl-6 pb-2 text-right', { 'pt-2': index !== 0 })}>
-                  <span className="mr-2 text-sm tabular-nums font-medium leading-6">
-                    {new Intl.NumberFormat(navigator.language).format(Number(transaction.amount.toFixed(2)))}
+                  <span className="mr-2 text-sm font-medium leading-6">
+                    {new Intl.NumberFormat(navigator.language, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    }).format(Number(transaction.amount))}
                   </span>
                 </td>
                 <td className={classNames('pb-2', { 'pt-2': index !== 0 })}>

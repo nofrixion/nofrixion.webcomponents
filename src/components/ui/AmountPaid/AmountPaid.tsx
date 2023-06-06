@@ -16,9 +16,12 @@ const AmountPaid = ({
   const outstandingAmount = amountPaid > totalAmount ? 0 : totalAmount - amountPaid;
   return (
     <div className="flex flex-col">
-      <span className="text-[2rem] tabular-nums font-semibold leading-8 mb-4 text-defaultText">
+      <span className="text-[2rem] font-semibold leading-8 mb-4 text-defaultText">
         {currency == Currency.GBP ? '£' : '€'}
-        {new Intl.NumberFormat(navigator.language).format(Number(totalAmount.toFixed(2)))}
+        {new Intl.NumberFormat(navigator.language, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }).format(Number(totalAmount))}
       </span>
       {partialPaymentMethod === LocalPartialPaymentMethods.Partial && (
         <div className="flex flex-row h-[0.125rem]">
@@ -32,8 +35,11 @@ const AmountPaid = ({
       {amountPaid > 0 && (
         <span className="text-sm leading-[1.063rem] text-greyText font-medium mt-2">
           {currency == Currency.GBP ? '£' : '€'}
-          <span className="tabular-nums">
-            {new Intl.NumberFormat(navigator.language).format(Number(outstandingAmount.toFixed(2)))}
+          <span>
+            {new Intl.NumberFormat(navigator.language, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }).format(Number(outstandingAmount))}
           </span>{' '}
           outstanding
         </span>
