@@ -28,7 +28,7 @@ const Template: StoryFn<typeof PaymentRequestDetailsModal> = (args) => {
   };
   return (
     <>
-      <div className=" flex items-center justify-center">
+      <div className="flex items-center justify-center">
         <button
           type="button"
           onClick={openModal}

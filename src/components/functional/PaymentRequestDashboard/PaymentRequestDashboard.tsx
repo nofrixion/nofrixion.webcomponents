@@ -9,15 +9,16 @@ import PaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTabl
 import { SortDirection } from '../../ui/ColumnHeader/ColumnHeader';
 import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
 import { usePaymentRequests } from '../../../api/hooks/usePaymentRequests';
-import { LocalPaymentRequest } from '../../../types/LocalTypes';
+import { LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
 import { makeToast } from '../../ui/Toast/Toast';
-import { remotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
+import { parseApiTagToLocalTag, remotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
 import CreatePaymentRequestPage from '../../functional/CreatePaymentRequestPage/CreatePaymentRequestPage';
 import { add, startOfDay, endOfDay } from 'date-fns';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import LayoutWrapper from '../../ui/utils/LayoutWrapper';
 import { PaymentRequestMetrics } from '../../../api/types/ApiResponses';
 import PaymentRequestDetailsModal from '../PaymentRequestDetailsModal/PaymentRequestDetailsModal';
+import { useMerchantTags } from '../../../api/hooks/useMerchantTags';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -89,11 +90,21 @@ const PaymentRequestDashboard = ({
     dateRange.toDate.getTime(),
   );
 
+  const merchantTags = useMerchantTags(apiUrl, token, merchantId);
+
+  const [localMerchantTags, setLocalMerchantTags] = useState<LocalTag[]>([] as LocalTag[]);
+
   useEffect(() => {
     setLocalPaymentRequests(
       paymentRequests?.map((paymentRequest) => remotePaymentRequestToLocalPaymentRequest(paymentRequest)) ?? [],
     );
   }, [paymentRequests]);
+
+  useEffect(() => {
+    if (merchantTags.tags) {
+      setLocalMerchantTags(merchantTags.tags.map((tag) => parseApiTagToLocalTag(tag)));
+    }
+  }, [merchantTags.tags]);
 
   const onDeletePaymentRequest = async (paymentRequest: LocalPaymentRequest) => {
     const response = await client.delete(paymentRequest.id);
@@ -255,9 +266,13 @@ const PaymentRequestDashboard = ({
           token={token}
           apiUrl={apiUrl}
           merchantId={merchantId}
-          paymentRequestID={selectedPaymentRequestID}
+          selectedPaymentRequestID={selectedPaymentRequestID}
+          merchantTags={localMerchantTags}
+          paymentRequests={localPaymentRequests}
           open={selectedPaymentRequestID !== undefined}
           onDismiss={onPaymentRequestDetailsModalDismiss}
+          setMerchantTags={setLocalMerchantTags}
+          setPaymentRequests={setLocalPaymentRequests}
         ></PaymentRequestDetailsModal>
       )}
     </div>

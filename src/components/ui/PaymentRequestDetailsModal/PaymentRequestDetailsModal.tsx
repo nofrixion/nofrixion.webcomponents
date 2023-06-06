@@ -52,7 +52,7 @@ const PaymentRequestDetailsModal = ({
           >
             <Dialog.Panel>
               <div className="absolute left-0 top-0 -ml-8 flex pr-2 pt-4 sm:-ml-10 sm:pr-4">
-                <button type="button" className="opacity-0 focus:outline-none" onClick={onDismiss}>
+                <button type="button" className="opacity-0 pointer-events-none focus:outline-none" onClick={onDismiss}>
                   <svg
                     className="h-6 w-6"
                     fill="none"
@@ -67,7 +67,7 @@ const PaymentRequestDetailsModal = ({
               </div>
 
               <div className="bg-white max-h-screen overflow-auto w-[37.5rem]">
-                <div className="max-h-[63.5rem] h-screen ">
+                <div className="max-h-full h-screen ">
                   <div className="h-fit">
                     <PaymentRequestDetails
                       paymentRequest={paymentRequest}

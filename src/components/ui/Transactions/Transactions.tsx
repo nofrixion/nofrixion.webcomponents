@@ -36,7 +36,7 @@ const Transactions = ({
         <table>
           <tbody>
             {transactions.map((transaction, index) => (
-              <tr key={index} className="border-b group">
+              <tr key={index} className="border-b group whitespace-nowrap">
                 <td className={classNames('text-[0.813rem] pb-2 leading-6', { 'pt-2': index !== 0 })}>
                   {transaction.occurredAt && format(transaction.occurredAt, 'MMM do, yyyy')}
                 </td>
@@ -63,13 +63,19 @@ const Transactions = ({
                       )}
                   </div>
                 </td>
-                <td className={classNames('pl-6 pb-2 leading-6', { 'pt-2': index !== 0 })}>
-                  <div className="w-[3.75rem] text-[0.813rem] h-6 ">
-                    <div
-                      className="text-[0.813rem] px-2 py-1 rounded-full bg-[#DEE6ED] leading-4 cursor-pointer opacity-0 transition group-hover:opacity-100 hover:bg-[#BDCCDB]"
-                      onClick={() => onRefundClicked(transaction.attemptKey)}
-                    >
-                      Refund
+                <td
+                  className={classNames('pl-6 pb-2 leading-6 w-full', {
+                    'pt-2': index !== 0,
+                  })}
+                >
+                  <div className="flex justify-end">
+                    <div className="w-[3.75rem] text-[0.813rem] h-6 ">
+                      <div
+                        className="text-[0.813rem] px-2 py-1 rounded-full bg-[#DEE6ED] leading-4 cursor-pointer opacity-0 transition group-hover:opacity-100 hover:bg-[#BDCCDB]"
+                        onClick={() => onRefundClicked(transaction.attemptKey)}
+                      >
+                        Refund
+                      </div>
                     </div>
                   </div>
                 </td>
