@@ -1,12 +1,14 @@
 import { Fragment, useEffect, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import Checkbox from '../Checkbox/Checkbox';
+import classNames from 'classnames';
 
 interface CustomModalProps extends BaseModalProps {
   title: string;
   enableUseAsDefault?: boolean;
   children: React.ReactNode;
   isDefault: boolean;
+  enabled?: boolean;
 }
 
 export interface BaseModalProps {
@@ -23,6 +25,7 @@ const CustomModal = ({
   isDefault,
   onApply,
   onDismiss,
+  enabled = true,
 }: CustomModalProps) => {
   const [isDefaultChecked, setIsDefaultChecked] = useState<boolean>(isDefault);
 
@@ -81,8 +84,15 @@ const CustomModal = ({
                     </div>
                   )}
                   <button
+                    disabled={!enabled}
                     type="button"
-                    className="inline-flex justify-center rounded-full bg-[#006A80] py-3 px-16 text-sm text-white font-semibold ml-auto cursor-pointer transition hover:bg-[#144752]"
+                    className={classNames(
+                      'inline-flex justify-center rounded-full bg-[#006A80] py-3 px-16 text-sm text-white font-semibold ml-auto transition',
+                      {
+                        'cursor-pointer hover:bg-[#144752]': enabled,
+                        'opacity-20 cursor-not-allowed': !enabled,
+                      },
+                    )}
                     onClick={onApplyClicked}
                   >
                     Apply
