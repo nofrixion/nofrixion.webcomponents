@@ -58,7 +58,7 @@ const PaymentNotificationsModal = ({ open, userDefaults, onDismiss, onApply }: N
       onDismiss={onDismiss}
       onApply={onApplyClicked}
       isDefault={isDefault}
-      enabled={!hasEmailError}
+      onApplyEnabled={!hasEmailError}
     >
       <div className="text-defaultText font-normal text-sm mb-6">
         Send a notification to the specified email addresses when the payment is completed.

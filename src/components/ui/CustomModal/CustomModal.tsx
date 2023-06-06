@@ -8,7 +8,7 @@ interface CustomModalProps extends BaseModalProps {
   enableUseAsDefault?: boolean;
   children: React.ReactNode;
   isDefault: boolean;
-  enabled?: boolean;
+  onApplyEnabled?: boolean;
 }
 
 export interface BaseModalProps {
@@ -25,7 +25,7 @@ const CustomModal = ({
   isDefault,
   onApply,
   onDismiss,
-  enabled = true,
+  onApplyEnabled = true,
 }: CustomModalProps) => {
   const [isDefaultChecked, setIsDefaultChecked] = useState<boolean>(isDefault);
 
@@ -84,13 +84,13 @@ const CustomModal = ({
                     </div>
                   )}
                   <button
-                    disabled={!enabled}
+                    disabled={!onApplyEnabled}
                     type="button"
                     className={classNames(
                       'inline-flex justify-center rounded-full bg-[#006A80] py-3 px-16 text-sm text-white font-semibold ml-auto transition',
                       {
-                        'cursor-pointer hover:bg-[#144752]': enabled,
-                        'opacity-20 cursor-not-allowed': !enabled,
+                        'cursor-pointer hover:bg-[#144752]': onApplyEnabled,
+                        'opacity-20 cursor-not-allowed': !onApplyEnabled,
                       },
                     )}
                     onClick={onApplyClicked}
