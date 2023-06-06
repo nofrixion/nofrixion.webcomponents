@@ -261,20 +261,18 @@ const PaymentRequestDashboard = ({
         merchantId={merchantId}
         apiUrl={apiUrl}
       />
-      {selectedPaymentRequestID && (
-        <PaymentRequestDetailsModal
-          token={token}
-          apiUrl={apiUrl}
-          merchantId={merchantId}
-          selectedPaymentRequestID={selectedPaymentRequestID}
-          merchantTags={localMerchantTags}
-          paymentRequests={localPaymentRequests}
-          open={selectedPaymentRequestID !== undefined}
-          onDismiss={onPaymentRequestDetailsModalDismiss}
-          setMerchantTags={setLocalMerchantTags}
-          setPaymentRequests={setLocalPaymentRequests}
-        ></PaymentRequestDetailsModal>
-      )}
+      <PaymentRequestDetailsModal
+        token={token}
+        apiUrl={apiUrl}
+        merchantId={merchantId}
+        selectedPaymentRequestID={selectedPaymentRequestID ?? ''}
+        merchantTags={localMerchantTags}
+        paymentRequests={localPaymentRequests}
+        open={selectedPaymentRequestID !== undefined}
+        onDismiss={onPaymentRequestDetailsModalDismiss}
+        setMerchantTags={setLocalMerchantTags}
+        setPaymentRequests={setLocalPaymentRequests}
+      ></PaymentRequestDetailsModal>
     </div>
   );
 };
