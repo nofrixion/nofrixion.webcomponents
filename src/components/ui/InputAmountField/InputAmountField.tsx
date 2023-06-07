@@ -28,7 +28,7 @@ const actionItem = cva(actionItemClassNames, {
     intent: 'neutral',
   },
 });
-const InputAmountField: React.FC<InputAmountFieldProps> = ({ currency, onCurrencyChange, ...props }) => {
+const InputAmountField: React.FC<InputAmountFieldProps> = ({ currency, onCurrencyChange, onChange, ...props }) => {
   const [selectedCurrency, setSelectedCurrency] = useState(localCurrency.eur);
 
   const maskOptions = {
@@ -65,6 +65,12 @@ const InputAmountField: React.FC<InputAmountFieldProps> = ({ currency, onCurrenc
         <MaskedInput
           className="w-full pl-7 mr-1 rounded font-normal text-sm text-defaultText appearance-none"
           mask={currencyMask}
+          onChange={(e) => {
+            const masked = e.target.value;
+            e.target.value = e.target.value.replace(/[^\d\.\-]/g, '');
+            onChange && onChange(e);
+            e.target.value = masked;
+          }}
           {...props}
         />
       </div>
