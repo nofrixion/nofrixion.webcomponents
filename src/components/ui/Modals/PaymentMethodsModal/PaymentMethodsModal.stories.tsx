@@ -18,13 +18,6 @@ const Template: StoryFn<typeof PaymentMethodsModal> = (args) => <PaymentMethodsM
 export const Showcase = Template.bind({});
 Showcase.args = {
   open: true,
-  value: {
-    isBankEnabled: true,
-    isCardEnabled: true,
-    isWalletEnabled: true,
-    isLightningEnabled: false,
-    isCaptureFundsEnabled: true,
-  },
   banks: [
     {
       bankID: 'abddb9c0-6c43-4e87-8381-1bd1db2204ad',

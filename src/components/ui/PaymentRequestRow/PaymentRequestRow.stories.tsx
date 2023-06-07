@@ -5,21 +5,21 @@ import { Currency } from '../../../api/types/Enums';
 
 const tags = [
   {
-    ID: '1',
+    id: '1',
     merchantID: '1',
     name: 'Tag 1',
     colourHex: '#FF0000',
     description: 'This is a tag',
   },
   {
-    ID: '2',
+    id: '2',
     merchantID: '1',
     name: 'Another tag',
     colourHex: '#00FF00',
     description: 'This is another tag',
   },
   {
-    ID: '3',
+    id: '3',
     merchantID: '1',
     name: 'Third tag',
     colourHex: '#0000FF',

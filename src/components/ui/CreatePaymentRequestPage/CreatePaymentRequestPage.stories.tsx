@@ -4,6 +4,7 @@ import CreatePaymentRequestPage from './CreatePaymentRequestPage';
 import { Currency, PaymentProcessor } from '../../../api/types/Enums';
 import { useState } from 'react';
 import { action } from '@storybook/addon-actions';
+import { LocalPaymentRequestCreate } from '../../../types/LocalTypes';
 
 export default {
   title: 'UI/CreatePaymentRequestPage',
@@ -29,7 +30,7 @@ const Template: StoryFn<typeof CreatePaymentRequestPage> = (args) => {
     setIsOpen(false);
   };
 
-  const onCreatePaymentRequest = () => {
+  const onCreatePaymentRequest = async (_: LocalPaymentRequestCreate) => {
     onClose();
   };
 
