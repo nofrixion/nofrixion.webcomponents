@@ -33,7 +33,7 @@ const Transactions = ({
         <div className="text-center text-defaultText text-base pt-9">No transactions found</div>
       )}
       {transactions && transactions.length > 0 && (
-        <table>
+        <table className="w-full">
           <tbody>
             {transactions.map((transaction, index) => (
               <tr key={index} className="border-b group whitespace-nowrap">
@@ -41,7 +41,7 @@ const Transactions = ({
                   {transaction.occurredAt && format(transaction.occurredAt, 'MMM do, yyyy')}
                 </td>
                 <td className={classNames('pl-6 pb-2 text-right', { 'pt-2': index !== 0 })}>
-                  <span className="mr-2 text-sm font-medium leading-6">
+                  <span className="mr-2 text-sm font-medium leading-6 tabular-nums">
                     {new Intl.NumberFormat(navigator.language, {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
@@ -67,7 +67,7 @@ const Transactions = ({
                   </div>
                 </td>
                 <td
-                  className={classNames('pl-6 pb-2 leading-6 w-full', {
+                  className={classNames('pl-6 pb-2 leading-6', {
                     'pt-2': index !== 0,
                   })}
                 >
