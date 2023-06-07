@@ -27,6 +27,7 @@ import PaymentMethodIcon from '../utils/PaymentMethodIcon';
 import _ from 'lodash';
 import PaymentNotificationsModal from '../Modals/PaymentNotificationsModal/PaymentNotificationsModal';
 import { validateEmail } from '../../../utils/validation';
+import { formatAmount } from '../../../utils/formatters';
 
 interface CreatePaymentRequestPageProps {
   banks: BankSettings[];
@@ -481,7 +482,7 @@ const CreatePaymentRequestPage = ({
                             <LayoutWrapper key="amount" className="flex overflow-hidden items-baseline">
                               <span className="leading-6 text-greyText w-40 shrink-0">Request</span>
                               <span className="font-semibold text-[2rem]/8 w-full">
-                                {currency == 'GBP' ? '£' : '€'} {amount}
+                                {currency == 'GBP' ? '£' : '€'} {formatAmount(Number(amount))}
                               </span>
                             </LayoutWrapper>
                           )}
