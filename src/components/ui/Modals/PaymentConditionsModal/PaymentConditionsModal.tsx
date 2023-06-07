@@ -1,5 +1,5 @@
 import CustomModal, { BaseModalProps } from '../../CustomModal/CustomModal';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Checkbox from '../../Checkbox/Checkbox';
 import { LocalPaymentConditionsFormValue } from '../../../../types/LocalTypes';
 import { PaymentConditionsDefaults, UserPaymentDefaults } from '../../../../api/types/ApiResponses';
@@ -14,6 +14,7 @@ const PaymentConditionsModal = ({ open, userDefaults, onDismiss, onApply }: Paym
     userDefaults ? userDefaults.allowPartialPayments : false,
   );
   const [isDefault, setIsDefault] = useState<boolean>(userDefaults ? true : false);
+  const [currentState, setCurrentState] = useState<LocalPaymentConditionsFormValue>();
 
   // When the user clicks on the Apply button, we need to send the data to the parent component
   const onApplyClicked = (data: any) => {
@@ -23,8 +24,20 @@ const PaymentConditionsModal = ({ open, userDefaults, onDismiss, onApply }: Paym
     };
 
     onApply(formData);
+    setCurrentState(formData);
 
     return formData;
+  };
+
+  const handleOnDismiss = () => {
+    onDismiss();
+
+    // Reset to initial state
+    if (currentState) {
+      setIsAllowPartialEnabled(currentState.allowPartialPayments);
+    } else {
+      setIsAllowPartialEnabled(userDefaults ? userDefaults.allowPartialPayments : false);
+    }
   };
 
   return (
@@ -32,7 +45,7 @@ const PaymentConditionsModal = ({ open, userDefaults, onDismiss, onApply }: Paym
       title="Payment conditions"
       open={open}
       enableUseAsDefault
-      onDismiss={onDismiss}
+      onDismiss={handleOnDismiss}
       onApply={onApplyClicked}
       isDefault={isDefault}
     >

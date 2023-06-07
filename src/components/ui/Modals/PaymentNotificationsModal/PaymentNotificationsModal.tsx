@@ -16,6 +16,7 @@ const PaymentNotificationsModal = ({ open, userDefaults, onDismiss, onApply }: N
   const [isDefault, setIsDefault] = useState<boolean>(userDefaults ? true : false);
   const [email, setEmail] = useState(userDefaults ? userDefaults.emailAddresses : '');
   const [hasEmailError, setHasEmailError] = useState(false);
+  const [currentState, setCurrentState] = useState<LocalPaymentNotificationsFormValue>();
 
   // When the user clicks on the Apply button, we need to send the data to the parent component
   const onApplyClicked = (data: any) => {
@@ -25,6 +26,7 @@ const PaymentNotificationsModal = ({ open, userDefaults, onDismiss, onApply }: N
     };
 
     onApply(formData);
+    setCurrentState(formData);
 
     return formData;
   };
@@ -50,12 +52,25 @@ const PaymentNotificationsModal = ({ open, userDefaults, onDismiss, onApply }: N
     setHasEmailError(hasError);
   };
 
+  const handleOnDismiss = () => {
+    onDismiss();
+
+    // Reset to initial state
+    if (currentState) {
+      setEmail(currentState.emailAddresses);
+      setHasEmailError(false);
+    } else {
+      setEmail(userDefaults ? userDefaults.emailAddresses : '');
+      setHasEmailError(false);
+    }
+  };
+
   return (
     <CustomModal
       title="Payment notifications"
       open={open}
       enableUseAsDefault
-      onDismiss={onDismiss}
+      onDismiss={handleOnDismiss}
       onApply={onApplyClicked}
       isDefault={isDefault}
       onApplyEnabled={!hasEmailError}

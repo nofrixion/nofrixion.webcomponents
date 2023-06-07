@@ -651,7 +651,7 @@ const CreatePaymentRequestPage = ({
               open={isPaymentMethodsModalOpen}
               userDefaults={userPaymentDefaults?.paymentMethodsDefaults}
               onApply={onMethodsReceived}
-              onDismiss={() => {}}
+              onDismiss={() => setIsPaymentMethodsModalOpen(false)}
               banks={banks}
             />
           )}
@@ -660,7 +660,7 @@ const CreatePaymentRequestPage = ({
             <PaymentConditionsModal
               open={isPaymentConditionsModalOpen}
               userDefaults={userPaymentDefaults?.paymentConditionsDefaults}
-              onDismiss={() => {}}
+              onDismiss={() => setIsPaymentConditionsModalOpen(false)}
               onApply={onConditionsReceived}
             />
           )}
@@ -669,7 +669,7 @@ const CreatePaymentRequestPage = ({
             <PaymentNotificationsModal
               open={isPaymentNotificationsModalOpen}
               userDefaults={userPaymentDefaults?.notificationEmailsDefaults}
-              onDismiss={() => {}}
+              onDismiss={() => setIsPaymentNotificationsModalOpen(false)}
               onApply={onPaymentNotificationsReceived}
             />
           )}
