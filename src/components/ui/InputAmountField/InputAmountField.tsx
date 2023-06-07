@@ -66,10 +66,10 @@ const InputAmountField: React.FC<InputAmountFieldProps> = ({ currency, onCurrenc
           className="w-full pl-7 mr-1 rounded font-normal text-sm text-defaultText appearance-none"
           mask={currencyMask}
           onChange={(e) => {
-            const masked = e.target.value;
-            e.target.value = e.target.value.replace(/[^\d\.\-]/g, '');
-            onChange && onChange(e);
-            e.target.value = masked;
+            const unMasked = e.target.value.replace(/[^\d\.\-]/g, '');
+
+            const eventShallow = { ...e, target: { ...e.target, value: unMasked } };
+            onChange && onChange(eventShallow);
           }}
           {...props}
         />
