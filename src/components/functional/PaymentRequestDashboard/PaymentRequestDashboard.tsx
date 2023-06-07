@@ -95,6 +95,11 @@ const PaymentRequestDashboard = ({
   const [localMerchantTags, setLocalMerchantTags] = useState<LocalTag[]>([] as LocalTag[]);
 
   useEffect(() => {
+    // This helps avoid resizing due to dynamic scrollbar visibility.
+    document.documentElement.style.scrollbarGutter = 'stable both-edges';
+  }, []);
+
+  useEffect(() => {
     setLocalPaymentRequests(
       paymentRequests?.map((paymentRequest) => remotePaymentRequestToLocalPaymentRequest(paymentRequest)) ?? [],
     );
