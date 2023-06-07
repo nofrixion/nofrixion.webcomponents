@@ -66,6 +66,7 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     const localPaymentMethodTypesArray: LocalPaymentMethodTypes[] = [];
 
     paymentMethodTypesArray.forEach((paymentMethodType) => {
+      paymentMethodType = paymentMethodType.trim();
       switch (paymentMethodType) {
         case 'card':
           localPaymentMethodTypesArray.push(LocalPaymentMethodTypes.Card);
@@ -73,10 +74,10 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
         case 'pisp':
           localPaymentMethodTypesArray.push(LocalPaymentMethodTypes.Pisp);
           break;
-        case 'applepay':
+        case 'applePay':
           localPaymentMethodTypesArray.push(LocalPaymentMethodTypes.ApplePay);
           break;
-        case 'googlepay':
+        case 'googlePay':
           localPaymentMethodTypesArray.push(LocalPaymentMethodTypes.GooglePay);
           break;
         case 'lightning':
