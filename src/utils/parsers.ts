@@ -1,9 +1,30 @@
-import { PaymentRequest, PaymentRequestAddress, Tag } from '../api/types/ApiResponses';
-import { PaymentResult } from '../api/types/Enums';
-import { LocalAddressType, LocalPaymentMethodTypes } from '../types/LocalEnums';
-import { LocalAddress, LocalPaymentRequest, LocalPaymentStatus, LocalTag } from '../types/LocalTypes';
+import { PaymentRequest, PaymentRequestAddress, PaymentRequestPaymentAttempt, Tag } from '../api/types/ApiResponses';
+import { PartialPaymentMethods, PaymentMethodTypes, PaymentResult, Wallets } from '../api/types/Enums';
+import {
+  LocalAddressType,
+  LocalPartialPaymentMethods,
+  LocalPaymentMethodTypes,
+  LocalWallets,
+} from '../types/LocalEnums';
+import {
+  LocalAddress,
+  LocalPaymentAttempt,
+  LocalPaymentRequest,
+  LocalPaymentStatus,
+  LocalTag,
+} from '../types/LocalTypes';
 
-const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: PaymentRequest): LocalPaymentRequest => {
+const parseApiTagToLocalTag = (tag: Tag): LocalTag => {
+  return {
+    id: tag.id,
+    name: tag.name,
+    colourHex: tag.colourHex,
+    description: tag.description,
+    merchantID: tag.merchantID,
+  };
+};
+
+const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: PaymentRequest): LocalPaymentRequest => {
   const { addresses, inserted, customerEmailAddress, amount, currency, status, tags } = remotePaymentRequest;
 
   const parseApiStatusToLocalStatus = (status: PaymentResult): LocalPaymentStatus => {
@@ -19,6 +40,25 @@ const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     }
   };
 
+  const parseApiPaymentMethodTypeToLocalMethodType = (
+    paymentMethodType: PaymentMethodTypes,
+  ): LocalPaymentMethodTypes => {
+    switch (paymentMethodType) {
+      case PaymentMethodTypes.Card:
+        return LocalPaymentMethodTypes.Card;
+      case PaymentMethodTypes.Pisp:
+        return LocalPaymentMethodTypes.Pisp;
+      case PaymentMethodTypes.ApplePay:
+        return LocalPaymentMethodTypes.ApplePay;
+      case PaymentMethodTypes.GooglePay:
+        return LocalPaymentMethodTypes.GooglePay;
+      case PaymentMethodTypes.Lightning:
+        return LocalPaymentMethodTypes.Lightning;
+      default:
+        return LocalPaymentMethodTypes.None;
+    }
+  };
+
   const parseApiPaymentMethodTypesToLocalPaymentMethodTypes = (
     paymentMethodTypes: string,
   ): LocalPaymentMethodTypes[] => {
@@ -26,6 +66,7 @@ const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     const localPaymentMethodTypesArray: LocalPaymentMethodTypes[] = [];
 
     paymentMethodTypesArray.forEach((paymentMethodType) => {
+      paymentMethodType = paymentMethodType.trim();
       switch (paymentMethodType) {
         case 'card':
           localPaymentMethodTypesArray.push(LocalPaymentMethodTypes.Card);
@@ -33,10 +74,10 @@ const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
         case 'pisp':
           localPaymentMethodTypesArray.push(LocalPaymentMethodTypes.Pisp);
           break;
-        case 'applepay':
+        case 'applePay':
           localPaymentMethodTypesArray.push(LocalPaymentMethodTypes.ApplePay);
           break;
-        case 'googlepay':
+        case 'googlePay':
           localPaymentMethodTypesArray.push(LocalPaymentMethodTypes.GooglePay);
           break;
         case 'lightning':
@@ -86,14 +127,74 @@ const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     };
   };
 
-  const parseApiTagToLocalTag = (tag: Tag): LocalTag => {
-    return {
-      ID: tag.ID,
-      name: tag.name,
-      colourHex: tag.colourHex,
-      description: tag.description,
-      merchantID: tag.merchantID,
-    };
+  const parseApiWalletTypeToLocalWalletType = (walletType: Wallets): LocalWallets | undefined => {
+    switch (walletType) {
+      case Wallets.ApplePay:
+        return LocalWallets.ApplePay;
+      case Wallets.GooglePay:
+        return LocalWallets.GooglePay;
+      default:
+        return undefined;
+    }
+  };
+
+  const parseWalletNameToPaymentMethodType = (walletName: Wallets): LocalPaymentMethodTypes => {
+    switch (walletName) {
+      case Wallets.ApplePay:
+        return LocalPaymentMethodTypes.ApplePay;
+      case Wallets.GooglePay:
+        return LocalPaymentMethodTypes.GooglePay;
+      default:
+        return LocalPaymentMethodTypes.None;
+    }
+  };
+
+  const parseApiPartialPaymentMethodToLocalPartialPaymentMethod = (
+    partialPaymentMethod: PartialPaymentMethods,
+  ): LocalPartialPaymentMethods => {
+    switch (partialPaymentMethod) {
+      case PartialPaymentMethods.None:
+        return LocalPartialPaymentMethods.None;
+      case PartialPaymentMethods.Partial:
+        return LocalPartialPaymentMethods.Partial;
+      default:
+        return LocalPartialPaymentMethods.None;
+    }
+  };
+
+  const parseApiPaymentAttemptsToLocalPaymentAttempts = (
+    remotePaymentAttempts: PaymentRequestPaymentAttempt[],
+  ): LocalPaymentAttempt[] => {
+    if (remotePaymentAttempts.length === 0) {
+      return [];
+    } else {
+      const localPaymentAttempts: LocalPaymentAttempt[] = [];
+      remotePaymentAttempts.map((remotePaymentAttempt) => {
+        if (remotePaymentAttempt.settledAt || remotePaymentAttempt.authorisedAt) {
+          const {
+            attemptKey,
+            authorisedAt,
+            settledAt,
+            paymentMethod,
+            authorisedAmount,
+            settledAmount,
+            currency,
+            walletName,
+          } = remotePaymentAttempt;
+          localPaymentAttempts.push({
+            attemptKey: attemptKey,
+            occurredAt: new Date(settledAt ?? authorisedAt ?? 0),
+            paymentMethod: walletName
+              ? parseWalletNameToPaymentMethodType(walletName)
+              : parseApiPaymentMethodTypeToLocalMethodType(paymentMethod),
+            amount: settledAmount > 0 ? settledAmount : authorisedAmount,
+            currency: currency,
+            processor: walletName ? parseApiWalletTypeToLocalWalletType(walletName) : undefined,
+          });
+        }
+      });
+      return localPaymentAttempts;
+    }
   };
 
   return {
@@ -101,8 +202,8 @@ const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     status: parseApiStatusToLocalStatus(status),
     createdAt: new Date(inserted),
     contact: {
-      name: addresses.length ? `${addresses[0].firstName} ${addresses[0].lastName}` : '',
-      email: customerEmailAddress ?? '',
+      name: addresses.length ? `${addresses[0].firstName} ${addresses[0].lastName}` : undefined,
+      email: customerEmailAddress ?? undefined,
     },
     amount: amount,
     currency: currency,
@@ -112,8 +213,11 @@ const RemotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     description: remotePaymentRequest.description ?? '',
     productOrService: remotePaymentRequest.title ?? '',
     hostedPayCheckoutUrl: remotePaymentRequest.hostedPayCheckoutUrl ?? '',
-    paymentAttempts: [],
+    partialPaymentMethod: parseApiPartialPaymentMethodToLocalPartialPaymentMethod(
+      remotePaymentRequest.partialPaymentMethod,
+    ),
+    paymentAttempts: parseApiPaymentAttemptsToLocalPaymentAttempts(remotePaymentRequest.paymentAttempts),
   };
 };
 
-export { RemotePaymentRequestToLocalPaymentRequest };
+export { remotePaymentRequestToLocalPaymentRequest, parseApiTagToLocalTag };

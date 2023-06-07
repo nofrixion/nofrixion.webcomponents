@@ -17,7 +17,6 @@ export const useMerchantTags = (apiUrl: string, authToken: string, merchantId: s
         setApiError(response.error);
       }
     };
-
     fetchMerchantTags();
   }, [apiUrl, authToken, merchantId]);
 

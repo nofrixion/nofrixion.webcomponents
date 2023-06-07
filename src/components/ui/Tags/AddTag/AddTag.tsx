@@ -58,7 +58,7 @@ const AddTag = ({ tags, availableTags, onTagAdded, onTagCreated }: TagProps) => 
       onTagCreated &&
         onTagCreated({
           name: tagName,
-          ID: uuidv4(), // This is here to make sure the tag key is unique in the list
+          id: uuidv4(), // This is here to make sure the tag key is unique in the list
         });
     }
     reset();

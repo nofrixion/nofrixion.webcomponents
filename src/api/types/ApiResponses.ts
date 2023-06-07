@@ -3,9 +3,12 @@ import {
   CardTokenCreateModes,
   Currency,
   PartialPaymentMethods,
+  PaymentMethodTypes,
   PaymentProcessor,
   PaymentRequestEventType,
+  PaymentRequestStatus,
   PaymentResult,
+  Wallets,
 } from './Enums';
 
 export type PaymentRequestPageResponse = PageResponse<PaymentRequest>;
@@ -47,6 +50,26 @@ export type PaymentRequest = {
   tags: Tag[];
   priorityBankID?: string;
   title?: string;
+  paymentAttempts: PaymentRequestPaymentAttempt[];
+};
+
+export type PaymentRequestPaymentAttempt = {
+  attemptKey: string;
+  paymentRequestID: string;
+  initiatedAt: Date;
+  authorisedAt?: Date;
+  settledAt?: Date;
+  refundedAt?: Date;
+  settleFailedAt?: Date;
+  paymentMethod: PaymentMethodTypes;
+  attemptedAmount: number;
+  authorisedAmount: number;
+  settledAmount: number;
+  refundedAmount: number;
+  currency: Currency.EUR | Currency.GBP;
+  paymentProcessor: PaymentProcessor;
+  status: PaymentRequestStatus;
+  walletName?: Wallets;
 };
 
 export type PaymentRequestMinimal = {
@@ -101,6 +124,39 @@ export type PaymentRequestCreate = {
   title?: string;
   tagIds?: string[];
   notificationEmailAddresses?: string;
+};
+
+export type PaymentRequestUpdate = {
+  amount?: number;
+  currency?: Currency;
+  customerID?: string;
+  orderID?: string;
+  paymentMethodTypes?: string;
+  description?: string;
+  pispAccountID?: string;
+  shippingFirstName?: string;
+  shippingLastName?: string;
+  shippingAddressLine1?: string;
+  shippingAddressLine2?: string;
+  shippingAddressCity?: string;
+  shippingAddressCounty?: string;
+  shippingAddressPostCode?: string;
+  shippingAddressCountryCode?: string;
+  shippingPhone?: string;
+  shippingEmail?: string;
+  baseOriginUrl?: string;
+  callbackUrl?: string;
+  cardAuthorizeOnly?: boolean;
+  cardCreateToken?: boolean;
+  ignoreAddressVerification?: boolean;
+  cardIgnoreCVN?: boolean;
+  pispRecipientReference?: string;
+  cardProcessorMerchantID?: string;
+  customerEmailAddress?: string;
+  notificationEmailAddresses?: string[];
+  title?: string;
+  partialPaymentSteps?: string;
+  tagIds?: string[];
 };
 
 export type PaymentRequestAddress = {
@@ -163,7 +219,7 @@ export type ApiResponse<T> = {
 };
 
 export type Tag = {
-  ID?: string;
+  id: string;
   merchantID?: string;
   name: string;
   colourHex?: string;

@@ -75,3 +75,16 @@ export enum PaymentRequestStatus {
   Voided = 'Voided',
   Authorized = 'Authorized',
 }
+
+export enum PaymentMethodTypes {
+  Card = 'card',
+  Pisp = 'pisp',
+  ApplePay = 'applepay',
+  GooglePay = 'googlepay',
+  Lightning = 'lightning',
+}
+
+export enum Wallets {
+  ApplePay = 'ApplePay',
+  GooglePay = 'GooglePay',
+}

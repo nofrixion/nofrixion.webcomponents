@@ -11,6 +11,7 @@ import TagManager from '../Tags/TagManager/TagManager';
 const PaymentRequestDetails = ({
   paymentRequest,
   merchantTags,
+  hostedPaymentLink,
   onRefundClick,
   onTagAdded,
   onTagDeleted,
@@ -18,6 +19,7 @@ const PaymentRequestDetails = ({
 }: {
   paymentRequest: LocalPaymentRequest;
   merchantTags: LocalTag[];
+  hostedPaymentLink: string;
   onRefundClick: (paymentAttemptID: string) => void;
   onTagAdded: (tag: LocalTag) => void;
   onTagDeleted: (id: string) => void;
@@ -28,10 +30,10 @@ const PaymentRequestDetails = ({
       <div className="bg-[#F6F9F9] pl-8 pr-7 relative mb-[4.875rem]">
         <div className="flex justify-between pb-[2.625rem] pt-6 items-center">
           <Contact name={paymentRequest.contact.name} email={paymentRequest.contact.email} size="large"></Contact>
-          <QRCode url={paymentRequest.hostedPayCheckoutUrl}></QRCode>
+          <QRCode url={hostedPaymentLink}></QRCode>
         </div>
-        <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-opacity-100 z-10 w-[92%]">
-          <CopyLink link={paymentRequest.hostedPayCheckoutUrl}></CopyLink>
+        <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-opacity-100 w-[92%]">
+          <CopyLink link={hostedPaymentLink}></CopyLink>
         </div>
       </div>
       <div className="px-8">
@@ -41,6 +43,7 @@ const PaymentRequestDetails = ({
               amountPaid={paymentRequest.paymentAttempts.reduce((acc, curr) => acc + curr.amount, 0)}
               totalAmount={paymentRequest.amount}
               currency={paymentRequest.currency === Currency.EUR ? Currency.EUR : Currency.GBP}
+              partialPaymentMethod={paymentRequest.partialPaymentMethod}
             ></AmountPaid>
           </div>
           <div>
@@ -48,22 +51,30 @@ const PaymentRequestDetails = ({
           </div>
         </div>
         <div className="mb-[2.625rem]">
-          <div className="flex flex-col gap-4 mb-8">
-            <span className="text-base leading-[1.188rem] font-medium">{paymentRequest.productOrService}</span>
-            <span className="text-sm leading-[1.313rem] font-normal text-greyText">{paymentRequest.description}</span>
+          {paymentRequest.productOrService && paymentRequest.description && (
+            <div className="flex flex-col gap-4 mb-8">
+              {paymentRequest.productOrService && (
+                <span className="text-base leading-[1.188rem] font-medium">{paymentRequest.productOrService}</span>
+              )}
+              {paymentRequest.description && (
+                <span className="text-sm leading-[1.313rem] font-normal text-greyText">
+                  {paymentRequest.description}
+                </span>
+              )}
+            </div>
+          )}
+          <div>
+            <TagManager
+              availableTags={merchantTags}
+              tags={paymentRequest.tags}
+              onAdded={onTagAdded}
+              onDeleted={onTagDeleted}
+              onCreated={onTagCreated}
+            ></TagManager>
           </div>
-          <TagManager
-            availableTags={merchantTags}
-            tags={paymentRequest.tags}
-            onAdded={onTagAdded}
-            onDeleted={onTagDeleted}
-            onCreated={onTagCreated}
-          ></TagManager>
         </div>
-        <div className="relative">
-          <div className="absolute z-0 left-0 right-0">
-            <DetailsTabs paymentRequest={paymentRequest} onRefundClick={onRefundClick}></DetailsTabs>
-          </div>
+        <div className="mb-6">
+          <DetailsTabs paymentRequest={paymentRequest} onRefundClick={onRefundClick}></DetailsTabs>
         </div>
       </div>
     </>
