@@ -28,6 +28,7 @@ const PaymentMethodsModal = ({ open, banks, userDefaults, onDismiss, onApply }: 
   const [isCaptureFundsEnabled, setIsCaptureFundsEnabled] = useState<boolean>(!userDefaults?.cardAuthorizeOnly ?? true);
   const [isDefault, setIsDefault] = useState<boolean>(userDefaults ? true : false);
   const [priorityBank, setPriorityBank] = useState<BankSettings | undefined>();
+  const [currentState, setCurrentState] = useState<LocalPaymentMethodsFormValue>();
 
   useEffect(() => {
     if (userDefaults?.pispPriorityBank && userDefaults?.pispPriorityBankID) {
@@ -62,9 +63,51 @@ const PaymentMethodsModal = ({ open, banks, userDefaults, onDismiss, onApply }: 
       };
     }
 
+    setCurrentState(formData);
     onApply(formData);
 
     return formData;
+  };
+
+  const handleOnDismiss = () => {
+    onDismiss();
+
+    // Reset to initial state
+    if (currentState) {
+      setIsDefault(currentState.isDefault);
+      setIsBankEnabled(currentState.isBankEnabled);
+      setIsCardEnabled(currentState.isCardEnabled);
+      setIsWalletEnabled(currentState.isWalletEnabled);
+      setIsLightningEnabled(currentState.isLightningEnabled);
+      setIsCaptureFundsEnabled(currentState.isCaptureFundsEnabled);
+      setIsPriorityBankEnabled(currentState.isBankEnabled);
+
+      if (currentState.isBankEnabled && currentState.priorityBank) {
+        const bank = banks.find((bank) => bank.bankID === currentState.priorityBank?.id);
+        setPriorityBank(bank);
+        setIsPriorityBankEnabled(true);
+      } else {
+        setPriorityBank(undefined);
+        setIsPriorityBankEnabled(false);
+      }
+    } else {
+      setIsDefault(isDefault);
+      setIsBankEnabled(userDefaults?.pisp ?? true);
+      setIsCardEnabled(userDefaults?.card ?? true);
+      setIsWalletEnabled(userDefaults?.wallet ?? true);
+      setIsLightningEnabled(userDefaults?.lightning ?? false);
+      setIsCaptureFundsEnabled(!userDefaults?.cardAuthorizeOnly ?? true);
+      setIsPriorityBankEnabled(userDefaults?.pispPriorityBank ?? false);
+
+      if (userDefaults?.pispPriorityBank && userDefaults?.pispPriorityBankID) {
+        const bank = banks.find((bank) => bank.bankID === userDefaults.pispPriorityBankID);
+        setPriorityBank(bank);
+        setIsPriorityBankEnabled(true);
+      } else {
+        setPriorityBank(undefined);
+        setIsPriorityBankEnabled(false);
+      }
+    }
   };
 
   return (
@@ -73,12 +116,12 @@ const PaymentMethodsModal = ({ open, banks, userDefaults, onDismiss, onApply }: 
       open={open}
       enableUseAsDefault
       isDefault={isDefault}
-      onDismiss={onDismiss}
+      onDismiss={handleOnDismiss}
       onApply={onApplyClicked}
     >
       <div className="divide-y">
         <div className="py-4">
-          <Switch icon={BankIcon} label="Bank transfer" value={isBankEnabled} onChange={setIsBankEnabled} />
+          <Switch icon={BankIcon} label="Pay by Bank" value={isBankEnabled} onChange={setIsBankEnabled} />
 
           <AnimatePresence initial={false}>
             {isBankEnabled && banks.length > 0 && (

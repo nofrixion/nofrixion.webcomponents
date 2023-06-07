@@ -21,9 +21,9 @@ const Template: StoryFn<typeof Switch> = (args) => {
   return <Switch {...args} value={enabled} onChange={onChangeEnabled} />;
 };
 
-export const BankTransfer = Template.bind({});
-BankTransfer.args = {
-  label: 'Bank transfer',
+export const PayByBank = Template.bind({});
+PayByBank.args = {
+  label: 'Pay by Bank',
   icon: BankIcon,
 };
 
