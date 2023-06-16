@@ -1,36 +1,18 @@
-import {
-  PaymentRequest,
-  PaymentRequestAddress,
-  PaymentRequestEvent,
-  PaymentRequestPaymentAttempt,
-  Tag,
-} from '../api/types/ApiResponses';
-import {
-  Currency,
-  PartialPaymentMethods,
-  PaymentMethodTypes,
-  PaymentProcessor,
-  PaymentRequestEventType,
-  PaymentResult,
-  Wallets,
-} from '../api/types/Enums';
+import { PaymentRequest, PaymentRequestAddress, PaymentRequestPaymentAttempt, Tag } from '../api/types/ApiResponses';
+import { Currency, PartialPaymentMethods, PaymentMethodTypes, PaymentResult, Wallets } from '../api/types/Enums';
 import {
   LocalAddressType,
   LocalPartialPaymentMethods,
   LocalPaymentMethodTypes,
-  LocalPaymentProcessor,
-  LocalPaymentRequestEventType,
   LocalWallets,
 } from '../types/LocalEnums';
 import {
   LocalAddress,
   LocalPaymentAttempt,
   LocalPaymentRequest,
-  LocalPaymentRequestEvent,
   LocalPaymentStatus,
   LocalTag,
 } from '../types/LocalTypes';
-import * as events from 'events';
 
 const parseApiTagToLocalTag = (tag: Tag): LocalTag => {
   return {
@@ -145,108 +127,6 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     };
   };
 
-  const parseApiPaymentRequestEventTypeToLocalType = (
-    paymentRequestEventType: string,
-  ): LocalPaymentRequestEventType => {
-    switch (paymentRequestEventType) {
-      case 'card_payer_authentication_setup':
-        return LocalPaymentRequestEventType.card_payer_authentication_setup;
-      case 'card_authorization':
-        return LocalPaymentRequestEventType.card_authorization;
-      case 'card_sale':
-        return LocalPaymentRequestEventType.card_sale;
-      case 'card_capture':
-        return LocalPaymentRequestEventType.card_capture;
-      case 'card_void':
-        return LocalPaymentRequestEventType.card_void;
-      case 'pisp_initiate':
-        return LocalPaymentRequestEventType.pisp_initiate;
-      case 'pisp_callback':
-        return LocalPaymentRequestEventType.pisp_callback;
-      case 'lightning_invoice_created':
-        return LocalPaymentRequestEventType.lightning_invoice_created;
-      case 'lightning_invoice_paid':
-        return LocalPaymentRequestEventType.lightning_invoice_paid;
-      case 'card_payer_authentication_failure':
-        return LocalPaymentRequestEventType.card_payer_authentication_failure;
-      case 'pisp_webhook':
-        return LocalPaymentRequestEventType.pisp_webhook;
-      case 'pisp_settle':
-        return LocalPaymentRequestEventType.pisp_settle;
-      default:
-        return LocalPaymentRequestEventType.unknown;
-    }
-  };
-
-  const parseApiPaymentProcessorToLocalPaymentProcessor = (paymentProcessor: string): LocalPaymentProcessor => {
-    switch (paymentProcessor) {
-      case 'CyberSource':
-        return LocalPaymentProcessor.CyberSource;
-      case 'Checkout':
-        return LocalPaymentProcessor.Checkout;
-      case 'Stripe':
-        return LocalPaymentProcessor.Stripe;
-      case 'Modulr':
-        return LocalPaymentProcessor.Modulr;
-      case 'Plaid':
-        return LocalPaymentProcessor.Plaid;
-      case 'Yapily':
-        return LocalPaymentProcessor.Yapily;
-      default:
-        return LocalPaymentProcessor.None;
-    }
-  };
-
-  const parseApiPaymentRequestEventToLocalEvent = (
-    paymentRequestEvent: PaymentRequestEvent,
-  ): LocalPaymentRequestEvent => {
-    const {
-      id,
-      paymentRequestID,
-      eventType,
-      amount,
-      currency,
-      status,
-      errorReason,
-      errorMessage,
-      rawResponse,
-      rawResponseHash,
-      cardRequestID,
-      cardTransactionID,
-      cardTokenCustomerID,
-      cardAuthorizationResponseID,
-      lightningInvoice,
-      pispPaymentServiceProviderID,
-      pispPaymentInitiationID,
-      pispRedirectUrl,
-      pispToken,
-      paymentProcessorName,
-    } = paymentRequestEvent;
-
-    return {
-      id: id,
-      paymentRequestID: paymentRequestID,
-      eventType: parseApiPaymentRequestEventTypeToLocalType(eventType),
-      amount: amount,
-      currency: currency,
-      status: status,
-      errorReason: errorReason,
-      errorMessage: errorMessage,
-      rawResponse: rawResponse,
-      rawResponseHash: rawResponseHash,
-      cardRequestID: cardRequestID,
-      cardTransactionID: cardTransactionID,
-      cardTokenCustomerID: cardTokenCustomerID,
-      cardAuthorizationResponseID: cardAuthorizationResponseID,
-      lightningInvoice: lightningInvoice,
-      pispPaymentServiceProviderID: pispPaymentServiceProviderID,
-      pispPaymentInitiationID: pispPaymentInitiationID,
-      pispRedirectUrl: pispRedirectUrl,
-      pispToken: pispToken,
-      paymentProcessorName: parseApiPaymentProcessorToLocalPaymentProcessor(paymentProcessorName),
-    };
-  };
-
   const parseApiWalletTypeToLocalWalletType = (walletType: Wallets): LocalWallets | undefined => {
     switch (walletType) {
       case Wallets.ApplePay:
@@ -330,7 +210,6 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     tags: tags.map((tag) => parseApiTagToLocalTag(tag)),
     paymentMethodTypes: parseApiPaymentMethodTypesToLocalPaymentMethodTypes(remotePaymentRequest.paymentMethodTypes),
     addresses: addresses.map((address) => parseApiAddressToLocalAddress(address)),
-    events: events.map((event) => parseApiPaymentRequestEventToLocalEvent(event)),
     description: remotePaymentRequest.description ?? '',
     productOrService: remotePaymentRequest.title ?? '',
     hostedPayCheckoutUrl: remotePaymentRequest.hostedPayCheckoutUrl ?? '',

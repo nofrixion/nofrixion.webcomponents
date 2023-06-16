@@ -1,11 +1,11 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import menuIcon from '../../../assets/images/nf_menu.svg';
 import copyIcon from '../../../assets/images/nf_copy.svg';
 import linkIcon from '../../../assets/images/nf_link.svg';
 import trashIcon from '../../../assets/images/nf_trash.svg';
 import trashDisabledIcon from '../../../assets/images/nf_trash_disabled.svg';
 import { cva } from 'class-variance-authority';
 import { motion } from 'framer-motion';
+import InfoTooltip from '../InfoTooltip/InfoTooltip';
 
 const actionItemClassNames =
   'group text-xs leading-none rounded-1 flex items-center relative select-none outline-none cursor-pointer';
@@ -97,7 +97,12 @@ const PaymentRequestActionMenu = ({ onDuplicate, onCopyLink, onDelete, onBlur }:
               </DropdownMenu.Item>
             ) : (
               <DropdownMenu.Item className={actionItem({ intent: 'disabled' })} disabled>
-                <PaymentRequestActionMenuItemContent label="Delete not available" iconSource={trashDisabledIcon} />
+                <InfoTooltip
+                  side="bottom"
+                  content="Payment requests that have already received payments cannot be deleted."
+                >
+                  <PaymentRequestActionMenuItemContent label="Delete not available" iconSource={trashDisabledIcon} />
+                </InfoTooltip>
               </DropdownMenu.Item>
             )}
           </motion.div>

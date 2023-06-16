@@ -1,11 +1,5 @@
 import { Currency } from '../api/types/Enums';
-import {
-  LocalAddressType,
-  LocalPartialPaymentMethods,
-  LocalPaymentMethodTypes,
-  LocalPaymentProcessor,
-  LocalPaymentRequestEventType,
-} from './LocalEnums';
+import { LocalAddressType, LocalPartialPaymentMethods, LocalPaymentMethodTypes } from './LocalEnums';
 
 export interface LocalContact {
   name?: string;
@@ -24,7 +18,6 @@ export interface LocalPaymentRequest {
   tags: LocalTag[];
   paymentMethodTypes: LocalPaymentMethodTypes[];
   addresses: LocalAddress[];
-  events: LocalPaymentRequestEvent[];
   description: string;
   productOrService: string;
   hostedPayCheckoutUrl: string;
@@ -52,29 +45,6 @@ export type LocalAddress = {
   phone?: string;
   email?: string;
   addressType: LocalAddressType;
-};
-
-export type LocalPaymentRequestEvent = {
-  id: string;
-  paymentRequestID: string;
-  eventType: LocalPaymentRequestEventType;
-  amount: number;
-  currency: Currency;
-  status?: string;
-  errorReason?: string;
-  errorMessage?: string;
-  rawResponse: string;
-  rawResponseHash: string;
-  cardRequestID?: string;
-  cardTransactionID?: string;
-  cardTokenCustomerID?: string;
-  cardAuthorizationResponseID?: string;
-  lightningInvoice?: string;
-  pispPaymentServiceProviderID?: string;
-  pispPaymentInitiationID?: string;
-  pispRedirectUrl?: string;
-  pispToken?: string;
-  paymentProcessorName: LocalPaymentProcessor;
 };
 
 export interface LocalPaymentRequestCreate {

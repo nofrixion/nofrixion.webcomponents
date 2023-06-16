@@ -152,7 +152,7 @@ const PaymentRequestTable = ({
                     onPaymentRequestDuplicateClicked && onPaymentRequestDuplicateClicked(paymentRequest)
                   }
                   onDelete={
-                    paymentRequest.events && paymentRequest.events.length > 0
+                    paymentRequest.paymentAttempts && paymentRequest.paymentAttempts.length > 0
                       ? undefined
                       : () => onPaymentRequestDeleteClicked && onPaymentRequestDeleteClicked(paymentRequest)
                   }
