@@ -3,6 +3,7 @@ import menuIcon from '../../../assets/images/nf_menu.svg';
 import copyIcon from '../../../assets/images/nf_copy.svg';
 import linkIcon from '../../../assets/images/nf_link.svg';
 import trashIcon from '../../../assets/images/nf_trash.svg';
+import trashDisabledIcon from '../../../assets/images/nf_trash_disabled.svg';
 import { cva } from 'class-variance-authority';
 import { motion } from 'framer-motion';
 
@@ -13,6 +14,7 @@ const actionItem = cva(actionItemClassNames, {
     intent: {
       neutral: ['data-[highlighted]:text-greyText'],
       negative: ['text-negativeRed data-[highlighted]:text-highlightedNegativeRed'],
+      disabled: ['text-disabledText data-[highlighted]:text-greyText'],
     },
   },
   defaultVariants: {
@@ -55,6 +57,7 @@ const PaymentRequestActionMenu = ({ onDuplicate, onCopyLink, onDelete, onBlur }:
   const onDuplicateClick = (e: React.MouseEvent<HTMLDivElement>) => handleClick(e, onDuplicate);
   const onCopyLinkClick = (e: React.MouseEvent<HTMLDivElement>) => handleClick(e, onCopyLink);
   const onDeleteClick = (e: React.MouseEvent<HTMLDivElement>) => handleClick(e, onDelete);
+  const emptyClick = (e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation();
 
   return (
     <DropdownMenu.Root>
@@ -72,7 +75,7 @@ const PaymentRequestActionMenu = ({ onDuplicate, onCopyLink, onDelete, onBlur }:
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
-        <DropdownMenu.Content asChild forceMount sideOffset={5}>
+        <DropdownMenu.Content asChild forceMount sideOffset={5} onClick={emptyClick}>
           <motion.div
             className="min-w-[150px] bg-white rounded-md shadow-[0px_0px_8px_rgba(4,_41,_49,_0.1)] space-y-2 p-4"
             initial={{ opacity: 0.5, y: -5, scaleX: 1, scaleY: 1 }}
@@ -88,9 +91,13 @@ const PaymentRequestActionMenu = ({ onDuplicate, onCopyLink, onDelete, onBlur }:
                 <PaymentRequestActionMenuItemContent label="Copy payment link" iconSource={linkIcon} />
               </DropdownMenu.Item>
             )}
-            {onDelete && (
+            {onDelete ? (
               <DropdownMenu.Item className={actionItem({ intent: 'negative' })} onClick={onDeleteClick}>
                 <PaymentRequestActionMenuItemContent label="Delete" iconSource={trashIcon} />
+              </DropdownMenu.Item>
+            ) : (
+              <DropdownMenu.Item className={actionItem({ intent: 'disabled' })} disabled>
+                <PaymentRequestActionMenuItemContent label="Delete not available" iconSource={trashDisabledIcon} />
               </DropdownMenu.Item>
             )}
           </motion.div>

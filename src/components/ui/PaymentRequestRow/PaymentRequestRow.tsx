@@ -60,6 +60,7 @@ const Row = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
             >
               <div className="ml-auto mr-11 space-x-1">
                 <button
@@ -108,7 +109,7 @@ const Row = ({
         <PaymentRequestActionMenu
           onDuplicate={onDuplicate}
           onCopyLink={onCopyLink}
-          onDelete={onDeletePaymentRequestClicked}
+          onDelete={onDelete ? onDeletePaymentRequestClicked : undefined}
           onBlur={onCancelDeletingPaymentRequestClicked}
         />
       </td>
