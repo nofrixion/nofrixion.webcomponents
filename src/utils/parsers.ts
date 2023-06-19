@@ -1,5 +1,5 @@
 import { PaymentRequest, PaymentRequestAddress, PaymentRequestPaymentAttempt, Tag } from '../api/types/ApiResponses';
-import { Currency, PartialPaymentMethods, PaymentMethodTypes, PaymentResult, Wallets } from '../api/types/Enums';
+import { PartialPaymentMethods, PaymentMethodTypes, PaymentResult, Wallets } from '../api/types/Enums';
 import {
   LocalAddressType,
   LocalPartialPaymentMethods,
@@ -25,7 +25,7 @@ const parseApiTagToLocalTag = (tag: Tag): LocalTag => {
 };
 
 const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: PaymentRequest): LocalPaymentRequest => {
-  const { addresses, events, inserted, customerEmailAddress, amount, currency, status, tags } = remotePaymentRequest;
+  const { addresses, inserted, customerEmailAddress, amount, currency, status, tags } = remotePaymentRequest;
 
   const parseApiStatusToLocalStatus = (status: PaymentResult): LocalPaymentStatus => {
     switch (status) {
