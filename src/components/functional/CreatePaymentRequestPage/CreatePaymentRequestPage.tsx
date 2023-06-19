@@ -3,12 +3,12 @@ import UICreatePaymentRequestPage from '../../ui/CreatePaymentRequestPage/Create
 import { LocalPaymentRequestCreate } from '../../../types/LocalTypes';
 import { makeToast } from '../../ui/Toast/Toast';
 import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
-import { PaymentRequestCreate, UserPaymentDefaults } from '../../../api/types/ApiResponses';
-import { CardTokenCreateModes, PartialPaymentMethods } from '../../../api/types/Enums';
+import { UserPaymentDefaults } from '../../../api/types/ApiResponses';
 import { useBanks } from '../../../api/hooks/useBanks';
 import { useUserPaymentDefaults } from '../../../api/hooks/useUserPaymentDefaults';
 import { ClientSettingsClient } from '../../../api/clients/ClientSettingsClient';
 import { defaultUserPaymentDefaults } from '../../../utils/constants';
+import { parseLocalPaymentRequestCreateToRemotePaymentRequest } from '../../../utils/parsers';
 
 interface CreatePaymentRequesPageProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -29,46 +29,6 @@ const CreatePaymentRequestPage = ({
 
   const { userPaymentDefaults, isUserPaymentDefaultsLoading } = useUserPaymentDefaults(apiUrl, token);
   const { banks } = useBanks(apiUrl, token, merchantId);
-
-  const parseLocalPaymentRequestCreateToRemotePaymentRequest = (
-    merchantId: string,
-    paymentRequest: LocalPaymentRequestCreate,
-  ): PaymentRequestCreate => {
-    // None = 0,
-    // card = 1,
-    // pisp = 2,
-    // lightning = 4,
-    // cardtoken = 8,
-    // applePay = 16
-    // googlePay = 32
-
-    let paymentMethodTypes = paymentRequest.paymentMethods.card.active ? 1 : 0;
-    paymentMethodTypes += paymentRequest.paymentMethods.bank.active ? 2 : 0;
-    paymentMethodTypes += paymentRequest.paymentMethods.lightning ? 4 : 0;
-    paymentMethodTypes += paymentRequest.paymentMethods.wallet ? 16 + 32 : 0;
-
-    return {
-      merchantID: merchantId,
-      title: paymentRequest.productOrService,
-      amount: paymentRequest.amount,
-      currency: paymentRequest.currency,
-      paymentMethodTypes: paymentMethodTypes.toString(),
-      description: paymentRequest.description,
-      cardAuthorizeOnly: !paymentRequest.paymentMethods.card.captureFunds,
-      customerEmailAddress: paymentRequest.email,
-      cardCreateToken: false,
-      cardTokenCreateModes: CardTokenCreateModes.None,
-      partialPaymentMethod: paymentRequest.paymentConditions.allowPartialPayments
-        ? PartialPaymentMethods.Partial
-        : PartialPaymentMethods.None,
-      priorityBankID: paymentRequest.paymentMethods.bank.active
-        ? paymentRequest.paymentMethods.bank.priority?.id
-        : undefined,
-      shippingFirstName: paymentRequest.firstName,
-      shippingLastName: paymentRequest.lastName,
-      notificationEmailAddresses: paymentRequest.notificationEmailAddresses,
-    };
-  };
 
   const onCreatePaymentRequest = async (paymentRequestToCreate: LocalPaymentRequestCreate) => {
     const parsedPaymentRequestToCreate = parseLocalPaymentRequestCreateToRemotePaymentRequest(

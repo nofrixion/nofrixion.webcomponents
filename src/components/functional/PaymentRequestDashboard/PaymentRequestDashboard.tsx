@@ -9,9 +9,14 @@ import PaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTabl
 import { SortDirection } from '../../ui/ColumnHeader/ColumnHeader';
 import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
 import { usePaymentRequests } from '../../../api/hooks/usePaymentRequests';
-import { LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
+import { LocalPaymentRequest, LocalPaymentRequestCreate, LocalTag } from '../../../types/LocalTypes';
 import { makeToast } from '../../ui/Toast/Toast';
-import { parseApiTagToLocalTag, remotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
+import {
+  parseApiTagToLocalTag,
+  parseLocalPaymentRequestCreateToRemotePaymentRequest,
+  parseRemotePaymentRequestToPaymentRequestCreate,
+  remotePaymentRequestToLocalPaymentRequest,
+} from '../../../utils/parsers';
 import CreatePaymentRequestPage from '../../functional/CreatePaymentRequestPage/CreatePaymentRequestPage';
 import { add, startOfDay, endOfDay } from 'date-fns';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
@@ -19,6 +24,7 @@ import LayoutWrapper from '../../ui/utils/LayoutWrapper';
 import { PaymentRequestMetrics } from '../../../api/types/ApiResponses';
 import PaymentRequestDetailsModal from '../PaymentRequestDetailsModal/PaymentRequestDetailsModal';
 import { useMerchantTags } from '../../../api/hooks/useMerchantTags';
+import { LocalPartialPaymentMethods } from '../../../types/LocalEnums';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -131,8 +137,24 @@ const PaymentRequestDashboard = ({
     makeToast('success', 'Link copied into clipboard.');
   };
 
-  const onDuplicatePaymentRequest = (paymentRequest: LocalPaymentRequest) => {
-    console.log('Duplicate payment request clicked: ', paymentRequest);
+  const onDuplicatePaymentRequest = async (paymentRequest: LocalPaymentRequest) => {
+    const paymentRequestToDuplicate = paymentRequests?.find((x) => x.id === paymentRequest.id);
+
+    if (!paymentRequestToDuplicate) {
+      makeToast('error', "Couldn't duplicate this payment request.");
+      return;
+    }
+
+    const response = await client.create(parseRemotePaymentRequestToPaymentRequestCreate(paymentRequestToDuplicate));
+
+    if (response.error) {
+      makeToast('error', response.error.title);
+      return;
+    }
+
+    makeToast('success', 'Payment request successfully duplicated.');
+
+    await fetchPaymentRequests();
   };
 
   const onCreatePaymentRequest = () => {

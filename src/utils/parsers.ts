@@ -1,5 +1,17 @@
-import { PaymentRequest, PaymentRequestAddress, PaymentRequestPaymentAttempt, Tag } from '../api/types/ApiResponses';
-import { PartialPaymentMethods, PaymentMethodTypes, PaymentResult, Wallets } from '../api/types/Enums';
+import {
+  PaymentRequest,
+  PaymentRequestAddress,
+  PaymentRequestCreate,
+  PaymentRequestPaymentAttempt,
+  Tag,
+} from '../api/types/ApiResponses';
+import {
+  CardTokenCreateModes,
+  PartialPaymentMethods,
+  PaymentMethodTypes,
+  PaymentResult,
+  Wallets,
+} from '../api/types/Enums';
 import {
   LocalAddressType,
   LocalPartialPaymentMethods,
@@ -10,6 +22,7 @@ import {
   LocalAddress,
   LocalPaymentAttempt,
   LocalPaymentRequest,
+  LocalPaymentRequestCreate,
   LocalPaymentStatus,
   LocalTag,
 } from '../types/LocalTypes';
@@ -220,4 +233,70 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
   };
 };
 
-export { remotePaymentRequestToLocalPaymentRequest, parseApiTagToLocalTag };
+const parseLocalPaymentRequestCreateToRemotePaymentRequest = (
+  merchantId: string,
+  paymentRequest: LocalPaymentRequestCreate,
+): PaymentRequestCreate => {
+  // None = 0,
+  // card = 1,
+  // pisp = 2,
+  // lightning = 4,
+  // cardtoken = 8,
+  // applePay = 16
+  // googlePay = 32
+
+  let paymentMethodTypes = paymentRequest.paymentMethods.card.active ? 1 : 0;
+  paymentMethodTypes += paymentRequest.paymentMethods.bank.active ? 2 : 0;
+  paymentMethodTypes += paymentRequest.paymentMethods.lightning ? 4 : 0;
+  paymentMethodTypes += paymentRequest.paymentMethods.wallet ? 16 + 32 : 0;
+
+  return {
+    merchantID: merchantId,
+    title: paymentRequest.productOrService,
+    amount: paymentRequest.amount,
+    currency: paymentRequest.currency,
+    paymentMethodTypes: paymentMethodTypes.toString(),
+    description: paymentRequest.description,
+    cardAuthorizeOnly: !paymentRequest.paymentMethods.card.captureFunds,
+    customerEmailAddress: paymentRequest.email,
+    cardCreateToken: false,
+    cardTokenCreateModes: CardTokenCreateModes.None,
+    partialPaymentMethod: paymentRequest.paymentConditions.allowPartialPayments
+      ? PartialPaymentMethods.Partial
+      : PartialPaymentMethods.None,
+    priorityBankID: paymentRequest.paymentMethods.bank.active
+      ? paymentRequest.paymentMethods.bank.priority?.id
+      : undefined,
+    shippingFirstName: paymentRequest.firstName,
+    shippingLastName: paymentRequest.lastName,
+    notificationEmailAddresses: paymentRequest.notificationEmailAddresses,
+  };
+};
+
+const parseRemotePaymentRequestToPaymentRequestCreate = (paymentRequest: PaymentRequest): PaymentRequestCreate => {
+  return {
+    merchantID: paymentRequest.merchantID,
+    title: paymentRequest.title,
+    amount: paymentRequest.amount,
+    currency: paymentRequest.currency,
+    paymentMethodTypes: paymentRequest.paymentMethodTypes,
+    description: paymentRequest.description,
+    cardAuthorizeOnly: paymentRequest.cardAuthorizeOnly,
+    customerEmailAddress: paymentRequest.customerEmailAddress,
+    cardCreateToken: paymentRequest.cardCreateToken,
+    cardTokenCreateModes: CardTokenCreateModes.None,
+    partialPaymentMethod: paymentRequest.partialPaymentMethod,
+    priorityBankID: paymentRequest.priorityBankID,
+    shippingFirstName: paymentRequest.addresses[0]?.firstName,
+    shippingLastName: paymentRequest.addresses[0]?.lastName,
+    notificationEmailAddresses: paymentRequest.notificationEmailAddresses,
+    tagIds: paymentRequest.tags.map((tag) => tag.id),
+  };
+};
+
+export {
+  remotePaymentRequestToLocalPaymentRequest,
+  parseApiTagToLocalTag,
+  parseLocalPaymentRequestCreateToRemotePaymentRequest,
+  parseRemotePaymentRequestToPaymentRequestCreate,
+};

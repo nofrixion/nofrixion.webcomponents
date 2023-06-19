@@ -41,6 +41,7 @@ export type PaymentRequest = {
   inserted: Date;
   insertedSortable: string;
   lastUpdated: Date;
+  notificationEmailAddresses?: string;
   useHostedPaymentPage: boolean;
   customerEmailAddress?: string;
   cardStripePaymentIntentID?: string;
