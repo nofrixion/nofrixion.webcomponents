@@ -10,7 +10,7 @@ interface InfoTooltipProps {
   side?: 'top' | 'bottom' | 'left' | 'right';
 }
 
-const InfoTooltip = ({ content, children, side }: InfoTooltipProps) => {
+const InfoTooltip = ({ content, children, side = 'top' }: InfoTooltipProps) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -27,7 +27,7 @@ const InfoTooltip = ({ content, children, side }: InfoTooltipProps) => {
         <AnimatePresence>
           {open && (
             <Tooltip.Portal forceMount>
-              <Tooltip.Content sideOffset={5} side={side ?? 'top'} asChild>
+              <Tooltip.Content sideOffset={5} side={side} asChild>
                 <motion.div
                   className="rounded-lg p-4 bg-white select-none max-w-xs shadow-[0px_0px_16px_rgba(4,_41,_49,_0.15)] text-sm"
                   initial={{ opacity: 0 }}

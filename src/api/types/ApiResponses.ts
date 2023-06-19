@@ -46,7 +46,6 @@ export type PaymentRequest = {
   cardStripePaymentIntentID?: string;
   cardStripePaymentIntentSecret?: string;
   addresses: PaymentRequestAddress[];
-  events: PaymentRequestEvent[];
   jwk?: string;
   tags: Tag[];
   priorityBankID?: string;
