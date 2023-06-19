@@ -151,7 +151,11 @@ const PaymentRequestTable = ({
                   onDuplicate={() =>
                     onPaymentRequestDuplicateClicked && onPaymentRequestDuplicateClicked(paymentRequest)
                   }
-                  onDelete={() => onPaymentRequestDeleteClicked && onPaymentRequestDeleteClicked(paymentRequest)}
+                  onDelete={
+                    paymentRequest.paymentAttempts && paymentRequest.paymentAttempts.length > 0
+                      ? undefined
+                      : () => onPaymentRequestDeleteClicked && onPaymentRequestDeleteClicked(paymentRequest)
+                  }
                   onCopyLink={() => onPaymentRequestCopyLinkClicked && onPaymentRequestCopyLinkClicked(paymentRequest)}
                 />
               ))}
