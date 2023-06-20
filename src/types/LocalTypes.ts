@@ -31,6 +31,8 @@ export interface LocalPaymentAttempt {
   paymentMethod: LocalPaymentMethodTypes;
   amount: number;
   currency: Currency.EUR | Currency.GBP;
+  refundAmount?: number;
+  refundedAt?: Date;
   processor?: string;
   last4DigitsOfCardNumber?: string;
 }
