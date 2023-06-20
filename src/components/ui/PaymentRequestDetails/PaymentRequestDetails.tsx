@@ -1,5 +1,5 @@
 import Contact from '../Contact/Contact';
-import { LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
+import { LocalPaymentAttempt, LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
 import QRCode from '../QRCode/QRCode';
 import { CopyLink } from '../CopyLink/CopyLink';
 import AmountPaid from '../AmountPaid/AmountPaid';
@@ -7,6 +7,7 @@ import { Currency } from '../../../api/types/Enums';
 import StatusBadge from '../PaymentRequestStatusBadge/PaymentRequestStatusBadge';
 import DetailsTabs from '../DetailsTabs/DetailsTabs';
 import TagManager from '../Tags/TagManager/TagManager';
+import { LocalPaymentMethodTypes } from '../../../types/LocalEnums';
 
 const PaymentRequestDetails = ({
   paymentRequest,
@@ -20,7 +21,7 @@ const PaymentRequestDetails = ({
   paymentRequest: LocalPaymentRequest;
   merchantTags: LocalTag[];
   hostedPaymentLink: string;
-  onRefundClick: (paymentAttemptID: string) => void;
+  onRefundClick: (paymentAttempt: LocalPaymentAttempt) => void;
   onTagAdded: (tag: LocalTag) => void;
   onTagDeleted: (id: string) => void;
   onTagCreated: (tag: LocalTag) => void;

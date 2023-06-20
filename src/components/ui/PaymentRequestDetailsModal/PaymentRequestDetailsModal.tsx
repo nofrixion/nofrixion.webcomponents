@@ -1,13 +1,14 @@
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import PaymentRequestDetails from '../PaymentRequestDetails/PaymentRequestDetails';
-import { LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
+import { LocalPaymentAttempt, LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
+import { LocalPaymentMethodTypes } from '../../../types/LocalEnums';
 
 export interface PaymentRequestDetailsModalProps {
   paymentRequest: LocalPaymentRequest;
   merchantTags: LocalTag[];
   hostedPaymentLink: string;
-  onRefundClick: (paymentAttemptID: string) => void;
+  onRefundClick: (paymentAttempt: LocalPaymentAttempt) => void;
   onTagAdded: (tag: LocalTag) => void;
   onTagDeleted: (id: string) => void;
   onTagCreated: (tag: LocalTag) => void;

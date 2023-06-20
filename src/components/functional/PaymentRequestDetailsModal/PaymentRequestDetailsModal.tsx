@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import UIPaymentRequestDetailsModal from '../../ui/PaymentRequestDetailsModal/PaymentRequestDetailsModal';
 import { parseApiTagToLocalTag } from '../../../utils/parsers';
-import { LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
+import { LocalPaymentAttempt, LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
 import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
 import { PaymentRequest, PaymentRequestUpdate } from '../../../api/types/ApiResponses';
 import { MerchantClient } from '../../../api/clients/MerchantClient';
+import { LocalPaymentMethodTypes } from '../../../types/LocalEnums';
+import { makeToast } from '../../ui/Toast/Toast';
 
 interface PaymentRequestDetailsModalProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -44,9 +46,15 @@ const PaymentRequestDetailsModal = ({
     }
   }, [selectedPaymentRequestID, paymentRequests]);
 
-  const onRefundClick = async (paymentAttemptID: string) => {
-    //TODO: Will implement refund for atleast card payment attempts. For PISP, it will need to be worked on later.
-    console.log(paymentAttemptID);
+  const onRefundClick = async (paymentAttempt: LocalPaymentAttempt) => {
+    if (paymentAttempt.paymentMethod === LocalPaymentMethodTypes.Card) {
+      const response = await paymentRequestClient.voidCardPayment(selectedPaymentRequestID, paymentAttempt.attemptKey);
+      if (response.error) {
+        console.log(response.error);
+      } else {
+        makeToast('success', 'Refund successful');
+      }
+    }
   };
 
   const updatePaymentRequests = (updatedPaymentRequest: PaymentRequest) => {

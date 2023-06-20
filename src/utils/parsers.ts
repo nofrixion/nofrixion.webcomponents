@@ -180,6 +180,8 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
             settledAmount,
             currency,
             walletName,
+            refundedAmount,
+            refundedAt,
           } = remotePaymentAttempt;
           localPaymentAttempts.push({
             attemptKey: attemptKey,
@@ -190,6 +192,8 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
             amount: settledAmount > 0 ? settledAmount : authorisedAmount,
             currency: currency,
             processor: walletName ? parseApiWalletTypeToLocalWalletType(walletName) : undefined,
+            refundAmount: refundedAmount,
+            refundedAt: refundedAt ? new Date(refundedAt) : undefined,
           });
         }
       });

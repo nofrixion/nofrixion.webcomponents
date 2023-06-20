@@ -157,7 +157,7 @@ export class PaymentRequestClient extends BaseApiClient {
    * @param paymentRequestId The Payment Request Id
    * @returns True if successfull. An ApiError if not successful.
    */
-  async voidCardPayment(paymentRequestId: string): Promise<{
+  async voidAllCardPayments(paymentRequestId: string): Promise<{
     success?: boolean;
     error?: ApiError;
   }> {
@@ -165,6 +165,26 @@ export class PaymentRequestClient extends BaseApiClient {
       `${this.apiUrl}/${paymentRequestId}/card/voidpaymentrequest`,
       HttpMethod.POST,
     );
+
+    return !response.error ? { success: true } : { success: false, error: response.error };
+  }
+
+  /**
+   * Voids a card Payment Request
+   * @param paymentRequestId The Payment Request Id
+   * @param authorizationID The authorization ID of the card payment to void.
+   * @returns True if successfull. An ApiError if not successful.
+   */
+  async voidCardPayment(
+    paymentRequestId: string,
+    authorizationID: string,
+  ): Promise<{
+    success?: boolean;
+    error?: ApiError;
+  }> {
+    const response = await this.httpRequest(`${this.apiUrl}/${paymentRequestId}/card/void`, HttpMethod.POST, {
+      authorizationID,
+    });
 
     return !response.error ? { success: true } : { success: false, error: response.error };
   }
