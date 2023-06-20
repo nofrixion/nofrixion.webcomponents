@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import UIPaymentRequestDetailsModal from '../../ui/PaymentRequestDetailsModal/PaymentRequestDetailsModal';
-import { parseApiTagToLocalTag } from '../../../utils/parsers';
+import { parseApiTagToLocalTag, remotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
 import { LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
 import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
 import { PaymentRequest, PaymentRequestUpdate } from '../../../api/types/ApiResponses';
@@ -10,52 +10,56 @@ interface PaymentRequestDetailsModalProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
   apiUrl: string; // Example: "https://api.nofrixion.com/api/v1"
   merchantId: string;
-  selectedPaymentRequestID: string;
+  paymentRequest?: PaymentRequest;
   merchantTags: LocalTag[];
-  paymentRequests: LocalPaymentRequest[];
   open: boolean;
   onDismiss: () => void;
   setMerchantTags: (merchantTags: LocalTag[]) => void;
-  setPaymentRequests: (paymentRequests: LocalPaymentRequest[]) => void;
+  onPaymentRequestUpdated: (paymentRequest: LocalPaymentRequest) => void;
 }
 const PaymentRequestDetailsModal = ({
   token,
   apiUrl,
   merchantId,
-  selectedPaymentRequestID,
   merchantTags,
-  paymentRequests,
+  paymentRequest,
   open,
   onDismiss,
   setMerchantTags,
-  setPaymentRequests,
+  onPaymentRequestUpdated,
 }: PaymentRequestDetailsModalProps) => {
   const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId);
   const merchantClient = new MerchantClient(apiUrl, token, merchantId);
 
-  const [paymentRequest, setPaymentRequest] = useState<LocalPaymentRequest | undefined>(undefined);
+  const [updatedPaymentRequest, setUpdatedPaymentRequest] = useState<LocalPaymentRequest>();
 
-  useEffect(() => {
-    if (selectedPaymentRequestID) {
-      const paymentRequest = paymentRequests.find((paymentRequest) => paymentRequest.id === selectedPaymentRequestID);
-      if (paymentRequest) {
-        setPaymentRequest(paymentRequest);
-      }
+  useMemo(() => {
+    if (!paymentRequest) {
+      return;
     }
-  }, [selectedPaymentRequestID, paymentRequests]);
+
+    const localPaymentRequest = remotePaymentRequestToLocalPaymentRequest(paymentRequest);
+    setUpdatedPaymentRequest(localPaymentRequest);
+  }, [paymentRequest]);
 
   const onRefundClick = async (paymentAttemptID: string) => {
     //TODO: Will implement refund for atleast card payment attempts. For PISP, it will need to be worked on later.
     console.log(paymentAttemptID);
   };
 
-  const updatePaymentRequests = (updatedPaymentRequest: PaymentRequest) => {
-    const index = paymentRequests.findIndex((paymentRequest) => paymentRequest.id === selectedPaymentRequestID);
+  const updatePaymentRequests = (paymentRequest: PaymentRequest) => {
+    setUpdatedPaymentRequest((prevPR) => {
+      if (prevPR) {
+        const updatedPaymentRequest = {
+          ...prevPR,
+          tags: paymentRequest.tags?.map((tag) => parseApiTagToLocalTag(tag)),
+        };
 
-    if (index !== -1) {
-      paymentRequests[index].tags = updatedPaymentRequest.tags.map((tag) => parseApiTagToLocalTag(tag));
-    }
-    setPaymentRequests(paymentRequests);
+        onPaymentRequestUpdated(updatedPaymentRequest);
+
+        return updatedPaymentRequest;
+      }
+    });
   };
 
   const onTagAdded = async (tag: LocalTag) => {
@@ -115,11 +119,11 @@ const PaymentRequestDetailsModal = ({
 
   return (
     <div>
-      {paymentRequest && (
+      {updatedPaymentRequest && (
         <UIPaymentRequestDetailsModal
           merchantTags={merchantTags}
-          paymentRequest={paymentRequest}
-          hostedPaymentLink={`${paymentRequest.hostedPayCheckoutUrl}/nextgen`}
+          paymentRequest={updatedPaymentRequest}
+          hostedPaymentLink={`${updatedPaymentRequest.hostedPayCheckoutUrl}`}
           open={open}
           onRefundClick={onRefundClick}
           onTagAdded={onTagAdded}

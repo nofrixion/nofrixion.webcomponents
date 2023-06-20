@@ -9,22 +9,20 @@ import PaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTabl
 import { SortDirection } from '../../ui/ColumnHeader/ColumnHeader';
 import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
 import { usePaymentRequests } from '../../../api/hooks/usePaymentRequests';
-import { LocalPaymentRequest, LocalPaymentRequestCreate, LocalTag } from '../../../types/LocalTypes';
+import { LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
 import { makeToast } from '../../ui/Toast/Toast';
 import {
   parseApiTagToLocalTag,
-  parseLocalPaymentRequestCreateToRemotePaymentRequest,
   parseRemotePaymentRequestToPaymentRequestCreate,
   remotePaymentRequestToLocalPaymentRequest,
 } from '../../../utils/parsers';
 import CreatePaymentRequestPage from '../../functional/CreatePaymentRequestPage/CreatePaymentRequestPage';
 import { add, startOfDay, endOfDay } from 'date-fns';
-import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
+import { AnimatePresence, LayoutGroup } from 'framer-motion';
 import LayoutWrapper from '../../ui/utils/LayoutWrapper';
-import { PaymentRequestMetrics } from '../../../api/types/ApiResponses';
+import { PaymentRequest, PaymentRequestMetrics } from '../../../api/types/ApiResponses';
 import PaymentRequestDetailsModal from '../PaymentRequestDetailsModal/PaymentRequestDetailsModal';
 import { useMerchantTags } from '../../../api/hooks/useMerchantTags';
-import { LocalPartialPaymentMethods } from '../../../types/LocalEnums';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -50,18 +48,20 @@ const PaymentRequestDashboard = ({
 
   let [isCreatePaymentRequestOpen, setIsCreatePaymentRequestOpen] = useState(false);
 
-  const [selectedPaymentRequestID, setSelectedPaymentRequestID] = useState<string | undefined>(undefined);
+  const [selectedPaymentRequest, setSelectedPaymentRequest] = useState<PaymentRequest>();
 
-  const pageSize = 20;
+  const pageSize = 5;
 
   const client = new PaymentRequestClient(apiUrl, token, merchantId);
 
   const onPaymentRequestRowClicked = (paymentRequest: LocalPaymentRequest) => {
-    setSelectedPaymentRequestID(paymentRequest.id);
+    const remotePaymentRequest = paymentRequests?.find((x) => x.id === paymentRequest.id);
+
+    setSelectedPaymentRequest(remotePaymentRequest);
   };
 
   const onPaymentRequestDetailsModalDismiss = () => {
-    setSelectedPaymentRequestID(undefined);
+    setSelectedPaymentRequest(undefined);
   };
 
   const {
@@ -84,7 +84,8 @@ const PaymentRequestDashboard = ({
     status,
   );
 
-  const [localPaymentRequests, setLocalPaymentRequests] = useState<LocalPaymentRequest[]>([]);
+  const localPaymentRequests =
+    paymentRequests?.map((paymentRequest) => remotePaymentRequestToLocalPaymentRequest(paymentRequest)) ?? [];
 
   const [firstMetrics, setFirstMetrics] = useState<PaymentRequestMetrics | undefined>();
 
@@ -104,12 +105,6 @@ const PaymentRequestDashboard = ({
     // This helps avoid resizing due to dynamic scrollbar visibility.
     document.documentElement.style.scrollbarGutter = 'stable both-edges';
   }, []);
-
-  useEffect(() => {
-    setLocalPaymentRequests(
-      paymentRequests?.map((paymentRequest) => remotePaymentRequestToLocalPaymentRequest(paymentRequest)) ?? [],
-    );
-  }, [paymentRequests]);
 
   useEffect(() => {
     if (merchantTags.tags) {
@@ -154,6 +149,17 @@ const PaymentRequestDashboard = ({
 
     makeToast('success', 'Payment request successfully duplicated.');
 
+    fetchPaymentRequests();
+  };
+
+  const onPaymentRequestUpdated = async (paymentRequest: LocalPaymentRequest) => {
+    console.log('Payment request updated', paymentRequest);
+
+    const remotePaymentRequest = paymentRequests?.find((x) => x.id === paymentRequest.id);
+    if (!remotePaymentRequest) {
+      return;
+    }
+
     await fetchPaymentRequests();
   };
 
@@ -171,7 +177,6 @@ const PaymentRequestDashboard = ({
     setIsCreatePaymentRequestOpen(false);
 
     // Refresh the payment requests table
-    // TODO: Table is not refreshing
     await fetchPaymentRequests();
   };
 
@@ -292,13 +297,12 @@ const PaymentRequestDashboard = ({
         token={token}
         apiUrl={apiUrl}
         merchantId={merchantId}
-        selectedPaymentRequestID={selectedPaymentRequestID ?? ''}
+        paymentRequest={selectedPaymentRequest}
         merchantTags={localMerchantTags}
-        paymentRequests={localPaymentRequests}
-        open={selectedPaymentRequestID !== undefined}
+        open={selectedPaymentRequest !== undefined}
         onDismiss={onPaymentRequestDetailsModalDismiss}
         setMerchantTags={setLocalMerchantTags}
-        setPaymentRequests={setLocalPaymentRequests}
+        onPaymentRequestUpdated={onPaymentRequestUpdated}
       ></PaymentRequestDetailsModal>
     </div>
   );
