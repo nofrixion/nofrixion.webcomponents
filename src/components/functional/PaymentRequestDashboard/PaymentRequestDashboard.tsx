@@ -50,7 +50,7 @@ const PaymentRequestDashboard = ({
 
   const [selectedPaymentRequest, setSelectedPaymentRequest] = useState<PaymentRequest>();
 
-  const pageSize = 5;
+  const pageSize = 20;
 
   const client = new PaymentRequestClient(apiUrl, token, merchantId);
 
@@ -152,13 +152,9 @@ const PaymentRequestDashboard = ({
     fetchPaymentRequests();
   };
 
-  const onPaymentRequestUpdated = async (paymentRequest: LocalPaymentRequest) => {
-    console.log('Payment request updated', paymentRequest);
-
-    const remotePaymentRequest = paymentRequests?.find((x) => x.id === paymentRequest.id);
-    if (!remotePaymentRequest) {
-      return;
-    }
+  const onPaymentRequestUpdated = async (_: LocalPaymentRequest) => {
+    // TODO: Need refactor not to fetch all payment requests again
+    // and just update the one that was updated.
 
     await fetchPaymentRequests();
   };
