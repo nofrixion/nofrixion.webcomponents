@@ -124,6 +124,7 @@ export type PaymentRequestCreate = {
   title?: string;
   tagIds?: string[];
   notificationEmailAddresses?: string;
+  useHostedPaymentPage: boolean;
 };
 
 export type PaymentRequestUpdate = {
