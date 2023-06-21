@@ -78,7 +78,7 @@ steps:
       scriptType: pscore
       scriptLocation: inlineScript
       inlineScript: |
-        az storage blob upload-batch -s "$(Build.ArtifactStagingDirectory)/dev" -d '$web' --account-name "$(storageAccountName)"
+        az storage blob upload-batch -s "$(Build.ArtifactStagingDirectory)" -d '$web' --account-name "$(storageAccountName)"
 
   # Purge CDN endpoint to remove old version
   - task: AzureCLI@2
