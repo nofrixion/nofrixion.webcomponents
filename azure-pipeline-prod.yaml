@@ -1,13 +1,11 @@
 ---
 #------------------------------------------------------------------------------
 #
-# Filename: azure-pipeline-dev.yml
+# Filename: azure-pipeline-prod.yml
 #
-# Description: Deploy web components to DEV path on PROD CDN.
+# Description: Deploy web components to PROD CDN.
 #
-# Usage:  Run from devops pipeline. Notes:
-#         - The version is extracted from the package.json file by npm build and the pipeline copy tasks
-#         - The versioned bundle copy depends on there being a single *.js file in the dist/ directory
+# Usage: run from devops pipeline
 #
 # Author: Axel Granillo (axel@nofrixion.com)
 #
@@ -17,11 +15,11 @@
 
 pr: none # don't run on PR
 trigger:
-  - develop
+  - none
 
 variables:
   # Azure service connection for storage account access
-  serviceConnection: 'Prod Azure - NoFrixion Ops'
+  serviceConnection: 'NoFrixion Production'
   storageAccountName: 'nofrixioncdn'
   bundleName: 'nofrixion-webcomponents.js'
   cdnRg: 'nofrixion-ops'
@@ -33,14 +31,6 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-  # these steps set the .js bundle names
-  - bash: |
-      # get package version from package.json file
-      version=$(cat package.json | jq -r '.version')
-      echo "Version is: $version"
-      echo "##vso[task.setvariable variable=versionedBundleName;]nofrixion-webcomponents-v${version}.min.js"
-    displayName: 'set DEV .js bundle names'
-
   - task: NodeTool@0
     inputs:
       versionSpec: '16.x'
@@ -58,21 +48,21 @@ steps:
       cd dist
       mkdir js
       cd ..
-      cp dist/*.cjs dist/js/$(bundleName)
-      mv dist/*.cjs "dist/js/$(versionedBundleName)"
+      cp dist/*.cjs "dist/js/$(versionedBundleName)"
+      mv dist/*.cjs dist/$(bundleName)
     displayName: 'Rename bundles'
 
   # Creates folder structure for blob container
   - task: CopyFiles@2
     inputs:
-      sourceFolder: '$(Build.SourcesDirectory)/dist/js'
+      sourceFolder: '$(Build.SourcesDirectory)/dist'
       contents: '**'
-      targetFolder: '$(Build.ArtifactStagingDirectory)/dev'
+      targetFolder: '$(Build.ArtifactStagingDirectory)'
     displayName: 'Copy js files'
 
-  # Copy main .js file to the $web container.
+  # Copy .js files to the $web container.
   - task: AzureCLI@2
-    displayName: Copy dev bundle into $web blob container
+    displayName: Copy bundle into $web blob container
     inputs:
       azureSubscription: $(serviceConnection)
       scriptType: pscore
@@ -88,4 +78,4 @@ steps:
       scriptType: pscore
       scriptLocation: inlineScript
       inlineScript: |
-        az cdn endpoint purge -g "$(cdnRg)" -n "$(cdnName)" --profile-name "$(cdnProfileName)" --content-paths '/dev/*'
+        az cdn endpoint purge -g "$(cdnRg)" -n "$(cdnName)" --profile-name "$(cdnProfileName)" --content-paths '/$(bundleName)'
