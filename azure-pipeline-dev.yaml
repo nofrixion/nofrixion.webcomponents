@@ -30,7 +30,7 @@ variables:
 
 # A windows agent is required here as the AzureFileCopy@4 task is windows only.
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'ubuntu-latest'
 
 steps:
   # these steps set the .js bundle names
