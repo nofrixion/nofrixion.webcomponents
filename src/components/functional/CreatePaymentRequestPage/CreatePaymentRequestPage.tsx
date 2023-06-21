@@ -67,6 +67,7 @@ const CreatePaymentRequestPage = ({
       shippingFirstName: paymentRequest.firstName,
       shippingLastName: paymentRequest.lastName,
       notificationEmailAddresses: paymentRequest.notificationEmailAddresses,
+      useHostedPaymentPage: true,
     };
   };
 
