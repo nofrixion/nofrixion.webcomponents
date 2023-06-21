@@ -71,14 +71,14 @@ steps:
     displayName: 'Copy js files'
 
   # Copy main .js file to the $web container.
-  - task: AzureFileCopy@4
+  - task: AzureCLI@2
+    displayName: Copy dev bundle into $web blob container
     inputs:
-      sourcePath: $(Build.ArtifactStagingDirectory)/dev
       azureSubscription: $(serviceConnection)
-      destination: azureBlob
-      storage: '$(storageAccountName)'
-      containerName: '$web'
-    displayName: 'Copy dev bundle into $web blob container'
+      scriptType: pscore
+      scriptLocation: inlineScript
+      inlineScript: |
+        az storage blob upload-batch -s "$(Build.ArtifactStagingDirectory)/dev" -d '$web' --account-name "$(storageAccountName)"
 
   # Purge CDN endpoint to remove old version
   - task: AzureCLI@2
