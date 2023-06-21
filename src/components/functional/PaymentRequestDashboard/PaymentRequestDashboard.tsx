@@ -125,7 +125,8 @@ const PaymentRequestDashboard = ({
   };
 
   const onCopyPaymentRequestLink = async (paymentRequest: LocalPaymentRequest) => {
-    let link = `${paymentRequest.hostedPayCheckoutUrl}/nextgen`;
+    console.log('Copy payment request link clicked: ', paymentRequest);
+    let link = `${paymentRequest.hostedPayCheckoutUrl}`;
     await navigator.clipboard.writeText(link);
 
     makeToast('success', 'Link copied into clipboard.');
