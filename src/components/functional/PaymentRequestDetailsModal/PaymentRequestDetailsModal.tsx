@@ -119,7 +119,7 @@ const PaymentRequestDetailsModal = ({
         <UIPaymentRequestDetailsModal
           merchantTags={merchantTags}
           paymentRequest={paymentRequest}
-          hostedPaymentLink={`${paymentRequest.hostedPayCheckoutUrl}/nextgen`}
+          hostedPaymentLink={`${paymentRequest.hostedPayCheckoutUrl}`}
           open={open}
           onRefundClick={onRefundClick}
           onTagAdded={onTagAdded}
