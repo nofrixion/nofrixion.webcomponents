@@ -161,7 +161,6 @@ const PaymentRequestTable = ({
                   key={`pr-${index}`}
                   {...paymentRequest}
                   onClick={(event) => onPaymentRequestClickedHandler(event, paymentRequest)}
-                  //onClick={() => onPaymentRequestClicked && onPaymentRequestClicked(paymentRequest)}
                   onDuplicate={() =>
                     onPaymentRequestDuplicateClicked && onPaymentRequestDuplicateClicked(paymentRequest)
                   }
