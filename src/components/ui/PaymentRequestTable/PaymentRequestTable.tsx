@@ -46,6 +46,17 @@ const PaymentRequestTable = ({
   onCreatePaymentRequest,
   onOpenPaymentPage,
 }: PaymentRequestTableProps) => {
+  const onPaymentRequestClickedHandler = (
+    event: React.MouseEvent<HTMLTableRowElement, MouseEvent>,
+    paymentRequest: LocalPaymentRequest,
+  ) => {
+    if (event.metaKey) {
+      onOpenPaymentPage && onOpenPaymentPage(paymentRequest);
+    } else {
+      onPaymentRequestClicked && onPaymentRequestClicked(paymentRequest);
+    }
+  };
+
   return (
     <>
       {/* Show table when loading so the skeletons are visible */}
@@ -149,7 +160,8 @@ const PaymentRequestTable = ({
                 <PaymentRequestRow
                   key={`pr-${index}`}
                   {...paymentRequest}
-                  onClick={() => onPaymentRequestClicked && onPaymentRequestClicked(paymentRequest)}
+                  onClick={(event) => onPaymentRequestClickedHandler(event, paymentRequest)}
+                  //onClick={() => onPaymentRequestClicked && onPaymentRequestClicked(paymentRequest)}
                   onDuplicate={() =>
                     onPaymentRequestDuplicateClicked && onPaymentRequestDuplicateClicked(paymentRequest)
                   }

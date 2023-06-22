@@ -132,7 +132,11 @@ const PaymentRequestDashboard = ({
   };
 
   const onOpenPaymentPage = async (paymentRequest: LocalPaymentRequest) => {
-    window.open(paymentRequest.hostedPayCheckoutUrl, '_blank', 'noreferrer');
+    let newWindow = window.open();
+    if (newWindow) {
+      newWindow.opener = null;
+      newWindow.location = paymentRequest.hostedPayCheckoutUrl;
+    }
   };
 
   const onDuplicatePaymentRequest = (paymentRequest: LocalPaymentRequest) => {

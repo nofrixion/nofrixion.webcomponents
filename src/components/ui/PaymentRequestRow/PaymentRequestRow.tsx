@@ -9,7 +9,7 @@ import { animate, AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 
 interface PaymentRequestRowProps extends LocalPaymentRequest {
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent<HTMLTableRowElement, MouseEvent>) => void;
   onDuplicate?: () => void;
   onCopyLink?: () => void;
   onDelete?: () => void;
