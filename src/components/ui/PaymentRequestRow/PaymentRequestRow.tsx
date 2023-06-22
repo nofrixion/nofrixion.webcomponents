@@ -13,6 +13,7 @@ interface PaymentRequestRowProps extends LocalPaymentRequest {
   onDuplicate?: () => void;
   onCopyLink?: () => void;
   onDelete?: () => void;
+  onOpenPaymentPage?: () => void;
 }
 
 const commonTdClasses = 'px-4 py-3';
@@ -29,6 +30,7 @@ const Row = ({
   onDuplicate,
   onCopyLink,
   onDelete,
+  onOpenPaymentPage,
 }: PaymentRequestRowProps) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -111,6 +113,7 @@ const Row = ({
           onCopyLink={onCopyLink}
           onDelete={onDelete ? onDeletePaymentRequestClicked : undefined}
           onBlur={onCancelDeletingPaymentRequestClicked}
+          onOpenPaymentPage={onOpenPaymentPage}
         />
       </td>
     </tr>

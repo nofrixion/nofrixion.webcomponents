@@ -125,11 +125,14 @@ const PaymentRequestDashboard = ({
   };
 
   const onCopyPaymentRequestLink = async (paymentRequest: LocalPaymentRequest) => {
-    console.log('Copy payment request link clicked: ', paymentRequest);
     let link = `${paymentRequest.hostedPayCheckoutUrl}`;
     await navigator.clipboard.writeText(link);
 
     makeToast('success', 'Link copied into clipboard.');
+  };
+
+  const onOpenPaymentPage = async (paymentRequest: LocalPaymentRequest) => {
+    window.open(paymentRequest.hostedPayCheckoutUrl, '_blank', 'noreferrer');
   };
 
   const onDuplicatePaymentRequest = (paymentRequest: LocalPaymentRequest) => {
@@ -169,7 +172,7 @@ const PaymentRequestDashboard = ({
       <div className="flex justify-between">
         <div className="flex">
           <div className="pl-4 pt-[72px] pb-[68px] leading-8 font-medium text-[1.75rem]">
-            <span>Payment requests</span>
+            <span>Accounts Receivable</span>
           </div>
           <AnimatePresence>
             {!isInitialState && (
@@ -256,6 +259,7 @@ const PaymentRequestDashboard = ({
             isEmpty={isInitialState}
             onCreatePaymentRequest={onCreatePaymentRequest}
             onPaymentRequestClicked={onPaymentRequestRowClicked}
+            onOpenPaymentPage={onOpenPaymentPage}
           />
         </LayoutWrapper>
       </LayoutGroup>

@@ -21,6 +21,7 @@ interface PaymentRequestTableProps {
   setContactSortDirection?: (sortDirection: SortDirection) => void;
   setAmountSortDirection?: (sortDirection: SortDirection) => void;
   onCreatePaymentRequest?: () => void;
+  onOpenPaymentPage: (paymentRequest: LocalPaymentRequest) => void;
   isLoading?: boolean;
   isEmpty?: boolean; // True when there are no payment requests at all, even when filters are not applied
 }
@@ -43,6 +44,7 @@ const PaymentRequestTable = ({
   isLoading = false,
   isEmpty = false,
   onCreatePaymentRequest,
+  onOpenPaymentPage,
 }: PaymentRequestTableProps) => {
   return (
     <>
@@ -157,6 +159,7 @@ const PaymentRequestTable = ({
                       : () => onPaymentRequestDeleteClicked && onPaymentRequestDeleteClicked(paymentRequest)
                   }
                   onCopyLink={() => onPaymentRequestCopyLinkClicked && onPaymentRequestCopyLinkClicked(paymentRequest)}
+                  onOpenPaymentPage={() => onOpenPaymentPage && onOpenPaymentPage(paymentRequest)}
                 />
               ))}
           </tbody>
