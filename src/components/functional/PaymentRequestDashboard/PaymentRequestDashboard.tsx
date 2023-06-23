@@ -260,6 +260,7 @@ const PaymentRequestDashboard = ({
             onCreatePaymentRequest={onCreatePaymentRequest}
             onPaymentRequestClicked={onPaymentRequestRowClicked}
             onOpenPaymentPage={onOpenPaymentPage}
+            selectedPaymentRequestID={selectedPaymentRequestID}
           />
         </LayoutWrapper>
       </LayoutGroup>

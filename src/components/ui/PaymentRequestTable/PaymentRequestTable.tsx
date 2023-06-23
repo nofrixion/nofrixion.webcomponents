@@ -24,6 +24,7 @@ interface PaymentRequestTableProps {
   onOpenPaymentPage: (paymentRequest: LocalPaymentRequest) => void;
   isLoading?: boolean;
   isEmpty?: boolean; // True when there are no payment requests at all, even when filters are not applied
+  selectedPaymentRequestID?: string;
 }
 
 const commonThClasses = 'px-4 pb-4 font-normal';
@@ -45,6 +46,7 @@ const PaymentRequestTable = ({
   isEmpty = false,
   onCreatePaymentRequest,
   onOpenPaymentPage,
+  selectedPaymentRequestID,
 }: PaymentRequestTableProps) => {
   const onPaymentRequestClickedHandler = (
     event: React.MouseEvent<HTMLTableRowElement, MouseEvent>,
@@ -171,6 +173,7 @@ const PaymentRequestTable = ({
                   }
                   onCopyLink={() => onPaymentRequestCopyLinkClicked && onPaymentRequestCopyLinkClicked(paymentRequest)}
                   onOpenPaymentPage={() => onOpenPaymentPage && onOpenPaymentPage(paymentRequest)}
+                  selected={selectedPaymentRequestID === paymentRequest.id}
                 />
               ))}
           </tbody>

@@ -14,6 +14,7 @@ interface PaymentRequestRowProps extends LocalPaymentRequest {
   onCopyLink?: () => void;
   onDelete?: () => void;
   onOpenPaymentPage?: () => void;
+  selected: boolean;
 }
 
 const commonTdClasses = 'px-4 py-3';
@@ -31,6 +32,7 @@ const Row = ({
   onCopyLink,
   onDelete,
   onOpenPaymentPage,
+  selected,
 }: PaymentRequestRowProps) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -51,7 +53,12 @@ const Row = ({
 
   return (
     <tr
-      className={`relative border-b border-[#F1F2F3] cursor-pointer transition-all ease-in-out hover:bg-[#F6F8F9] hover:border-[#E1E5EA]`}
+      className={classNames(
+        'relative border-b border-[#F1F2F3] cursor-pointer transition-all ease-in-out hover:bg-[#F6F8F9] hover:border-[#E1E5EA]',
+        {
+          'bg-[#F6F8F9] border-[#E1E5EA]': selected,
+        },
+      )}
       onClick={onClick}
     >
       <td className={classNames(commonTdClasses, `pl-4 py-0`)}>
