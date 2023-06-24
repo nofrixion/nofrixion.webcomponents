@@ -30,6 +30,10 @@ export abstract class BaseApiClient {
     fromDate?: Date,
     toDate?: Date,
     status?: string,
+    search?: string,
+    minAmount?: number,
+    maxAmount?: number,
+    tags?: string[],
   ): Promise<{
     data?: TResponse;
     error?: ApiError;
@@ -54,6 +58,22 @@ export abstract class BaseApiClient {
 
     if (status) {
       filterParams.append('status', status);
+    }
+
+    if (search) {
+      filterParams.append('search', search);
+    }
+
+    if (minAmount) {
+      filterParams.append('minAmount', minAmount.toString());
+    }
+
+    if (maxAmount) {
+      filterParams.append('maxAmount', maxAmount.toString());
+    }
+
+    if (tags) {
+      tags.forEach((tag) => filterParams.append('tags', tag));
     }
 
     url = `${url}?${filterParams.toString()}`;

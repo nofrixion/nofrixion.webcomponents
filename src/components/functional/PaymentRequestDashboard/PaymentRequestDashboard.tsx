@@ -2,7 +2,7 @@ import { PaymentRequestStatus } from '../../../api/types/Enums';
 import Tab from '../../ui/Tab/Tab';
 import * as Tabs from '@radix-ui/react-tabs';
 import { useEffect, useState } from 'react';
-import DateRangePicker, { DateRange } from '../../ui/DateRangePicker/DateRangePicker';
+import { DateRange } from '../../ui/DateRangePicker/DateRangePicker';
 import PrimaryButton from '../../ui/PrimaryButton/PrimaryButton';
 import { usePaymentRequestMetrics } from '../../../api/hooks/usePaymentRequestMetrics';
 import PaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTable';
@@ -19,6 +19,7 @@ import LayoutWrapper from '../../ui/utils/LayoutWrapper';
 import { PaymentRequestMetrics } from '../../../api/types/ApiResponses';
 import PaymentRequestDetailsModal from '../PaymentRequestDetailsModal/PaymentRequestDetailsModal';
 import { useMerchantTags } from '../../../api/hooks/useMerchantTags';
+import PaymentRequestFilterRow from '../../ui/PaymentRequestFilterRow/PaymentRequestFilterRow';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -41,6 +42,7 @@ const PaymentRequestDashboard = ({
     fromDate: startOfDay(add(new Date(), { days: -90 })), // Last 90 days as default
     toDate: endOfDay(new Date()),
   });
+  const [searchFilter, setSearchFilter] = useState<string>('');
 
   let [isCreatePaymentRequestOpen, setIsCreatePaymentRequestOpen] = useState(false);
 
@@ -76,6 +78,7 @@ const PaymentRequestDashboard = ({
     dateRange.fromDate.getTime(),
     dateRange.toDate.getTime(),
     status,
+    searchFilter?.length >= 3 ? searchFilter : undefined,
   );
 
   const [localPaymentRequests, setLocalPaymentRequests] = useState<LocalPaymentRequest[]>([]);
@@ -174,13 +177,6 @@ const PaymentRequestDashboard = ({
           <div className="pl-4 pt-[72px] pb-[68px] leading-8 font-medium text-[1.75rem]">
             <span>Accounts Receivable</span>
           </div>
-          <AnimatePresence>
-            {!isInitialState && (
-              <LayoutWrapper className="pl-12 pt-[69px]">
-                <DateRangePicker onDateChange={(dateRange) => setDateRange(dateRange)}></DateRangePicker>
-              </LayoutWrapper>
-            )}
-          </AnimatePresence>
         </div>
         <div className="flex pr-6">
           <LayoutGroup>
@@ -205,6 +201,18 @@ const PaymentRequestDashboard = ({
           </LayoutGroup>
         </div>
       </div>
+
+      <AnimatePresence>
+        {!isInitialState && (
+          <div className="mb-4">
+            <PaymentRequestFilterRow
+              setDateRange={setDateRange}
+              searchFilter={searchFilter}
+              setSearchFilter={setSearchFilter}
+            />
+          </div>
+        )}
+      </AnimatePresence>
 
       <LayoutGroup>
         <AnimatePresence initial={false}>

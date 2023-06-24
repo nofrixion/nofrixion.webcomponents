@@ -48,6 +48,10 @@ export class PaymentRequestClient extends BaseApiClient {
     fromDate?: Date,
     toDate?: Date,
     status?: PaymentRequestStatus,
+    search?: string,
+    minAmount?: number,
+    maxAmount?: number,
+    tags?: string[],
   ): Promise<{
     data?: PaymentRequestPageResponse;
     error?: ApiError;
@@ -61,6 +65,10 @@ export class PaymentRequestClient extends BaseApiClient {
       fromDate,
       toDate,
       status,
+      search,
+      minAmount,
+      maxAmount,
+      tags,
     );
   }
 

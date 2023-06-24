@@ -18,6 +18,10 @@ export const usePaymentRequests = (
   fromDateMs?: number,
   toDateMs?: number,
   status?: PaymentRequestStatus,
+  searchFilter?: string,
+  minAmount?: number,
+  maxAmount?: number,
+  tags?: string[],
 ) => {
   const client = new MoneyMoovApiClient(apiUrl, authToken, merchantId);
 
@@ -36,6 +40,10 @@ export const usePaymentRequests = (
       new Date(fromDateMs ?? 0),
       new Date(toDateMs ?? 0),
       status,
+      searchFilter,
+      minAmount,
+      maxAmount,
+      tags,
     );
 
     if (response.data) {
@@ -72,6 +80,10 @@ export const usePaymentRequests = (
     fromDateMs,
     toDateMs,
     status,
+    searchFilter,
+    minAmount,
+    maxAmount,
+    tags,
   ]);
 
   return {
