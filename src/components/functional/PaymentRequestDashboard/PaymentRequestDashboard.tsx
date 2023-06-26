@@ -24,12 +24,14 @@ interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
   apiUrl?: string; // Example: "https://api.nofrixion.com/api/v1"
   merchantId: string;
+  onUnauthorized: () => void;
 }
 
 const PaymentRequestDashboard = ({
   token,
   apiUrl = 'https://api.nofrixion.com/api/v1',
   merchantId,
+  onUnauthorized,
 }: PaymentRequestDashboardProps) => {
   const [page, setPage] = useState(1);
   const [statusSortDirection, setStatusSortDirection] = useState<SortDirection>(SortDirection.NONE);
@@ -48,7 +50,7 @@ const PaymentRequestDashboard = ({
 
   const pageSize = 20;
 
-  const client = new PaymentRequestClient(apiUrl, token, merchantId);
+  const client = new PaymentRequestClient(apiUrl, token, merchantId, onUnauthorized);
 
   const onPaymentRequestRowClicked = (paymentRequest: LocalPaymentRequest) => {
     setSelectedPaymentRequestID(paymentRequest.id);
@@ -71,6 +73,7 @@ const PaymentRequestDashboard = ({
     createdSortDirection,
     contactSortDirection,
     amountSortDirection,
+    onUnauthorized,
     page,
     pageSize,
     dateRange.fromDate.getTime(),
@@ -86,11 +89,12 @@ const PaymentRequestDashboard = ({
     apiUrl,
     token,
     merchantId,
+    onUnauthorized,
     dateRange.fromDate.getTime(),
     dateRange.toDate.getTime(),
   );
 
-  const merchantTags = useMerchantTags(apiUrl, token, merchantId);
+  const merchantTags = useMerchantTags(apiUrl, token, merchantId, onUnauthorized);
 
   const [localMerchantTags, setLocalMerchantTags] = useState<LocalTag[]>([] as LocalTag[]);
 
@@ -271,6 +275,7 @@ const PaymentRequestDashboard = ({
         token={token}
         merchantId={merchantId}
         apiUrl={apiUrl}
+        onUnauthorized={onUnauthorized}
       />
       <PaymentRequestDetailsModal
         token={token}
@@ -283,6 +288,7 @@ const PaymentRequestDashboard = ({
         onDismiss={onPaymentRequestDetailsModalDismiss}
         setMerchantTags={setLocalMerchantTags}
         setPaymentRequests={setLocalPaymentRequests}
+        onUnauthorized={onUnauthorized}
       ></PaymentRequestDetailsModal>
     </div>
   );

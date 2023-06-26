@@ -4,9 +4,11 @@ import { HttpMethod } from '../types/Enums';
 
 export abstract class BaseApiClient {
   authToken: string;
+  onUnauthorized: () => void;
 
-  constructor(authToken: string) {
+  constructor(authToken: string, onUnauthorized: () => void) {
     this.authToken = authToken;
+    this.onUnauthorized = onUnauthorized;
   }
 
   /**
@@ -104,6 +106,11 @@ export abstract class BaseApiClient {
       // Axios will throw an exception for all errors
 
       const error = ex as AxiosError;
+
+      if (error.response?.status === 401) {
+        // Unauthorized
+        this.onUnauthorized();
+      }
 
       if (error.response?.data) {
         // This contains the problem details

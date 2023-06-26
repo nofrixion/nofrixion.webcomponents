@@ -16,6 +16,7 @@ interface CreatePaymentRequesPageProps {
   apiUrl?: string; // Example: "https://api.nofrixion.com/api/v1"
   isOpen: boolean; // When true, the modal will be open. When false, the modal will be closed.
   onClose: () => void; // Callback function that will be called when the modal is asked to be closed.
+  onUnauthorized: () => void; // Callback function that will be called when the user is unauthorized.
 }
 
 const CreatePaymentRequestPage = ({
@@ -24,11 +25,12 @@ const CreatePaymentRequestPage = ({
   apiUrl = 'https://api.nofrixion.com/api/v1',
   isOpen,
   onClose,
+  onUnauthorized,
 }: CreatePaymentRequesPageProps) => {
-  const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId);
+  const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId, onUnauthorized);
 
-  const { userPaymentDefaults, isUserPaymentDefaultsLoading } = useUserPaymentDefaults(apiUrl, token);
-  const { banks } = useBanks(apiUrl, token, merchantId);
+  const { userPaymentDefaults, isUserPaymentDefaultsLoading } = useUserPaymentDefaults(apiUrl, token, onUnauthorized);
+  const { banks } = useBanks(apiUrl, token, merchantId, onUnauthorized);
 
   const parseLocalPaymentRequestCreateToRemotePaymentRequest = (
     merchantId: string,
@@ -90,7 +92,7 @@ const CreatePaymentRequestPage = ({
   };
 
   const onSaveUserPaymentDefaults = async (userPaymentDefaults: UserPaymentDefaults) => {
-    const client = new ClientSettingsClient(apiUrl, token);
+    const client = new ClientSettingsClient(apiUrl, token, onUnauthorized);
     const response = await client.saveUserPaymentDefaults(userPaymentDefaults);
 
     if (response.error) {
