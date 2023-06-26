@@ -15,8 +15,8 @@ export class ClientSettingsClient extends BaseApiClient {
    * Sandbox: https://api-sandbox.nofrixion.com/api/v1
    * @param authToken The OAUTH token used to authenticate with the api.
    */
-  constructor(apiBaseUrl: string, authToken: string) {
-    super(authToken);
+  constructor(apiBaseUrl: string, authToken: string, onUnauthorized: () => void) {
+    super(authToken, onUnauthorized);
     this.paymentDefaultsUrl = `${apiBaseUrl}/clientsettings/paymentdefaults`;
   }
 

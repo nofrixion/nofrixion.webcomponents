@@ -13,13 +13,14 @@ export const usePaymentRequests = (
   createdSortDirection: SortDirection,
   contactSortDirection: SortDirection,
   amountSortDirection: SortDirection,
+  onUnauthorized: () => void,
   page: number,
   pageSize?: number,
   fromDateMs?: number,
   toDateMs?: number,
   status?: PaymentRequestStatus,
 ) => {
-  const client = new MoneyMoovApiClient(apiUrl, authToken, merchantId);
+  const client = new MoneyMoovApiClient(apiUrl, authToken, merchantId, onUnauthorized);
 
   const [paymentRequests, setPaymentRequests] = useState<PaymentRequest[] | undefined>(undefined);
   const [pageNumber, setPageNumber] = useState(1);
@@ -37,6 +38,8 @@ export const usePaymentRequests = (
       new Date(toDateMs ?? 0),
       status,
     );
+
+    console.log('Payment Requests response', response);
 
     if (response.data) {
       setPaymentRequests(response.data.content);

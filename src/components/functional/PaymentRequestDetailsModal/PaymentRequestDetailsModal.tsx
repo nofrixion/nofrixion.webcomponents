@@ -17,6 +17,7 @@ interface PaymentRequestDetailsModalProps {
   onDismiss: () => void;
   setMerchantTags: (merchantTags: LocalTag[]) => void;
   setPaymentRequests: (paymentRequests: LocalPaymentRequest[]) => void;
+  onUnauthorized: () => void;
 }
 const PaymentRequestDetailsModal = ({
   token,
@@ -29,9 +30,10 @@ const PaymentRequestDetailsModal = ({
   onDismiss,
   setMerchantTags,
   setPaymentRequests,
+  onUnauthorized,
 }: PaymentRequestDetailsModalProps) => {
-  const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId);
-  const merchantClient = new MerchantClient(apiUrl, token, merchantId);
+  const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId, onUnauthorized);
+  const merchantClient = new MerchantClient(apiUrl, token, merchantId, onUnauthorized);
 
   const [paymentRequest, setPaymentRequest] = useState<LocalPaymentRequest | undefined>(undefined);
 

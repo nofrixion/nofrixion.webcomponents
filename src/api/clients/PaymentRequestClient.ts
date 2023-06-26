@@ -25,8 +25,8 @@ export class PaymentRequestClient extends BaseApiClient {
    * @param authToken The OAUTH token used to authenticate with the api.
    * @param merchantId The merchant id to use when accessing the api.
    */
-  constructor(apiBaseUrl: string, authToken: string, merchantId: string) {
-    super(authToken);
+  constructor(apiBaseUrl: string, authToken: string, merchantId: string, onUnauthorized: () => void) {
+    super(authToken, onUnauthorized);
     this.apiUrl = `${apiBaseUrl}/paymentrequests`;
     this.merchantId = merchantId;
   }
