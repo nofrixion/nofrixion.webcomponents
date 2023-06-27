@@ -1,12 +1,13 @@
 {
-  "name": "@nofrixion/web-components",
-  "private": true,
+  "name": "@nofrixion/components",
+  "private": false,
   "version": "0.0.7",
   "type": "module",
   "scripts": {
     "dev": "storybook dev -p 6006 --no-open --quiet",
     "dev-web": "storybook dev -p 6007 -c .storybook-webcomponents --no-open --quiet",
     "build": "PRE_BUILD=true postcss src/**/*.css --dir out && tsc && vite build && rimraf out",
+    "build-react": "tsc && vite build --config vite.config.react.ts",
     "build-storybook": "storybook build",
     "lint": "eslint . --ext .ts,.tsx",
     "pretty-quick": "pretty-quick --staged",
@@ -81,6 +82,19 @@
     "typescript": "^4.9.3",
     "vite": "^4.2.3",
     "vite-plugin-banner": "^0.7.0",
-    "vite-plugin-css-injected-by-js": "^3.1.1"
+    "vite-plugin-css-injected-by-js": "^3.1.1",
+    "vite-plugin-dts": "^2.3.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/nofrixion-components.umd.js",
+  "module": "./dist/nofrixion-components.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/nofrixion-components.es.js",
+      "require": "./dist/nofrixion-components.umd.js"
+    }
   }
 }
