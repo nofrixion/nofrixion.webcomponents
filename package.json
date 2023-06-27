@@ -7,7 +7,7 @@
     "dev": "storybook dev -p 6006 --no-open --quiet",
     "dev-web": "storybook dev -p 6007 -c .storybook-webcomponents --no-open --quiet",
     "build": "PRE_BUILD=true postcss src/**/*.css --dir out && tsc && vite build && rimraf out",
-    "build-react": "tsc && vite build --config vite.config.react.ts",
+    "build-react": "PRE_BUILD=true postcss src/**/*.css --dir out tsc && vite build --config vite.config.react.ts && rimraf out",
     "build-storybook": "storybook build",
     "lint": "eslint . --ext .ts,.tsx",
     "pretty-quick": "pretty-quick --staged",

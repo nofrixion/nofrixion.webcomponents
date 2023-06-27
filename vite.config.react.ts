@@ -14,7 +14,7 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'src/index-react.ts'),
+      entry: path.resolve(__dirname, 'out/index-react.ts'),
       name: 'NoFrixionComponents',
       formats: ['es', 'umd'],
       fileName: (format) => `nofrixion-components.${format}.js`,
