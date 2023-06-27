@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  .Toastify__toast-body > div,
+  html {
+    font-family: 'Inter', sans-serif;
+    font-feature-settings: 'cv01', 'cv02', 'cv03', 'cv04'; /* OpenType font features. See more in: https://rsms.me/inter/#features/cvXX */
+    @apply text-defaultText;
+  }
+  input[type='number'].appearance-none::-webkit-inner-spin-button,
+  input[type='number'].appearance-none::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type='number'].appearance-none {
+    -moz-appearance: textfield;
+  }
+}
+
+.columnSort {
+  @apply inline-flex;
+  @apply text-sm;
+  @apply text-greyText;
+  @apply cursor-pointer;
+  @apply transition;
+  @apply items-center;
+}
+
+.columnSort:hover {
+  @apply text-controlGreyHover;
+}
+
+.Toastify__toast {
+  min-height: 16px !important;
+  --toastify-color-info: #fff;
+  --toastify-color-success: #fff;
+  --toastify-color-warning: #f2eed8;
+  --toastify-color-error: #fee9e7;
+  --toastify-text-color-info: #00264d;
+  --toastify-text-color-success: #00264d;
+  --toastify-text-color-warning: #00264d;
+  --toastify-text-color-error: #00264d;
+  padding: 14px 24px !important;
+  box-shadow: 0 0 8px rgba(4, 41, 49, 0.1) !important;
+  border-radius: 8px !important;
+}
+
+.Toastify__toast-body {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.Toastify__toast--info > .Toastify__toast-body > div,
+.Toastify__toast--success > .Toastify__toast-body > div {
+  color: var(--toastify-text-color-info);
+}
+
+.Toastify__toast--warning > .Toastify__toast-body > div {
+  color: var(--toastify-text-color-warning);
+}
+
+.Toastify__toast--error > .Toastify__toast-body > div {
+  color: var(--toastify-text-color-error);
+}
