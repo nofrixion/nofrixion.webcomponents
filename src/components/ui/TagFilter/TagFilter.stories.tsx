@@ -1,14 +1,14 @@
-﻿import PaymentRequestTagFilter, { TagFilter } from './PaymentRequestTagFilter';
+﻿import TagFilter, { FilterableTag } from './TagFilter';
 import { Meta, StoryFn } from '@storybook/react';
 import React, { useState } from 'react';
 
 export default {
-  title: 'UI/Payment Request Tag Filter',
-  component: PaymentRequestTagFilter,
-} as Meta<typeof PaymentRequestTagFilter>;
+  title: 'UI/Tag Filter',
+  component: TagFilter,
+} as Meta<typeof TagFilter>;
 
-const Template: StoryFn<typeof PaymentRequestTagFilter> = (args) => {
-  const [localTags, setLocalTags] = React.useState<TagFilter[]>([
+const Template: StoryFn<typeof TagFilter> = (args) => {
+  const [localTags, setLocalTags] = React.useState<FilterableTag[]>([
     {
       id: '1',
       label: 'Name of tag',
@@ -60,7 +60,7 @@ const Template: StoryFn<typeof PaymentRequestTagFilter> = (args) => {
       isSelected: false,
     },
   ]);
-  return <PaymentRequestTagFilter tags={localTags} setTags={setLocalTags} />;
+  return <TagFilter tags={localTags} setTags={setLocalTags} />;
 };
 
 export const Default = Template.bind({});

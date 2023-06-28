@@ -1,19 +1,19 @@
-﻿import PaymentRequestAmountFilter from './PaymentRequestAmountFilter';
+﻿import AmountFilter from './AmountFilter';
 import { Meta, StoryFn } from '@storybook/react';
 import React, { useState } from 'react';
 
 export default {
-  title: 'UI/Payment Request Amount Filter',
-  component: PaymentRequestAmountFilter,
-} as Meta<typeof PaymentRequestAmountFilter>;
+  title: 'UI/Amount Filter',
+  component: AmountFilter,
+} as Meta<typeof AmountFilter>;
 
-const Template: StoryFn<typeof PaymentRequestAmountFilter> = (args) => {
+const Template: StoryFn<typeof AmountFilter> = (args) => {
   const [localCurrency, setLocalCurrency] = React.useState<string | undefined>();
   const [localMinAmount, setLocalMinAmount] = React.useState<number | undefined>();
   const [localMaxAmount, setLocalMaxAmount] = React.useState<number | undefined>();
 
   return (
-    <PaymentRequestAmountFilter
+    <AmountFilter
       currency={localCurrency}
       setCurrency={setLocalCurrency}
       minAmount={localMinAmount}

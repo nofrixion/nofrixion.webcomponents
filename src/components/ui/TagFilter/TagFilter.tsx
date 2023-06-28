@@ -5,35 +5,42 @@ import enabledTagIcon from '../../../assets/icons/tag-icon-enabled.svg';
 import filterIcon from '../../../assets/icons/filter-icon.svg';
 import SelectablePill from '../SelectablePill/SelectablePill';
 
-export interface TagFilter {
+export interface FilterableTag {
   id: string;
   label: string;
   isSelected: boolean;
 }
 
-export interface PaymentRequestTagFilterProps {
-  tags: TagFilter[];
-  setTags: (tags: TagFilter[]) => void;
+export interface TagFilterProps {
+  tags: FilterableTag[];
+  setTags: (tags: FilterableTag[]) => void;
 }
 
-const PaymentRequestTagFilter: React.FC<PaymentRequestTagFilterProps> = ({ tags, setTags }) => {
-  const [localTags, setLocalTags] = React.useState<TagFilter[]>(tags);
+const TagFilter: React.FC<TagFilterProps> = ({ tags, setTags }) => {
+  const [localTags, setLocalTags] = React.useState<FilterableTag[]>([...tags]);
   const [isFiltered, setIsFiltered] = React.useState<boolean>(false);
 
   useEffect(() => {
-    setLocalTags([...tags]);
+    let tempArray = tags.map((tag) => ({ ...tag }));
+    setLocalTags([...tempArray]);
     checkIfIsFiltered();
   }, [tags]);
 
   const onReset = () => {
-    let tempArray = [...localTags];
+    let tempArray = localTags.map((tag) => ({ ...tag }));
     tempArray.forEach((tag) => (tag.isSelected = false));
     setLocalTags([...tempArray]);
     setTags([...tempArray]);
   };
 
+  const onCancel = () => {
+    let tempArray = tags.map((tag) => ({ ...tag }));
+    setLocalTags([...tempArray]);
+  };
+
   const onApply = () => {
-    setTags([...localTags]);
+    let tempArray = localTags.map((tag) => ({ ...tag }));
+    setTags([...tempArray]);
     let isFiltered = false;
     localTags.forEach((tag) => {
       if (tag.isSelected) {
@@ -76,9 +83,10 @@ const PaymentRequestTagFilter: React.FC<PaymentRequestTagFilterProps> = ({ tags,
       highlightedIconSource={enabledTagIcon}
       onReset={onReset}
       onApply={onApply}
+      onCancel={onCancel}
     >
       <FilterButton.Body>
-        <div className="flex space-x-2 flex-wrap gap-y-3.5 justify-center">
+        <div className="flex gap-x-2 flex-wrap gap-y-3.5 justify-items-center">
           {localTags.map((tag, index) => (
             <SelectablePill
               key={index}
@@ -101,4 +109,4 @@ const PaymentRequestTagFilter: React.FC<PaymentRequestTagFilterProps> = ({ tags,
   );
 };
 
-export default PaymentRequestTagFilter;
+export default TagFilter;

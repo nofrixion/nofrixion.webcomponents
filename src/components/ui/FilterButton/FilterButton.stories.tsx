@@ -11,7 +11,6 @@ export default {
 } as Meta<typeof FilterButton>;
 
 const Template: StoryFn<typeof FilterButton> = (args) => {
-  console.log(args);
   return <FilterButton {...args} />;
 };
 

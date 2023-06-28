@@ -19,8 +19,8 @@ import LayoutWrapper from '../../ui/utils/LayoutWrapper';
 import { PaymentRequestMetrics } from '../../../api/types/ApiResponses';
 import PaymentRequestDetailsModal from '../PaymentRequestDetailsModal/PaymentRequestDetailsModal';
 import { useMerchantTags } from '../../../api/hooks/useMerchantTags';
-import PaymentRequestFilterRow from '../../ui/PaymentRequestFilterRow/PaymentRequestFilterRow';
-import { TagFilter } from '../../ui/PaymentRequestTagFilter/PaymentRequestTagFilter';
+import FilterControlsRow from '../../ui/FilterControlsRow/FilterControlsRow';
+import { FilterableTag } from '../../ui/TagFilter/TagFilter';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -47,7 +47,7 @@ const PaymentRequestDashboard = ({
   const [currencyFilter, setCurrencyFilter] = React.useState<string | undefined>();
   const [minAmountFilter, setMinAmountFilter] = React.useState<number | undefined>();
   const [maxAmountFilter, setMaxAmountFilter] = React.useState<number | undefined>();
-  const [tags, setTags] = React.useState<TagFilter[]>([]);
+  const [tags, setTags] = React.useState<FilterableTag[]>([]);
   const [tagsFilter, setTagsFilter] = React.useState<string[]>([]);
 
   let [isCreatePaymentRequestOpen, setIsCreatePaymentRequestOpen] = useState(false);
@@ -237,7 +237,7 @@ const PaymentRequestDashboard = ({
       <AnimatePresence>
         {!isInitialState && (
           <div className="mb-4">
-            <PaymentRequestFilterRow
+            <FilterControlsRow
               setDateRange={setDateRange}
               searchFilter={searchFilter}
               setSearchFilter={setSearchFilter}

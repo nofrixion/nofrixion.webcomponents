@@ -6,7 +6,7 @@ import closeIcon from '../../../assets/images/nf_close.svg';
 import SelectablePill from '../SelectablePill/SelectablePill';
 import React, { useEffect } from 'react';
 
-export interface PaymentRequestAmountFilterProps {
+export interface AmountFilterProps {
   currency?: string;
   setCurrency?: (currency?: string) => void;
   minAmount?: number;
@@ -28,7 +28,7 @@ const ActiveFilterControl: React.FC<ActiveFilterControlProps> = ({ label, onClic
   };
 
   return (
-    <div className="inline-flex space-x-2 items-center">
+    <div className="inline-flex space-x-2 px-2 items-center rounded-full border border-solid border-borderGreyHighlighted">
       <span className="text-defaultText text-sm leading-6">{label}</span>
       <a onPointerDown={onClose} role="button" href="">
         <img src={closeIcon} alt="Close" title="Close" className="w-2 h-2" />
@@ -37,7 +37,7 @@ const ActiveFilterControl: React.FC<ActiveFilterControlProps> = ({ label, onClic
   );
 };
 
-const PaymentRequestAmountFilter: React.FC<PaymentRequestAmountFilterProps> = ({
+const AmountFilter: React.FC<AmountFilterProps> = ({
   currency,
   setCurrency,
   minAmount,
@@ -60,6 +60,12 @@ const PaymentRequestAmountFilter: React.FC<PaymentRequestAmountFilterProps> = ({
     clearCurrency();
     clearMinAmount();
     clearMaxAmount();
+  };
+
+  const onCancel = () => {
+    setLocalCurrency(currency ?? '');
+    setLocalMinAmount(minAmount ? minAmount.toString() : '');
+    setLocalMaxAmount(maxAmount ? maxAmount.toString() : '');
   };
 
   const onApply = () => {
@@ -133,6 +139,7 @@ const PaymentRequestAmountFilter: React.FC<PaymentRequestAmountFilterProps> = ({
       isFiltered={isFiltered}
       onReset={onReset}
       onApply={onApply}
+      onCancel={onCancel}
     >
       <FilterButton.Body>
         <div
@@ -183,8 +190,8 @@ const PaymentRequestAmountFilter: React.FC<PaymentRequestAmountFilterProps> = ({
         </div>
       </FilterButton.Body>
       <FilterButton.FilteredLayout>
-        <div className="inline-flex space-x-4 items-center">
-          <img src={filterIcon} alt="Filter" title="Filter" className="w-4 h-4" />
+        <div className="inline-flex space-x-2 items-center">
+          <img src={enabledCurrencyIcon} alt="Filter" title="Filter" className="w-4 h-4" />
           {minAmount && <ActiveFilterControl label={'Min ' + minAmount} onClick={clearMinAmount} />}
           {maxAmount && <ActiveFilterControl label={'Max ' + maxAmount} onClick={clearMaxAmount} />}
           {currency && <ActiveFilterControl label={getCurrencyName(currency)} onClick={clearCurrency} />}
@@ -194,4 +201,4 @@ const PaymentRequestAmountFilter: React.FC<PaymentRequestAmountFilterProps> = ({
   );
 };
 
-export default PaymentRequestAmountFilter;
+export default AmountFilter;

@@ -9,10 +9,7 @@ export default {
 
 const Template: StoryFn<typeof SearchBar> = (args) => {
   const [value, setValue] = useState<string>('');
-  const onChangeValue = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
-  };
-  return <SearchBar {...args} value={value} onChange={onChangeValue} />;
+  return <SearchBar {...args} value={value} setValue={setValue} />;
 };
 
 export const Default = Template.bind({});

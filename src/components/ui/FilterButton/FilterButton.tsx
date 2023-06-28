@@ -44,7 +44,8 @@ const FilterButton: FilterButtonFC = ({
 
   const filterButtonClassNames =
     'outline-none inline-flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-greyBg hover:text-defaultText transition-all';
-  const actionButtonClassNames = 'outline-none px-3 py-1 cursor-pointer leading-6 text-13px rounded-full';
+  const actionButtonClassNames =
+    'outline-none px-3 py-1 cursor-pointer leading-6 text-13px rounded-full transition-all';
 
   Children.forEach(children, (child) => {
     if (React.isValidElement(child) && typeof child.type !== 'string') {
@@ -83,9 +84,17 @@ const FilterButton: FilterButtonFC = ({
     setIsDialogOpen(false);
   };
 
+  const onDropdownOpenChange = (open: boolean) => {
+    if (onCancel && !open) {
+      onCancel();
+    }
+
+    setIsDialogOpen(open);
+  };
+
   return (
     <>
-      <DropdownMenu.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <DropdownMenu.Root open={isDialogOpen} onOpenChange={onDropdownOpenChange}>
         <DropdownMenu.Trigger asChild>
           <button
             className={classNames(filterButtonClassNames, {
@@ -129,7 +138,7 @@ const FilterButton: FilterButtonFC = ({
                       <button
                         className={classNames(
                           actionButtonClassNames,
-                          'bg-white font-medium text-defaultText border border-solid border-borderGrey',
+                          'bg-white text-defaultText border border-solid border-borderGrey hover:border-borderGreyHighlighted',
                         )}
                         onClick={onReset}
                       >
@@ -137,7 +146,10 @@ const FilterButton: FilterButtonFC = ({
                       </button>
                       <div className="flex flex-row gap-x-4">
                         <button
-                          className={classNames(actionButtonClassNames, 'bg-white font-medium text-greyText')}
+                          className={classNames(
+                            actionButtonClassNames,
+                            'bg-white text-greyText hover:text-defaultText',
+                          )}
                           onClick={onCancelClick}
                         >
                           Cancel
@@ -145,7 +157,7 @@ const FilterButton: FilterButtonFC = ({
                         <button
                           className={classNames(
                             actionButtonClassNames,
-                            'bg-primaryGreen font-semibold text-white rounded-full',
+                            'bg-primaryGreen font-semibold text-white rounded-full hover:bg-primaryGreenHover',
                           )}
                           onClick={onApplyClick}
                         >

@@ -1,19 +1,19 @@
 ﻿import React, { useState } from 'react';
-import PaymentRequestFilterRow from './PaymentRequestFilterRow';
+import FilterControlsRow from './FilterControlsRow';
 import { Meta, StoryFn } from '@storybook/react';
-import { TagFilter } from '../PaymentRequestTagFilter/PaymentRequestTagFilter';
+import { FilterableTag } from '../TagFilter/TagFilter';
 
 export default {
-  title: 'UI/Payment Request Filter Row',
-  component: PaymentRequestFilterRow,
-} as Meta<typeof PaymentRequestFilterRow>;
+  title: 'UI/Filter Controls Row',
+  component: FilterControlsRow,
+} as Meta<typeof FilterControlsRow>;
 
-const Template: StoryFn<typeof PaymentRequestFilterRow> = (args) => {
+const Template: StoryFn<typeof FilterControlsRow> = (args) => {
   const [searchFilter, setSearchFilter] = useState<string>('');
   const [currency, setCurrency] = React.useState<string | undefined>();
   const [minAmount, setMinAmount] = React.useState<number | undefined>();
   const [maxAmount, setMaxAmount] = React.useState<number | undefined>();
-  const [tags, setTags] = React.useState<TagFilter[]>([
+  const [tags, setTags] = React.useState<FilterableTag[]>([
     {
       id: '1',
       label: 'Name of tag',
@@ -71,7 +71,7 @@ const Template: StoryFn<typeof PaymentRequestFilterRow> = (args) => {
   };
 
   return (
-    <PaymentRequestFilterRow
+    <FilterControlsRow
       {...args}
       setDateRange={setDateRange}
       searchFilter={searchFilter}

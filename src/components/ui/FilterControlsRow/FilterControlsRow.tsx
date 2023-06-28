@@ -1,9 +1,9 @@
 ﻿import DateRangePicker, { DateRange } from '../DateRangePicker/DateRangePicker';
 import SearchBar from '../SearchBar/SearchBar';
-import PaymentRequestAmountFilter from '../PaymentRequestAmountFilter/PaymentRequestAmountFilter';
-import PaymentRequestTagFilter, { TagFilter } from '../PaymentRequestTagFilter/PaymentRequestTagFilter';
+import AmountFilter from '../AmountFilter/AmountFilter';
+import TagFilter, { FilterableTag } from '../TagFilter/TagFilter';
 
-interface PaymentRequestFilterRowProps {
+interface FilterControlsRowProps {
   setDateRange: (dateRange: DateRange) => void;
   searchFilter: string;
   setSearchFilter: (value: string) => void;
@@ -13,11 +13,11 @@ interface PaymentRequestFilterRowProps {
   setMinAmount?: (minAmount?: number) => void;
   maxAmount?: number;
   setMaxAmount?: (maxAmount?: number) => void;
-  tags: TagFilter[];
-  setTags: (tags: TagFilter[]) => void;
+  tags: FilterableTag[];
+  setTags: (tags: FilterableTag[]) => void;
 }
 
-const PaymentRequestFilterRow = ({
+const FilterControlsRow = ({
   setDateRange,
   searchFilter,
   setSearchFilter,
@@ -29,16 +29,16 @@ const PaymentRequestFilterRow = ({
   setMaxAmount,
   tags,
   setTags,
-}: PaymentRequestFilterRowProps) => {
+}: FilterControlsRowProps) => {
   return (
     <div className="flex justify-between p-3 bg-white rounded-lg">
       <div>
         <DateRangePicker onDateChange={(dateRange) => setDateRange(dateRange)}></DateRangePicker>
       </div>
       <div className="inline-flex flex-row space-x-2">
-        <SearchBar value={searchFilter} onChange={(event) => setSearchFilter(event.target.value)} />
+        <SearchBar value={searchFilter} setValue={setSearchFilter} />
 
-        <PaymentRequestAmountFilter
+        <AmountFilter
           currency={currency}
           setCurrency={setCurrency}
           minAmount={minAmount}
@@ -47,10 +47,10 @@ const PaymentRequestFilterRow = ({
           setMaxAmount={setMaxAmount}
         />
 
-        <PaymentRequestTagFilter tags={tags} setTags={setTags} />
+        <TagFilter tags={tags} setTags={setTags} />
       </div>
     </div>
   );
 };
 
-export default PaymentRequestFilterRow;
+export default FilterControlsRow;
