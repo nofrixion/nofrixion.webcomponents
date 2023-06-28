@@ -5,6 +5,16 @@ import React, { useState } from 'react';
 
 const SearchBar = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
   ({ maxLength = 100, value, onChange, ...props }, ref) => {
+    const [isFocused, setIsFocused] = useState<boolean>(false);
+
+    const onFocus = () => {
+      setIsFocused(true);
+    };
+
+    const onBlur = () => {
+      setIsFocused(false);
+    };
+
     return (
       <input
         ref={ref}
@@ -12,22 +22,21 @@ const SearchBar = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<H
         maxLength={maxLength}
         className={classNames(
           'inline outline outline-1 hover:outline-borderGrey focus:outline-borderGrey ' +
-            'focus:rounded-lg focus:w-48 py-2 pl-9 pr-1 text-sm placeholder-greyText' +
-            'text-defaultText bg-[12px] bg-no-repeat transition-all',
+            'focus:rounded-lg focus:w-48 py-2 pl-9 pr-1 text-sm placeholder:text-greyText ' +
+            'placeholder:opacity-100 text-defaultText bg-[12px] bg-no-repeat transition-all',
           {
-            'outline-borderGrey': value,
-            rounded: !value,
-            'rounded-lg': value,
-            'w-24': !value,
-            'w-48': value,
+            'outline-borderGrey rounded-lg w-48': value,
+            'rounded w-24': !value,
           },
         )}
         style={{
-          backgroundImage: value ? `url(${searchIconEnabled})` : `url(${searchIconDisabled})`,
+          backgroundImage: value || isFocused ? `url(${searchIconEnabled})` : `url(${searchIconDisabled})`,
           outlineColor: 'transparent',
         }}
         placeholder="Search"
         onChange={onChange}
+        onFocus={onFocus}
+        onBlur={onBlur}
         value={value}
         {...props}
       />

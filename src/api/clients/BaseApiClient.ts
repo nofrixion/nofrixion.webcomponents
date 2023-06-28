@@ -31,6 +31,7 @@ export abstract class BaseApiClient {
     toDate?: Date,
     status?: string,
     search?: string,
+    currency?: string,
     minAmount?: number,
     maxAmount?: number,
     tags?: string[],
@@ -62,6 +63,10 @@ export abstract class BaseApiClient {
 
     if (search) {
       filterParams.append('search', search);
+    }
+
+    if (currency) {
+      filterParams.append('currency', currency);
     }
 
     if (minAmount) {

@@ -1,7 +1,7 @@
 import { PaymentRequestStatus } from '../../../api/types/Enums';
 import Tab from '../../ui/Tab/Tab';
 import * as Tabs from '@radix-ui/react-tabs';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DateRange } from '../../ui/DateRangePicker/DateRangePicker';
 import PrimaryButton from '../../ui/PrimaryButton/PrimaryButton';
 import { usePaymentRequestMetrics } from '../../../api/hooks/usePaymentRequestMetrics';
@@ -43,6 +43,9 @@ const PaymentRequestDashboard = ({
     toDate: endOfDay(new Date()),
   });
   const [searchFilter, setSearchFilter] = useState<string>('');
+  const [currencyFilter, setCurrencyFilter] = React.useState<string | undefined>();
+  const [minAmountFilter, setMinAmountFilter] = React.useState<number | undefined>();
+  const [maxAmountFilter, setMaxAmountFilter] = React.useState<number | undefined>();
 
   let [isCreatePaymentRequestOpen, setIsCreatePaymentRequestOpen] = useState(false);
 
@@ -79,6 +82,9 @@ const PaymentRequestDashboard = ({
     dateRange.toDate.getTime(),
     status,
     searchFilter?.length >= 3 ? searchFilter : undefined,
+    currencyFilter,
+    minAmountFilter,
+    maxAmountFilter,
   );
 
   const [localPaymentRequests, setLocalPaymentRequests] = useState<LocalPaymentRequest[]>([]);
@@ -209,6 +215,12 @@ const PaymentRequestDashboard = ({
               setDateRange={setDateRange}
               searchFilter={searchFilter}
               setSearchFilter={setSearchFilter}
+              currency={currencyFilter}
+              setCurrency={setCurrencyFilter}
+              minAmount={minAmountFilter}
+              setMinAmount={setMinAmountFilter}
+              maxAmount={maxAmountFilter}
+              setMaxAmount={setMaxAmountFilter}
             />
           </div>
         )}
