@@ -189,11 +189,11 @@ const PaymentRequestDashboard = ({
         <div className="flex pr-6">
           <LayoutGroup>
             <LayoutWrapper className="pl-12 pt-16 font-medium text-base cursor-pointer">
-              <PrimaryButton
+              {/* <PrimaryButton
                 label="Settings"
                 className="text-defaultText hover:bg-greyBg font-normal"
                 onClick={() => {}}
-              ></PrimaryButton>
+              ></PrimaryButton> */}
             </LayoutWrapper>
             <AnimatePresence initial={false}>
               {!isInitialState && (
