@@ -20,6 +20,7 @@ import { PaymentRequestMetrics } from '../../../api/types/ApiResponses';
 import PaymentRequestDetailsModal from '../PaymentRequestDetailsModal/PaymentRequestDetailsModal';
 import { useMerchantTags } from '../../../api/hooks/useMerchantTags';
 import PaymentRequestFilterRow from '../../ui/PaymentRequestFilterRow/PaymentRequestFilterRow';
+import { TagFilter } from '../../ui/PaymentRequestTagFilter/PaymentRequestTagFilter';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -46,6 +47,8 @@ const PaymentRequestDashboard = ({
   const [currencyFilter, setCurrencyFilter] = React.useState<string | undefined>();
   const [minAmountFilter, setMinAmountFilter] = React.useState<number | undefined>();
   const [maxAmountFilter, setMaxAmountFilter] = React.useState<number | undefined>();
+  const [tags, setTags] = React.useState<TagFilter[]>([]);
+  const [tagsFilter, setTagsFilter] = React.useState<string[]>([]);
 
   let [isCreatePaymentRequestOpen, setIsCreatePaymentRequestOpen] = useState(false);
 
@@ -61,6 +64,14 @@ const PaymentRequestDashboard = ({
 
   const onPaymentRequestDetailsModalDismiss = () => {
     setSelectedPaymentRequestID(undefined);
+  };
+
+  const getSelectedTagFilters = () => {
+    if (!tags) {
+      return [];
+    }
+
+    return tags.filter((tag) => tag.isSelected).map((tag) => tag.id);
   };
 
   const {
@@ -85,6 +96,7 @@ const PaymentRequestDashboard = ({
     currencyFilter,
     minAmountFilter,
     maxAmountFilter,
+    tagsFilter,
   );
 
   const [localPaymentRequests, setLocalPaymentRequests] = useState<LocalPaymentRequest[]>([]);
@@ -115,8 +127,22 @@ const PaymentRequestDashboard = ({
   }, [paymentRequests]);
 
   useEffect(() => {
+    let tempTagArray = getSelectedTagFilters();
+    setTagsFilter([...tempTagArray]);
+  }, [tags]);
+
+  useEffect(() => {
     if (merchantTags.tags) {
       setLocalMerchantTags(merchantTags.tags.map((tag) => parseApiTagToLocalTag(tag)));
+      setTags(
+        merchantTags.tags.map((tag) => {
+          return {
+            id: tag.id,
+            label: tag.name,
+            isSelected: false,
+          };
+        }),
+      );
     }
   }, [merchantTags.tags]);
 
@@ -221,6 +247,8 @@ const PaymentRequestDashboard = ({
               setMinAmount={setMinAmountFilter}
               maxAmount={maxAmountFilter}
               setMaxAmount={setMaxAmountFilter}
+              tags={tags}
+              setTags={setTags}
             />
           </div>
         )}

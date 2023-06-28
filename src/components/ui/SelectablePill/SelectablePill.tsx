@@ -2,7 +2,7 @@
 import { useId, useState } from 'react';
 export interface SelectablePillProps {
   label: string;
-  value: string;
+  value?: string;
   selected: boolean;
   onSelect?: (selected: boolean) => void;
   onValueChange?: (value: string) => void;

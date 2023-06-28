@@ -165,11 +165,11 @@ const FilterButton: FilterButtonFC = ({
 };
 
 const FilterButtonFilteredLayout: React.FC<FilterButtonFilteredLayoutProps> = ({ children }) => {
-  return <div>{children}</div>;
+  return <>{children}</>;
 };
 
 const FilterButtonBody: React.FC<FilterButtonBody> = ({ children }) => {
-  return <div>{children}</div>;
+  return <>{children}</>;
 };
 
 FilterButton.FilteredLayout = FilterButtonFilteredLayout;
