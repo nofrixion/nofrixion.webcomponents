@@ -71,7 +71,11 @@ const Transactions = ({
                     'pt-2': index !== 0,
                   })}
                 >
-                  <div className="flex justify-end">
+                  {/* 
+                    Commeting out refund button for now
+                    until we have that functionality in the API
+                   */}
+                  {/* <div className="flex justify-end">
                     <div className="w-[3.75rem] text-[0.813rem] h-6 ">
                       <div
                         className="text-[0.813rem] px-2 py-1 rounded-full bg-[#DEE6ED] leading-4 cursor-pointer opacity-0 transition group-hover:opacity-100 hover:bg-[#BDCCDB]"
@@ -80,7 +84,7 @@ const Transactions = ({
                         Refund
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </td>
               </tr>
             ))}
