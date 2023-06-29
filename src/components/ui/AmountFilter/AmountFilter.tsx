@@ -5,6 +5,8 @@ import { formatAmount } from '../../../utils/formatters';
 import closeIcon from '../../../assets/images/nf_close.svg';
 import SelectablePill from '../SelectablePill/SelectablePill';
 import React, { useEffect } from 'react';
+import createNumberMask from 'text-mask-addons/dist/createNumberMask';
+import MaskedInput from 'react-text-mask';
 
 export interface AmountFilterProps {
   currency?: string;
@@ -52,6 +54,23 @@ const AmountFilter: React.FC<AmountFilterProps> = ({
 
   const commonInputClassNames = 'outline-none border border-solid border-borderGrey rounded px-2 py-1 appearance-none';
 
+  const maskOptions = {
+    prefix: '',
+    suffix: '',
+    includeThousandsSeparator: true,
+    thousandsSeparatorSymbol: ',',
+    allowDecimal: false,
+    decimalSymbol: '.',
+    decimalLimit: 0,
+    integerLimit: 7,
+    allowNegative: false,
+    allowLeadingZeroes: false,
+  };
+
+  const currencyMask = createNumberMask({
+    ...maskOptions,
+  });
+
   useEffect(() => {
     checkIfIsFiltered();
   }, [currency, minAmount, maxAmount]);
@@ -85,11 +104,17 @@ const AmountFilter: React.FC<AmountFilterProps> = ({
   };
 
   const onMinAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const masked = event.target.value;
+    event.target.value = event.target.value.replace(/[^\d\.\-]/g, '');
     setLocalMinAmount(event.target.value);
+    event.target.value = masked;
   };
 
   const onMaxAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const masked = event.target.value;
+    event.target.value = event.target.value.replace(/[^\d\.\-]/g, '');
     setLocalMaxAmount(event.target.value);
+    event.target.value = masked;
   };
 
   const clearCurrency = (preventDefault: boolean = true) => {
@@ -169,8 +194,8 @@ const AmountFilter: React.FC<AmountFilterProps> = ({
             <span>Min amount</span>
           </div>
           <div>
-            <input
-              type="number"
+            <MaskedInput
+              mask={currencyMask}
               className={commonInputClassNames}
               value={localMinAmount}
               onChange={onMinAmountChange}
@@ -180,8 +205,8 @@ const AmountFilter: React.FC<AmountFilterProps> = ({
             <span>Max amount</span>
           </div>
           <div>
-            <input
-              type="number"
+            <MaskedInput
+              mask={currencyMask}
               className={commonInputClassNames}
               value={localMaxAmount}
               onChange={onMaxAmountChange}
