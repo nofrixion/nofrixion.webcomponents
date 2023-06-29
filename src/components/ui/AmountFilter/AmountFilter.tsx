@@ -1,7 +1,7 @@
 ﻿import FilterButton from '../FilterButton/FilterButton';
 import disabledCurrencyIcon from '../../../assets/icons/currency-icon-disabled.svg';
 import enabledCurrencyIcon from '../../../assets/icons/currency-icon-enabled.svg';
-import filterIcon from '../../../assets/icons/filter-icon.svg';
+import { formatAmount } from '../../../utils/formatters';
 import closeIcon from '../../../assets/images/nf_close.svg';
 import SelectablePill from '../SelectablePill/SelectablePill';
 import React, { useEffect } from 'react';
@@ -192,8 +192,8 @@ const AmountFilter: React.FC<AmountFilterProps> = ({
       <FilterButton.FilteredLayout>
         <div className="inline-flex space-x-2 items-center">
           <img src={enabledCurrencyIcon} alt="Filter" title="Filter" className="w-4 h-4" />
-          {minAmount && <ActiveFilterControl label={'Min ' + minAmount} onClick={clearMinAmount} />}
-          {maxAmount && <ActiveFilterControl label={'Max ' + maxAmount} onClick={clearMaxAmount} />}
+          {minAmount && <ActiveFilterControl label={'Min ' + formatAmount(minAmount, 0)} onClick={clearMinAmount} />}
+          {maxAmount && <ActiveFilterControl label={'Max ' + formatAmount(maxAmount, 0)} onClick={clearMaxAmount} />}
           {currency && <ActiveFilterControl label={getCurrencyName(currency)} onClick={clearCurrency} />}
         </div>
       </FilterButton.FilteredLayout>
