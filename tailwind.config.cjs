@@ -20,8 +20,10 @@ module.exports = {
         primaryGreen: '#40BFBF',
         primaryGreenHover: '#00807F',
         borderGrey: '#D5DBDD',
+        borderGreyHighlighted: '#ABB2BA',
         errorBg: '#FEE7EB',
         disabledText: '#C7CCD1',
+        selectedPill: '#042931',
       },
       fontSize: {
         '13px': '0.8125rem',

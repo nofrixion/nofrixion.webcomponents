@@ -32,10 +32,10 @@ const formatDate = (date: Date): string => {
 // - 123456789 -> '123,456,789.00'
 // - 115.5 -> '115.50'
 // - 699.9 -> '699.90'
-const formatAmount = (amount: number): string => {
+const formatAmount = (amount: number, fractionDigits = 2): string => {
   const formattedAmount = new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
   }).format(amount);
 
   return formattedAmount;

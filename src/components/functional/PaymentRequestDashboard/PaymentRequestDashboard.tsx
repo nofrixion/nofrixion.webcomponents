@@ -1,8 +1,8 @@
 import { PaymentRequestStatus } from '../../../api/types/Enums';
 import Tab from '../../ui/Tab/Tab';
 import * as Tabs from '@radix-ui/react-tabs';
-import { useEffect, useState } from 'react';
-import DateRangePicker, { DateRange } from '../../ui/DateRangePicker/DateRangePicker';
+import React, { useEffect, useState } from 'react';
+import { DateRange } from '../../ui/DateRangePicker/DateRangePicker';
 import PrimaryButton from '../../ui/PrimaryButton/PrimaryButton';
 import { usePaymentRequestMetrics } from '../../../api/hooks/usePaymentRequestMetrics';
 import PaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTable';
@@ -19,6 +19,8 @@ import LayoutWrapper from '../../ui/utils/LayoutWrapper';
 import { PaymentRequestMetrics } from '../../../api/types/ApiResponses';
 import PaymentRequestDetailsModal from '../PaymentRequestDetailsModal/PaymentRequestDetailsModal';
 import { useMerchantTags } from '../../../api/hooks/useMerchantTags';
+import FilterControlsRow from '../../ui/FilterControlsRow/FilterControlsRow';
+import { FilterableTag } from '../../ui/TagFilter/TagFilter';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -43,6 +45,12 @@ const PaymentRequestDashboard = ({
     fromDate: startOfDay(add(new Date(), { days: -90 })), // Last 90 days as default
     toDate: endOfDay(new Date()),
   });
+  const [searchFilter, setSearchFilter] = useState<string>('');
+  const [currencyFilter, setCurrencyFilter] = React.useState<string | undefined>();
+  const [minAmountFilter, setMinAmountFilter] = React.useState<number | undefined>();
+  const [maxAmountFilter, setMaxAmountFilter] = React.useState<number | undefined>();
+  const [tags, setTags] = React.useState<FilterableTag[]>([]);
+  const [tagsFilter, setTagsFilter] = React.useState<string[]>([]);
 
   let [isCreatePaymentRequestOpen, setIsCreatePaymentRequestOpen] = useState(false);
 
@@ -58,6 +66,14 @@ const PaymentRequestDashboard = ({
 
   const onPaymentRequestDetailsModalDismiss = () => {
     setSelectedPaymentRequestID(undefined);
+  };
+
+  const getSelectedTagFilters = () => {
+    if (!tags) {
+      return [];
+    }
+
+    return tags.filter((tag) => tag.isSelected).map((tag) => tag.id);
   };
 
   const {
@@ -79,6 +95,11 @@ const PaymentRequestDashboard = ({
     dateRange.fromDate.getTime(),
     dateRange.toDate.getTime(),
     status,
+    searchFilter?.length >= 3 ? searchFilter : undefined,
+    currencyFilter,
+    minAmountFilter,
+    maxAmountFilter,
+    tagsFilter,
   );
 
   const [localPaymentRequests, setLocalPaymentRequests] = useState<LocalPaymentRequest[]>([]);
@@ -110,8 +131,22 @@ const PaymentRequestDashboard = ({
   }, [paymentRequests]);
 
   useEffect(() => {
+    let tempTagArray = getSelectedTagFilters();
+    setTagsFilter([...tempTagArray]);
+  }, [tags]);
+
+  useEffect(() => {
     if (merchantTags.tags) {
       setLocalMerchantTags(merchantTags.tags.map((tag) => parseApiTagToLocalTag(tag)));
+      setTags(
+        merchantTags.tags.map((tag) => {
+          return {
+            id: tag.id,
+            label: tag.name,
+            isSelected: false,
+          };
+        }),
+      );
     }
   }, [merchantTags.tags]);
 
@@ -178,13 +213,6 @@ const PaymentRequestDashboard = ({
           <div className="pl-4 pt-[72px] pb-[68px] leading-8 font-medium text-[1.75rem]">
             <span>Accounts Receivable</span>
           </div>
-          <AnimatePresence>
-            {!isInitialState && (
-              <LayoutWrapper className="pl-12 pt-[69px]">
-                <DateRangePicker onDateChange={(dateRange) => setDateRange(dateRange)}></DateRangePicker>
-              </LayoutWrapper>
-            )}
-          </AnimatePresence>
         </div>
         <div className="flex pr-6">
           <LayoutGroup>
@@ -209,6 +237,26 @@ const PaymentRequestDashboard = ({
           </LayoutGroup>
         </div>
       </div>
+
+      <AnimatePresence>
+        {!isInitialState && (
+          <div className="mb-4">
+            <FilterControlsRow
+              setDateRange={setDateRange}
+              searchFilter={searchFilter}
+              setSearchFilter={setSearchFilter}
+              currency={currencyFilter}
+              setCurrency={setCurrencyFilter}
+              minAmount={minAmountFilter}
+              setMinAmount={setMinAmountFilter}
+              maxAmount={maxAmountFilter}
+              setMaxAmount={setMaxAmountFilter}
+              tags={tags}
+              setTags={setTags}
+            />
+          </div>
+        )}
+      </AnimatePresence>
 
       <LayoutGroup>
         <AnimatePresence initial={false}>
