@@ -90,11 +90,11 @@ const PaymentRequestActionMenu = ({
             initial={{ opacity: 0.5, y: -5, scaleX: 1, scaleY: 1 }}
             animate={{ opacity: 1, y: 0, scaleX: 1, scaleY: 1 }}
           >
-            {onDuplicate && (
+            {/* {onDuplicate && (
               <DropdownMenu.Item className={actionItem()} onClick={onDuplicateClick}>
                 <PaymentRequestActionMenuItemContent label="Duplicate" iconSource={copyIcon} />
               </DropdownMenu.Item>
-            )}
+            )} */}
             {onOpenPaymentPage && (
               <DropdownMenu.Item className={actionItem()} onClick={onOpenPaymentPageClick}>
                 <PaymentRequestActionMenuItemContent label="Open payment page" iconSource={openIcon} />
