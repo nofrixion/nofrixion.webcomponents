@@ -92,6 +92,7 @@ const CreatePaymentRequestPage = ({
   const [isPaymentConditionsModalOpen, setIsPaymentConditionsModalOpen] = useState(false);
   const [isPaymentNotificationsModalOpen, setIsPaymentNotificationsModalOpen] = useState(false);
   const [isReviewing, setIsReviewing] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (userPaymentDefaults?.paymentMethodsDefaults) {
@@ -167,6 +168,8 @@ const CreatePaymentRequestPage = ({
   };
 
   const onConfirmClicked = async () => {
+    setIsSubmitting(true);
+
     const paymentRequestToCreate: LocalPaymentRequestCreate = {
       amount: Number(amount),
       currency: currency as Currency,
@@ -202,6 +205,8 @@ const CreatePaymentRequestPage = ({
     // TODO: Remove this. This is just for demo purposes
     onClose();
     resetStates();
+
+    setIsSubmitting(false);
   };
 
   const handleDefaultsChanged = () => {
@@ -620,7 +625,8 @@ const CreatePaymentRequestPage = ({
                                     delay={durationAnimationWidth / 1.5}
                                   >
                                     <button
-                                      className="w-full whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-white font-semibold cursor-pointer hover:bg-[#144752]"
+                                      className="w-full whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-white font-semibold cursor-pointer hover:bg-[#144752] select-none disabled:bg-[#DEE5ED]"
+                                      disabled={isSubmitting}
                                       onClick={onConfirmClicked}
                                     >
                                       Confirm payment request
