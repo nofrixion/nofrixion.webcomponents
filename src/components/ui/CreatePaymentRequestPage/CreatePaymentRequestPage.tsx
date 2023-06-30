@@ -626,9 +626,9 @@ const CreatePaymentRequestPage = ({
                                   >
                                     <button
                                       className={classNames(
-                                        'w-full whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-white font-semibold cursor-pointer hover:bg-[#144752] select-none',
-                                        { 'pointer-events-none cursor-not-allowed bg-[#DEE5ED]': isSubmitting },
+                                        'w-full whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-white font-semibold cursor-pointer hover:bg-[#144752] select-none disabled:bg-[#DEE5ED]',
                                       )}
+                                      disabled={isSubmitting}
                                       onClick={onConfirmClicked}
                                     >
                                       Confirm payment request
