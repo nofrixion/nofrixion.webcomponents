@@ -625,9 +625,7 @@ const CreatePaymentRequestPage = ({
                                     delay={durationAnimationWidth / 1.5}
                                   >
                                     <button
-                                      className={classNames(
-                                        'w-full whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-white font-semibold cursor-pointer hover:bg-[#144752] select-none disabled:bg-[#DEE5ED]',
-                                      )}
+                                      className="w-full whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-white font-semibold cursor-pointer hover:bg-[#144752] select-none disabled:bg-[#DEE5ED]"
                                       disabled={isSubmitting}
                                       onClick={onConfirmClicked}
                                     >
