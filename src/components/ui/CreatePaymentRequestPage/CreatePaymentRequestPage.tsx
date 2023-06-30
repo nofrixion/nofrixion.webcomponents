@@ -92,6 +92,7 @@ const CreatePaymentRequestPage = ({
   const [isPaymentConditionsModalOpen, setIsPaymentConditionsModalOpen] = useState(false);
   const [isPaymentNotificationsModalOpen, setIsPaymentNotificationsModalOpen] = useState(false);
   const [isReviewing, setIsReviewing] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (userPaymentDefaults?.paymentMethodsDefaults) {
@@ -166,7 +167,9 @@ const CreatePaymentRequestPage = ({
     setIsReviewing(true);
   };
 
-  const onConfirmClicked = async () => {
+  const onConfirmClicked = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    setIsSubmitting(true);
+
     const paymentRequestToCreate: LocalPaymentRequestCreate = {
       amount: Number(amount),
       currency: currency as Currency,
@@ -202,6 +205,8 @@ const CreatePaymentRequestPage = ({
     // TODO: Remove this. This is just for demo purposes
     onClose();
     resetStates();
+
+    setIsSubmitting(false);
   };
 
   const handleDefaultsChanged = () => {
@@ -620,8 +625,11 @@ const CreatePaymentRequestPage = ({
                                     delay={durationAnimationWidth / 1.5}
                                   >
                                     <button
-                                      className="w-full whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-white font-semibold cursor-pointer hover:bg-[#144752]"
-                                      onClick={onConfirmClicked}
+                                      className={classNames(
+                                        'w-full whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-white font-semibold cursor-pointer hover:bg-[#144752] select-none',
+                                        { 'pointer-events-none cursor-not-allowed bg-[#DEE5ED]': isSubmitting },
+                                      )}
+                                      onClick={(e) => onConfirmClicked(e)}
                                     >
                                       Confirm payment request
                                     </button>
