@@ -39,6 +39,11 @@ export class PaymentRequestClient extends BaseApiClient {
    * @param fromDate Optional. The date filter to apply to retrieve payment requests created after this date.
    * @param toDate Optional. The date filter to apply to retrieve payment requests created up until this date.
    * @param status Optional. The status filter to apply to retrieve records with this status.
+   * @param search Optional. The search filter to apply to retrieve records with this search text in the description, title, merchant name or contact name.
+   * @param currency Optional. The currency filter to apply to retrieve records with this currency.
+   * @param minAmount Optional. The minimum amount filter to apply to retrieve records with this minimum amount.
+   * @param maxAmount Optional. The maximum amount filter to apply to retrieve records with this maximum amount.
+   * @param tags Optional. The tags filter to apply to retrieve records with these tags.
    * @returns A PaymentRequestPageResponse if successful. An ApiError if not successful.
    */
   async getAll(
@@ -183,11 +188,21 @@ export class PaymentRequestClient extends BaseApiClient {
    * Gets the metrics for Payment Requests
    * @param fromDate Optional. The date filter to apply to retrieve payment requests metrics after this date.
    * @param toDate Optional. The date filter to apply to retrieve payment requests metrics up until this date.
+   * @param search Optional. The search filter to apply to retrieve payment request metrics with this search text in the description, title, merchant name or contact name.
+   * @param currency Optional. The currency filter to apply to retrieve payment request metrics with this currency.
+   * @param minAmount Optional. The minimum amount filter to apply to retrieve payment request metrics with this minimum amount.
+   * @param maxAmount Optional. The maximum amount filter to apply to retrieve payment request metrics with this maximum amount.
+   * @param tags Optional. The tags filter to apply to retrieve payment request metrics with these tags.
    * @returns A PaymentRequestMetrics response if successful. An ApiError if not successful.
    */
   async metrics(
     fromDate?: Date,
     toDate?: Date,
+    search?: string,
+    currency?: string,
+    minAmount?: number,
+    maxAmount?: number,
+    tags?: string[],
   ): Promise<{
     data?: PaymentRequestMetrics;
     error?: ApiError;
@@ -204,6 +219,26 @@ export class PaymentRequestClient extends BaseApiClient {
 
     if (toDate) {
       filterParams.append('toDate', toDate.toUTCString());
+    }
+
+    if (search) {
+      filterParams.append('search', search);
+    }
+
+    if (currency) {
+      filterParams.append('currency', currency);
+    }
+
+    if (minAmount) {
+      filterParams.append('minAmount', minAmount.toString());
+    }
+
+    if (maxAmount) {
+      filterParams.append('maxAmount', maxAmount.toString());
+    }
+
+    if (tags) {
+      tags.forEach((tag) => filterParams.append('tags', tag));
     }
 
     url = `${url}?${filterParams.toString()}`;
