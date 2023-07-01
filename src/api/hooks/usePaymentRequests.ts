@@ -49,8 +49,6 @@ export const usePaymentRequests = (
       tags,
     );
 
-    console.log('Payment Requests response', response);
-
     if (response.data) {
       setPaymentRequests(response.data.content);
       setPageNumber(response.data.pageNumber);

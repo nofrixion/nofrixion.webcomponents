@@ -106,13 +106,22 @@ const PaymentRequestDashboard = ({
 
   const [firstMetrics, setFirstMetrics] = useState<PaymentRequestMetrics | undefined>();
 
-  const { metrics, isLoading: isLoadingMetrics } = usePaymentRequestMetrics(
+  const {
+    metrics,
+    isLoading: isLoadingMetrics,
+    fetchPaymentRequestMetrics,
+  } = usePaymentRequestMetrics(
     apiUrl,
     token,
     merchantId,
     onUnauthorized,
     dateRange.fromDate.getTime(),
     dateRange.toDate.getTime(),
+    searchFilter?.length >= 3 ? searchFilter : undefined,
+    currencyFilter,
+    minAmountFilter,
+    maxAmountFilter,
+    tagsFilter,
   );
 
   const merchantTags = useMerchantTags(apiUrl, token, merchantId, onUnauthorized);
@@ -160,7 +169,8 @@ const PaymentRequestDashboard = ({
 
     makeToast('success', 'Payment request successfully deleted.');
 
-    await fetchPaymentRequests();
+    fetchPaymentRequests();
+    fetchPaymentRequestMetrics();
   };
 
   const onCopyPaymentRequestLink = async (paymentRequest: LocalPaymentRequest) => {
@@ -193,19 +203,21 @@ const PaymentRequestDashboard = ({
 
     // Refresh the payment requests table
     // TODO: Table is not refreshing
-    await fetchPaymentRequests();
+    fetchPaymentRequests();
+    fetchPaymentRequestMetrics();
   };
 
   // tore the results of the first execution of the metrics
   // and use them as the initial state of the metrics.
   // This way, when they change the dates
   // we don't see the metrics disappear
-  if (metrics && !firstMetrics) {
-    setFirstMetrics(metrics);
-  }
+  useEffect(() => {
+    if (metrics && (!firstMetrics || firstMetrics?.all === 0)) {
+      setFirstMetrics(metrics);
+    }
+  }, [metrics]);
 
   const isInitialState = !isLoadingMetrics && (!firstMetrics || firstMetrics?.all === 0);
-
   return (
     <div className="font-inter bg-mainGrey text-defaultText h-full pl-8 pr-8 pb-10">
       <div className="flex justify-between">
