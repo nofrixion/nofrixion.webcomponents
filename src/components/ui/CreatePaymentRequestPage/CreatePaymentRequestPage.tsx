@@ -478,7 +478,7 @@ const CreatePaymentRequestPage = ({
                   </AnimatePresence>
 
                   {/* Right side */}
-                  <div className="flex-1 bg-mainGrey sticky inset-0 h-full pl-[8.25rem] pr-32 py-44">
+                  <div className="flex-1 bg-mainGrey sticky inset-0 min-h-screen h-full pl-[8.25rem] pr-32 py-44">
                     <div className="w-full max-w-lg mx-auto">
                       <div className="space-y-10">
                         <AnimatePresence>
