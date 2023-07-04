@@ -1,6 +1,6 @@
 import UICreatePaymentRequestPage from '../../ui/CreatePaymentRequestPage/CreatePaymentRequestPage';
 
-import { LocalPaymentRequestCreate } from '../../../types/LocalTypes';
+import { LocalPaymentRequest, LocalPaymentRequestCreate } from '../../../types/LocalTypes';
 import { makeToast } from '../../ui/Toast/Toast';
 import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
 import { PaymentRequestCreate, UserPaymentDefaults } from '../../../api/types/ApiResponses';
@@ -9,6 +9,7 @@ import { useBanks } from '../../../api/hooks/useBanks';
 import { useUserPaymentDefaults } from '../../../api/hooks/useUserPaymentDefaults';
 import { ClientSettingsClient } from '../../../api/clients/ClientSettingsClient';
 import { defaultUserPaymentDefaults } from '../../../utils/constants';
+import { remotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
 
 interface CreatePaymentRequesPageProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -17,6 +18,7 @@ interface CreatePaymentRequesPageProps {
   isOpen: boolean; // When true, the modal will be open. When false, the modal will be closed.
   onClose: () => void; // Callback function that will be called when the modal is asked to be closed.
   onUnauthorized: () => void; // Callback function that will be called when the user is unauthorized.
+  onPaymentRequestCreated: (paymentRequest: LocalPaymentRequest) => void; // Callback function that will be called when the payment request is created.
 }
 
 const CreatePaymentRequestPage = ({
@@ -26,6 +28,7 @@ const CreatePaymentRequestPage = ({
   isOpen,
   onClose,
   onUnauthorized,
+  onPaymentRequestCreated,
 }: CreatePaymentRequesPageProps) => {
   const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId, onUnauthorized);
 
@@ -89,6 +92,10 @@ const CreatePaymentRequestPage = ({
     }
 
     makeToast('success', 'Payment request successfully created.');
+
+    if (response.data) {
+      onPaymentRequestCreated(remotePaymentRequestToLocalPaymentRequest(response.data));
+    }
   };
 
   const onSaveUserPaymentDefaults = async (userPaymentDefaults: UserPaymentDefaults) => {
