@@ -31,11 +31,10 @@ const FilterControlsRow = ({
   setTags,
 }: FilterControlsRowProps) => {
   return (
-    <div className="flex justify-between p-3 bg-white rounded-lg">
-      <div>
-        <DateRangePicker onDateChange={(dateRange) => setDateRange(dateRange)}></DateRangePicker>
-      </div>
-      <div className="inline-flex flex-row space-x-2">
+    <div className="md:flex justify-between md:p-3 bg-white rounded-lg">
+      <DateRangePicker onDateChange={(dateRange) => setDateRange(dateRange)}></DateRangePicker>
+
+      <div className="hidden md:inline-flex flex-row space-x-2">
         <SearchBar value={searchFilter} setValue={setSearchFilter} />
 
         <AmountFilter

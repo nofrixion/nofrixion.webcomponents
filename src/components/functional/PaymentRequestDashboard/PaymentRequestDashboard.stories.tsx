@@ -23,7 +23,13 @@ const meta: Meta<typeof PaymentRequestDashboard> = {
   },
 } as Meta<typeof PaymentRequestDashboard>;
 
-const Template: StoryFn<typeof PaymentRequestDashboard> = (args) => <PaymentRequestDashboard {...args} />;
+const Template: StoryFn<typeof PaymentRequestDashboard> = (args) => {
+  return (
+    <div className="px-6 md:px-14 bg-orange-100 bg-opacity-50 pt-[64px]">
+      <PaymentRequestDashboard {...args} />
+    </div>
+  );
+};
 
 export const Showcase = Template.bind({});
 

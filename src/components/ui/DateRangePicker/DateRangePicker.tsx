@@ -94,10 +94,10 @@ const DateRangePicker = ({ onDateChange }: DateRangeFilterProps) => {
   }, [selectRangeText]);
 
   return (
-    <div className="flex defaultText w-fit">
+    <div className="md:flex md:justify-normal md:w-fit">
       <DropdownMenu.Root>
-        <DropdownMenu.Trigger>
-          <div className={classNames(pillClasses, 'border-r flex items-center w-fit space-x-2 px-4 py-2')}>
+        <DropdownMenu.Trigger className="w-full flex justify-center md:w-auto md:block">
+          <div className={classNames(pillClasses, 'md:border-r flex items-center w-fit space-x-2 px-4 py-2')}>
             <ResizableComponent>
               <span className="py-2">{selectRangeText}</span>
             </ResizableComponent>
@@ -131,7 +131,7 @@ const DateRangePicker = ({ onDateChange }: DateRangeFilterProps) => {
         </DropdownMenu.Portal>
       </DropdownMenu.Root>
 
-      <div className={classNames(pillClasses, 'flex py-2 pr-4')}>
+      <div className={classNames(pillClasses, 'hidden md:flex py-2 pr-4')}>
         <DatePicker
           value={dates}
           onChange={(changes: DateObject[]) => {

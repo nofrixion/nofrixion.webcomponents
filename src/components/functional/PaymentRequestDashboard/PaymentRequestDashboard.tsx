@@ -21,6 +21,7 @@ import PaymentRequestDetailsModal from '../PaymentRequestDetailsModal/PaymentReq
 import { useMerchantTags } from '../../../api/hooks/useMerchantTags';
 import FilterControlsRow from '../../ui/FilterControlsRow/FilterControlsRow';
 import { FilterableTag } from '../../ui/TagFilter/TagFilter';
+import ScrollArea from '../../ui/ScrollArea/ScrollArea';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -221,25 +222,21 @@ const PaymentRequestDashboard = ({
 
   const isInitialState = !isLoadingMetrics && (!firstMetrics || firstMetrics?.all === 0);
   return (
-    <div className="font-inter bg-mainGrey text-defaultText h-full pl-8 pr-8 pb-10">
-      <div className="flex justify-between">
-        <div className="flex">
-          <div className="pl-4 pt-[72px] pb-[68px] leading-8 font-medium text-[1.75rem]">
-            <span>Accounts Receivable</span>
-          </div>
-        </div>
+    <div className="font-inter bg-mainGrey text-defaultText h-full">
+      <div className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center mb-[68px]">
+        <span className="md:pl-4 leading-8 font-medium text-[1.75rem]">Accounts Receivable</span>
         <div className="flex pr-6">
           <LayoutGroup>
-            <LayoutWrapper className="pl-12 pt-16 font-medium text-base cursor-pointer">
-              {/* <PrimaryButton
+            {/* <LayoutWrapper className="pl-12 pt-16 font-medium text-base cursor-pointer">
+              <PrimaryButton
                 label="Settings"
                 className="text-defaultText hover:bg-greyBg font-normal"
                 onClick={() => {}}
-              ></PrimaryButton> */}
-            </LayoutWrapper>
+              ></PrimaryButton>
+            </LayoutWrapper> */}
             <AnimatePresence initial={false}>
               {!isInitialState && (
-                <LayoutWrapper className="pt-16 pl-2">
+                <LayoutWrapper>
                   <PrimaryButton
                     label="Create payment request"
                     className="text-white bg-primaryGreen hover:bg-primaryGreenHover"
@@ -276,58 +273,66 @@ const PaymentRequestDashboard = ({
         <AnimatePresence initial={false}>
           {!isInitialState && (
             <LayoutWrapper className="h-full">
-              <Tabs.Root
-                defaultValue={PaymentRequestStatus.All}
-                onValueChange={(value) => setStatus(value as PaymentRequestStatus)}
-              >
-                {/* Keep the Tab to still get accessibility functions through the keyboard */}
-                <Tabs.List className="flex shrink-0 gap-x-4 mb-4">
-                  <Tab
-                    status={PaymentRequestStatus.All}
-                    isLoading={isLoadingMetrics}
-                    totalRecords={metrics?.all ?? 0}
-                  />
-                  <Tab
-                    status={PaymentRequestStatus.None}
-                    isLoading={isLoadingMetrics}
-                    totalRecords={metrics?.unpaid ?? 0}
-                  />
-                  <Tab
-                    status={PaymentRequestStatus.PartiallyPaid}
-                    isLoading={isLoadingMetrics}
-                    totalRecords={metrics?.partiallyPaid ?? 0}
-                  />
-                  <Tab
-                    status={PaymentRequestStatus.FullyPaid}
-                    isLoading={isLoadingMetrics}
-                    totalRecords={metrics?.paid ?? 0}
-                  />
-                </Tabs.List>
-                <Tabs.Content value=""></Tabs.Content>
-              </Tabs.Root>
+              <ScrollArea>
+                <Tabs.Root
+                  defaultValue={PaymentRequestStatus.All}
+                  onValueChange={(value) => setStatus(value as PaymentRequestStatus)}
+                >
+                  {/* Keep the Tab to still get accessibility functions through the keyboard */}
+                  <Tabs.List className="flex shrink-0 gap-x-4 mb-4">
+                    <Tab
+                      status={PaymentRequestStatus.All}
+                      isLoading={isLoadingMetrics}
+                      totalRecords={metrics?.all ?? 0}
+                    />
+                    <Tab
+                      status={PaymentRequestStatus.None}
+                      isLoading={isLoadingMetrics}
+                      totalRecords={metrics?.unpaid ?? 0}
+                    />
+                    <Tab
+                      status={PaymentRequestStatus.PartiallyPaid}
+                      isLoading={isLoadingMetrics}
+                      totalRecords={metrics?.partiallyPaid ?? 0}
+                    />
+                    <Tab
+                      status={PaymentRequestStatus.FullyPaid}
+                      isLoading={isLoadingMetrics}
+                      totalRecords={metrics?.paid ?? 0}
+                    />
+                  </Tabs.List>
+                  <Tabs.Content value=""></Tabs.Content>
+                </Tabs.Root>
+              </ScrollArea>
             </LayoutWrapper>
           )}
         </AnimatePresence>
         <LayoutWrapper className="bg-white min-h-[18rem] py-10 px-6 rounded-lg">
-          <PaymentRequestTable
-            paymentRequests={localPaymentRequests}
-            pageSize={pageSize}
-            totalRecords={totalRecords}
-            onPageChanged={setPage}
-            setStatusSortDirection={setStatusSortDirection}
-            setCreatedSortDirection={setCreatedSortDirection}
-            setContactSortDirection={setContactSortDirection}
-            setAmountSortDirection={setAmountSortDirection}
-            onPaymentRequestDuplicateClicked={onDuplicatePaymentRequest}
-            onPaymentRequestDeleteClicked={onDeletePaymentRequest}
-            onPaymentRequestCopyLinkClicked={onCopyPaymentRequestLink}
-            isLoading={isLoadingPaymentRequests}
-            isEmpty={isInitialState}
-            onCreatePaymentRequest={onCreatePaymentRequest}
-            onPaymentRequestClicked={onPaymentRequestRowClicked}
-            onOpenPaymentPage={onOpenPaymentPage}
-            selectedPaymentRequestID={selectedPaymentRequestID}
-          />
+          {/* 
+            TODO: Scroll Area will be used in the meantime until Pablo I design the table for mobile.
+            Remove the ScrollArea when the mobile design is ready.
+          */}
+          <ScrollArea>
+            <PaymentRequestTable
+              paymentRequests={localPaymentRequests}
+              pageSize={pageSize}
+              totalRecords={totalRecords}
+              onPageChanged={setPage}
+              setStatusSortDirection={setStatusSortDirection}
+              setCreatedSortDirection={setCreatedSortDirection}
+              setContactSortDirection={setContactSortDirection}
+              setAmountSortDirection={setAmountSortDirection}
+              onPaymentRequestDuplicateClicked={onDuplicatePaymentRequest}
+              onPaymentRequestDeleteClicked={onDeletePaymentRequest}
+              onPaymentRequestCopyLinkClicked={onCopyPaymentRequestLink}
+              isLoading={isLoadingPaymentRequests}
+              isEmpty={isInitialState}
+              onCreatePaymentRequest={onCreatePaymentRequest}
+              onPaymentRequestClicked={onPaymentRequestRowClicked}
+              onOpenPaymentPage={onOpenPaymentPage}
+              selectedPaymentRequestID={selectedPaymentRequestID}
+            />
+          </ScrollArea>
         </LayoutWrapper>
       </LayoutGroup>
 
