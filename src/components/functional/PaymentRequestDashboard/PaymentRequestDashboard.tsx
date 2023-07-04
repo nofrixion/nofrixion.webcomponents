@@ -192,19 +192,21 @@ const PaymentRequestDashboard = ({
     setIsCreatePaymentRequestOpen(true);
   };
 
-  // TODO: We'd receive the payment request created
-  // from the create payment request page component
-  // and would be good add it to the table. For now, we just refresh the table.
-  // Also, when the page exits we don't know for sure
-  // if the PR was created. We need to handle
-  // the loading and error states inside the page.
   const onCloseCreatePaymentRequest = async () => {
     setIsCreatePaymentRequestOpen(false);
+  };
 
-    // Refresh the payment requests table
-    // TODO: Table is not refreshing
-    fetchPaymentRequests();
-    fetchPaymentRequestMetrics();
+  // Adds the newly created payment request to the top of the list
+  // Increments the metrics all and unpaid counts
+  // Sets the newly created payment request as the selected one
+  const onPaymentRequestCreated = async (paymentRequest: LocalPaymentRequest) => {
+    localPaymentRequests.splice(0, 0, paymentRequest);
+    if (metrics) {
+      metrics.all++;
+      metrics.unpaid++;
+    }
+
+    setSelectedPaymentRequestID(paymentRequest.id);
   };
 
   // tore the results of the first execution of the metrics
@@ -336,6 +338,7 @@ const PaymentRequestDashboard = ({
         merchantId={merchantId}
         apiUrl={apiUrl}
         onUnauthorized={onUnauthorized}
+        onPaymentRequestCreated={onPaymentRequestCreated}
       />
       <PaymentRequestDetailsModal
         token={token}
