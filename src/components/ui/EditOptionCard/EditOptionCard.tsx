@@ -20,15 +20,19 @@ const EditOptionCard = ({ label, values, details, onClick, children, isLoading }
   };
   return (
     <button
-      className={classNames('bg-mainGrey group rounded-lg p-4 w-full flex flex-col text-sm/6 transition ease-in-out', {
-        'hover:bg-greyBg': !isLoading,
-        'cursor-default': isLoading,
-      })}
+      className={classNames(
+        'bg-mainGrey group rounded-lg p-4 w-full flex flex-col text-sm/6 transition ease-in-out text-left',
+        {
+          'hover:bg-greyBg': !isLoading,
+          'cursor-default': isLoading,
+        },
+      )}
       onClick={handleOnClick}
     >
-      <div className="flex w-full">
-        <span className="text-greyText">{label}</span>
-        <div>
+      <div className="flex flex-col md:flex-row w-full">
+        <span className="text-greyText mb-3.5 md:mb-0">{label}</span>
+
+        <div className="hidden md:block">
           <img
             src={EditIcon}
             alt="Edit icon"
@@ -44,11 +48,11 @@ const EditOptionCard = ({ label, values, details, onClick, children, isLoading }
           </div>
         )}
         {!isLoading && (
-          <div className="ml-auto flex-col grid justify-items-end transition">
+          <div className="flex-col grid md:justify-items-end md:ml-auto transition truncate">
             {values &&
               values.map((value, index) => {
                 return (
-                  <span className="flex" key={`value-${index}`}>
+                  <span className="truncate" key={`value-${index}`}>
                     {value}
                   </span>
                 );
@@ -58,7 +62,7 @@ const EditOptionCard = ({ label, values, details, onClick, children, isLoading }
         )}
       </div>
       {!isLoading && details && details.length > 0 && (
-        <div className="ml-auto flex flex-col mt-2 text-end text-greyText text-xs">
+        <div className="flex flex-col mt-2 text-greyText text-xs md:ml-auto">
           {details?.map((detail, index) => {
             return <span key={`detail-${index}`}>{parseBoldText(detail)}</span>;
           })}

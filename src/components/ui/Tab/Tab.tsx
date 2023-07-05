@@ -46,11 +46,11 @@ const Tab = ({ status, totalRecords, isLoading = false }: TabProps) => {
     <Tabs.Trigger
       value={status}
       className={classNames(
-        'flex flex-col items-center justify-center md:justify-normal rounded-lg w-28 h-28 md:w-full md:px-8 md:pt-6 md:pb-8 bg-white border-2 border-transparent transition  hover:border-borderGrey',
+        'flex flex-col items-center justify-center md:justify-normal rounded-lg w-24 h-24  md:w-full md:h-28 lg:px-8 md:pt-6 md:pb-8 bg-white border-2 border-transparent transition  hover:border-borderGrey',
         getSpecificStatusClasses(status),
       )}
     >
-      <span className="text-sm/6 font-normal flex items-center mb-2 md:mb-4">
+      <span className="text-xs md:text-sm/6 font-normal flex items-center mb-2 md:mb-4">
         {showIndicator(status) && (
           <div className="items-center whitespace-nowrap inline-block mr-1.5">
             <svg width="6" height="6" viewBox="0 0 6 6" xmlns="http://www.w3.org/2000/svg" className="fill-inherit">
@@ -74,7 +74,7 @@ const Tab = ({ status, totalRecords, isLoading = false }: TabProps) => {
           <div className="h-2 w-8 bg-[#E0E9EB] rounded-lg"></div>
         </div>
         <p
-          className={classNames('text-[1.75rem]/6 font-medium truncate px-2', {
+          className={classNames('text-2xl md:text-[1.75rem]/6 font-medium truncate px-2', {
             invisible: isLoading,
           })}
         >

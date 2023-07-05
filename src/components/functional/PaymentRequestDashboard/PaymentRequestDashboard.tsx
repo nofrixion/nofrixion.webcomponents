@@ -14,7 +14,7 @@ import { makeToast } from '../../ui/Toast/Toast';
 import { parseApiTagToLocalTag, remotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
 import CreatePaymentRequestPage from '../../functional/CreatePaymentRequestPage/CreatePaymentRequestPage';
 import { add, startOfDay, endOfDay } from 'date-fns';
-import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
+import { AnimatePresence, LayoutGroup } from 'framer-motion';
 import LayoutWrapper from '../../ui/utils/LayoutWrapper';
 import { PaymentRequestMetrics } from '../../../api/types/ApiResponses';
 import PaymentRequestDetailsModal from '../PaymentRequestDetailsModal/PaymentRequestDetailsModal';
@@ -130,11 +130,6 @@ const PaymentRequestDashboard = ({
   const [localMerchantTags, setLocalMerchantTags] = useState<LocalTag[]>([] as LocalTag[]);
 
   useEffect(() => {
-    // This helps avoid resizing due to dynamic scrollbar visibility.
-    document.documentElement.style.scrollbarGutter = 'stable both-edges';
-  }, []);
-
-  useEffect(() => {
     setLocalPaymentRequests(
       paymentRequests?.map((paymentRequest) => remotePaymentRequestToLocalPaymentRequest(paymentRequest)) ?? [],
     );
@@ -223,30 +218,28 @@ const PaymentRequestDashboard = ({
   const isInitialState = !isLoadingMetrics && (!firstMetrics || firstMetrics?.all === 0);
   return (
     <div className="font-inter bg-mainGrey text-defaultText h-full">
-      <div className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center mb-[68px]">
+      <div className="flex flex-col gap-8 md:flex-row md:justify-between md:items-center mb-8 md:mb-[68px]">
         <span className="md:pl-4 leading-8 font-medium text-[1.75rem]">Accounts Receivable</span>
-        <div className="flex pr-6">
-          <LayoutGroup>
-            {/* <LayoutWrapper className="pl-12 pt-16 font-medium text-base cursor-pointer">
+        <LayoutGroup>
+          {/* <LayoutWrapper className="pl-12 pt-16 font-medium text-base cursor-pointer">
               <PrimaryButton
                 label="Settings"
                 className="text-defaultText hover:bg-greyBg font-normal"
                 onClick={() => {}}
               ></PrimaryButton>
             </LayoutWrapper> */}
-            <AnimatePresence initial={false}>
-              {!isInitialState && (
-                <LayoutWrapper>
-                  <PrimaryButton
-                    label="Create payment request"
-                    className="text-white bg-primaryGreen hover:bg-primaryGreenHover"
-                    onClick={onCreatePaymentRequest}
-                  ></PrimaryButton>
-                </LayoutWrapper>
-              )}
-            </AnimatePresence>
-          </LayoutGroup>
-        </div>
+          <AnimatePresence initial={false}>
+            {!isInitialState && (
+              <LayoutWrapper>
+                <PrimaryButton
+                  label="Create payment request"
+                  className="text-white bg-primaryGreen hover:bg-primaryGreenHover w-full"
+                  onClick={onCreatePaymentRequest}
+                />
+              </LayoutWrapper>
+            )}
+          </AnimatePresence>
+        </LayoutGroup>
       </div>
 
       <AnimatePresence>
