@@ -10,10 +10,17 @@ import { validateEmail } from '../../../../utils/validation';
 interface NotificationEmailsModalProps extends BaseModalProps {
   userDefaults?: NotificationEmailsDefaults;
   onApply: (data: LocalPaymentNotificationsFormValue) => void;
+  isPrefilledData: boolean;
 }
 
-const PaymentNotificationsModal = ({ open, userDefaults, onDismiss, onApply }: NotificationEmailsModalProps) => {
-  const [isDefault, setIsDefault] = useState<boolean>(userDefaults ? true : false);
+const PaymentNotificationsModal = ({
+  open,
+  userDefaults,
+  onDismiss,
+  onApply,
+  isPrefilledData = false,
+}: NotificationEmailsModalProps) => {
+  const [isDefault, setIsDefault] = useState<boolean>(!isPrefilledData && !!userDefaults);
   const [email, setEmail] = useState(userDefaults ? userDefaults.emailAddresses : '');
   const [hasEmailError, setHasEmailError] = useState(false);
   const [currentState, setCurrentState] = useState<LocalPaymentNotificationsFormValue>();

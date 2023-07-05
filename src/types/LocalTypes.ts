@@ -23,6 +23,10 @@ export interface LocalPaymentRequest {
   hostedPayCheckoutUrl: string;
   partialPaymentMethod: LocalPartialPaymentMethods;
   paymentAttempts: LocalPaymentAttempt[];
+  priorityBankID?: string;
+  priorityBankName?: string;
+  notificationEmailAddresses?: string;
+  captureFunds: boolean;
 }
 
 export interface LocalPaymentAttempt {
