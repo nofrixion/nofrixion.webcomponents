@@ -11,7 +11,7 @@ import { AnimatePresence } from 'framer-motion';
 import Select from '../../Select/Select';
 import AnimateHeightWrapper from '../../utils/AnimateHeight';
 import { LocalPaymentMethodsFormValue } from '../../../../types/LocalTypes';
-import { BankSettings, PaymentMethodsDefaults } from '../../../../api/types/ApiResponses';
+import { BankSettings, PaymentMethodsDefaults } from '@nofrixion/moneymoov';
 
 interface PaymentMethodsModalProps extends BaseModalProps {
   banks: BankSettings[];

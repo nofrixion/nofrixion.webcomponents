@@ -1,14 +1,18 @@
-import { PaymentRequestStatus } from '../../../api/types/Enums';
 import Tab from '../../ui/Tab/Tab';
 import * as Tabs from '@radix-ui/react-tabs';
 import React, { useEffect, useState } from 'react';
 import { DateRange } from '../../ui/DateRangePicker/DateRangePicker';
 import PrimaryButton from '../../ui/PrimaryButton/PrimaryButton';
-import { usePaymentRequestMetrics } from '../../../api/hooks/usePaymentRequestMetrics';
+import {
+  usePaymentRequestMetrics,
+  PaymentRequestStatus,
+  PaymentRequestClient,
+  usePaymentRequests,
+  PaymentRequestMetrics,
+  useMerchantTags,
+} from '@nofrixion/moneymoov';
 import PaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTable';
 import { SortDirection } from '../../ui/ColumnHeader/ColumnHeader';
-import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
-import { usePaymentRequests } from '../../../api/hooks/usePaymentRequests';
 import { LocalPaymentRequest, LocalPaymentRequestCreate, LocalTag } from '../../../types/LocalTypes';
 import { makeToast } from '../../ui/Toast/Toast';
 import { parseApiTagToLocalTag, remotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
@@ -16,9 +20,7 @@ import CreatePaymentRequestPage from '../../functional/CreatePaymentRequestPage/
 import { add, endOfDay, startOfDay } from 'date-fns';
 import { AnimatePresence, LayoutGroup } from 'framer-motion';
 import LayoutWrapper from '../../ui/utils/LayoutWrapper';
-import { PaymentRequestMetrics } from '../../../api/types/ApiResponses';
 import PaymentRequestDetailsModal from '../PaymentRequestDetailsModal/PaymentRequestDetailsModal';
-import { useMerchantTags } from '../../../api/hooks/useMerchantTags';
 import FilterControlsRow from '../../ui/FilterControlsRow/FilterControlsRow';
 import { FilterableTag } from '../../ui/TagFilter/TagFilter';
 import { LocalPartialPaymentMethods, LocalPaymentMethodTypes } from '../../../types/LocalEnums';
@@ -83,7 +85,6 @@ const PaymentRequestDashboard = ({
   const {
     paymentRequests,
     totalRecords,
-    fetchPaymentRequests,
     isLoading: isLoadingPaymentRequests,
   } = usePaymentRequests(
     apiUrl,
@@ -110,11 +111,7 @@ const PaymentRequestDashboard = ({
 
   const [firstMetrics, setFirstMetrics] = useState<PaymentRequestMetrics | undefined>();
 
-  const {
-    metrics,
-    isLoading: isLoadingMetrics,
-    fetchPaymentRequestMetrics,
-  } = usePaymentRequestMetrics(
+  const { metrics, isLoading: isLoadingMetrics } = usePaymentRequestMetrics(
     apiUrl,
     token,
     merchantId,
@@ -173,8 +170,14 @@ const PaymentRequestDashboard = ({
 
     makeToast('success', 'Payment request successfully deleted.');
 
-    fetchPaymentRequests();
-    fetchPaymentRequestMetrics();
+    // Remove the payment request from the local list.
+    setLocalPaymentRequests(localPaymentRequests.filter((pr) => pr.id !== paymentRequest.id));
+
+    // Update the metrics
+    if (metrics) {
+      metrics.all--;
+      metrics.unpaid--;
+    }
   };
 
   const onCopyPaymentRequestLink = async (paymentRequest: LocalPaymentRequest) => {

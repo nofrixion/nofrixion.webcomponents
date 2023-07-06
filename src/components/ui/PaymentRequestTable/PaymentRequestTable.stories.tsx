@@ -3,7 +3,7 @@ import { StoryFn, Meta } from '@storybook/react';
 
 import PaymentRequestTable from './PaymentRequestTable';
 import { LocalPaymentRequest } from '../../../types/LocalTypes';
-import { Currency } from '../../../api/types/Enums';
+import { Currency } from '@nofrixion/moneymoov';
 import mockedData from '../../../utils/mockedData';
 
 const tags = [
