@@ -203,6 +203,7 @@ const regular: LocalPaymentRequest = {
     'Curabitur ultricies ligula vitae tellus fringilla consequat. Pellentesque in tortor eu nibh lobortis ultrices vel in quam. Nunc tristique egestas purus et hendrerit.',
   productOrService: 'Flight lessons',
   paymentAttempts: mockPaymentAttempts,
+  captureFunds: true,
 };
 
 const partiallyPaidPaymentRequest: LocalPaymentRequest = {
@@ -246,6 +247,7 @@ const noShippingAddress: LocalPaymentRequest = {
     'Curabitur ultricies ligula vitae tellus fringilla consequat. Pellentesque in tortor eu nibh lobortis ultrices vel in quam. Nunc tristique egestas purus et hendrerit.',
   productOrService: 'Flight lessons',
   paymentAttempts: mockPaymentAttempts,
+  captureFunds: true,
 };
 
 const fewPaymentRequests: LocalPaymentRequest[] = [
@@ -282,6 +284,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
   {
     id: '2',
@@ -323,6 +326,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
   {
     id: '3',
@@ -346,6 +350,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
   {
     id: '4',
@@ -369,6 +374,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
   {
     id: '5',
@@ -392,6 +398,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
   {
     id: '6',
@@ -414,6 +421,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
   {
     id: '7',
@@ -437,6 +445,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
   {
     id: '8',
@@ -460,6 +469,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
   {
     id: '9',
@@ -483,6 +493,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
   {
     id: '10',
@@ -506,6 +517,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
   {
     id: '11',
@@ -529,6 +541,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
   {
     id: '12',
@@ -552,6 +565,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
 ];
 
