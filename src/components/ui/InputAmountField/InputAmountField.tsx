@@ -63,8 +63,9 @@ const InputAmountField: React.FC<InputAmountFieldProps> = ({ currency, onCurrenc
           {selectedCurrency.symbol}
         </span>
         <MaskedInput
-          className="w-full pl-7 mr-1 rounded font-normal text-sm text-defaultText appearance-none"
+          className="block w-full pl-7 mr-1 rounded font-normal text-sm text-defaultText appearance-none"
           mask={currencyMask}
+          inputMode="decimal"
           onChange={(e) => {
             const masked = e.target.value;
             e.target.value = e.target.value.replace(/[^\d\.\-]/g, '');

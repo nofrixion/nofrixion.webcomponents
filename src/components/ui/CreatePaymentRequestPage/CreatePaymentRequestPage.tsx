@@ -291,6 +291,50 @@ const CreatePaymentRequestPage = ({
 
   const reviewRowClassNames = 'flex overflow-hidden items-baseline flex-col gap-2 md:gap-0 md:flex-row';
 
+  const renderSettingsReview = () => {
+    return (
+      <>
+        <div className="h-px w-full bg-borderGrey mt-6 md:mt-12"></div>
+        <div className={classNames('mt-6 md:mt-12', reviewRowClassNames)}>
+          <span className="leading-6 text-greyText w-40 shrink-0">Settings</span>
+          <div className="flex flex-col w-full space-y-4 md:space-y-6">
+            <span className="text-sm/6">
+              {!paymentConditionsFormValue.allowPartialPayments ? 'Single full payment' : 'Partial payments'}
+            </span>
+
+            <div className="flex items-center space-x-3">
+              <PaymentMethodIcon paymentMethod="bank" enabled={paymentMethodsFormValue.isBankEnabled} />
+              <PaymentMethodIcon paymentMethod="card" enabled={paymentMethodsFormValue.isCardEnabled} />
+              <PaymentMethodIcon paymentMethod="wallet" enabled={paymentMethodsFormValue.isWalletEnabled} />
+              <PaymentMethodIcon paymentMethod="lightning" enabled={paymentMethodsFormValue.isLightningEnabled} />
+            </div>
+
+            <div>
+              {availableMethodsDetails.length > 0 && (
+                <div className="flex flex-col text-greyText text-xs">
+                  {availableMethodsDetails?.map((detail, index) => {
+                    return <span key={`detail-${index}`}>{parseBoldText(detail)}</span>;
+                  })}
+                </div>
+              )}
+            </div>
+
+            <div>
+              {paymentNotificationsFormValue.emailAddresses && (
+                <div className="flex text-greyText text-xs">
+                  <span>
+                    Payment notification to{' '}
+                    {formatEmailAddressesForSummary(paymentNotificationsFormValue.emailAddresses)}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  };
+
   const renderReviewSummary = () => {
     return (
       <div className="w-full max-w-lg mx-auto mt-6 md:mt-44 relative">
@@ -355,54 +399,24 @@ const CreatePaymentRequestPage = ({
             )}
 
             {/* Settings */}
+            {/* Show only on desktop so we get the animation only on desktop */}
             {isReviewing && (
-              <LayoutWrapper key="settings" animateOnExit={false} duration={0.6} delay={durationAnimationWidth / 1.5}>
-                <div className="h-px w-full bg-borderGrey mt-6 md:mt-12"></div>
-                <div className={classNames('mt-6 md:mt-12', reviewRowClassNames)}>
-                  <span className="leading-6 text-greyText w-40 shrink-0">Settings</span>
-                  <div className="flex flex-col w-full space-y-4 md:space-y-6">
-                    <span className="text-sm/6">
-                      {!paymentConditionsFormValue.allowPartialPayments ? 'Single full payment' : 'Partial payments'}
-                    </span>
-
-                    <div className="flex items-center space-x-3">
-                      <PaymentMethodIcon paymentMethod="bank" enabled={paymentMethodsFormValue.isBankEnabled} />
-                      <PaymentMethodIcon paymentMethod="card" enabled={paymentMethodsFormValue.isCardEnabled} />
-                      <PaymentMethodIcon paymentMethod="wallet" enabled={paymentMethodsFormValue.isWalletEnabled} />
-                      <PaymentMethodIcon
-                        paymentMethod="lightning"
-                        enabled={paymentMethodsFormValue.isLightningEnabled}
-                      />
-                    </div>
-
-                    <div>
-                      {availableMethodsDetails.length > 0 && (
-                        <div className="flex flex-col text-greyText text-xs">
-                          {availableMethodsDetails?.map((detail, index) => {
-                            return <span key={`detail-${index}`}>{parseBoldText(detail)}</span>;
-                          })}
-                        </div>
-                      )}
-                    </div>
-
-                    <div>
-                      {paymentNotificationsFormValue.emailAddresses && (
-                        <div className="flex text-greyText text-xs">
-                          <span>
-                            Payment notification to{' '}
-                            {formatEmailAddressesForSummary(paymentNotificationsFormValue.emailAddresses)}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </LayoutWrapper>
+              <div className="hidden md:block">
+                <LayoutWrapper key="settings" animateOnExit={false} duration={0.6} delay={durationAnimationWidth / 1.5}>
+                  {renderSettingsReview()}
+                </LayoutWrapper>
+              </div>
             )}
+
+            {/* Show only on desktop so we DONt get the animation on mobile */}
+            {isReviewing && <div className="block md:hidden">{renderSettingsReview()}</div>}
 
             {/* Buttons */}
             {currency && amount && productOrService && (
-              <LayoutWrapper key="buttons" className="flex flex-col !mt-20 justify-center">
+              <LayoutWrapper
+                key="buttons"
+                className="flex flex-col !mt-20 justify-center sticky bottom-4 w-10/12 lg:w-full mx-auto lg:mx-0 lg:static lg:bottom-auto"
+              >
                 <AnimatePresence initial={false}>
                   {/* Review PR */}
                   {!isReviewing && (
@@ -453,7 +467,7 @@ const CreatePaymentRequestPage = ({
   const renderBackArrow = () => {
     return (
       <button
-        className="inline-block lg:ml-[3.25rem]"
+        className="inline-block lg:ml-[3.25rem] w-6 h-6"
         onClick={() => {
           if (isReviewing) {
             setIsReviewing(false);
@@ -514,7 +528,7 @@ const CreatePaymentRequestPage = ({
                                 New payment request
                               </Dialog.Title>
                             </div>
-                            <div className="space-y-10 lg:w-[27rem] lg:ml-[7.625rem]">
+                            <div className="space-y-10 lg:w-[27rem] lg:ml-[7.625rem] lg:pr-12 xl:pr-0">
                               <div className="md:w-72 lg:w-[13.938rem]">
                                 <InputAmountField
                                   value={amount}

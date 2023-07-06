@@ -120,13 +120,13 @@ const PaymentMethodsModal = ({ open, banks, userDefaults, onDismiss, onApply }: 
       onApply={onApplyClicked}
     >
       <div className="divide-y">
-        <div className="py-4">
+        <div className="pb-6 md:pb-4">
           <Switch icon={BankIcon} label="Pay by Bank" value={isBankEnabled} onChange={setIsBankEnabled} />
 
           <AnimatePresence initial={false}>
             {isBankEnabled && banks.length > 0 && (
               <AnimateHeightWrapper layoutId="checkbox-priority-bank">
-                <div className="pl-10 pt-7 pb-4">
+                <div className="pl-6 md:pl-10 pt-7 md:pb-4">
                   <Checkbox
                     label="Define a priority bank"
                     infoText="Select a priority bank to set it as the default payment option for users. This streamlines the payment process by displaying the preferred bank first."
@@ -140,7 +140,7 @@ const PaymentMethodsModal = ({ open, banks, userDefaults, onDismiss, onApply }: 
           <AnimatePresence>
             {isBankEnabled && isPriorityBankEnabled && (
               <AnimateHeightWrapper layoutId="select-priority-bank">
-                <div className="pl-[3.25rem]">
+                <div className="pl-6 md:pl-[3.25rem] pt-4 md:pt-0">
                   <Select
                     options={banks.map((bank) => {
                       return {
@@ -168,13 +168,13 @@ const PaymentMethodsModal = ({ open, banks, userDefaults, onDismiss, onApply }: 
             )}
           </AnimatePresence>
         </div>
-        <div className="py-4">
+        <div className="py-6 md:py-4">
           <Switch icon={CardIcon} label="Credit and debit card" value={isCardEnabled} onChange={setIsCardEnabled} />
 
           <AnimatePresence initial={false}>
             {isCardEnabled && (
               <AnimateHeightWrapper layoutId="card-capture-founds">
-                <div className="ml-10 pt-7 pb-4">
+                <div className="ml-10 pt-7 md:pb-4">
                   <Checkbox
                     label="Don't capture funds on card payments"
                     infoText="Enable this option to authorize card payments without immediately capturing the funds. This allows for manual capture or cancellation before completing the transaction."
@@ -191,14 +191,14 @@ const PaymentMethodsModal = ({ open, banks, userDefaults, onDismiss, onApply }: 
           label="Apple Pay / Google Pay"
           value={isWalletEnabled}
           onChange={setIsWalletEnabled}
-          className="py-4"
+          className="py-6 md:py-4"
         />
         <Switch
           icon={BitcoinIcon}
           label="Bitcoin Lightning"
           value={isLightningEnabled}
           onChange={setIsLightningEnabled}
-          className="py-4"
+          className="pt-6 md:pt-4"
         />
       </div>
     </CustomModal>
