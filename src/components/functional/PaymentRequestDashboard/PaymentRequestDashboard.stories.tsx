@@ -25,7 +25,7 @@ const meta: Meta<typeof PaymentRequestDashboard> = {
 
 const Template: StoryFn<typeof PaymentRequestDashboard> = (args) => {
   return (
-    <div className="px-6 md:px-14 bg-orange-100 bg-opacity-50 pt-[64px]">
+    <div className="px-6 md:px-14 bg-mainGrey pt-[64px]">
       <PaymentRequestDashboard {...args} />
     </div>
   );
@@ -37,6 +37,10 @@ Showcase.args = {
   token: 'Enter user token...',
   apiUrl: apiUrls.sandbox,
   merchantId: 'Enter merchant id...',
+};
+
+Showcase.parameters = {
+  layout: 'fullscreen',
 };
 
 export default meta;
