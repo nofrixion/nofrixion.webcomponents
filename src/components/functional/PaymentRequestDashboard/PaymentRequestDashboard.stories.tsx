@@ -25,7 +25,7 @@ const meta: Meta<typeof PaymentRequestDashboard> = {
 
 const Template: StoryFn<typeof PaymentRequestDashboard> = (args) => {
   return (
-    <div className="px-6 md:px-14 bg-mainGrey pt-[64px]">
+    <div className="px-6 md:px-14 bg-mainGrey pt-[64px] pb-10">
       <PaymentRequestDashboard {...args} />
     </div>
   );
