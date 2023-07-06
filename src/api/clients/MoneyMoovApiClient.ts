@@ -28,12 +28,12 @@ class MoneyMoovApiClient {
    * @param authToken The OAUTH token used to authenticate with the api.
    * @param merchantId The merchant id to use when accessing the api.
    */
-  constructor(apiBaseUrl: string, authToken: string, merchantId: string) {
+  constructor(apiBaseUrl: string, authToken: string, merchantId: string, onUnauthorized: () => void) {
     this.apiBaseUrl = apiBaseUrl;
     this.authToken = authToken;
 
-    this.PaymentRequests = new PaymentRequestClient(apiBaseUrl, authToken, merchantId);
-    this.ClientSettings = new ClientSettingsClient(apiBaseUrl, authToken);
+    this.PaymentRequests = new PaymentRequestClient(apiBaseUrl, authToken, merchantId, onUnauthorized);
+    this.ClientSettings = new ClientSettingsClient(apiBaseUrl, authToken, onUnauthorized);
   }
 }
 

@@ -21,8 +21,10 @@ interface PaymentRequestTableProps {
   setContactSortDirection?: (sortDirection: SortDirection) => void;
   setAmountSortDirection?: (sortDirection: SortDirection) => void;
   onCreatePaymentRequest?: () => void;
+  onOpenPaymentPage: (paymentRequest: LocalPaymentRequest) => void;
   isLoading?: boolean;
   isEmpty?: boolean; // True when there are no payment requests at all, even when filters are not applied
+  selectedPaymentRequestID?: string;
 }
 
 const commonThClasses = 'px-4 pb-4 font-normal';
@@ -43,7 +45,20 @@ const PaymentRequestTable = ({
   isLoading = false,
   isEmpty = false,
   onCreatePaymentRequest,
+  onOpenPaymentPage,
+  selectedPaymentRequestID,
 }: PaymentRequestTableProps) => {
+  const onPaymentRequestClickedHandler = (
+    event: React.MouseEvent<HTMLTableRowElement, MouseEvent>,
+    paymentRequest: LocalPaymentRequest,
+  ) => {
+    if (event.metaKey) {
+      onOpenPaymentPage && onOpenPaymentPage(paymentRequest);
+    } else {
+      onPaymentRequestClicked && onPaymentRequestClicked(paymentRequest);
+    }
+  };
+
   return (
     <>
       {/* Show table when loading so the skeletons are visible */}
@@ -147,7 +162,7 @@ const PaymentRequestTable = ({
                 <PaymentRequestRow
                   key={`pr-${index}`}
                   {...paymentRequest}
-                  onClick={() => onPaymentRequestClicked && onPaymentRequestClicked(paymentRequest)}
+                  onClick={(event) => onPaymentRequestClickedHandler(event, paymentRequest)}
                   onDuplicate={() =>
                     onPaymentRequestDuplicateClicked && onPaymentRequestDuplicateClicked(paymentRequest)
                   }
@@ -157,6 +172,8 @@ const PaymentRequestTable = ({
                       : () => onPaymentRequestDeleteClicked && onPaymentRequestDeleteClicked(paymentRequest)
                   }
                   onCopyLink={() => onPaymentRequestCopyLinkClicked && onPaymentRequestCopyLinkClicked(paymentRequest)}
+                  onOpenPaymentPage={() => onOpenPaymentPage && onOpenPaymentPage(paymentRequest)}
+                  selected={selectedPaymentRequestID === paymentRequest.id}
                 />
               ))}
           </tbody>

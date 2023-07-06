@@ -4,9 +4,11 @@ import { HttpMethod } from '../types/Enums';
 
 export abstract class BaseApiClient {
   authToken: string;
+  onUnauthorized: () => void;
 
-  constructor(authToken: string) {
+  constructor(authToken: string, onUnauthorized: () => void) {
     this.authToken = authToken;
+    this.onUnauthorized = onUnauthorized;
   }
 
   /**
@@ -30,6 +32,11 @@ export abstract class BaseApiClient {
     fromDate?: Date,
     toDate?: Date,
     status?: string,
+    search?: string,
+    currency?: string,
+    minAmount?: number,
+    maxAmount?: number,
+    tags?: string[],
   ): Promise<{
     data?: TResponse;
     error?: ApiError;
@@ -54,6 +61,26 @@ export abstract class BaseApiClient {
 
     if (status) {
       filterParams.append('status', status);
+    }
+
+    if (search) {
+      filterParams.append('search', search);
+    }
+
+    if (currency) {
+      filterParams.append('currency', currency);
+    }
+
+    if (minAmount) {
+      filterParams.append('minAmount', minAmount.toString());
+    }
+
+    if (maxAmount) {
+      filterParams.append('maxAmount', maxAmount.toString());
+    }
+
+    if (tags) {
+      tags.forEach((tag) => filterParams.append('tags', tag));
     }
 
     url = `${url}?${filterParams.toString()}`;
@@ -104,6 +131,11 @@ export abstract class BaseApiClient {
       // Axios will throw an exception for all errors
 
       const error = ex as AxiosError;
+
+      if (error.response?.status === 401) {
+        // Unauthorized
+        this.onUnauthorized();
+      }
 
       if (error.response?.data) {
         // This contains the problem details

@@ -92,6 +92,7 @@ const CreatePaymentRequestPage = ({
   const [isPaymentConditionsModalOpen, setIsPaymentConditionsModalOpen] = useState(false);
   const [isPaymentNotificationsModalOpen, setIsPaymentNotificationsModalOpen] = useState(false);
   const [isReviewing, setIsReviewing] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (userPaymentDefaults?.paymentMethodsDefaults) {
@@ -167,6 +168,8 @@ const CreatePaymentRequestPage = ({
   };
 
   const onConfirmClicked = async () => {
+    setIsSubmitting(true);
+
     const paymentRequestToCreate: LocalPaymentRequestCreate = {
       amount: Number(amount),
       currency: currency as Currency,
@@ -202,6 +205,8 @@ const CreatePaymentRequestPage = ({
     // TODO: Remove this. This is just for demo purposes
     onClose();
     resetStates();
+
+    setIsSubmitting(false);
   };
 
   const handleDefaultsChanged = () => {
@@ -473,7 +478,7 @@ const CreatePaymentRequestPage = ({
                   </AnimatePresence>
 
                   {/* Right side */}
-                  <div className="flex-1 bg-mainGrey sticky inset-0 h-screen pl-[8.25rem] pr-32 py-44">
+                  <div className="flex-1 bg-mainGrey sticky inset-0 min-h-screen h-full pl-[8.25rem] pr-32 py-44">
                     <div className="w-full max-w-lg mx-auto">
                       <div className="space-y-10">
                         <AnimatePresence>
@@ -620,7 +625,8 @@ const CreatePaymentRequestPage = ({
                                     delay={durationAnimationWidth / 1.5}
                                   >
                                     <button
-                                      className="w-full whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-white font-semibold cursor-pointer hover:bg-[#144752]"
+                                      className="w-full whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-white font-semibold cursor-pointer hover:bg-[#144752] select-none disabled:bg-[#DEE5ED]"
+                                      disabled={isSubmitting}
                                       onClick={onConfirmClicked}
                                     >
                                       Confirm payment request

@@ -1,0 +1,89 @@
+---
+#------------------------------------------------------------------------------
+#
+# Filename: azure-pipeline-prod.yml
+#
+# Description: Deploy web components to PROD CDN.
+#
+# Usage: run from devops pipeline
+#
+# Author: Axel Granillo (axel@nofrixion.com)
+#
+# History:
+# 20 June     2023  Axel Granillo   Created, Mexico City, Mexico
+#-----------------------------------------------------------------------------
+
+pr: none # don't run on PR
+trigger:
+  - none
+
+variables:
+  # Azure service connection for storage account access
+  serviceConnection: 'NoFrixion Production'
+  storageAccountName: 'nofrixioncdn'
+  bundleName: 'nofrixion-webcomponents.js'
+  cdnRg: 'nofrixion-ops'
+  cdnName: 'nofrixioncdn'
+  cdnProfileName: 'nofrixioncdn'
+
+# A windows agent is required here as the AzureFileCopy@4 task is windows only.
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  # these steps set the .js bundle names
+  - bash: |
+      # get package version from package.json file
+      version=$(cat package.json | jq -r '.version')
+      echo "Version is: $version"
+      echo "##vso[task.setvariable variable=versionedBundleName;]nofrixion-webcomponents-v${version}.min.js"
+    displayName: 'set PROD .js bundle names'
+
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '16.x'
+    displayName: 'Install Node.js'
+
+  - script: |
+      npm install
+    displayName: 'npm install'
+
+  - script: |
+      npm run build
+    displayName: 'npm build prod'
+
+  - script: |
+      cd dist
+      mkdir js
+      cd ..
+      cp dist/*.cjs "dist/js/$(versionedBundleName)"
+      mv dist/*.cjs dist/$(bundleName)
+    displayName: 'Rename bundles'
+
+  # Creates folder structure for blob container
+  - task: CopyFiles@2
+    inputs:
+      sourceFolder: '$(Build.SourcesDirectory)/dist'
+      contents: '**'
+      targetFolder: '$(Build.ArtifactStagingDirectory)'
+    displayName: 'Copy js files'
+
+  # Copy .js files to the $web container.
+  - task: AzureCLI@2
+    displayName: Copy bundle into $web blob container
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptType: pscore
+      scriptLocation: inlineScript
+      inlineScript: |
+        az storage blob upload-batch -s "$(Build.ArtifactStagingDirectory)" -d '$web' --account-name "$(storageAccountName)"
+
+  # Purge CDN endpoint to remove old version
+  - task: AzureCLI@2
+    displayName: Purge CDN endpoint
+    inputs:
+      azureSubscription: $(serviceConnection)
+      scriptType: pscore
+      scriptLocation: inlineScript
+      inlineScript: |
+        az cdn endpoint purge -g "$(cdnRg)" -n "$(cdnName)" --profile-name "$(cdnProfileName)" --content-paths '/$(bundleName)'

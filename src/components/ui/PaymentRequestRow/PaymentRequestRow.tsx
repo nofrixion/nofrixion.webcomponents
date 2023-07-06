@@ -9,10 +9,12 @@ import { animate, AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 
 interface PaymentRequestRowProps extends LocalPaymentRequest {
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent<HTMLTableRowElement, MouseEvent>) => void;
   onDuplicate?: () => void;
   onCopyLink?: () => void;
   onDelete?: () => void;
+  onOpenPaymentPage?: () => void;
+  selected: boolean;
 }
 
 const commonTdClasses = 'px-4 py-3';
@@ -29,6 +31,8 @@ const Row = ({
   onDuplicate,
   onCopyLink,
   onDelete,
+  onOpenPaymentPage,
+  selected,
 }: PaymentRequestRowProps) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -49,7 +53,12 @@ const Row = ({
 
   return (
     <tr
-      className={`relative border-b border-[#F1F2F3] cursor-pointer transition-all ease-in-out hover:bg-[#F6F8F9] hover:border-[#E1E5EA]`}
+      className={classNames(
+        'relative border-b border-[#F1F2F3] cursor-pointer transition-all ease-in-out hover:bg-[#F6F8F9] hover:border-[#E1E5EA]',
+        {
+          'bg-[#F6F8F9] border-[#E1E5EA]': selected,
+        },
+      )}
       onClick={onClick}
     >
       <td className={classNames(commonTdClasses, `pl-4 py-0`)}>
@@ -111,6 +120,7 @@ const Row = ({
           onCopyLink={onCopyLink}
           onDelete={onDelete ? onDeletePaymentRequestClicked : undefined}
           onBlur={onCancelDeletingPaymentRequestClicked}
+          onOpenPaymentPage={onOpenPaymentPage}
         />
       </td>
     </tr>

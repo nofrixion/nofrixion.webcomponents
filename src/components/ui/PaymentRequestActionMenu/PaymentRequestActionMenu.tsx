@@ -2,6 +2,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import copyIcon from '../../../assets/images/nf_copy.svg';
 import linkIcon from '../../../assets/images/nf_link.svg';
 import trashIcon from '../../../assets/images/nf_trash.svg';
+import openIcon from '../../../assets/images/nf_open.svg';
 import trashDisabledIcon from '../../../assets/images/nf_trash_disabled.svg';
 import { cva } from 'class-variance-authority';
 import { motion } from 'framer-motion';
@@ -35,6 +36,7 @@ interface PaymentRequestActionMenuProps {
   onCopyLink?: () => void;
   onDelete?: () => void;
   onBlur?: () => void;
+  onOpenPaymentPage?: () => void;
 }
 
 interface PaymentRequestActionMenuItemContentProps {
@@ -53,11 +55,18 @@ const PaymentRequestActionMenuItemContent = ({ label, iconSource }: PaymentReque
   );
 };
 
-const PaymentRequestActionMenu = ({ onDuplicate, onCopyLink, onDelete, onBlur }: PaymentRequestActionMenuProps) => {
+const PaymentRequestActionMenu = ({
+  onDuplicate,
+  onCopyLink,
+  onDelete,
+  onBlur,
+  onOpenPaymentPage,
+}: PaymentRequestActionMenuProps) => {
   const onDuplicateClick = (e: React.MouseEvent<HTMLDivElement>) => handleClick(e, onDuplicate);
   const onCopyLinkClick = (e: React.MouseEvent<HTMLDivElement>) => handleClick(e, onCopyLink);
   const onDeleteClick = (e: React.MouseEvent<HTMLDivElement>) => handleClick(e, onDelete);
   const emptyClick = (e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation();
+  const onOpenPaymentPageClick = (e: React.MouseEvent<HTMLDivElement>) => handleClick(e, onOpenPaymentPage);
 
   return (
     <DropdownMenu.Root>
@@ -81,9 +90,14 @@ const PaymentRequestActionMenu = ({ onDuplicate, onCopyLink, onDelete, onBlur }:
             initial={{ opacity: 0.5, y: -5, scaleX: 1, scaleY: 1 }}
             animate={{ opacity: 1, y: 0, scaleX: 1, scaleY: 1 }}
           >
-            {onDuplicate && (
+            {/* {onDuplicate && (
               <DropdownMenu.Item className={actionItem()} onClick={onDuplicateClick}>
                 <PaymentRequestActionMenuItemContent label="Duplicate" iconSource={copyIcon} />
+              </DropdownMenu.Item>
+            )} */}
+            {onOpenPaymentPage && (
+              <DropdownMenu.Item className={actionItem()} onClick={onOpenPaymentPageClick}>
+                <PaymentRequestActionMenuItemContent label="Open payment page" iconSource={openIcon} />
               </DropdownMenu.Item>
             )}
             {onCopyLink && (
