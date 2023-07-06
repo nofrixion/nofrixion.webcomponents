@@ -11,7 +11,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import AnimateHeightWrapper from '../utils/AnimateHeight';
 import LayoutWrapper from '../utils/LayoutWrapper';
 import PaymentMethodsModal from '../Modals/PaymentMethodsModal/PaymentMethodsModal';
-import { Currency } from '../../../api/types/Enums';
+import { Currency, BankSettings, UserPaymentDefaults } from '@nofrixion/moneymoov';
 import {
   LocalPaymentConditionsFormValue,
   LocalPaymentMethodsFormValue,
@@ -22,7 +22,6 @@ import classNames from 'classnames';
 import PaymentConditionsModal from '../Modals/PaymentConditionsModal/PaymentConditionsModal';
 
 import { formatEmailAddressesForSummary, parseBoldText } from '../../../utils/uiFormaters';
-import { BankSettings, UserPaymentDefaults } from '../../../api/types/ApiResponses';
 import PaymentMethodIcon from '../utils/PaymentMethodIcon';
 import _ from 'lodash';
 import PaymentNotificationsModal from '../Modals/PaymentNotificationsModal/PaymentNotificationsModal';

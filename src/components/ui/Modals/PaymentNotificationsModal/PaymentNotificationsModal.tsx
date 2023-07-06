@@ -1,7 +1,7 @@
 import CustomModal, { BaseModalProps } from '../../CustomModal/CustomModal';
 import { useState } from 'react';
 import { LocalPaymentNotificationsFormValue } from '../../../../types/LocalTypes';
-import { NotificationEmailsDefaults } from '../../../../api/types/ApiResponses';
+import { NotificationEmailsDefaults } from '@nofrixion/moneymoov';
 import InputTextField from '../../InputTextField/InputTextField';
 import { AnimatePresence } from 'framer-motion';
 import AnimateHeightWrapper from '../../utils/AnimateHeight';

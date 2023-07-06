@@ -1,7 +1,7 @@
 import { StoryFn, Meta } from '@storybook/react';
 
 import PaymentRequestRow from './PaymentRequestRow';
-import { Currency } from '../../../api/types/Enums';
+import { Currency } from '@nofrixion/moneymoov';
 
 const tags = [
   {

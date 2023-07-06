@@ -1,7 +1,7 @@
 import PaymentMethodIcon from '../utils/PaymentMethodIcon';
-import { PaymentRequest } from '../../../api/types/ApiResponses';
+import { PaymentRequest } from '@nofrixion/moneymoov';
 import { format } from 'date-fns';
-import { AddressType } from '../../../api/types/Enums';
+import { AddressType } from '@nofrixion/moneymoov';
 import { LocalPaymentRequest } from '../../../types/LocalTypes';
 import { LocalAddressType, LocalPaymentMethodTypes } from '../../../types/LocalEnums';
 
