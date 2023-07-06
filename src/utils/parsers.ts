@@ -217,6 +217,9 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
       remotePaymentRequest.partialPaymentMethod,
     ),
     paymentAttempts: parseApiPaymentAttemptsToLocalPaymentAttempts(remotePaymentRequest.paymentAttempts),
+    priorityBankID: remotePaymentRequest.priorityBankID,
+    notificationEmailAddresses: remotePaymentRequest.notificationEmailAddresses,
+    captureFunds: !remotePaymentRequest.cardAuthorizeOnly,
   };
 };
 

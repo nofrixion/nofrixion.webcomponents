@@ -51,6 +51,7 @@ export type PaymentRequest = {
   priorityBankID?: string;
   title?: string;
   paymentAttempts: PaymentRequestPaymentAttempt[];
+  notificationEmailAddresses?: string;
 };
 
 export type PaymentRequestPaymentAttempt = {

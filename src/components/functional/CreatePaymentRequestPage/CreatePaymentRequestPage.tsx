@@ -19,6 +19,7 @@ interface CreatePaymentRequesPageProps {
   onClose: () => void; // Callback function that will be called when the modal is asked to be closed.
   onUnauthorized: () => void; // Callback function that will be called when the user is unauthorized.
   onPaymentRequestCreated: (paymentRequest: LocalPaymentRequest) => void; // Callback function that will be called when the payment request is created.
+  prefilledPaymentRequest?: LocalPaymentRequestCreate; // Optional payment request that will be prefilled in the form.
 }
 
 const CreatePaymentRequestPage = ({
@@ -29,6 +30,7 @@ const CreatePaymentRequestPage = ({
   onClose,
   onUnauthorized,
   onPaymentRequestCreated,
+  prefilledPaymentRequest,
 }: CreatePaymentRequesPageProps) => {
   const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId, onUnauthorized);
 
@@ -118,6 +120,7 @@ const CreatePaymentRequestPage = ({
         userPaymentDefaults={isUserPaymentDefaultsLoading ? defaultUserPaymentDefaults : userPaymentDefaults}
         onDefaultsChanged={onSaveUserPaymentDefaults}
         isUserPaymentDefaultsLoading={isUserPaymentDefaultsLoading}
+        prefilledData={prefilledPaymentRequest}
       />
     </>
   );
