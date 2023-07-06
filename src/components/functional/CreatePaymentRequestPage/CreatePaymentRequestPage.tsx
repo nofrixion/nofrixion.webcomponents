@@ -2,12 +2,17 @@ import UICreatePaymentRequestPage from '../../ui/CreatePaymentRequestPage/Create
 
 import { LocalPaymentRequest, LocalPaymentRequestCreate } from '../../../types/LocalTypes';
 import { makeToast } from '../../ui/Toast/Toast';
-import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
-import { PaymentRequestCreate, UserPaymentDefaults } from '../../../api/types/ApiResponses';
-import { CardTokenCreateModes, PartialPaymentMethods } from '../../../api/types/Enums';
-import { useBanks } from '../../../api/hooks/useBanks';
-import { useUserPaymentDefaults } from '../../../api/hooks/useUserPaymentDefaults';
-import { ClientSettingsClient } from '../../../api/clients/ClientSettingsClient';
+import {
+  PaymentRequestClient,
+  PaymentRequestCreate,
+  UserPaymentDefaults,
+  useBanks,
+  CardTokenCreateModes,
+  PartialPaymentMethods,
+  useUserPaymentDefaults,
+  ClientSettingsClient,
+} from '@nofrixion/moneymoov';
+
 import { defaultUserPaymentDefaults } from '../../../utils/constants';
 import { remotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
 
@@ -19,6 +24,7 @@ interface CreatePaymentRequesPageProps {
   onClose: () => void; // Callback function that will be called when the modal is asked to be closed.
   onUnauthorized: () => void; // Callback function that will be called when the user is unauthorized.
   onPaymentRequestCreated: (paymentRequest: LocalPaymentRequest) => void; // Callback function that will be called when the payment request is created.
+  prefilledPaymentRequest?: LocalPaymentRequestCreate; // Optional payment request that will be prefilled in the form.
 }
 
 const CreatePaymentRequestPage = ({
@@ -29,6 +35,7 @@ const CreatePaymentRequestPage = ({
   onClose,
   onUnauthorized,
   onPaymentRequestCreated,
+  prefilledPaymentRequest,
 }: CreatePaymentRequesPageProps) => {
   const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId, onUnauthorized);
 
@@ -118,6 +125,7 @@ const CreatePaymentRequestPage = ({
         userPaymentDefaults={isUserPaymentDefaultsLoading ? defaultUserPaymentDefaults : userPaymentDefaults}
         onDefaultsChanged={onSaveUserPaymentDefaults}
         isUserPaymentDefaultsLoading={isUserPaymentDefaultsLoading}
+        prefilledData={prefilledPaymentRequest}
       />
     </>
   );

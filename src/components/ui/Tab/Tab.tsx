@@ -1,5 +1,5 @@
 import * as Tabs from '@radix-ui/react-tabs';
-import { PaymentRequestStatus } from '../../../api/types/Enums';
+import { PaymentRequestStatus } from '@nofrixion/moneymoov';
 import classNames from 'classnames';
 
 export interface TabProps {

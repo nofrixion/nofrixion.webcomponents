@@ -1,4 +1,4 @@
-import { Currency } from '../../../api/types/Enums';
+import { Currency } from '@nofrixion/moneymoov';
 import { LocalPartialPaymentMethods } from '../../../types/LocalEnums';
 
 const AmountPaid = ({

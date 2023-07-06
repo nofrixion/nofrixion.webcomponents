@@ -11,22 +11,30 @@ import { AnimatePresence } from 'framer-motion';
 import Select from '../../Select/Select';
 import AnimateHeightWrapper from '../../utils/AnimateHeight';
 import { LocalPaymentMethodsFormValue } from '../../../../types/LocalTypes';
-import { BankSettings, PaymentMethodsDefaults } from '../../../../api/types/ApiResponses';
+import { BankSettings, PaymentMethodsDefaults } from '@nofrixion/moneymoov';
 
 interface PaymentMethodsModalProps extends BaseModalProps {
   banks: BankSettings[];
   userDefaults?: PaymentMethodsDefaults;
   onApply: (data: LocalPaymentMethodsFormValue) => void;
+  isPrefilledData: boolean;
 }
 
-const PaymentMethodsModal = ({ open, banks, userDefaults, onDismiss, onApply }: PaymentMethodsModalProps) => {
+const PaymentMethodsModal = ({
+  open,
+  banks,
+  userDefaults,
+  onDismiss,
+  onApply,
+  isPrefilledData = false,
+}: PaymentMethodsModalProps) => {
   const [isBankEnabled, setIsBankEnabled] = useState<boolean>(userDefaults?.pisp ?? true);
   const [isCardEnabled, setIsCardEnabled] = useState<boolean>(userDefaults?.card ?? true);
   const [isWalletEnabled, setIsWalletEnabled] = useState<boolean>(userDefaults?.wallet ?? true);
   const [isLightningEnabled, setIsLightningEnabled] = useState<boolean>(userDefaults?.lightning ?? false);
   const [isPriorityBankEnabled, setIsPriorityBankEnabled] = useState<boolean>(userDefaults?.pispPriorityBank ?? false);
   const [isCaptureFundsEnabled, setIsCaptureFundsEnabled] = useState<boolean>(!userDefaults?.cardAuthorizeOnly ?? true);
-  const [isDefault, setIsDefault] = useState<boolean>(userDefaults ? true : false);
+  const [isDefault, setIsDefault] = useState<boolean>(!isPrefilledData && !!userDefaults);
   const [priorityBank, setPriorityBank] = useState<BankSettings | undefined>();
   const [currentState, setCurrentState] = useState<LocalPaymentMethodsFormValue>();
 

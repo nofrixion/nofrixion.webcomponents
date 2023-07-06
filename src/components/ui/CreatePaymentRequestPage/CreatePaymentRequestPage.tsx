@@ -11,7 +11,14 @@ import { AnimatePresence, motion } from 'framer-motion';
 import AnimateHeightWrapper from '../utils/AnimateHeight';
 import LayoutWrapper from '../utils/LayoutWrapper';
 import PaymentMethodsModal from '../Modals/PaymentMethodsModal/PaymentMethodsModal';
-import { Currency } from '../../../api/types/Enums';
+import {
+  Currency,
+  BankSettings,
+  NotificationEmailsDefaults,
+  PaymentConditionsDefaults,
+  PaymentMethodsDefaults,
+  UserPaymentDefaults,
+} from '@nofrixion/moneymoov';
 import {
   LocalPaymentConditionsFormValue,
   LocalPaymentMethodsFormValue,
@@ -22,7 +29,7 @@ import classNames from 'classnames';
 import PaymentConditionsModal from '../Modals/PaymentConditionsModal/PaymentConditionsModal';
 
 import { formatEmailAddressesForSummary, parseBoldText } from '../../../utils/uiFormaters';
-import { BankSettings, UserPaymentDefaults } from '../../../api/types/ApiResponses';
+
 import PaymentMethodIcon from '../utils/PaymentMethodIcon';
 import _ from 'lodash';
 import PaymentNotificationsModal from '../Modals/PaymentNotificationsModal/PaymentNotificationsModal';
@@ -37,6 +44,7 @@ interface CreatePaymentRequestPageProps {
   onClose: () => void;
   onDefaultsChanged: (data: UserPaymentDefaults) => void;
   isUserPaymentDefaultsLoading: boolean;
+  prefilledData?: LocalPaymentRequestCreate;
 }
 
 const durationAnimationWidth = 0.3;
@@ -49,14 +57,15 @@ const CreatePaymentRequestPage = ({
   onClose,
   onDefaultsChanged,
   isUserPaymentDefaultsLoading,
+  prefilledData,
 }: CreatePaymentRequestPageProps) => {
-  const [amount, setAmount] = useState('');
-  const [currency, setCurrency] = useState<'EUR' | 'GBP'>('EUR');
-  const [productOrService, setProductOrService] = useState('');
-  const [description, setDescription] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
+  const [amount, setAmount] = useState(prefilledData?.amount.toString() ?? '');
+  const [currency, setCurrency] = useState<'EUR' | 'GBP'>((prefilledData?.currency ?? 'EUR') as 'EUR' | 'GBP');
+  const [productOrService, setProductOrService] = useState(prefilledData?.productOrService ?? '');
+  const [description, setDescription] = useState(prefilledData?.description ?? '');
+  const [firstName, setFirstName] = useState(prefilledData?.firstName ?? '');
+  const [lastName, setLastName] = useState(prefilledData?.lastName ?? '');
+  const [email, setEmail] = useState(prefilledData?.email ?? '');
   const [hasEmailError, setHasEmailError] = useState(false);
   const [defaultsChanged, setDefaultsChanged] = useState(false);
 
@@ -94,33 +103,109 @@ const CreatePaymentRequestPage = ({
   const [isReviewing, setIsReviewing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const convertPrefilledDataToPaymentMethodDefaults = (): PaymentMethodsDefaults => {
+    return {
+      pisp: prefilledData?.paymentMethods?.bank?.active ?? false,
+      card: prefilledData?.paymentMethods?.card?.active ?? false,
+      wallet: prefilledData?.paymentMethods?.wallet ?? false,
+      lightning: prefilledData?.paymentMethods?.lightning ?? false,
+      cardAuthorizeOnly: !prefilledData?.paymentMethods?.card?.captureFunds,
+      pispPriorityBankID: prefilledData?.paymentMethods?.bank?.priority?.id ?? '',
+      pispPriorityBank: !!prefilledData?.paymentMethods?.bank?.priority?.id,
+    };
+  };
+  const convertPrefilledDataToPaymentConditionsDefaults = (): PaymentConditionsDefaults => {
+    return {
+      allowPartialPayments: prefilledData?.paymentConditions?.allowPartialPayments ?? false,
+    };
+  };
+  const convertPrefilledDataToNotificationEmailsDefaults = (): NotificationEmailsDefaults => {
+    return {
+      emailAddresses: prefilledData?.notificationEmailAddresses ?? '',
+    };
+  };
+
+  const fillDefaultPaymentMethods = () => {
+    setPaymentMethodsFormValue({
+      isBankEnabled: userPaymentDefaults?.paymentMethodsDefaults?.pisp ?? true,
+      isCardEnabled: userPaymentDefaults?.paymentMethodsDefaults?.card ?? true,
+      isWalletEnabled: userPaymentDefaults?.paymentMethodsDefaults?.wallet ?? true,
+      isLightningEnabled: userPaymentDefaults?.paymentMethodsDefaults?.lightning ?? false,
+      isCaptureFundsEnabled: !userPaymentDefaults?.paymentMethodsDefaults?.cardAuthorizeOnly ?? true,
+      priorityBank: findBank(userPaymentDefaults?.paymentMethodsDefaults?.pispPriorityBankID),
+      isDefault: !!userPaymentDefaults?.paymentMethodsDefaults,
+    });
+  };
+
+  const fillDefaultPaymentConditions = () => {
+    setPaymentConditionsFormValue({
+      allowPartialPayments: userPaymentDefaults?.paymentConditionsDefaults?.allowPartialPayments ?? false,
+      isDefault: !!userPaymentDefaults?.paymentConditionsDefaults,
+    });
+  };
+
+  const fillDefaultNotificationEmailAddresses = () => {
+    setPaymentNotificationsFormValue({
+      emailAddresses: userPaymentDefaults?.notificationEmailsDefaults?.emailAddresses ?? '',
+      isDefault: !!userPaymentDefaults?.notificationEmailsDefaults,
+    });
+  };
+
   useEffect(() => {
     if (userPaymentDefaults?.paymentMethodsDefaults) {
-      setPaymentMethodsFormValue({
-        isBankEnabled: userPaymentDefaults.paymentMethodsDefaults.pisp ?? true,
-        isCardEnabled: userPaymentDefaults.paymentMethodsDefaults.card ?? true,
-        isWalletEnabled: userPaymentDefaults.paymentMethodsDefaults.wallet ?? true,
-        isLightningEnabled: userPaymentDefaults.paymentMethodsDefaults.lightning ?? false,
-        isCaptureFundsEnabled: !userPaymentDefaults.paymentMethodsDefaults.cardAuthorizeOnly ?? true,
-        priorityBank: findBank(userPaymentDefaults.paymentMethodsDefaults.pispPriorityBankID),
-        isDefault: true,
-      });
+      fillDefaultPaymentMethods();
     }
 
     if (userPaymentDefaults?.paymentConditionsDefaults) {
-      setPaymentConditionsFormValue({
-        allowPartialPayments: userPaymentDefaults?.paymentConditionsDefaults?.allowPartialPayments ?? false,
-        isDefault: true,
-      });
+      fillDefaultPaymentConditions();
     }
 
-    if (userPaymentDefaults?.notificationEmailsDefaults) {
-      setPaymentNotificationsFormValue({
-        emailAddresses: userPaymentDefaults?.notificationEmailsDefaults?.emailAddresses ?? '',
-        isDefault: true,
-      });
-    }
+    fillDefaultNotificationEmailAddresses();
   }, [userPaymentDefaults]);
+
+  useEffect(() => {
+    setAmount(prefilledData?.amount.toString() ?? '');
+    setCurrency((prefilledData?.currency ?? 'EUR') as 'EUR' | 'GBP');
+    setProductOrService(prefilledData?.productOrService ?? '');
+    setDescription(prefilledData?.description ?? '');
+    setFirstName(prefilledData?.firstName ?? '');
+    setLastName(prefilledData?.lastName ?? '');
+    setEmail(prefilledData?.email ?? '');
+
+    if (prefilledData?.paymentMethods) {
+      setPaymentMethodsFormValue({
+        isBankEnabled: prefilledData?.paymentMethods?.bank?.active ?? false,
+        isCardEnabled: prefilledData?.paymentMethods?.card?.active ?? false,
+        isWalletEnabled: prefilledData?.paymentMethods?.wallet ?? false,
+        isLightningEnabled: prefilledData?.paymentMethods?.lightning ?? false,
+        isCaptureFundsEnabled: prefilledData?.paymentMethods?.card?.captureFunds ?? false,
+        priorityBank: prefilledData?.paymentMethods?.bank?.priority?.id
+          ? findBank(prefilledData?.paymentMethods?.bank?.priority?.id)
+          : undefined,
+        isDefault: false,
+      });
+    } else {
+      fillDefaultPaymentMethods();
+    }
+
+    if (prefilledData?.paymentConditions) {
+      setPaymentConditionsFormValue({
+        allowPartialPayments: prefilledData?.paymentConditions?.allowPartialPayments ?? false,
+        isDefault: false,
+      });
+    } else {
+      fillDefaultPaymentConditions();
+    }
+
+    if (prefilledData?.notificationEmailAddresses) {
+      setPaymentNotificationsFormValue({
+        emailAddresses: prefilledData?.notificationEmailAddresses ?? '',
+        isDefault: false,
+      });
+    } else {
+      fillDefaultNotificationEmailAddresses();
+    }
+  }, [prefilledData]);
 
   const onCurrencyChange = (currency: string) => {
     setCurrency(currency as 'EUR' | 'GBP');
@@ -263,6 +348,10 @@ const CreatePaymentRequestPage = ({
     });
     setPaymentConditionsFormValue({
       allowPartialPayments: false,
+      isDefault: false,
+    });
+    setPaymentNotificationsFormValue({
+      emailAddresses: '',
       isDefault: false,
     });
     setIsReviewing(false);
@@ -719,7 +808,12 @@ const CreatePaymentRequestPage = ({
           {!isUserPaymentDefaultsLoading && (
             <PaymentMethodsModal
               open={isPaymentMethodsModalOpen}
-              userDefaults={userPaymentDefaults?.paymentMethodsDefaults}
+              userDefaults={
+                prefilledData?.paymentMethods
+                  ? convertPrefilledDataToPaymentMethodDefaults()
+                  : userPaymentDefaults?.paymentMethodsDefaults
+              }
+              isPrefilledData={!!prefilledData?.paymentMethods}
               onApply={onMethodsReceived}
               onDismiss={() => setIsPaymentMethodsModalOpen(false)}
               banks={banks}
@@ -729,7 +823,12 @@ const CreatePaymentRequestPage = ({
           {!isUserPaymentDefaultsLoading && (
             <PaymentConditionsModal
               open={isPaymentConditionsModalOpen}
-              userDefaults={userPaymentDefaults?.paymentConditionsDefaults}
+              userDefaults={
+                prefilledData?.paymentConditions
+                  ? convertPrefilledDataToPaymentConditionsDefaults()
+                  : userPaymentDefaults?.paymentConditionsDefaults
+              }
+              isPrefilledData={!!prefilledData?.paymentConditions}
               onDismiss={() => setIsPaymentConditionsModalOpen(false)}
               onApply={onConditionsReceived}
             />
@@ -738,7 +837,12 @@ const CreatePaymentRequestPage = ({
           {!isUserPaymentDefaultsLoading && (
             <PaymentNotificationsModal
               open={isPaymentNotificationsModalOpen}
-              userDefaults={userPaymentDefaults?.notificationEmailsDefaults}
+              userDefaults={
+                prefilledData?.notificationEmailAddresses
+                  ? convertPrefilledDataToNotificationEmailsDefaults()
+                  : userPaymentDefaults?.notificationEmailsDefaults
+              }
+              isPrefilledData={!!prefilledData?.notificationEmailAddresses}
               onDismiss={() => setIsPaymentNotificationsModalOpen(false)}
               onApply={onPaymentNotificationsReceived}
             />

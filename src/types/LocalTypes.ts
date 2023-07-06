@@ -1,4 +1,4 @@
-import { Currency } from '../api/types/Enums';
+import { Currency } from '@nofrixion/moneymoov';
 import { LocalAddressType, LocalPartialPaymentMethods, LocalPaymentMethodTypes } from './LocalEnums';
 
 export interface LocalContact {
@@ -23,6 +23,10 @@ export interface LocalPaymentRequest {
   hostedPayCheckoutUrl: string;
   partialPaymentMethod: LocalPartialPaymentMethods;
   paymentAttempts: LocalPaymentAttempt[];
+  priorityBankID?: string;
+  priorityBankName?: string;
+  notificationEmailAddresses?: string;
+  captureFunds: boolean;
 }
 
 export interface LocalPaymentAttempt {
