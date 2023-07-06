@@ -166,8 +166,14 @@ const PaymentRequestDashboard = ({
 
     makeToast('success', 'Payment request successfully deleted.');
 
-    // fetchPaymentRequests();
-    // fetchPaymentRequestMetrics();
+    // Remove the payment request from the local list.
+    setLocalPaymentRequests(localPaymentRequests.filter((pr) => pr.id !== paymentRequest.id));
+
+    // Update the metrics
+    if (metrics) {
+      metrics.all--;
+      metrics.unpaid--;
+    }
   };
 
   const onCopyPaymentRequestLink = async (paymentRequest: LocalPaymentRequest) => {
