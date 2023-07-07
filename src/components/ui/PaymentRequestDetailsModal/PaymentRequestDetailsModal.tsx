@@ -40,7 +40,7 @@ const PaymentRequestDetailsModal = ({
         >
           <div className="fixed inset-0 bg-black bg-opacity-[15%]" />
         </Transition.Child>
-        <div className="fixed inset-y-0 right-0">
+        <div className="fixed inset-0 lg:inset-y-0 lg:right-0 lg:left-auto">
           <Transition.Child
             as={Fragment}
             enter="transform transition ease-in-out duration-300"
@@ -66,8 +66,38 @@ const PaymentRequestDetailsModal = ({
                 </button>
               </div>
 
-              <div className="bg-white max-h-screen overflow-auto w-[37.5rem]">
-                <div className="max-h-full h-screen ">
+              {/* Review PR */}
+              <div className="block lg:hidden absolute bottom-0 w-full px-6 mx-auto pb-4 z-20">
+                <button
+                  key="review-pr"
+                  type="button"
+                  className="w-full h-12 px-16 whitespace-nowrap flex justify-center items-center rounded-full py-3 text-sm cursor-pointer bg-[#DEE5ED] transition hover:bg-[#BDCCDB]"
+                  onClick={onDismiss}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g id="Close Button">
+                      <path
+                        id="Vector 11"
+                        d="M22 21L12 11L22 1"
+                        stroke="#454D54"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        id="Vector 15"
+                        d="M2 0.999999L12 11L2 21"
+                        stroke="#454D54"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </g>
+                  </svg>
+                  <span className="ml-2">Close</span>
+                </button>
+              </div>
+
+              <div className="bg-white max-h-screen overflow-auto lg:w-[37.5rem]">
+                <div className="max-h-full h-screen">
                   <div className="h-fit">
                     <PaymentRequestDetails
                       paymentRequest={paymentRequest}

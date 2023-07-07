@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import PaymentInfo from '../PaymentInfo/PaymentInfo';
 import Transactions from '../Transactions/Transactions';
 import { LocalPaymentRequest } from '../../../types/LocalTypes';
+import ScrollArea from '../ScrollArea/ScrollArea';
 
 const tabs = ['Transactions', 'Payment info'];
 
@@ -45,7 +46,7 @@ const DetailsTabs: React.FC<DetailsTabsProps> = ({ paymentRequest, onRefundClick
   return (
     <MotionConfig transition={{ ease: 'easeInOut' }}>
       <Tabs.Root value={selectedTab} onValueChange={setSelectedTab}>
-        <Tabs.List className="flex mb-11" aria-label="Explore Payment Request Details">
+        <Tabs.List className="flex mb-6 lg:mb-11" aria-label="Explore Payment Request Details">
           {tabs.map((tab) => {
             return (
               <Tabs.Trigger
@@ -71,10 +72,12 @@ const DetailsTabs: React.FC<DetailsTabsProps> = ({ paymentRequest, onRefundClick
           })}
         </Tabs.List>
         <TabContent value={tabs[0]} selectedTab={selectedTab}>
-          <Transactions transactions={paymentRequest.paymentAttempts} onRefundClicked={onRefundClick}></Transactions>
+          <ScrollArea>
+            <Transactions transactions={paymentRequest.paymentAttempts} onRefundClicked={onRefundClick}></Transactions>
+          </ScrollArea>
         </TabContent>
         <TabContent value={tabs[1]} selectedTab={selectedTab}>
-          <PaymentInfo paymentRequest={paymentRequest} />
+          <PaymentInfo {...paymentRequest} />
         </TabContent>
       </Tabs.Root>
     </MotionConfig>

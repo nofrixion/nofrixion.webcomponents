@@ -3,20 +3,22 @@ import * as Tooltip from '@radix-ui/react-tooltip';
 import InfoIcon from '../../../assets/icons/info-icon.svg';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
+import classNames from 'classnames';
 
 interface InfoTooltipProps {
   content: string;
   children?: React.ReactNode;
   side?: 'top' | 'bottom' | 'left' | 'right';
+  className?: string;
 }
 
-const InfoTooltip = ({ content, children, side = 'top' }: InfoTooltipProps) => {
+const InfoTooltip = ({ content, children, side = 'top', className }: InfoTooltipProps) => {
   const [open, setOpen] = useState(false);
 
   return (
     <Tooltip.Provider delayDuration={0}>
       <Tooltip.Root open={open} onOpenChange={setOpen}>
-        <Tooltip.Trigger className="w-4 h-4 min-w-[1rem] min-h-[1rem] inline-flex">
+        <Tooltip.Trigger className={classNames('w-4 h-4 min-w-[1rem] min-h-[1rem] inline-flex', className)}>
           <>
             {/* If no children show img */}
             {!children && <img src={InfoIcon} className="cursor-pointer w-full h-full" alt="Info icon" />}

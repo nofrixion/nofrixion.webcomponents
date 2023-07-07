@@ -35,6 +35,7 @@ import _ from 'lodash';
 import PaymentNotificationsModal from '../Modals/PaymentNotificationsModal/PaymentNotificationsModal';
 import { validateEmail } from '../../../utils/validation';
 import { formatAmount } from '../../../utils/formatters';
+import BackArrow from '../utils/BackArrow';
 
 interface CreatePaymentRequestPageProps {
   banks: BankSettings[];
@@ -555,8 +556,8 @@ const CreatePaymentRequestPage = ({
 
   const renderBackArrow = () => {
     return (
-      <button
-        className="inline-block lg:ml-[3.25rem] w-6 h-6"
+      <BackArrow
+        intent={isReviewing ? 'back' : 'close'}
         onClick={() => {
           if (isReviewing) {
             setIsReviewing(false);
@@ -565,19 +566,7 @@ const CreatePaymentRequestPage = ({
 
           onClose();
         }}
-      >
-        <svg
-          className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] transition stroke-controlGrey hover:stroke-controlGreyHover"
-          width="26"
-          height="22"
-          viewBox="0 0 26 22"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M11 21L1 11L11 1" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M1 11.082H25" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </button>
+      />
     );
   };
 
