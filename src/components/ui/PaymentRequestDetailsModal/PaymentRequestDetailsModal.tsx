@@ -44,11 +44,11 @@ const PaymentRequestDetailsModal = ({
           <Transition.Child
             as={Fragment}
             enter="transform transition ease-in-out duration-300"
-            enterFrom="translate-x-full"
-            enterTo="translate-x-0"
+            enterFrom="translate-y-full lg:translate-x-full lg:translate-y-0"
+            enterTo="translate-y-0 lg:translate-x-0"
             leave="transform transition ease-in-out duration-300"
-            leaveFrom="translate-x-0"
-            leaveTo="translate-x-full"
+            leaveFrom="translate-y-0 lg:translate-x-0"
+            leaveTo="translate-y-full lg:translate-x-full lg:translate-y-0"
           >
             <Dialog.Panel>
               <div className="absolute left-0 top-0 -ml-8 flex pr-2 pt-4 sm:-ml-10 sm:pr-4">
