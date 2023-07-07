@@ -69,7 +69,7 @@ export type PaymentRequestPaymentAttempt = {
   refundedAmount: number;
   currency: Currency.EUR | Currency.GBP;
   paymentProcessor: PaymentProcessor;
-  status: PaymentRequestStatus;
+  status: PaymentResult;
   walletName?: Wallets;
 };
 

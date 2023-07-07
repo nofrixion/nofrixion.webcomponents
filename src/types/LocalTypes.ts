@@ -37,6 +37,7 @@ export interface LocalPaymentAttempt {
   currency: Currency.EUR | Currency.GBP;
   processor?: string;
   last4DigitsOfCardNumber?: string;
+  needsCapture: boolean;
 }
 
 export type LocalAddress = {

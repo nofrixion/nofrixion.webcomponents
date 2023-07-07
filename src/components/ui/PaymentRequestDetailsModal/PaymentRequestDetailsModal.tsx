@@ -1,13 +1,14 @@
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import PaymentRequestDetails from '../PaymentRequestDetails/PaymentRequestDetails';
-import { LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
+import { LocalPaymentAttempt, LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
 
 export interface PaymentRequestDetailsModalProps {
   paymentRequest: LocalPaymentRequest;
   merchantTags: LocalTag[];
   hostedPaymentLink: string;
-  onRefundClick: (paymentAttemptID: string) => void;
+  onRefund: (paymentAttemptID: string) => void;
+  onCapture: (paymentAttempt: LocalPaymentAttempt) => void;
   onTagAdded: (tag: LocalTag) => void;
   onTagDeleted: (id: string) => void;
   onTagCreated: (tag: LocalTag) => void;
@@ -19,7 +20,8 @@ const PaymentRequestDetailsModal = ({
   paymentRequest,
   merchantTags,
   hostedPaymentLink,
-  onRefundClick,
+  onRefund,
+  onCapture,
   onTagAdded,
   onTagDeleted,
   onTagCreated,
@@ -73,7 +75,8 @@ const PaymentRequestDetailsModal = ({
                       paymentRequest={paymentRequest}
                       merchantTags={merchantTags}
                       hostedPaymentLink={hostedPaymentLink}
-                      onRefundClick={onRefundClick}
+                      onRefund={onRefund}
+                      onCapture={onCapture}
                       onTagAdded={onTagAdded}
                       onTagDeleted={onTagDeleted}
                       onTagCreated={onTagCreated}

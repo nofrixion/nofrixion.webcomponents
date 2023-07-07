@@ -6,6 +6,12 @@ import { format } from 'date-fns';
 import classNames from 'classnames';
 import { LocalPaymentAttempt } from '../../../types/LocalTypes';
 
+export interface TransactionsProps {
+  transactions: LocalPaymentAttempt[];
+  onRefund: (paymentAttemptID: string) => void;
+  onCapture: (paymentAttempt: LocalPaymentAttempt) => void;
+}
+
 const PaymentMethodIcon = ({ paymentMethod }: { paymentMethod: LocalPaymentMethodTypes }) => {
   switch (paymentMethod) {
     case LocalPaymentMethodTypes.Card:
@@ -20,13 +26,7 @@ const PaymentMethodIcon = ({ paymentMethod }: { paymentMethod: LocalPaymentMetho
   }
 };
 
-const Transactions = ({
-  transactions,
-  onRefundClicked,
-}: {
-  transactions: LocalPaymentAttempt[];
-  onRefundClicked: (paymentAttemptID: string) => void;
-}) => {
+const Transactions = ({ transactions, onRefund, onCapture }: TransactionsProps) => {
   return (
     <>
       {transactions.length === 0 && (
@@ -71,20 +71,31 @@ const Transactions = ({
                     'pt-2': index !== 0,
                   })}
                 >
-                  {/* 
-                    Commeting out refund button for now
-                    until we have that functionality in the API
-                   */}
-                  {/* <div className="flex justify-end">
+                  <div className="flex justify-end">
+                    {/* 
+                      Commeting out refund button for now
+                      until we have that functionality in the API
+                    */}
+                    {/*
                     <div className="w-[3.75rem] text-[0.813rem] h-6 ">
                       <div
                         className="text-[0.813rem] px-2 py-1 rounded-full bg-[#DEE6ED] leading-4 cursor-pointer opacity-0 transition group-hover:opacity-100 hover:bg-[#BDCCDB]"
                         onClick={() => onRefundClicked(transaction.attemptKey)}
                       >
                         Refund
-                      </div>
+                      </div> 
                     </div>
-                  </div> */}
+                    */}
+                    {transaction.needsCapture && (
+                      <button
+                        type="button"
+                        className="text-white text-13px leading-4 bg-primaryGreen hover:bg-primaryGreenHover rounded-full px-2 py-1 transition-colors"
+                        onClick={() => onCapture(transaction)}
+                      >
+                        Capture
+                      </button>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}

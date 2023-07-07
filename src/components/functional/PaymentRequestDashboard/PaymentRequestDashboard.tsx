@@ -9,7 +9,12 @@ import PaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTabl
 import { SortDirection } from '../../ui/ColumnHeader/ColumnHeader';
 import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
 import { usePaymentRequests } from '../../../api/hooks/usePaymentRequests';
-import { LocalPaymentRequest, LocalPaymentRequestCreate, LocalTag } from '../../../types/LocalTypes';
+import {
+  LocalPaymentAttempt,
+  LocalPaymentRequest,
+  LocalPaymentRequestCreate,
+  LocalTag,
+} from '../../../types/LocalTypes';
 import { makeToast } from '../../ui/Toast/Toast';
 import { parseApiTagToLocalTag, remotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
 import CreatePaymentRequestPage from '../../functional/CreatePaymentRequestPage/CreatePaymentRequestPage';
@@ -248,6 +253,30 @@ const PaymentRequestDashboard = ({
     setSelectedPaymentRequestID(paymentRequest.id);
   };
 
+  const onRefundClick = async (paymentAttemptID: string) => {
+    //TODO: Will implement refund for atleast card payment attempts. For PISP, it will need to be worked on later.
+    console.log(paymentAttemptID);
+  };
+
+  const onCaptureClick = async (paymentAttempt: LocalPaymentAttempt) => {
+    if (selectedPaymentRequestID) {
+      var response = await client.captureCardPayment(
+        selectedPaymentRequestID,
+        paymentAttempt.attemptKey,
+        paymentAttempt.amount,
+      );
+
+      if (response.error) {
+        makeToast('error', response.error.title);
+        return;
+      }
+
+      makeToast('success', 'Payment successfully captured.');
+
+      fetchPaymentRequests();
+    }
+  };
+
   // tore the results of the first execution of the metrics
   // and use them as the initial state of the metrics.
   // This way, when they change the dates
@@ -392,6 +421,8 @@ const PaymentRequestDashboard = ({
         setMerchantTags={setLocalMerchantTags}
         setPaymentRequests={setLocalPaymentRequests}
         onUnauthorized={onUnauthorized}
+        onRefund={onRefundClick}
+        onCapture={onCaptureClick}
       ></PaymentRequestDetailsModal>
     </div>
   );

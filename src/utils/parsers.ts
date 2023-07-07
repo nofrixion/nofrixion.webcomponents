@@ -180,6 +180,7 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
             settledAmount,
             currency,
             walletName,
+            status,
           } = remotePaymentAttempt;
           localPaymentAttempts.push({
             attemptKey: attemptKey,
@@ -190,6 +191,7 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
             amount: settledAmount > 0 ? settledAmount : authorisedAmount,
             currency: currency,
             processor: walletName ? parseApiWalletTypeToLocalWalletType(walletName) : undefined,
+            needsCapture: status === PaymentResult.Authorized,
           });
         }
       });

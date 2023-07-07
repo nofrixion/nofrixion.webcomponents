@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import UIPaymentRequestDetailsModal from '../../ui/PaymentRequestDetailsModal/PaymentRequestDetailsModal';
 import { parseApiTagToLocalTag } from '../../../utils/parsers';
-import { LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
+import { LocalPaymentAttempt, LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
 import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
 import { PaymentRequest, PaymentRequestUpdate } from '../../../api/types/ApiResponses';
 import { MerchantClient } from '../../../api/clients/MerchantClient';
@@ -18,6 +18,8 @@ interface PaymentRequestDetailsModalProps {
   setMerchantTags: (merchantTags: LocalTag[]) => void;
   setPaymentRequests: (paymentRequests: LocalPaymentRequest[]) => void;
   onUnauthorized: () => void;
+  onRefund: (paymentAttemptID: string) => void;
+  onCapture: (paymentAttempt: LocalPaymentAttempt) => void;
 }
 const PaymentRequestDetailsModal = ({
   token,
@@ -31,6 +33,8 @@ const PaymentRequestDetailsModal = ({
   setMerchantTags,
   setPaymentRequests,
   onUnauthorized,
+  onRefund,
+  onCapture,
 }: PaymentRequestDetailsModalProps) => {
   const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId, onUnauthorized);
   const merchantClient = new MerchantClient(apiUrl, token, merchantId, onUnauthorized);
@@ -45,11 +49,6 @@ const PaymentRequestDetailsModal = ({
       }
     }
   }, [selectedPaymentRequestID, paymentRequests]);
-
-  const onRefundClick = async (paymentAttemptID: string) => {
-    //TODO: Will implement refund for atleast card payment attempts. For PISP, it will need to be worked on later.
-    console.log(paymentAttemptID);
-  };
 
   const updatePaymentRequests = (updatedPaymentRequest: PaymentRequest) => {
     const index = paymentRequests.findIndex((paymentRequest) => paymentRequest.id === selectedPaymentRequestID);
@@ -123,7 +122,8 @@ const PaymentRequestDetailsModal = ({
           paymentRequest={paymentRequest}
           hostedPaymentLink={`${paymentRequest.hostedPayCheckoutUrl}`}
           open={open}
-          onRefundClick={onRefundClick}
+          onRefund={onRefund}
+          onCapture={onCapture}
           onTagAdded={onTagAdded}
           onTagCreated={onTagCreated}
           onTagDeleted={onTagDeleted}

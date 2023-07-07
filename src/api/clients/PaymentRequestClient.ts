@@ -247,4 +247,27 @@ export class PaymentRequestClient extends BaseApiClient {
 
     return response;
   }
+
+  /**
+   * Captures a Payment Request attempt.
+   * @param paymentRequestId The Payment Request Id
+   * @param authorizationId Capture authorization Id
+   * @param amount Amount to capture. If set to 0, the remaining amount will be captured.
+   * @returns True if successfull. An ApiError if not successful.
+   */
+  async captureCardPayment(
+    paymentRequestId: string,
+    authorizationId: string,
+    amount?: number,
+  ): Promise<{
+    success?: boolean;
+    error?: ApiError;
+  }> {
+    const response = await this.httpRequest(`${this.apiUrl}/${paymentRequestId}/card/capture`, HttpMethod.POST, {
+      authorizationID: authorizationId,
+      amount: amount ?? 0,
+    });
+
+    return !response.error ? { success: true } : { success: false, error: response.error };
+  }
 }
