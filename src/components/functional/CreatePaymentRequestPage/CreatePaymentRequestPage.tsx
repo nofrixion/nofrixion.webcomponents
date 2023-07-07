@@ -37,10 +37,21 @@ const CreatePaymentRequestPage = ({
   onPaymentRequestCreated,
   prefilledPaymentRequest,
 }: CreatePaymentRequesPageProps) => {
-  const paymentRequestClient = new PaymentRequestClient(apiUrl, token, onUnauthorized);
+  const paymentRequestClient = new PaymentRequestClient({
+    url: apiUrl,
+    authToken: token,
+    onUnauthorized: onUnauthorized,
+  });
 
-  const { userPaymentDefaults, isUserPaymentDefaultsLoading } = useUserPaymentDefaults(apiUrl, token, onUnauthorized);
-  const { banks } = useBanks({ url: apiUrl, merchantId: merchantId }, token, onUnauthorized);
+  const { userPaymentDefaults, isUserPaymentDefaultsLoading } = useUserPaymentDefaults({
+    url: apiUrl,
+    authToken: token,
+    onUnauthorized: onUnauthorized,
+  });
+  const { banks } = useBanks(
+    { merchantId: merchantId },
+    { url: apiUrl, authToken: token, onUnauthorized: onUnauthorized },
+  );
 
   const parseLocalPaymentRequestCreateToRemotePaymentRequest = (
     merchantId: string,
@@ -106,7 +117,7 @@ const CreatePaymentRequestPage = ({
   };
 
   const onSaveUserPaymentDefaults = async (userPaymentDefaults: UserPaymentDefaults) => {
-    const client = new ClientSettingsClient(apiUrl, token, onUnauthorized);
+    const client = new ClientSettingsClient({ url: apiUrl, authToken: token, onUnauthorized: onUnauthorized });
     const response = await client.saveUserPaymentDefaults(userPaymentDefaults);
 
     if (response.error) {

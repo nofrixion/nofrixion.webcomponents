@@ -65,7 +65,7 @@ const PaymentRequestDashboard = ({
 
   const pageSize = 20;
 
-  const client = new PaymentRequestClient(apiUrl, token, onUnauthorized);
+  const client = new PaymentRequestClient({ url: apiUrl, authToken: token, onUnauthorized: onUnauthorized });
 
   const onPaymentRequestRowClicked = (paymentRequest: LocalPaymentRequest) => {
     setSelectedPaymentRequestID(paymentRequest.id);
@@ -89,7 +89,6 @@ const PaymentRequestDashboard = ({
     isLoading: isLoadingPaymentRequests,
   } = usePaymentRequests(
     {
-      url: apiUrl,
       amountSortDirection: amountSortDirection,
       statusSortDirection: statusSortDirection,
       createdSortDirection: createdSortDirection,
@@ -106,8 +105,7 @@ const PaymentRequestDashboard = ({
       maxAmount: maxAmountFilter,
       tags: tagsFilter,
     },
-    token,
-    onUnauthorized,
+    { url: apiUrl, authToken: token, onUnauthorized: onUnauthorized },
   );
 
   const [localPaymentRequests, setLocalPaymentRequests] = useState<LocalPaymentRequest[]>([]);
@@ -116,7 +114,6 @@ const PaymentRequestDashboard = ({
 
   const { metrics, isLoading: isLoadingMetrics } = usePaymentRequestMetrics(
     {
-      url: apiUrl,
       merchantId: merchantId,
       fromDateMS: dateRange.fromDate.getTime(),
       toDateMS: dateRange.toDate.getTime(),
@@ -126,11 +123,13 @@ const PaymentRequestDashboard = ({
       maxAmount: maxAmountFilter,
       tags: tagsFilter,
     },
-    onUnauthorized,
-    token,
+    { url: apiUrl, authToken: token, onUnauthorized: onUnauthorized },
   );
 
-  const merchantTags = useMerchantTags({ url: apiUrl, merchantId: merchantId }, token, onUnauthorized);
+  const merchantTags = useMerchantTags(
+    { merchantId: merchantId },
+    { url: apiUrl, authToken: token, onUnauthorized: onUnauthorized },
+  );
 
   const [localMerchantTags, setLocalMerchantTags] = useState<LocalTag[]>([] as LocalTag[]);
 

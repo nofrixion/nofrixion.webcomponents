@@ -30,8 +30,12 @@ const PaymentRequestDetailsModal = ({
   setPaymentRequests,
   onUnauthorized,
 }: PaymentRequestDetailsModalProps) => {
-  const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId, onUnauthorized);
-  const merchantClient = new MerchantClient(apiUrl, token, merchantId, onUnauthorized);
+  const paymentRequestClient = new PaymentRequestClient({
+    url: apiUrl,
+    authToken: token,
+    onUnauthorized: onUnauthorized,
+  });
+  const merchantClient = new MerchantClient({ url: apiUrl, authToken: token, onUnauthorized: onUnauthorized });
 
   const [paymentRequest, setPaymentRequest] = useState<LocalPaymentRequest | undefined>(undefined);
 
@@ -75,7 +79,7 @@ const PaymentRequestDetailsModal = ({
 
   const onTagCreated = async (tag: LocalTag) => {
     if (paymentRequest) {
-      const response = await merchantClient.addTag(parseApiTagToLocalTag(tag));
+      const response = await merchantClient.addTag({ merchantId }, parseApiTagToLocalTag(tag));
       if (response.error) {
         console.log(response.error);
       } else {
