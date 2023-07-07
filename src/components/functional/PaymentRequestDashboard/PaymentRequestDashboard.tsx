@@ -65,7 +65,7 @@ const PaymentRequestDashboard = ({
 
   const pageSize = 20;
 
-  const client = new PaymentRequestClient(apiUrl, token, merchantId, onUnauthorized);
+  const client = new PaymentRequestClient(apiUrl, token, onUnauthorized);
 
   const onPaymentRequestRowClicked = (paymentRequest: LocalPaymentRequest) => {
     setSelectedPaymentRequestID(paymentRequest.id);
@@ -88,24 +88,26 @@ const PaymentRequestDashboard = ({
     totalRecords,
     isLoading: isLoadingPaymentRequests,
   } = usePaymentRequests(
-    apiUrl,
+    {
+      url: apiUrl,
+      amountSortDirection: amountSortDirection,
+      statusSortDirection: statusSortDirection,
+      createdSortDirection: createdSortDirection,
+      contactSortDirection: contactSortDirection,
+      merchantId: merchantId,
+      pageNumber: page,
+      pageSize: pageSize,
+      status: status,
+      fromDateMS: dateRange.fromDate.getTime(),
+      toDateMS: dateRange.toDate.getTime(),
+      search: searchFilter?.length >= 3 ? searchFilter : undefined,
+      currency: currencyFilter,
+      minAmount: minAmountFilter,
+      maxAmount: maxAmountFilter,
+      tags: tagsFilter,
+    },
     token,
-    merchantId,
-    statusSortDirection,
-    createdSortDirection,
-    contactSortDirection,
-    amountSortDirection,
     onUnauthorized,
-    page,
-    pageSize,
-    dateRange.fromDate.getTime(),
-    dateRange.toDate.getTime(),
-    status,
-    searchFilter?.length >= 3 ? searchFilter : undefined,
-    currencyFilter,
-    minAmountFilter,
-    maxAmountFilter,
-    tagsFilter,
   );
 
   const [localPaymentRequests, setLocalPaymentRequests] = useState<LocalPaymentRequest[]>([]);
@@ -113,20 +115,22 @@ const PaymentRequestDashboard = ({
   const [firstMetrics, setFirstMetrics] = useState<PaymentRequestMetrics | undefined>();
 
   const { metrics, isLoading: isLoadingMetrics } = usePaymentRequestMetrics(
-    apiUrl,
-    token,
-    merchantId,
+    {
+      url: apiUrl,
+      merchantId: merchantId,
+      fromDateMS: dateRange.fromDate.getTime(),
+      toDateMS: dateRange.toDate.getTime(),
+      search: searchFilter?.length >= 3 ? searchFilter : undefined,
+      currency: currencyFilter,
+      minAmount: minAmountFilter,
+      maxAmount: maxAmountFilter,
+      tags: tagsFilter,
+    },
     onUnauthorized,
-    dateRange.fromDate.getTime(),
-    dateRange.toDate.getTime(),
-    searchFilter?.length >= 3 ? searchFilter : undefined,
-    currencyFilter,
-    minAmountFilter,
-    maxAmountFilter,
-    tagsFilter,
+    token,
   );
 
-  const merchantTags = useMerchantTags(apiUrl, token, merchantId, onUnauthorized);
+  const merchantTags = useMerchantTags({ url: apiUrl, merchantId: merchantId }, token, onUnauthorized);
 
   const [localMerchantTags, setLocalMerchantTags] = useState<LocalTag[]>([] as LocalTag[]);
 

@@ -37,10 +37,10 @@ const CreatePaymentRequestPage = ({
   onPaymentRequestCreated,
   prefilledPaymentRequest,
 }: CreatePaymentRequesPageProps) => {
-  const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId, onUnauthorized);
+  const paymentRequestClient = new PaymentRequestClient(apiUrl, token, onUnauthorized);
 
   const { userPaymentDefaults, isUserPaymentDefaultsLoading } = useUserPaymentDefaults(apiUrl, token, onUnauthorized);
-  const { banks } = useBanks(apiUrl, token, merchantId, onUnauthorized);
+  const { banks } = useBanks({ url: apiUrl, merchantId: merchantId }, token, onUnauthorized);
 
   const parseLocalPaymentRequestCreateToRemotePaymentRequest = (
     merchantId: string,
