@@ -57,10 +57,12 @@ const PaymentConditionsModal = ({
       isDefault={isDefault}
     >
       <div className="py-1">
-        <Checkbox label="Allow partial payments" value={isAllowPartialEnabled} onChange={setIsAllowPartialEnabled} />
-      </div>
-      <div className="ml-7 mt-1 text-greyText font-normal text-xs">
-        Enable customers to pay a portion of the total amount owed, rather than the full balance all at once.
+        <Checkbox
+          label="Allow partial payments"
+          description="Enable customers to pay a portion of the total amount owed, rather than the full balance all at once."
+          value={isAllowPartialEnabled}
+          onChange={setIsAllowPartialEnabled}
+        />
       </div>
     </CustomModal>
   );

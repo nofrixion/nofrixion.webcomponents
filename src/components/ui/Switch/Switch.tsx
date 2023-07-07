@@ -15,7 +15,7 @@ const Switch = ({ label, value, icon, className, onChange }: SwitchProps) => {
       <SwitchHeadless.Group>
         <SwitchHeadless.Label className="cursor-pointer flex items-center flex-1">
           <img src={icon} alt={`${label} icon`} className="w-6 h-6 mr-4 inline-block" />
-          <span className="align-middle">{label}</span>
+          <span className="align-middle pr-2">{label}</span>
         </SwitchHeadless.Label>
         <SwitchHeadless
           checked={value}
