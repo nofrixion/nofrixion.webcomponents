@@ -1,7 +1,5 @@
 import PaymentMethodIcon from '../utils/PaymentMethodIcon';
-import { PaymentRequest } from '../../../api/types/ApiResponses';
 import { format } from 'date-fns';
-import { AddressType } from '../../../api/types/Enums';
 import { LocalPaymentRequest } from '../../../types/LocalTypes';
 import { LocalAddressType, LocalPaymentMethodTypes } from '../../../types/LocalEnums';
 

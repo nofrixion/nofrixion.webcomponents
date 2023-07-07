@@ -2,7 +2,7 @@ import CustomModal, { BaseModalProps } from '../../CustomModal/CustomModal';
 import { useState } from 'react';
 import Checkbox from '../../Checkbox/Checkbox';
 import { LocalPaymentConditionsFormValue } from '../../../../types/LocalTypes';
-import { PaymentConditionsDefaults, UserPaymentDefaults } from '../../../../api/types/ApiResponses';
+import { PaymentConditionsDefaults, UserPaymentDefaults } from '@nofrixion/moneymoov';
 
 interface PaymentConditionsModalProps extends BaseModalProps {
   userDefaults?: PaymentConditionsDefaults;
@@ -57,10 +57,12 @@ const PaymentConditionsModal = ({
       isDefault={isDefault}
     >
       <div className="py-1">
-        <Checkbox label="Allow partial payments" value={isAllowPartialEnabled} onChange={setIsAllowPartialEnabled} />
-      </div>
-      <div className="ml-7 mt-1 text-greyText font-normal text-xs">
-        Enable customers to pay a portion of the total amount owed, rather than the full balance all at once.
+        <Checkbox
+          label="Allow partial payments"
+          description="Enable customers to pay a portion of the total amount owed, rather than the full balance all at once."
+          value={isAllowPartialEnabled}
+          onChange={setIsAllowPartialEnabled}
+        />
       </div>
     </CustomModal>
   );

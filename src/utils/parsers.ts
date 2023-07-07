@@ -1,5 +1,14 @@
-import { PaymentRequest, PaymentRequestAddress, PaymentRequestPaymentAttempt, Tag } from '../api/types/ApiResponses';
-import { PartialPaymentMethods, PaymentMethodTypes, PaymentResult, Wallets } from '../api/types/Enums';
+import {
+  PaymentRequestAddress,
+  PaymentRequest,
+  PartialPaymentMethods,
+  PaymentMethodTypes,
+  PaymentResult,
+  Wallets,
+  Tag,
+  PaymentRequestPaymentAttempt,
+} from '@nofrixion/moneymoov';
+
 import {
   LocalAddressType,
   LocalPartialPaymentMethods,

@@ -1,4 +1,4 @@
-import { Currency } from '../api/types/Enums';
+import { Currency } from '@nofrixion/moneymoov';
 import { LocalAddressType, LocalPartialPaymentMethods, LocalPaymentMethodTypes } from './LocalEnums';
 
 export interface LocalContact {

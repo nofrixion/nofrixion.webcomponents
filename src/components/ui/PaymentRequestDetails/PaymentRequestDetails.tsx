@@ -3,7 +3,7 @@ import { LocalPaymentAttempt, LocalPaymentRequest, LocalTag } from '../../../typ
 import QRCode from '../QRCode/QRCode';
 import { CopyLink } from '../CopyLink/CopyLink';
 import AmountPaid from '../AmountPaid/AmountPaid';
-import { Currency } from '../../../api/types/Enums';
+import { Currency } from '@nofrixion/moneymoov';
 import StatusBadge from '../PaymentRequestStatusBadge/PaymentRequestStatusBadge';
 import DetailsTabs from '../DetailsTabs/DetailsTabs';
 import TagManager from '../Tags/TagManager/TagManager';
