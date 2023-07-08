@@ -31,11 +31,11 @@ const PaymentRequestDetailsModal = ({
   onUnauthorized,
 }: PaymentRequestDetailsModalProps) => {
   const paymentRequestClient = new PaymentRequestClient({
-    url: apiUrl,
+    apiUrl: apiUrl,
     authToken: token,
     onUnauthorized: onUnauthorized,
   });
-  const merchantClient = new MerchantClient({ url: apiUrl, authToken: token, onUnauthorized: onUnauthorized });
+  const merchantClient = new MerchantClient({ apiUrl: apiUrl, authToken: token, onUnauthorized: onUnauthorized });
 
   const [paymentRequest, setPaymentRequest] = useState<LocalPaymentRequest | undefined>(undefined);
 
