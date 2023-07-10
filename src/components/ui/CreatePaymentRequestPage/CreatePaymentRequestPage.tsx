@@ -427,7 +427,7 @@ const CreatePaymentRequestPage = ({
 
   const renderReviewSummary = () => {
     return (
-      <div className="w-full max-w-lg mx-auto mt-6 md:mt-44 relative">
+      <div className="w-full lg:max-w-sm xl:max-w-lg mx-auto mt-6 md:mt-44 relative">
         <div className="space-y-5 md:space-y-10">
           <AnimatePresence>
             {/* Amount */}
@@ -585,7 +585,7 @@ const CreatePaymentRequestPage = ({
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full transform bg-white text-left align-middle transition-all min-h-screen px-8 lg:px-0 lg:flex">
+                <Dialog.Panel className="w-full transform bg-white text-left align-middle transition-all min-h-screen px-6 lg:px-0 lg:flex">
                   {/* Left side & Right side on mobile */}
                   <AnimatePresence initial={false}>
                     {!isReviewing && (
@@ -601,7 +601,7 @@ const CreatePaymentRequestPage = ({
                               {renderBackArrow()}
                               <Dialog.Title
                                 as="h3"
-                                className="text-[1.75rem]/8 font-semibold inline-block text-clip md:whitespace-nowrap -mr-8"
+                                className="text-[1.75rem]/8 font-semibold inline-block text-clip md:whitespace-nowrap -mr-6"
                               >
                                 New payment request
                               </Dialog.Title>
