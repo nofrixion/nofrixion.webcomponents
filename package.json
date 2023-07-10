@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@headlessui/react": "1.6.0",
-    "@nofrixion/moneymoov": "^0.0.3",
+    "@nofrixion/moneymoov": "^0.0.4",
     "@radix-ui/react-checkbox": "^1.0.3",
     "@radix-ui/react-dropdown-menu": "^2.0.4",
     "@radix-ui/react-scroll-area": "^1.0.3",
