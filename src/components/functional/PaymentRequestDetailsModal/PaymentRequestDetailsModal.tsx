@@ -34,8 +34,12 @@ const PaymentRequestDetailsModal = ({
   onRefund,
   onCapture,
 }: PaymentRequestDetailsModalProps) => {
-  const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId, onUnauthorized);
-  const merchantClient = new MerchantClient(apiUrl, token, merchantId, onUnauthorized);
+  const paymentRequestClient = new PaymentRequestClient({
+    apiUrl: apiUrl,
+    authToken: token,
+    onUnauthorized: onUnauthorized,
+  });
+  const merchantClient = new MerchantClient({ apiUrl: apiUrl, authToken: token, onUnauthorized: onUnauthorized });
 
   const [paymentRequest, setPaymentRequest] = useState<LocalPaymentRequest | undefined>(undefined);
 
@@ -64,7 +68,7 @@ const PaymentRequestDetailsModal = ({
         tagIds: existingTagIds.concat(tag.id),
       };
       const paymentRequestTagAdd = await paymentRequestClient.update(paymentRequest.id, paymentRequestUpdate);
-      if (paymentRequestTagAdd.error) {
+      if (paymentRequestTagAdd.status === 'error') {
         console.log(paymentRequestTagAdd.error);
       } else if (paymentRequestTagAdd.data) {
         updatePaymentRequests(paymentRequestTagAdd.data);
@@ -74,8 +78,8 @@ const PaymentRequestDetailsModal = ({
 
   const onTagCreated = async (tag: LocalTag) => {
     if (paymentRequest) {
-      const response = await merchantClient.addTag(parseApiTagToLocalTag(tag));
-      if (response.error) {
+      const response = await merchantClient.addTag({ merchantId }, parseApiTagToLocalTag(tag));
+      if (response.status === 'error') {
         console.log(response.error);
       } else {
         const createdTag = response.data;
@@ -87,7 +91,7 @@ const PaymentRequestDetailsModal = ({
             tagIds: existingTagIds.concat(createdTag.id),
           };
           const paymentRequestTagAdd = await paymentRequestClient.update(paymentRequest.id, paymentRequestUpdate);
-          if (paymentRequestTagAdd.error) {
+          if (paymentRequestTagAdd.status === 'error') {
             console.log(paymentRequestTagAdd.error);
           } else if (paymentRequestTagAdd.data) {
             updatePaymentRequests(paymentRequestTagAdd.data);
@@ -104,7 +108,7 @@ const PaymentRequestDetailsModal = ({
         tagIds: existingTagIds.filter((id) => id !== tagIdToDelete),
       };
       const paymentRequestTagDelete = await paymentRequestClient.update(paymentRequest.id, paymentRequestUpdate);
-      if (paymentRequestTagDelete.error) {
+      if (paymentRequestTagDelete.status === 'error') {
         console.log(paymentRequestTagDelete.error);
       } else if (paymentRequestTagDelete.data) {
         updatePaymentRequests(paymentRequestTagDelete.data);

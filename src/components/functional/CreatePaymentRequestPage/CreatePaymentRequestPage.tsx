@@ -37,10 +37,21 @@ const CreatePaymentRequestPage = ({
   onPaymentRequestCreated,
   prefilledPaymentRequest,
 }: CreatePaymentRequesPageProps) => {
-  const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId, onUnauthorized);
+  const paymentRequestClient = new PaymentRequestClient({
+    apiUrl: apiUrl,
+    authToken: token,
+    onUnauthorized: onUnauthorized,
+  });
 
-  const { userPaymentDefaults, isUserPaymentDefaultsLoading } = useUserPaymentDefaults(apiUrl, token, onUnauthorized);
-  const { banks } = useBanks(apiUrl, token, merchantId, onUnauthorized);
+  const { userPaymentDefaults, isUserPaymentDefaultsLoading } = useUserPaymentDefaults({
+    apiUrl: apiUrl,
+    authToken: token,
+    onUnauthorized: onUnauthorized,
+  });
+  const { banks } = useBanks(
+    { merchantId: merchantId },
+    { apiUrl: apiUrl, authToken: token, onUnauthorized: onUnauthorized },
+  );
 
   const parseLocalPaymentRequestCreateToRemotePaymentRequest = (
     merchantId: string,
@@ -93,7 +104,7 @@ const CreatePaymentRequestPage = ({
 
     // TODO: Toasts are not working - however, we need to figure out how to handle errors & success cases
     // Maybe we should have a redirectUrl that we can redirect to? This could be a parameter in the web-component
-    if (response.error) {
+    if (response.status === 'error') {
       makeToast('error', response.error.title);
       return;
     }
@@ -106,10 +117,10 @@ const CreatePaymentRequestPage = ({
   };
 
   const onSaveUserPaymentDefaults = async (userPaymentDefaults: UserPaymentDefaults) => {
-    const client = new ClientSettingsClient(apiUrl, token, onUnauthorized);
+    const client = new ClientSettingsClient({ apiUrl: apiUrl, authToken: token, onUnauthorized: onUnauthorized });
     const response = await client.saveUserPaymentDefaults(userPaymentDefaults);
 
-    if (response.error) {
+    if (response.status === 'error') {
       makeToast('error', response.error.title);
       return;
     }
