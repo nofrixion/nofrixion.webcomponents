@@ -257,23 +257,23 @@ const PaymentRequestDashboard = ({
     console.log(paymentAttemptID);
   };
 
-  const onCaptureClick = async (paymentAttempt: LocalPaymentAttempt) => {
-    if (selectedPaymentRequestID) {
-      var response = await client.captureCardPayment(
-        selectedPaymentRequestID,
-        paymentAttempt.attemptKey,
-        paymentAttempt.amount,
-      );
-
-      if (response.error) {
-        makeToast('error', response.error.title);
-        return;
-      }
-
-      makeToast('success', 'Payment successfully captured.');
-
-      fetchPaymentRequests();
-    }
+  const onCaptureClick = async (authorizationID: string, amount: number) => {
+    // if (selectedPaymentRequestID) {
+    //   var response = await client.captureCardPayment(
+    //     selectedPaymentRequestID,
+    //     authorizationID,
+    //     amount,
+    //   );
+    //
+    //   if (response.error) {
+    //     makeToast('error', response.error.title);
+    //     return;
+    //   }
+    //
+    //   makeToast('success', 'Payment successfully captured.');
+    //
+    //   fetchPaymentRequests();
+    // }
   };
 
   // tore the results of the first execution of the metrics
@@ -417,7 +417,7 @@ const PaymentRequestDashboard = ({
         selectedPaymentRequestID={selectedPaymentRequestID ?? ''}
         merchantTags={localMerchantTags}
         paymentRequests={localPaymentRequests}
-        open={selectedPaymentRequestID !== undefined}
+        open={!!selectedPaymentRequestID}
         onDismiss={onPaymentRequestDetailsModalDismiss}
         setMerchantTags={setLocalMerchantTags}
         setPaymentRequests={setLocalPaymentRequests}
