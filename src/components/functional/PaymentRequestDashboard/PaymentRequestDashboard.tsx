@@ -272,7 +272,7 @@ const PaymentRequestDashboard = ({
             </LayoutWrapper> */}
           <AnimatePresence initial={false}>
             {!isInitialState && (
-              <LayoutWrapper className="fixed bottom-0 mb-4 px-6 w-full -mx-6 md:-mx-14 md:px-14 z-10 lg:static lg:w-auto">
+              <LayoutWrapper className="fixed bottom-0 mb-4 px-6 w-full -mx-6 md:-mx-14 md:px-14 lg:static lg:w-auto">
                 <PrimaryButton
                   label="Create payment request"
                   className="text-white bg-primaryGreen hover:bg-primaryGreenHover w-full"

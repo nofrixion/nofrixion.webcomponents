@@ -181,32 +181,32 @@ const PaymentRequestTable = ({
         </table>
       )}
 
-      <div className="space-y-2">
+      <div className="mb-2 lg:hidden">
         <Pager
           pageSize={pageSize}
           totalRecords={totalRecords}
           onPageChange={(newPage) => onPageChanged && onPageChanged(newPage)}
         />
+      </div>
 
-        <div className="lg:hidden space-y-2">
-          {paymentRequests &&
-            paymentRequests.length > 0 &&
-            paymentRequests.map((paymentRequest, index) => (
-              <PaymentRequestMobileCard
-                {...paymentRequest}
-                key={`pr-mobile-${index}`}
-                onClick={(event) => onPaymentRequestClickedHandler(event, paymentRequest)}
-                onDuplicate={() => onPaymentRequestDuplicateClicked && onPaymentRequestDuplicateClicked(paymentRequest)}
-                onDelete={
-                  paymentRequest.paymentAttempts && paymentRequest.paymentAttempts.length > 0
-                    ? undefined
-                    : () => onPaymentRequestDeleteClicked && onPaymentRequestDeleteClicked(paymentRequest)
-                }
-                onCopyLink={() => onPaymentRequestCopyLinkClicked && onPaymentRequestCopyLinkClicked(paymentRequest)}
-                onOpenPaymentPage={() => onOpenPaymentPage && onOpenPaymentPage(paymentRequest)}
-              />
-            ))}
-        </div>
+      <div className="lg:hidden space-y-2">
+        {paymentRequests &&
+          paymentRequests.length > 0 &&
+          paymentRequests.map((paymentRequest, index) => (
+            <PaymentRequestMobileCard
+              {...paymentRequest}
+              key={`pr-mobile-${index}`}
+              onClick={(event) => onPaymentRequestClickedHandler(event, paymentRequest)}
+              onDuplicate={() => onPaymentRequestDuplicateClicked && onPaymentRequestDuplicateClicked(paymentRequest)}
+              onDelete={
+                paymentRequest.paymentAttempts && paymentRequest.paymentAttempts.length > 0
+                  ? undefined
+                  : () => onPaymentRequestDeleteClicked && onPaymentRequestDeleteClicked(paymentRequest)
+              }
+              onCopyLink={() => onPaymentRequestCopyLinkClicked && onPaymentRequestCopyLinkClicked(paymentRequest)}
+              onOpenPaymentPage={() => onOpenPaymentPage && onOpenPaymentPage(paymentRequest)}
+            />
+          ))}
       </div>
 
       {/* Show empty state when contet has loaded and no there are no payment requests*/}
