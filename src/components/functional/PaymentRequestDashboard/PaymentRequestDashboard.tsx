@@ -272,7 +272,7 @@ const PaymentRequestDashboard = ({
             </LayoutWrapper> */}
           <AnimatePresence initial={false}>
             {!isInitialState && (
-              <LayoutWrapper>
+              <LayoutWrapper className="fixed bottom-0 mb-4 px-6 w-full -mx-6 md:-mx-14 md:px-14 z-10 lg:static lg:w-auto">
                 <PrimaryButton
                   label="Create payment request"
                   className="text-white bg-primaryGreen hover:bg-primaryGreenHover w-full"
@@ -342,32 +342,33 @@ const PaymentRequestDashboard = ({
             </LayoutWrapper>
           )}
         </AnimatePresence>
-        <LayoutWrapper className="bg-white min-h-[18rem] py-10 px-6 rounded-lg">
+        <div className="hidden lg:block"></div>
+        <LayoutWrapper className="lg:bg-white lg:min-h-[18rem] lg:py-10 lg:px-6 lg:rounded-lg pb-10">
           {/* 
             TODO: Scroll Area will be used in the meantime until Pablo I design the table for mobile.
             Remove the ScrollArea when the mobile design is ready.
           */}
-          <ScrollArea>
-            <PaymentRequestTable
-              paymentRequests={localPaymentRequests}
-              pageSize={pageSize}
-              totalRecords={totalRecords}
-              onPageChanged={setPage}
-              setStatusSortDirection={setStatusSortDirection}
-              setCreatedSortDirection={setCreatedSortDirection}
-              setContactSortDirection={setContactSortDirection}
-              setAmountSortDirection={setAmountSortDirection}
-              onPaymentRequestDuplicateClicked={onDuplicatePaymentRequest}
-              onPaymentRequestDeleteClicked={onDeletePaymentRequest}
-              onPaymentRequestCopyLinkClicked={onCopyPaymentRequestLink}
-              isLoading={isLoadingPaymentRequests}
-              isEmpty={isInitialState}
-              onCreatePaymentRequest={onCreatePaymentRequest}
-              onPaymentRequestClicked={onPaymentRequestRowClicked}
-              onOpenPaymentPage={onOpenPaymentPage}
-              selectedPaymentRequestID={selectedPaymentRequestID}
-            />
-          </ScrollArea>
+          {/* <ScrollArea> */}
+          <PaymentRequestTable
+            paymentRequests={localPaymentRequests}
+            pageSize={pageSize}
+            totalRecords={totalRecords}
+            onPageChanged={setPage}
+            setStatusSortDirection={setStatusSortDirection}
+            setCreatedSortDirection={setCreatedSortDirection}
+            setContactSortDirection={setContactSortDirection}
+            setAmountSortDirection={setAmountSortDirection}
+            onPaymentRequestDuplicateClicked={onDuplicatePaymentRequest}
+            onPaymentRequestDeleteClicked={onDeletePaymentRequest}
+            onPaymentRequestCopyLinkClicked={onCopyPaymentRequestLink}
+            isLoading={isLoadingPaymentRequests}
+            isEmpty={isInitialState}
+            onCreatePaymentRequest={onCreatePaymentRequest}
+            onPaymentRequestClicked={onPaymentRequestRowClicked}
+            onOpenPaymentPage={onOpenPaymentPage}
+            selectedPaymentRequestID={selectedPaymentRequestID}
+          />
+          {/* </ScrollArea> */}
         </LayoutWrapper>
       </LayoutGroup>
 

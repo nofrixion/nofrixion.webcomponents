@@ -46,7 +46,7 @@ const Tab = ({ status, totalRecords, isLoading = false }: TabProps) => {
     <Tabs.Trigger
       value={status}
       className={classNames(
-        'flex flex-col items-center justify-center md:justify-normal rounded-lg w-24 h-24  md:w-full md:h-28 lg:px-8 md:pt-6 md:pb-8 bg-white border-2 border-transparent transition  hover:border-borderGrey',
+        'flex flex-col items-center justify-center md:justify-normal rounded-lg w-36 h-20 px-2 py-4 md:w-full md:h-28 lg:px-8 md:pt-6 md:pb-8 md:px-4 bg-white border-2 border-transparent transition  hover:border-borderGrey',
         getSpecificStatusClasses(status),
       )}
     >
@@ -74,7 +74,7 @@ const Tab = ({ status, totalRecords, isLoading = false }: TabProps) => {
           <div className="h-2 w-8 bg-[#E0E9EB] rounded-lg"></div>
         </div>
         <p
-          className={classNames('text-2xl md:text-[1.75rem]/6 font-medium truncate px-2', {
+          className={classNames('text-3xl md:text-[1.75rem]/6 font-medium truncate', {
             invisible: isLoading,
           })}
         >
