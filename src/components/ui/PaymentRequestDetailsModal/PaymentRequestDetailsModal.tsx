@@ -10,7 +10,7 @@ export interface PaymentRequestDetailsModalProps {
   merchantTags: LocalTag[];
   hostedPaymentLink: string;
   onRefund: (paymentAttemptID: string) => void;
-  onCapture: (authorizationID: string, amount: number) => void;
+  onCapture: (authorizationID: string, amount: number) => Promise<void>;
   onTagAdded: (tag: LocalTag) => void;
   onTagDeleted: (id: string) => void;
   onTagCreated: (tag: LocalTag) => void;
@@ -32,19 +32,20 @@ const PaymentRequestDetailsModal = ({
 }: PaymentRequestDetailsModalProps) => {
   const [selectedTransaction, setSelectedTransaction] = React.useState<LocalPaymentAttempt | undefined>();
   const [amountToCapture, setAmountToCapture] = React.useState<string | undefined>(
-    selectedTransaction?.amount?.toString(),
+    ((selectedTransaction?.amount ?? 0) - (selectedTransaction?.capturedAmount ?? 0)).toString(),
   );
 
   const onTransactionSelectForCapture = (paymentAttempt: LocalPaymentAttempt) => {
     setSelectedTransaction(paymentAttempt);
-    setAmountToCapture(paymentAttempt.amount.toString());
+    setAmountToCapture((paymentAttempt.amount - paymentAttempt.capturedAmount).toString());
   };
 
-  const onCaptureClick = () => {
+  const onCaptureClick = async () => {
     if (selectedTransaction) {
       let parsedAmount = Number(amountToCapture);
       parsedAmount = (parsedAmount ?? 0) >= selectedTransaction.amount ? 0 : parsedAmount!;
-      onCapture(selectedTransaction.attemptKey, parsedAmount);
+      await onCapture(selectedTransaction.attemptKey, parsedAmount);
+      onCaptureDismiss();
     }
   };
 
@@ -136,6 +137,11 @@ const PaymentRequestDetailsModal = ({
                         initialAmount={amountToCapture ?? '0'}
                         currency={selectedTransaction?.currency ?? Currency.EUR}
                         setAmountToCapture={setAmountToCapture}
+                        transactionDate={selectedTransaction?.occurredAt ?? new Date()}
+                        totalTransactionAmount={selectedTransaction?.amount ?? 0}
+                        contactName={paymentRequest.contact.name}
+                        lastFourDigitsOnCard={selectedTransaction?.last4DigitsOfCardNumber}
+                        processor={selectedTransaction?.processor}
                       />
                     </Dialog.Panel>
                   </Transition.Child>

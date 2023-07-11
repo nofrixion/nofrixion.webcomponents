@@ -4,21 +4,17 @@ import React, { useEffect, useState } from 'react';
 import { DateRange } from '../../ui/DateRangePicker/DateRangePicker';
 import PrimaryButton from '../../ui/PrimaryButton/PrimaryButton';
 import {
-  usePaymentRequestMetrics,
-  PaymentRequestStatus,
   PaymentRequestClient,
-  usePaymentRequests,
+  PaymentRequestEventType,
   PaymentRequestMetrics,
+  PaymentRequestStatus,
   useMerchantTags,
+  usePaymentRequestMetrics,
+  usePaymentRequests,
 } from '@nofrixion/moneymoov';
 import PaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTable';
 import { SortDirection } from '../../ui/ColumnHeader/ColumnHeader';
-import {
-  LocalPaymentAttempt,
-  LocalPaymentRequest,
-  LocalPaymentRequestCreate,
-  LocalTag,
-} from '../../../types/LocalTypes';
+import { LocalPaymentRequest, LocalPaymentRequestCreate, LocalTag } from '../../../types/LocalTypes';
 import { makeToast } from '../../ui/Toast/Toast';
 import { parseApiTagToLocalTag, remotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
 import CreatePaymentRequestPage from '../../functional/CreatePaymentRequestPage/CreatePaymentRequestPage';
@@ -29,7 +25,11 @@ import PaymentRequestDetailsModal from '../PaymentRequestDetailsModal/PaymentReq
 import FilterControlsRow from '../../ui/FilterControlsRow/FilterControlsRow';
 import { FilterableTag } from '../../ui/TagFilter/TagFilter';
 import ScrollArea from '../../ui/ScrollArea/ScrollArea';
-import { LocalPartialPaymentMethods, LocalPaymentMethodTypes } from '../../../types/LocalEnums';
+import {
+  LocalCardPaymentResponseStatus,
+  LocalPartialPaymentMethods,
+  LocalPaymentMethodTypes,
+} from '../../../types/LocalEnums';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -261,22 +261,38 @@ const PaymentRequestDashboard = ({
   };
 
   const onCaptureClick = async (authorizationID: string, amount: number) => {
-    // if (selectedPaymentRequestID) {
-    //   var response = await client.captureCardPayment(
-    //     selectedPaymentRequestID,
-    //     authorizationID,
-    //     amount,
-    //   );
-    //
-    //   if (response.error) {
-    //     makeToast('error', response.error.title);
-    //     return;
-    //   }
-    //
-    //   makeToast('success', 'Payment successfully captured.');
-    //
-    //   fetchPaymentRequests();
-    // }
+    if (selectedPaymentRequestID) {
+      let response = await client.captureCardPayment(selectedPaymentRequestID, authorizationID, amount);
+
+      if (response.error) {
+        makeToast('error', response.error.title);
+        return;
+      }
+
+      makeToast('success', 'Payment successfully captured.');
+
+      let localPrsCopy = [...localPaymentRequests];
+      let prIndex = localPrsCopy.findIndex((pr) => pr.id === selectedPaymentRequestID);
+      let authIndex = localPrsCopy[prIndex].paymentAttempts.findIndex(
+        (attempt) => attempt.attemptKey === authorizationID,
+      );
+      localPrsCopy[prIndex].paymentAttempts[authIndex].capturedAmount += amount;
+      localPrsCopy[prIndex].paymentAttempts[authIndex].needsCapture =
+        localPrsCopy[prIndex].paymentAttempts[authIndex].capturedAmount <
+        localPrsCopy[prIndex].paymentAttempts[authIndex].amount;
+
+      localPrsCopy[prIndex].paymentAttempts[authIndex].events.splice(0, 0, {
+        status: LocalCardPaymentResponseStatus.CardCaptureSuccess.toString(),
+        id: '',
+        type: PaymentRequestEventType.card_capture,
+        amount: amount,
+        currency: localPrsCopy[prIndex].paymentAttempts[authIndex].currency,
+        occurredAt: new Date(),
+        authorizationID: authorizationID,
+      });
+
+      setLocalPaymentRequests([...localPrsCopy]);
+    }
   };
 
   // tore the results of the first execution of the metrics

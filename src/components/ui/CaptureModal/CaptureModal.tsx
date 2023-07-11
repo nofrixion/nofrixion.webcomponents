@@ -2,6 +2,8 @@
 import InputAmountField from '../InputAmountField/InputAmountField';
 import { Currency } from '@nofrixion/moneymoov';
 import backButtonIcon from '../../../assets/icons/back-button-icon.svg';
+import { format } from 'date-fns';
+import { localCurrency } from '../../../utils/constants';
 
 export interface CaptureModalProps {
   initialAmount: string;
@@ -9,6 +11,11 @@ export interface CaptureModalProps {
   onCapture: () => void;
   onDismiss: () => void;
   setAmountToCapture: (amount: string) => void;
+  totalTransactionAmount: number;
+  lastFourDigitsOnCard?: string;
+  processor?: string;
+  transactionDate: Date;
+  contactName?: string;
 }
 
 const CaptureModal: React.FC<CaptureModalProps> = ({
@@ -17,7 +24,21 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
   onCapture,
   onDismiss,
   setAmountToCapture,
+  totalTransactionAmount,
+  lastFourDigitsOnCard,
+  processor,
+  transactionDate,
+  contactName,
 }) => {
+  const formatter = new Intl.NumberFormat(navigator.language, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  const getCurrencySymbol = (transactionCurrency: string) => {
+    return transactionCurrency === Currency.EUR ? localCurrency.eur.symbol : localCurrency.gbp.symbol;
+  };
+
   return (
     <>
       <div className="bg-white h-screen overflow-auto w-[37.5rem] px-8 py-8">
@@ -28,8 +49,19 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
             </button>
             <span className="block text-2xl font-semibold text-defaultText mt-8">Confirm card payment capture</span>
             <p className="mt-12 text-defaultText text-sm font-normal">
-              You are about to capture the card payment made by {'Daniel Kowalski'} on {'Dec 1st, 2023'} with the{' '}
-              {'Visa card ending in 1234'}.
+              You are about to capture the card payment made
+              {contactName && <span className="font-semibold">{` by ${contactName}`}</span>}
+              &nbsp;on&nbsp;
+              <span className="font-semibold">{format(transactionDate, 'MMM do, yyyy')}</span>
+              {lastFourDigitsOnCard ? (
+                <>
+                  {' with the'}
+                  {processor && <span className="font-semibold">{` ${processor}`}</span>}
+                  {` card ending in ${lastFourDigitsOnCard}.`}
+                </>
+              ) : (
+                '.'
+              )}
             </p>
             <table className="mt-12" cellPadding={0} cellSpacing={0} border={0}>
               <tbody>
@@ -43,7 +75,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
                         currency={currency}
                         onCurrencyChange={() => {}}
                         allowCurrencyChange={false}
-                        value={initialAmount.toString()}
+                        value={formatter.format(Number(initialAmount))}
                         onChange={(e) => setAmountToCapture(e.target.value)}
                       ></InputAmountField>
                     </div>
@@ -53,7 +85,8 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
                   <td></td>
                   <td>
                     <span className="text-13px leading-5 font-normal text-greyText">
-                      Total payment was {'algo chingón'}
+                      Total payment was&nbsp;{getCurrencySymbol(currency)}&nbsp;
+                      {formatter.format(totalTransactionAmount)}
                     </span>
                   </td>
                 </tr>

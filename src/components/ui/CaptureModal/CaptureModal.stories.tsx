@@ -10,6 +10,13 @@ const meta: Meta<typeof CaptureModal> = {
   argTypes: {
     onCapture: { control: { type: 'action' } },
     onDismiss: { control: { type: 'action' } },
+    initialAmount: { control: { type: 'text' } },
+    currency: { control: { type: 'select', options: [Currency.EUR, Currency.GBP] } },
+    totalTransactionAmount: { control: { type: 'number' } },
+    lastFourDigitsOnCard: { control: { type: 'text' } },
+    processor: { control: { type: 'select', options: ['VISA', 'MasterCard', 'American Express'] } },
+    transactionDate: { control: { type: 'date' } },
+    contactName: { control: { type: 'text' } },
   },
 };
 
@@ -24,6 +31,8 @@ Showcase.args = {
   currency: Currency.EUR,
   onCapture: action('Captured'),
   onDismiss: action('Dismissed'),
+  transactionDate: new Date(),
+  totalTransactionAmount: 1222.99,
 };
 
 export const GBPInput = Template.bind({});
@@ -33,6 +42,8 @@ GBPInput.args = {
   currency: Currency.GBP,
   onCapture: action('Captured'),
   onDismiss: action('Dismissed'),
+  transactionDate: new Date(),
+  totalTransactionAmount: 27.5,
 };
 
 export default meta;

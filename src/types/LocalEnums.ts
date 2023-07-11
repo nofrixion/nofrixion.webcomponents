@@ -22,3 +22,15 @@ export enum LocalPartialPaymentMethods {
   None = 'None',
   Partial = 'Partial',
 }
+
+export enum LocalCardPaymentResponseStatus {
+  PaymentAuthorized = 'PAYMENT_AUTHORIZED',
+  CardAuthorizedSuccess = 'AUTHORIZED',
+  PendingAuthentication = 'PENDING_AUTHENTICATION',
+  CardCaptureSuccess = 'PENDING',
+  CardPaymentSoftDecline = '202',
+  CardVoidedSuccess = 'VOIDED',
+  CardCheckoutCaptured = 'CAPTURED',
+  CardCheckoutAuthorized = 'Authorized',
+  CardCheckoutVerified = 'CardVerified',
+}

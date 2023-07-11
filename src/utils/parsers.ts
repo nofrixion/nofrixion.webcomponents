@@ -1,16 +1,20 @@
 import {
-  PaymentRequestAddress,
-  PaymentRequest,
+  Currency,
   PartialPaymentMethods,
   PaymentMethodTypes,
-  PaymentResult,
-  Wallets,
-  Tag,
+  PaymentRequest,
+  PaymentRequestAddress,
+  PaymentRequestEvent,
+  PaymentRequestEventType,
   PaymentRequestPaymentAttempt,
+  PaymentResult,
+  Tag,
+  Wallets,
 } from '@nofrixion/moneymoov';
 
 import {
   LocalAddressType,
+  LocalCardPaymentResponseStatus,
   LocalPartialPaymentMethods,
   LocalPaymentMethodTypes,
   LocalWallets,
@@ -19,6 +23,7 @@ import {
   LocalAddress,
   LocalPaymentAttempt,
   LocalPaymentRequest,
+  LocalPaymentRequestEvent,
   LocalPaymentStatus,
   LocalTag,
 } from '../types/LocalTypes';
@@ -173,6 +178,7 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
 
   const parseApiPaymentAttemptsToLocalPaymentAttempts = (
     remotePaymentAttempts: PaymentRequestPaymentAttempt[],
+    remotePaymentEvents: PaymentRequestEvent[],
   ): LocalPaymentAttempt[] => {
     if (remotePaymentAttempts.length === 0) {
       return [];
@@ -184,6 +190,7 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
             attemptKey,
             authorisedAt,
             settledAt,
+            attemptedAmount,
             paymentMethod,
             authorisedAmount,
             settledAmount,
@@ -191,21 +198,58 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
             walletName,
             status,
           } = remotePaymentAttempt;
+
+          const transactionEvents = remotePaymentEvents.filter(
+            (event) => event.cardAuthorizationResponseID === attemptKey,
+          );
+
+          const capturedAmount = transactionEvents
+            .filter(
+              (event) =>
+                event.eventType === PaymentRequestEventType.card_capture &&
+                (event.status === LocalCardPaymentResponseStatus.CardCaptureSuccess ||
+                  event.status === LocalCardPaymentResponseStatus.CardCheckoutCaptured),
+            )
+            .reduce((previousValue, currentValue) => previousValue + currentValue.amount, 0);
+
           localPaymentAttempts.push({
             attemptKey: attemptKey,
             occurredAt: new Date(settledAt ?? authorisedAt ?? 0),
             paymentMethod: walletName
               ? parseWalletNameToPaymentMethodType(walletName)
               : parseApiPaymentMethodTypeToLocalMethodType(paymentMethod),
-            amount: settledAmount > 0 ? settledAmount : authorisedAmount,
+            amount: attemptedAmount,
             currency: currency,
             processor: walletName ? parseApiWalletTypeToLocalWalletType(walletName) : undefined,
-            needsCapture: status === PaymentResult.Authorized,
+            needsCapture:
+              status === PaymentResult.Authorized ||
+              (status === PaymentResult.PartiallyPaid && capturedAmount < attemptedAmount),
+            capturedAmount: capturedAmount,
+            events: transactionEvents.map((transactionEvent) => {
+              return parseApiPaymentRequestEventToLocalPaymentRequestEvent(transactionEvent);
+            }),
           });
         }
       });
       return localPaymentAttempts;
     }
+  };
+
+  const parseApiPaymentRequestEventToLocalPaymentRequestEvent = (
+    remotePaymentRequestEvent: PaymentRequestEvent,
+  ): LocalPaymentRequestEvent => {
+    const { id, inserted, eventType, amount, currency, status, cardAuthorizationResponseID } =
+      remotePaymentRequestEvent;
+
+    return {
+      id: id,
+      occurredAt: new Date(inserted),
+      authorizationID: cardAuthorizationResponseID,
+      type: eventType,
+      amount: amount,
+      currency: currency,
+      status: status,
+    };
   };
 
   return {
@@ -227,7 +271,10 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     partialPaymentMethod: parseApiPartialPaymentMethodToLocalPartialPaymentMethod(
       remotePaymentRequest.partialPaymentMethod,
     ),
-    paymentAttempts: parseApiPaymentAttemptsToLocalPaymentAttempts(remotePaymentRequest.paymentAttempts),
+    paymentAttempts: parseApiPaymentAttemptsToLocalPaymentAttempts(
+      remotePaymentRequest.paymentAttempts,
+      remotePaymentRequest.events,
+    ),
     priorityBankID: remotePaymentRequest.priorityBankID,
     notificationEmailAddresses: remotePaymentRequest.notificationEmailAddresses,
     captureFunds: !remotePaymentRequest.cardAuthorizeOnly,

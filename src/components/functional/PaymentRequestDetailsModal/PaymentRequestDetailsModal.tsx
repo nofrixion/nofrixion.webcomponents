@@ -17,7 +17,7 @@ interface PaymentRequestDetailsModalProps {
   setPaymentRequests: (paymentRequests: LocalPaymentRequest[]) => void;
   onUnauthorized: () => void;
   onRefund: (paymentAttemptID: string) => void;
-  onCapture: (authorizationID: string, amount: number) => void;
+  onCapture: (authorizationID: string, amount: number) => Promise<void>;
 }
 const PaymentRequestDetailsModal = ({
   token,
