@@ -261,15 +261,8 @@ const PaymentRequestDashboard = ({
   return (
     <div className="font-inter bg-mainGrey text-defaultText h-full">
       <div className="flex flex-col gap-8 md:flex-row md:justify-between md:items-center mb-8 md:mb-[68px]">
-        <span className="md:pl-4 leading-8 font-medium text-[1.75rem]">Accounts Receivable</span>
+        <span className="md:pl-4 leading-8 font-medium text-2xl md:text-[1.75rem]">Accounts Receivable</span>
         <LayoutGroup>
-          {/* <LayoutWrapper className="pl-12 pt-16 font-medium text-base cursor-pointer">
-              <PrimaryButton
-                label="Settings"
-                className="text-defaultText hover:bg-greyBg font-normal"
-                onClick={() => {}}
-              ></PrimaryButton>
-            </LayoutWrapper> */}
           <AnimatePresence initial={false}>
             {!isInitialState && (
               <LayoutWrapper className="fixed bottom-0 mb-4 px-6 w-full -mx-6 md:-mx-14 md:px-14 lg:static lg:w-auto">
@@ -308,7 +301,7 @@ const PaymentRequestDashboard = ({
         <AnimatePresence initial={false}>
           {!isInitialState && (
             <LayoutWrapper className="h-full">
-              <ScrollArea>
+              <ScrollArea hideScrollbar>
                 <Tabs.Root
                   defaultValue={PaymentRequestStatus.All}
                   onValueChange={(value) => setStatus(value as PaymentRequestStatus)}

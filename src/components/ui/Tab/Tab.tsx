@@ -74,7 +74,7 @@ const Tab = ({ status, totalRecords, isLoading = false }: TabProps) => {
           <div className="h-2 w-8 bg-[#E0E9EB] rounded-lg"></div>
         </div>
         <p
-          className={classNames('text-3xl md:text-[1.75rem]/6 font-medium truncate', {
+          className={classNames('text-[1.75rem]/6 font-medium truncate', {
             invisible: isLoading,
           })}
         >
