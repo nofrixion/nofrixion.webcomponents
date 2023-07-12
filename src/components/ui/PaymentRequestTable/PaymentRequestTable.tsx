@@ -6,6 +6,7 @@ import { LocalPaymentRequest } from '../../../types/LocalTypes';
 import { Toaster } from '../Toast/Toast';
 
 import EmptyState from './EmptyState';
+import PaymentRequestMobileCard from '../PaymentRequestMobileCard/PaymentRequestMobileCard';
 
 interface PaymentRequestTableProps {
   paymentRequests: LocalPaymentRequest[];
@@ -49,7 +50,7 @@ const PaymentRequestTable = ({
   selectedPaymentRequestID,
 }: PaymentRequestTableProps) => {
   const onPaymentRequestClickedHandler = (
-    event: React.MouseEvent<HTMLTableRowElement, MouseEvent>,
+    event: React.MouseEvent<HTMLTableRowElement | HTMLButtonElement, MouseEvent>,
     paymentRequest: LocalPaymentRequest,
   ) => {
     if (event.metaKey) {
@@ -64,7 +65,7 @@ const PaymentRequestTable = ({
       {/* Show table when loading so the skeletons are visible */}
       {/* or else show the table when has payment requests */}
       {(isLoading || (paymentRequests && paymentRequests.length > 0)) && (
-        <table className="table-fixed text-left w-full">
+        <table className="hidden lg:table table-fixed text-left w-full">
           <colgroup>
             <col />
             <col />
@@ -179,6 +180,36 @@ const PaymentRequestTable = ({
           </tbody>
         </table>
       )}
+
+      <div className="mb-2 lg:hidden">
+        {paymentRequests && paymentRequests.length > 0 && (
+          <Pager
+            pageSize={pageSize}
+            totalRecords={totalRecords}
+            onPageChange={(newPage) => onPageChanged && onPageChanged(newPage)}
+          />
+        )}
+      </div>
+
+      <div className="lg:hidden space-y-2">
+        {paymentRequests &&
+          paymentRequests.length > 0 &&
+          paymentRequests.map((paymentRequest, index) => (
+            <PaymentRequestMobileCard
+              {...paymentRequest}
+              key={`pr-mobile-${index}`}
+              onClick={(event) => onPaymentRequestClickedHandler(event, paymentRequest)}
+              onDuplicate={() => onPaymentRequestDuplicateClicked && onPaymentRequestDuplicateClicked(paymentRequest)}
+              onDelete={
+                paymentRequest.paymentAttempts && paymentRequest.paymentAttempts.length > 0
+                  ? undefined
+                  : () => onPaymentRequestDeleteClicked && onPaymentRequestDeleteClicked(paymentRequest)
+              }
+              onCopyLink={() => onPaymentRequestCopyLinkClicked && onPaymentRequestCopyLinkClicked(paymentRequest)}
+              onOpenPaymentPage={() => onOpenPaymentPage && onOpenPaymentPage(paymentRequest)}
+            />
+          ))}
+      </div>
 
       {/* Show empty state when contet has loaded and no there are no payment requests*/}
       {/* or also show when isEmpty property comes as `true` */}

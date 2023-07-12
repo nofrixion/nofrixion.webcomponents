@@ -5,6 +5,7 @@ import WalletIcon from '../../../assets/icons/wallet-icon.svg';
 import { format } from 'date-fns';
 import classNames from 'classnames';
 import { LocalPaymentAttempt } from '../../../types/LocalTypes';
+import { Currency } from '@nofrixion/moneymoov';
 
 const PaymentMethodIcon = ({ paymentMethod }: { paymentMethod: LocalPaymentMethodTypes }) => {
   switch (paymentMethod) {
@@ -38,28 +39,37 @@ const Transactions = ({
             {transactions.map((transaction, index) => (
               <tr key={index} className="border-b group whitespace-nowrap">
                 <td className={classNames('text-[0.813rem] pb-2 leading-6', { 'pt-2': index !== 0 })}>
-                  {transaction.occurredAt && format(transaction.occurredAt, 'MMM do, yyyy')}
+                  {/* Mobile date */}
+                  <span className="inline lg:hidden">
+                    {transaction.occurredAt && format(transaction.occurredAt, 'dd/MM/yyyy')}
+                  </span>
+
+                  {/* Desktop date */}
+                  <span className="hidden lg:inline">
+                    {transaction.occurredAt && format(transaction.occurredAt, 'MMM do, yyyy')}
+                  </span>
                 </td>
-                <td className={classNames('pl-6 pb-2 text-right', { 'pt-2': index !== 0 })}>
+                <td className={classNames('pl-2 lg:pl-6 pb-2 text-right', { 'pt-2': index !== 0 })}>
                   <span className="mr-2 text-sm font-medium leading-6 tabular-nums">
+                    <span className="lg:hidden">{transaction.currency === Currency.EUR ? '€' : '£'}</span>
                     {new Intl.NumberFormat(navigator.language, {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     }).format(Number(transaction.amount))}
                   </span>
                 </td>
-                <td className={classNames('pb-2', { 'pt-2': index !== 0 })}>
+                <td className={classNames('hidden lg:table-cell pb-2', { 'pt-2': index !== 0 })}>
                   <span className="text-greyText font-normal text-[0.813rem] leading-6">{transaction.currency}</span>
                 </td>
-                <td className={classNames('pl-6 pb-2', { 'pt-2': index !== 0 })}>
+                <td className={classNames('pl-2 lg:pl-6 pb-2', { 'pt-2': index !== 0 })}>
                   <div className="flex flex-row items-center">
-                    <span className="mr-2">
+                    <span className="mr-2 w-4 h-4">
                       <PaymentMethodIcon paymentMethod={transaction.paymentMethod}></PaymentMethodIcon>
                     </span>
-                    <span className="text-sm leading-6">{transaction.processor}</span>
+                    <span className="hidden lg:inline text-sm leading-6">{transaction.processor}</span>
                     {transaction.paymentMethod === LocalPaymentMethodTypes.Card &&
                       transaction.last4DigitsOfCardNumber && (
-                        <div className="text-sm ml-1 items-center flex">
+                        <div className="hidden lg:flex text-sm ml-1 items-center">
                           <span className="text-[0.375rem] mr-1">&#8226;&#8226;&#8226;&#8226;</span>
                           <span>{transaction.last4DigitsOfCardNumber}</span>
                         </div>
@@ -67,7 +77,7 @@ const Transactions = ({
                   </div>
                 </td>
                 <td
-                  className={classNames('pl-6 pb-2 leading-6', {
+                  className={classNames('hidden lg:table- pl-6 pb-2 leading-6', {
                     'pt-2': index !== 0,
                   })}
                 >

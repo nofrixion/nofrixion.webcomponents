@@ -35,6 +35,7 @@ import _ from 'lodash';
 import PaymentNotificationsModal from '../Modals/PaymentNotificationsModal/PaymentNotificationsModal';
 import { validateEmail } from '../../../utils/validation';
 import { formatAmount } from '../../../utils/formatters';
+import BackArrow from '../utils/BackArrow';
 
 interface CreatePaymentRequestPageProps {
   banks: BankSettings[];
@@ -426,7 +427,7 @@ const CreatePaymentRequestPage = ({
 
   const renderReviewSummary = () => {
     return (
-      <div className="w-full max-w-lg mx-auto mt-6 md:mt-44 relative">
+      <div className="w-full lg:max-w-sm xl:max-w-lg mx-auto mt-6 md:mt-44">
         <div className="space-y-5 md:space-y-10">
           <AnimatePresence>
             {/* Amount */}
@@ -555,8 +556,8 @@ const CreatePaymentRequestPage = ({
 
   const renderBackArrow = () => {
     return (
-      <button
-        className="inline-block lg:ml-[3.25rem] w-6 h-6"
+      <BackArrow
+        intent={isReviewing ? 'back' : 'close'}
         onClick={() => {
           if (isReviewing) {
             setIsReviewing(false);
@@ -565,19 +566,7 @@ const CreatePaymentRequestPage = ({
 
           onClose();
         }}
-      >
-        <svg
-          className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] transition stroke-controlGrey hover:stroke-controlGreyHover"
-          width="26"
-          height="22"
-          viewBox="0 0 26 22"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M11 21L1 11L11 1" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M1 11.082H25" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </button>
+      />
     );
   };
 
@@ -596,7 +585,7 @@ const CreatePaymentRequestPage = ({
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full transform bg-white text-left align-middle transition-all min-h-screen px-8 lg:px-0 lg:flex">
+                <Dialog.Panel className="w-full transform bg-white text-left align-middle transition-all min-h-screen px-6 lg:px-0 lg:flex">
                   {/* Left side & Right side on mobile */}
                   <AnimatePresence initial={false}>
                     {!isReviewing && (
@@ -612,7 +601,7 @@ const CreatePaymentRequestPage = ({
                               {renderBackArrow()}
                               <Dialog.Title
                                 as="h3"
-                                className="text-[1.75rem]/8 font-semibold inline-block text-clip md:whitespace-nowrap -mr-8"
+                                className="text-2xl md:text-[1.75rem]/8 font-semibold inline-block text-clip md:whitespace-nowrap -mr-6"
                               >
                                 New payment request
                               </Dialog.Title>
@@ -785,15 +774,9 @@ const CreatePaymentRequestPage = ({
 
                     {/*  Right side on mobile */}
                     {isReviewing && (
-                      <div className="lg:hidden">
-                        {
-                          <>
-                            <div className="pt-10 lg:pt-20 pb-10">
-                              {renderBackArrow()}
-                              {renderReviewSummary()}
-                            </div>
-                          </>
-                        }
+                      <div className="min-h-screen lg:hidden pt-10 pb-10">
+                        {renderBackArrow()}
+                        {renderReviewSummary()}
                       </div>
                     )}
                   </AnimatePresence>
