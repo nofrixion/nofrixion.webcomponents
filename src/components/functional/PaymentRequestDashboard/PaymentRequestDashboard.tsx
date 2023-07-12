@@ -309,18 +309,11 @@ const PaymentRequestDashboard = ({
   return (
     <div className="font-inter bg-mainGrey text-defaultText h-full">
       <div className="flex flex-col gap-8 md:flex-row md:justify-between md:items-center mb-8 md:mb-[68px]">
-        <span className="md:pl-4 leading-8 font-medium text-[1.75rem]">Accounts Receivable</span>
+        <span className="md:pl-4 leading-8 font-medium text-2xl md:text-[1.75rem]">Accounts Receivable</span>
         <LayoutGroup>
-          {/* <LayoutWrapper className="pl-12 pt-16 font-medium text-base cursor-pointer">
-              <PrimaryButton
-                label="Settings"
-                className="text-defaultText hover:bg-greyBg font-normal"
-                onClick={() => {}}
-              ></PrimaryButton>
-            </LayoutWrapper> */}
           <AnimatePresence initial={false}>
             {!isInitialState && (
-              <LayoutWrapper>
+              <LayoutWrapper className="fixed bottom-0 mb-4 px-6 w-full -mx-6 md:-mx-14 md:px-14 lg:static lg:w-auto">
                 <PrimaryButton
                   label="Create payment request"
                   className="text-white bg-primaryGreen hover:bg-primaryGreenHover w-full"
@@ -356,7 +349,7 @@ const PaymentRequestDashboard = ({
         <AnimatePresence initial={false}>
           {!isInitialState && (
             <LayoutWrapper className="h-full">
-              <ScrollArea>
+              <ScrollArea hideScrollbar>
                 <Tabs.Root
                   defaultValue={PaymentRequestStatus.All}
                   onValueChange={(value) => setStatus(value as PaymentRequestStatus)}
@@ -390,32 +383,33 @@ const PaymentRequestDashboard = ({
             </LayoutWrapper>
           )}
         </AnimatePresence>
-        <LayoutWrapper className="bg-white min-h-[18rem] py-10 px-6 rounded-lg">
+        <div className="hidden lg:block"></div>
+        <LayoutWrapper className="lg:bg-white lg:min-h-[18rem] lg:py-10 lg:px-6 lg:rounded-lg pb-10">
           {/* 
             TODO: Scroll Area will be used in the meantime until Pablo I design the table for mobile.
             Remove the ScrollArea when the mobile design is ready.
           */}
-          <ScrollArea>
-            <PaymentRequestTable
-              paymentRequests={localPaymentRequests}
-              pageSize={pageSize}
-              totalRecords={totalRecords}
-              onPageChanged={setPage}
-              setStatusSortDirection={setStatusSortDirection}
-              setCreatedSortDirection={setCreatedSortDirection}
-              setContactSortDirection={setContactSortDirection}
-              setAmountSortDirection={setAmountSortDirection}
-              onPaymentRequestDuplicateClicked={onDuplicatePaymentRequest}
-              onPaymentRequestDeleteClicked={onDeletePaymentRequest}
-              onPaymentRequestCopyLinkClicked={onCopyPaymentRequestLink}
-              isLoading={isLoadingPaymentRequests}
-              isEmpty={isInitialState}
-              onCreatePaymentRequest={onCreatePaymentRequest}
-              onPaymentRequestClicked={onPaymentRequestRowClicked}
-              onOpenPaymentPage={onOpenPaymentPage}
-              selectedPaymentRequestID={selectedPaymentRequestID}
-            />
-          </ScrollArea>
+          {/* <ScrollArea> */}
+          <PaymentRequestTable
+            paymentRequests={localPaymentRequests}
+            pageSize={pageSize}
+            totalRecords={totalRecords}
+            onPageChanged={setPage}
+            setStatusSortDirection={setStatusSortDirection}
+            setCreatedSortDirection={setCreatedSortDirection}
+            setContactSortDirection={setContactSortDirection}
+            setAmountSortDirection={setAmountSortDirection}
+            onPaymentRequestDuplicateClicked={onDuplicatePaymentRequest}
+            onPaymentRequestDeleteClicked={onDeletePaymentRequest}
+            onPaymentRequestCopyLinkClicked={onCopyPaymentRequestLink}
+            isLoading={isLoadingPaymentRequests}
+            isEmpty={isInitialState}
+            onCreatePaymentRequest={onCreatePaymentRequest}
+            onPaymentRequestClicked={onPaymentRequestRowClicked}
+            onOpenPaymentPage={onOpenPaymentPage}
+            selectedPaymentRequestID={selectedPaymentRequestID}
+          />
+          {/* </ScrollArea> */}
         </LayoutWrapper>
       </LayoutGroup>
 

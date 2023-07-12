@@ -59,7 +59,10 @@ const PaymentMethodIcon: React.FC<PaymentMethodIconProps> = ({
   }
 
   return (
-    <InfoTooltip content={showInfoTooltip ? getIconDescription(paymentMethodsName[paymentMethod], enabled) : ''}>
+    <InfoTooltip
+      className="w-6 h-6 lg:w-4 lg:h-4"
+      content={showInfoTooltip ? getIconDescription(paymentMethodsName[paymentMethod], enabled) : ''}
+    >
       {getImage({ paymentMethod, enabled })}
     </InfoTooltip>
   );

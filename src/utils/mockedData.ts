@@ -71,7 +71,7 @@ export const mockMerchantTags = [
 export const mockPaymentAttempts: LocalPaymentAttempt[] = [
   {
     attemptKey: 'a3b752d2-c0a6-4846-90e5-d783bb4ec005',
-    occurredAt: new Date('2023-05-18'),
+    occurredAt: new Date('2023-05-18T00:00:00.000Z'),
     paymentMethod: LocalPaymentMethodTypes.Card,
     amount: 20.02,
     currency: Currency.EUR,
@@ -83,7 +83,7 @@ export const mockPaymentAttempts: LocalPaymentAttempt[] = [
   },
   {
     attemptKey: 'f4c6e747-6fd6-4a3c-be3b-4d3edd258b35',
-    occurredAt: new Date('2023-03-23'),
+    occurredAt: new Date('2023-03-23T00:00:00.000Z'),
     paymentMethod: LocalPaymentMethodTypes.Card,
     amount: 30.57,
     currency: Currency.EUR,
@@ -95,9 +95,9 @@ export const mockPaymentAttempts: LocalPaymentAttempt[] = [
   },
   {
     attemptKey: 'ca2eb453-9c12-4f8f-b8b2-7c1c6af842ba',
-    occurredAt: new Date('2023-05-18'),
+    occurredAt: new Date('2023-05-18T00:00:00.000Z'),
     paymentMethod: LocalPaymentMethodTypes.Pisp,
-    amount: 5.34,
+    amount: 924852422.99,
     currency: Currency.EUR,
     processor: 'Revolut',
     last4DigitsOfCardNumber: '1234',
@@ -107,7 +107,7 @@ export const mockPaymentAttempts: LocalPaymentAttempt[] = [
   },
   {
     attemptKey: '43535f79-a9f2-4331-9a78-db731e467c49',
-    occurredAt: new Date('2023-05-2'),
+    occurredAt: new Date('2023-05-02T00:00:00.000Z'),
     paymentMethod: LocalPaymentMethodTypes.Pisp,
     amount: 7.9,
     currency: Currency.EUR,
@@ -119,7 +119,7 @@ export const mockPaymentAttempts: LocalPaymentAttempt[] = [
   },
   {
     attemptKey: 'a9f6c19a-0172-47a6-803a-c3f59899cafc',
-    occurredAt: new Date('2023-05-1'),
+    occurredAt: new Date('2023-05-01T00:00:00.000Z'),
     paymentMethod: LocalPaymentMethodTypes.ApplePay,
     amount: 15.39,
     currency: Currency.EUR,
@@ -130,7 +130,7 @@ export const mockPaymentAttempts: LocalPaymentAttempt[] = [
   },
   {
     attemptKey: '7bbb2998-8d78-4b2a-9334-84444c9915c8',
-    occurredAt: new Date('2023-05-18'),
+    occurredAt: new Date('2023-05-18T00:00:00.000Z'),
     paymentMethod: LocalPaymentMethodTypes.GooglePay,
     amount: 20.78,
     currency: Currency.EUR,
@@ -145,7 +145,7 @@ export const mockPaymentAttempts: LocalPaymentAttempt[] = [
 export const partiallyPaidMockPaymentAttempts: LocalPaymentAttempt[] = [
   {
     attemptKey: 'a3b752d2-c0a6-4846-90e5-d783bb4ec005',
-    occurredAt: new Date('2023-05-18'),
+    occurredAt: new Date('2023-05-18T00:00:00.000Z'),
     paymentMethod: LocalPaymentMethodTypes.Card,
     amount: 20.02,
     currency: Currency.EUR,
@@ -157,7 +157,7 @@ export const partiallyPaidMockPaymentAttempts: LocalPaymentAttempt[] = [
   },
   {
     attemptKey: 'f4c6e747-6fd6-4a3c-be3b-4d3edd258b35',
-    occurredAt: new Date('2023-03-23'),
+    occurredAt: new Date('2023-03-23T00:00:00.000Z'),
     paymentMethod: LocalPaymentMethodTypes.Card,
     amount: 30.57,
     currency: Currency.EUR,
@@ -172,7 +172,7 @@ export const partiallyPaidMockPaymentAttempts: LocalPaymentAttempt[] = [
 export const overpaidMockPaymentAttempts: LocalPaymentAttempt[] = [
   {
     attemptKey: 'a3b752d2-c0a6-4846-90e5-d783bb4ec005',
-    occurredAt: new Date('2023-05-18'),
+    occurredAt: new Date('2023-05-18T00:00:00.000Z'),
     paymentMethod: LocalPaymentMethodTypes.Card,
     amount: 20.02,
     currency: Currency.EUR,
@@ -184,7 +184,7 @@ export const overpaidMockPaymentAttempts: LocalPaymentAttempt[] = [
   },
   {
     attemptKey: 'f4c6e747-6fd6-4a3c-be3b-4d3edd258b35',
-    occurredAt: new Date('2023-03-23'),
+    occurredAt: new Date('2023-03-23T00:00:00.000Z'),
     paymentMethod: LocalPaymentMethodTypes.Card,
     amount: 90.57,
     currency: Currency.EUR,

@@ -8,7 +8,7 @@ import { localCurrency } from '../../../utils/constants';
 export interface CaptureModalProps {
   initialAmount: string;
   currency: Currency.EUR | Currency.GBP;
-  onCapture: () => void;
+  onCapture: () => Promise<void>;
   onDismiss: () => void;
   setAmountToCapture: (amount: string) => void;
   totalTransactionAmount: number;
@@ -30,6 +30,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
   transactionDate,
   contactName,
 }) => {
+  const [isCaptureButtonDisabled, setIsCaptureButtonDisabled] = React.useState(false);
   const formatter = new Intl.NumberFormat(navigator.language, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
@@ -39,9 +40,15 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
     return transactionCurrency === Currency.EUR ? localCurrency.eur.symbol : localCurrency.gbp.symbol;
   };
 
+  const onCaptureClick = async () => {
+    setIsCaptureButtonDisabled(true);
+    await onCapture();
+    setIsCaptureButtonDisabled(false);
+  };
+
   return (
     <>
-      <div className="bg-white h-screen overflow-auto w-[37.5rem] px-8 py-8">
+      <div className="bg-white h-screen overflow-auto lg:w-[37.5rem] px-8 py-8">
         <div className="max-h-full">
           <div className="h-fit">
             <button type="button" className="hover:cursor-pointer block" onClick={onDismiss}>
@@ -94,7 +101,8 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
             </table>
             <button
               className="mt-14 inline-flex justify-center rounded-full bg-[#006A80] py-3 px-16 text-sm text-white font-semibold transition w-full cursor-pointer hover:bg-[#144752]"
-              onClick={onCapture}
+              onClick={onCaptureClick}
+              disabled={isCaptureButtonDisabled}
             >
               Confirm capture
             </button>
