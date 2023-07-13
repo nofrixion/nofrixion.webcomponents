@@ -338,7 +338,7 @@ const PaymentRequestDashboard = ({
             </LayoutWrapper>
           )}
         </AnimatePresence>
-        <div className="hidden lg:block"></div>
+
         <LayoutWrapper className="lg:bg-white lg:min-h-[18rem] lg:py-10 lg:px-6 lg:rounded-lg pb-10">
           {/* 
             TODO: Scroll Area will be used in the meantime until Pablo I design the table for mobile.

@@ -41,6 +41,25 @@ const formatAmount = (amount: number, fractionDigits = 2): string => {
   return formattedAmount;
 };
 
+const formatAmountAndDecimals = (amount: number) => {
+  // Get the amount and split it into the value and the decimals
+  const parsedAmount = amount.toString().split('.');
+
+  // Divide amount into thousands with ","
+  const amountValueWithCommas = parsedAmount[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+  let amountDecimals = parsedAmount[1];
+
+  if (amountDecimals && amountDecimals.length == 1) {
+    amountDecimals += '0';
+  }
+
+  return {
+    amountValueWithCommas,
+    amountDecimals: amountDecimals ?? '00',
+  };
+};
+
 /**
  * Formats the given sort direction into a string that can be used in the API
  * @param statusSortDirection The sort direction for the status column
@@ -105,4 +124,11 @@ const getSelectRangeText = (fromDate: Date, toDate: Date): string => {
   }
 };
 
-export { formatDate, formatAmount, formatPaymentRequestSortExpression, getDateFormat, getSelectRangeText };
+export {
+  formatDate,
+  formatAmount,
+  formatAmountAndDecimals,
+  formatPaymentRequestSortExpression,
+  getDateFormat,
+  getSelectRangeText,
+};

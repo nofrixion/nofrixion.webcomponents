@@ -34,7 +34,7 @@ import PaymentMethodIcon from '../utils/PaymentMethodIcon';
 import _ from 'lodash';
 import PaymentNotificationsModal from '../Modals/PaymentNotificationsModal/PaymentNotificationsModal';
 import { validateEmail } from '../../../utils/validation';
-import { formatAmount } from '../../../utils/formatters';
+import { formatAmountAndDecimals } from '../../../utils/formatters';
 import BackArrow from '../utils/BackArrow';
 
 interface CreatePaymentRequestPageProps {
@@ -426,6 +426,8 @@ const CreatePaymentRequestPage = ({
   };
 
   const renderReviewSummary = () => {
+    const { amountValueWithCommas, amountDecimals } = formatAmountAndDecimals(Number(amount));
+
     return (
       <div className="w-full lg:max-w-sm xl:max-w-lg mx-auto mt-6 md:mt-44">
         <div className="space-y-5 md:space-y-10">
@@ -435,7 +437,8 @@ const CreatePaymentRequestPage = ({
               <LayoutWrapper key="amount" className={reviewRowClassNames}>
                 <span className="leading-6 text-greyText w-40 shrink-0">Request</span>
                 <span className="font-semibold text-[2rem]/8 w-full">
-                  {currency == 'GBP' ? '£' : '€'} {formatAmount(Number(amount))}
+                  {currency == 'GBP' ? '£' : '€'} {amountValueWithCommas}
+                  <sup className="ml-0.5 text-xl">.{amountDecimals}</sup>
                 </span>
               </LayoutWrapper>
             )}

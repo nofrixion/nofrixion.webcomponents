@@ -60,11 +60,11 @@ const QRCode = ({ url }: { url: string }) => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className="hidden lg:block" ref={qrCodeSvgRef}>
+        <div className="hidden md:block" ref={qrCodeSvgRef}>
           <QRCodeComponent value={url} className="w-full h-full" />
         </div>
 
-        <div>
+        <div className="block md:hidden">
           <button
             key="review-pr"
             type="button"
@@ -93,7 +93,7 @@ const QRCode = ({ url }: { url: string }) => {
               animate={{ opacity: 1 }}
               initial={{ opacity: 0 }}
               exit={{ opacity: 0 }}
-              className="hidden lg:flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full w-10 h-10 bg-[#CEF5FC] cursor-pointer justify-center items-center"
+              className="hidden md:flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full w-10 h-10 bg-[#CEF5FC] cursor-pointer justify-center items-center"
               onClick={downloadAsImage}
             >
               <div>
