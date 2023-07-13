@@ -10,6 +10,7 @@ import {
   usePaymentRequests,
   PaymentRequestMetrics,
   useMerchantTags,
+  Currency,
 } from '@nofrixion/moneymoov';
 import PaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTable';
 import { SortDirection } from '../../ui/ColumnHeader/ColumnHeader';
@@ -315,21 +316,29 @@ const PaymentRequestDashboard = ({
                       status={PaymentRequestStatus.All}
                       isLoading={isLoadingMetrics}
                       totalRecords={metrics?.all ?? 0}
+                      totalAmountInEuros={metrics?.totalAmountsByCurrency['all']?.['eur']}
+                      totalAmountInPounds={metrics?.totalAmountsByCurrency['all']?.['gbp']}
                     />
                     <Tab
                       status={PaymentRequestStatus.None}
                       isLoading={isLoadingMetrics}
                       totalRecords={metrics?.unpaid ?? 0}
+                      totalAmountInEuros={metrics?.totalAmountsByCurrency['unpaid']?.['eur']}
+                      totalAmountInPounds={metrics?.totalAmountsByCurrency['unpaid']?.['gbp']}
                     />
                     <Tab
                       status={PaymentRequestStatus.PartiallyPaid}
                       isLoading={isLoadingMetrics}
                       totalRecords={metrics?.partiallyPaid ?? 0}
+                      totalAmountInEuros={metrics?.totalAmountsByCurrency['partiallyPaid']?.['eur']}
+                      totalAmountInPounds={metrics?.totalAmountsByCurrency['partiallyPaid']?.['gbp']}
                     />
                     <Tab
                       status={PaymentRequestStatus.FullyPaid}
                       isLoading={isLoadingMetrics}
                       totalRecords={metrics?.paid ?? 0}
+                      totalAmountInEuros={metrics?.totalAmountsByCurrency['paid']?.['eur']}
+                      totalAmountInPounds={metrics?.totalAmountsByCurrency['paid']?.['gbp']}
                     />
                   </Tabs.List>
                   <Tabs.Content value=""></Tabs.Content>
