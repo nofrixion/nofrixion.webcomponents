@@ -81,8 +81,8 @@ const QRCode = ({ url }: { url: string }) => {
               <path d="M10 14.6667H14.6667V10" stroke="#454D54" />
               <path d="M12.8334 12H9.33337V8.66663" stroke="#454D54" />
               <path d="M11.9973 9.50263V9.16663H12.3333V9.50263H11.9973Z" stroke="#454D54" />
-              <path d="M23 13L23 2" stroke="#454D54" stroke-linecap="round" stroke-linejoin="round" />
-              <path d="M20 11L23 14L26 11" stroke="#454D54" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M23 13L23 2" stroke="#454D54" stroke-linecap="round" strokeLinejoin="round" />
+              <path d="M20 11L23 14L26 11" stroke="#454D54" stroke-linecap="round" strokeLinejoin="round" />
             </svg>
           </button>
         </div>
