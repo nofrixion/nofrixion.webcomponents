@@ -80,15 +80,15 @@ const PaymentRequestDetailsModal = ({
                         id="Vector 11"
                         d="M22 21L12 11L22 1"
                         stroke="#454D54"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                       <path
                         id="Vector 15"
                         d="M2 0.999999L12 11L2 21"
                         stroke="#454D54"
                         stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeLinejoin="round"
                       />
                     </g>
                   </svg>
