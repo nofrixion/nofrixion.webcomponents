@@ -5,7 +5,7 @@ import { defaultAnonymousUserName } from '../../../utils/constants';
 import PaymentRequestStatusBadge from '../PaymentRequestStatusBadge/PaymentRequestStatusBadge';
 
 interface PaymentRequestMobileCardProps extends LocalPaymentRequest {
-  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   onDuplicate?: () => void;
   onCopyLink?: () => void;
   onDelete?: () => void;
@@ -37,7 +37,7 @@ const PaymentRequestMobileCard = ({
   };
 
   return (
-    <button className="bg-white p-4 pr-2 rounded-lg tabular-nums w-full" onClick={onClick}>
+    <div className="bg-white p-4 pr-2 rounded-lg tabular-nums w-full cursor-pointer" onClick={onClick}>
       {/* Date, ammount & context menu */}
       <div className="flex mb-4 text-left">
         <span className="text-xs/6 w-20 mr-2">{formatDate(createdAt)}</span>
@@ -60,7 +60,7 @@ const PaymentRequestMobileCard = ({
           <PaymentRequestStatusBadge status={status} size="small"></PaymentRequestStatusBadge>
         </div>
       </div>
-    </button>
+    </div>
   );
 };
 

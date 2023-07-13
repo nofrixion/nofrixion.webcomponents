@@ -70,42 +70,35 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
                 '.'
               )}
             </p>
-            <table className="mt-12" cellPadding={0} cellSpacing={0} border={0}>
-              <tbody>
-                <tr>
-                  <td className="w-[152px]">
-                    <span className="text-sm leading-8 font-normal text-greyText">Capture</span>
-                  </td>
-                  <td>
-                    <div className="w-40">
-                      <InputAmountField
-                        currency={currency}
-                        onCurrencyChange={() => {}}
-                        allowCurrencyChange={false}
-                        value={formatter.format(Number(initialAmount))}
-                        onChange={(e) => setAmountToCapture(e.target.value)}
-                      ></InputAmountField>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td>
-                    <span className="text-13px leading-5 font-normal text-greyText">
-                      Total payment was&nbsp;{getCurrencySymbol(currency)}&nbsp;
-                      {formatter.format(totalTransactionAmount)}
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <button
-              className="mt-14 inline-flex justify-center rounded-full bg-[#006A80] py-3 px-16 text-sm text-white font-semibold transition w-full cursor-pointer hover:bg-[#144752]"
-              onClick={onCaptureClick}
-              disabled={isCaptureButtonDisabled}
-            >
-              Confirm capture
-            </button>
+            <div className="mt-12 md:flex">
+              <div className="md:w-[152px]">
+                <span className="text-sm leading-8 font-normal text-greyText md:leading-[48px]">Capture</span>
+              </div>
+              <div className="text-center md:text-left">
+                <div className="md:w-40">
+                  <InputAmountField
+                    currency={currency}
+                    onCurrencyChange={() => {}}
+                    allowCurrencyChange={false}
+                    value={formatter.format(Number(initialAmount))}
+                    onChange={(e) => setAmountToCapture(e.target.value)}
+                  ></InputAmountField>
+                </div>
+                <span className="text-13px leading-5 font-normal text-greyText">
+                  Total payment was&nbsp;{getCurrencySymbol(currency)}&nbsp;
+                  {formatter.format(totalTransactionAmount)}
+                </span>
+              </div>
+            </div>
+            <div className="lg:mt-14 lg:static lg:p-0 fixed bottom-0 left-0 w-full px-6 mx-auto pb-4 z-20">
+              <button
+                className="justify-center rounded-full bg-[#006A80] h-12 lg:h-11 px-16 text-sm text-white font-semibold transition w-full cursor-pointer hover:bg-[#144752]"
+                onClick={onCaptureClick}
+                disabled={isCaptureButtonDisabled}
+              >
+                Confirm capture
+              </button>
+            </div>
           </div>
         </div>
       </div>

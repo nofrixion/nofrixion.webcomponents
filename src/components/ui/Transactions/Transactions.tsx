@@ -163,7 +163,7 @@ const Transactions = ({ transactions, onRefund, onCapture }: TransactionsProps) 
                     <td className="hidden lg:table-cell py-0">
                       <span className="text-greyText font-normal">{transaction.currency}</span>
                     </td>
-                    <td className="pl-1 lg:pl-5 py-0">
+                    <td className="pl-1 lg:pl-5 py-0" colSpan={2}>
                       {isCaptureEvent(event) && (
                         <div className="flex flex-row items-center">
                           <span className="mr-2 p-1.5">
