@@ -2,7 +2,6 @@ import Tab from '../../ui/Tab/Tab';
 import * as Tabs from '@radix-ui/react-tabs';
 import React, { useEffect, useState } from 'react';
 import { DateRange } from '../../ui/DateRangePicker/DateRangePicker';
-import PrimaryButton from '../../ui/PrimaryButton/PrimaryButton';
 import {
   usePaymentRequestMetrics,
   PaymentRequestStatus,
@@ -25,6 +24,7 @@ import FilterControlsRow from '../../ui/FilterControlsRow/FilterControlsRow';
 import { FilterableTag } from '../../ui/TagFilter/TagFilter';
 import ScrollArea from '../../ui/ScrollArea/ScrollArea';
 import { LocalPartialPaymentMethods, LocalPaymentMethodTypes } from '../../../types/LocalEnums';
+import Button from '../../ui/Button/Button';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -269,11 +269,7 @@ const PaymentRequestDashboard = ({
           <AnimatePresence initial={false}>
             {!isInitialState && (
               <LayoutWrapper className="fixed bottom-0 mb-4 px-6 w-full -mx-6 md:-mx-14 md:px-14 lg:static lg:w-auto">
-                <PrimaryButton
-                  label="Create payment request"
-                  className="text-white bg-primaryGreen hover:bg-primaryGreenHover w-full"
-                  onClick={onCreatePaymentRequest}
-                />
+                <Button label="Create payment request" type="primary" size="big" onClick={onCreatePaymentRequest} />
               </LayoutWrapper>
             )}
           </AnimatePresence>

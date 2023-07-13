@@ -36,6 +36,7 @@ import PaymentNotificationsModal from '../Modals/PaymentNotificationsModal/Payme
 import { validateEmail } from '../../../utils/validation';
 import { formatAmount } from '../../../utils/formatters';
 import BackArrow from '../utils/BackArrow';
+import Button from '../Button/Button';
 
 interface CreatePaymentRequestPageProps {
   banks: BankSettings[];
@@ -528,13 +529,20 @@ const CreatePaymentRequestPage = ({
                   {/* Confirm PR */}
                   {isReviewing && (
                     <LayoutWrapper layout={false} className="space-y-7" animateOnExit={false} duration={0.6}>
-                      <button
+                      <Button
+                        label="Confirm payment request"
+                        type="primary"
+                        size="big"
+                        onClick={onConfirmClicked}
+                        disabled={isSubmitting}
+                      />
+                      {/* <button
                         className="w-full whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-white font-semibold cursor-pointer hover:bg-[#144752] select-none disabled:bg-[#DEE5ED]"
                         disabled={isSubmitting}
                         onClick={onConfirmClicked}
                       >
                         Confirm payment request
-                      </button>
+                      </button> */}
 
                       {/* Edit button */}
                       <button
@@ -755,16 +763,13 @@ const CreatePaymentRequestPage = ({
                                 exit={{ opacity: 0, y: 20 }}
                                 className="block lg:hidden sticky bottom-0 w-10/12 mx-auto pb-4"
                               >
-                                <button
-                                  key="review-pr"
-                                  type="button"
-                                  className="w-full h-12 px-16 whitespace-nowrap flex justify-center items-center rounded-full py-3 text-sm cursor-pointer bg-[#DEE5ED] transition hover:bg-[#BDCCDB]"
+                                <Button
+                                  label="Review payment request"
+                                  type="secondary"
+                                  size="big"
                                   onClick={onReviewClicked}
-                                >
-                                  <span className="py-3">Review payment request</span>
-
-                                  <img src={NextIcon} alt="Arrow right" className="ml-2 w-4 h-4" />
-                                </button>
+                                  nextArrow={true}
+                                />
                               </motion.div>
                             )}
                           </AnimatePresence>
