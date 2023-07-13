@@ -506,7 +506,7 @@ const CreatePaymentRequestPage = ({
             {currency && amount && productOrService && (
               <LayoutWrapper
                 key="buttons"
-                className="flex flex-col !mt-20 justify-center sticky bottom-4 w-10/12 lg:w-full mx-auto lg:mx-0 lg:static lg:bottom-auto"
+                className="flex flex-col !mt-20 justify-center sticky bottom-4 w-full lg:w-full mx-auto lg:mx-0 lg:static lg:bottom-auto"
               >
                 <AnimatePresence initial={false}>
                   {/* Review PR */}
@@ -531,26 +531,14 @@ const CreatePaymentRequestPage = ({
                     <LayoutWrapper layout={false} className="space-y-7" animateOnExit={false} duration={0.6}>
                       <Button
                         label="Confirm payment request"
-                        type="primary"
+                        type="darkPrimary"
                         size="big"
                         onClick={onConfirmClicked}
                         disabled={isSubmitting}
                       />
-                      {/* <button
-                        className="w-full whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-white font-semibold cursor-pointer hover:bg-[#144752] select-none disabled:bg-[#DEE5ED]"
-                        disabled={isSubmitting}
-                        onClick={onConfirmClicked}
-                      >
-                        Confirm payment request
-                      </button> */}
 
                       {/* Edit button */}
-                      <button
-                        className="hidden lg:inline-block w-full py-3 bg-[#DEE5ED] transition hover:bg-[#BDCCDB] rounded-full mr-5"
-                        onClick={() => setIsReviewing(false)}
-                      >
-                        Edit
-                      </button>
+                      <Button label="Edit" type="secondary" size="big" onClick={() => setIsReviewing(false)} />
                     </LayoutWrapper>
                   )}
                 </AnimatePresence>
@@ -761,7 +749,7 @@ const CreatePaymentRequestPage = ({
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: 20 }}
-                                className="block lg:hidden sticky bottom-0 w-10/12 mx-auto pb-4"
+                                className="block lg:hidden sticky bottom-0 w-full mx-auto pb-4"
                               >
                                 <Button
                                   label="Review payment request"
