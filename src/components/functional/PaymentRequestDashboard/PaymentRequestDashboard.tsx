@@ -4,13 +4,13 @@ import React, { useEffect, useState } from 'react';
 import { DateRange } from '../../ui/DateRangePicker/DateRangePicker';
 import PrimaryButton from '../../ui/PrimaryButton/PrimaryButton';
 import {
-  usePaymentRequestMetrics,
-  PaymentRequestStatus,
-  PaymentRequestClient,
-  usePaymentRequests,
-  PaymentRequestMetrics,
-  useMerchantTags,
   Currency,
+  PaymentRequestClient,
+  PaymentRequestMetrics,
+  PaymentRequestStatus,
+  useMerchantTags,
+  usePaymentRequestMetrics,
+  usePaymentRequests,
 } from '@nofrixion/moneymoov';
 import PaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTable';
 import { SortDirection } from '../../ui/ColumnHeader/ColumnHeader';
@@ -177,6 +177,8 @@ const PaymentRequestDashboard = ({
     if (metrics) {
       metrics.all--;
       metrics.unpaid--;
+
+      updateMetricTotals(paymentRequest.currency, paymentRequest.amount * -1);
     }
   };
 
@@ -238,6 +240,22 @@ const PaymentRequestDashboard = ({
     setIsCreatePaymentRequestOpen(false);
   };
 
+  const updateMetricTotals = (currency: Currency, amount: number) => {
+    if (metrics) {
+      let currencyField: 'eur' | 'gbp' | undefined =
+        currency === Currency.EUR ? 'eur' : currency === Currency.GBP ? 'gbp' : undefined;
+
+      if (currencyField) {
+        if (metrics.totalAmountsByCurrency?.all?.[currencyField]) {
+          metrics.totalAmountsByCurrency.all[currencyField]! += amount;
+        }
+        if (metrics.totalAmountsByCurrency?.unpaid?.[currencyField]) {
+          metrics.totalAmountsByCurrency.unpaid[currencyField]! += amount;
+        }
+      }
+    }
+  };
+
   // Adds the newly created payment request to the top of the list
   // Increments the metrics all and unpaid counts
   // Sets the newly created payment request as the selected one
@@ -246,6 +264,8 @@ const PaymentRequestDashboard = ({
     if (metrics) {
       metrics.all++;
       metrics.unpaid++;
+
+      updateMetricTotals(paymentRequest.currency, paymentRequest.amount);
     }
 
     setSelectedPaymentRequestID(paymentRequest.id);
@@ -316,29 +336,29 @@ const PaymentRequestDashboard = ({
                       status={PaymentRequestStatus.All}
                       isLoading={isLoadingMetrics}
                       totalRecords={metrics?.all ?? 0}
-                      totalAmountInEuros={metrics?.totalAmountsByCurrency['all']?.['eur']}
-                      totalAmountInPounds={metrics?.totalAmountsByCurrency['all']?.['gbp']}
+                      totalAmountInEuros={metrics?.totalAmountsByCurrency?.all?.eur}
+                      totalAmountInPounds={metrics?.totalAmountsByCurrency?.all?.gbp}
                     />
                     <Tab
                       status={PaymentRequestStatus.None}
                       isLoading={isLoadingMetrics}
                       totalRecords={metrics?.unpaid ?? 0}
-                      totalAmountInEuros={metrics?.totalAmountsByCurrency['unpaid']?.['eur']}
-                      totalAmountInPounds={metrics?.totalAmountsByCurrency['unpaid']?.['gbp']}
+                      totalAmountInEuros={metrics?.totalAmountsByCurrency?.unpaid?.eur}
+                      totalAmountInPounds={metrics?.totalAmountsByCurrency?.unpaid?.gbp}
                     />
                     <Tab
                       status={PaymentRequestStatus.PartiallyPaid}
                       isLoading={isLoadingMetrics}
                       totalRecords={metrics?.partiallyPaid ?? 0}
-                      totalAmountInEuros={metrics?.totalAmountsByCurrency['partiallyPaid']?.['eur']}
-                      totalAmountInPounds={metrics?.totalAmountsByCurrency['partiallyPaid']?.['gbp']}
+                      totalAmountInEuros={metrics?.totalAmountsByCurrency?.partiallyPaid?.eur}
+                      totalAmountInPounds={metrics?.totalAmountsByCurrency?.partiallyPaid?.gbp}
                     />
                     <Tab
                       status={PaymentRequestStatus.FullyPaid}
                       isLoading={isLoadingMetrics}
                       totalRecords={metrics?.paid ?? 0}
-                      totalAmountInEuros={metrics?.totalAmountsByCurrency['paid']?.['eur']}
-                      totalAmountInPounds={metrics?.totalAmountsByCurrency['paid']?.['gbp']}
+                      totalAmountInEuros={metrics?.totalAmountsByCurrency?.paid?.eur}
+                      totalAmountInPounds={metrics?.totalAmountsByCurrency?.paid?.gbp}
                     />
                   </Tabs.List>
                   <Tabs.Content value=""></Tabs.Content>

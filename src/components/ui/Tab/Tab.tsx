@@ -44,6 +44,11 @@ const showIndicator = (status: PaymentRequestStatus) => {
 };
 
 const Tab = ({ status, totalRecords, isLoading = false, totalAmountInEuros, totalAmountInPounds }: TabProps) => {
+  let formatter = new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
   return (
     <Tabs.Trigger
       value={status}
@@ -92,7 +97,7 @@ const Tab = ({ status, totalRecords, isLoading = false, totalAmountInEuros, tota
                 invisible: isLoading,
               })}
             >
-              € {totalAmountInEuros}
+              € {formatter.format(totalAmountInEuros)}
             </span>
           )}
           {totalAmountInPounds && (
@@ -101,7 +106,7 @@ const Tab = ({ status, totalRecords, isLoading = false, totalAmountInEuros, tota
                 invisible: isLoading,
               })}
             >
-              £ {totalAmountInPounds}
+              £ {formatter.format(totalAmountInPounds)}
             </span>
           )}
         </div>
