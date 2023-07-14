@@ -31,10 +31,10 @@ const arrow = cva('w-full h-full fill-none stroke-current', {
   variants: {
     type: {
       primary: ['text-white'],
+      primaryDark: ['text-white'],
       secondary: ['text-[#454D54]'],
       tertiary: ['text-[#454D54]'],
       text: ['text-[#454D54]', 'hover:text-greyTextHover'],
-      primaryDark: ['text-white'],
     },
   },
   defaultVariants: {
