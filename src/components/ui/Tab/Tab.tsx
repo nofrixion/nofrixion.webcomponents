@@ -91,7 +91,7 @@ const Tab = ({ status, totalRecords, isLoading = false, totalAmountInEuros, tota
           </span>
         </div>
         <div className="hidden lg:flex flex-col justify-center items-end">
-          {totalAmountInEuros && (
+          {totalAmountInEuros !== undefined && (
             <span
               className={classNames('text-xs md:text-sm/6 font-medium', {
                 invisible: isLoading,
@@ -100,7 +100,7 @@ const Tab = ({ status, totalRecords, isLoading = false, totalAmountInEuros, tota
               € {formatter.format(totalAmountInEuros)}
             </span>
           )}
-          {totalAmountInPounds && (
+          {totalAmountInPounds !== undefined && (
             <span
               className={classNames('text-xs md:text-sm/6 font-medium', {
                 invisible: isLoading,

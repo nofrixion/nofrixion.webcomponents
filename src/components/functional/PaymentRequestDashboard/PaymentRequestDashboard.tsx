@@ -271,6 +271,21 @@ const PaymentRequestDashboard = ({
     setSelectedPaymentRequestID(paymentRequest.id);
   };
 
+  /// Only show the total amount if there are payment requests
+  /// with the specified timeframe and currency, no matter the status,
+  /// unless there are no payment requests at all for the specified status.
+  const getTotalAmountPerCurrencyAndStatus = (currency: 'eur' | 'gbp', status: 'paid' | 'partiallyPaid' | 'unpaid') => {
+    if (
+      metrics &&
+      metrics.totalAmountsByCurrency &&
+      metrics.totalAmountsByCurrency.all?.[currency] &&
+      metrics[status] &&
+      metrics[status] > 0
+    ) {
+      return metrics.totalAmountsByCurrency?.[status]?.[currency] ?? 0;
+    }
+  };
+
   // tore the results of the first execution of the metrics
   // and use them as the initial state of the metrics.
   // This way, when they change the dates
@@ -343,22 +358,22 @@ const PaymentRequestDashboard = ({
                       status={PaymentRequestStatus.None}
                       isLoading={isLoadingMetrics}
                       totalRecords={metrics?.unpaid ?? 0}
-                      totalAmountInEuros={metrics?.totalAmountsByCurrency?.unpaid?.eur}
-                      totalAmountInPounds={metrics?.totalAmountsByCurrency?.unpaid?.gbp}
+                      totalAmountInEuros={getTotalAmountPerCurrencyAndStatus('eur', 'unpaid')}
+                      totalAmountInPounds={getTotalAmountPerCurrencyAndStatus('gbp', 'unpaid')}
                     />
                     <Tab
                       status={PaymentRequestStatus.PartiallyPaid}
                       isLoading={isLoadingMetrics}
                       totalRecords={metrics?.partiallyPaid ?? 0}
-                      totalAmountInEuros={metrics?.totalAmountsByCurrency?.partiallyPaid?.eur}
-                      totalAmountInPounds={metrics?.totalAmountsByCurrency?.partiallyPaid?.gbp}
+                      totalAmountInEuros={getTotalAmountPerCurrencyAndStatus('eur', 'partiallyPaid')}
+                      totalAmountInPounds={getTotalAmountPerCurrencyAndStatus('gbp', 'partiallyPaid')}
                     />
                     <Tab
                       status={PaymentRequestStatus.FullyPaid}
                       isLoading={isLoadingMetrics}
                       totalRecords={metrics?.paid ?? 0}
-                      totalAmountInEuros={metrics?.totalAmountsByCurrency?.paid?.eur}
-                      totalAmountInPounds={metrics?.totalAmountsByCurrency?.paid?.gbp}
+                      totalAmountInEuros={getTotalAmountPerCurrencyAndStatus('eur', 'paid')}
+                      totalAmountInPounds={getTotalAmountPerCurrencyAndStatus('gbp', 'paid')}
                     />
                   </Tabs.List>
                   <Tabs.Content value=""></Tabs.Content>
