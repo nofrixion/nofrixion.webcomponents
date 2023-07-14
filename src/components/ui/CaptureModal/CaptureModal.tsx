@@ -74,7 +74,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
               <div className="md:w-[152px]">
                 <span className="text-sm leading-8 font-normal text-greyText md:leading-[48px]">Capture</span>
               </div>
-              <div className="text-center md:text-left">
+              <div className="text-left">
                 <div className="md:w-40">
                   <InputAmountField
                     currency={currency}
