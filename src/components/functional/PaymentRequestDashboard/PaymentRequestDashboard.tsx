@@ -287,8 +287,8 @@ const PaymentRequestDashboard = ({
         ...prev,
         ...paymentRequests.data.content?.map((pr) => remotePaymentRequestToLocalPaymentRequest(pr)),
       ]);
+      setShowMorePage(showMorePage + 1);
     }
-    setShowMorePage(showMorePage + 1);
     setIsLoadingMore(false);
   };
 
