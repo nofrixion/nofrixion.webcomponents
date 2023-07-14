@@ -756,7 +756,7 @@ const CreatePaymentRequestPage = ({
                                   type="secondary"
                                   size="big"
                                   onClick={onReviewClicked}
-                                  nextArrow={true}
+                                  nextArrow
                                 />
                               </motion.div>
                             )}
