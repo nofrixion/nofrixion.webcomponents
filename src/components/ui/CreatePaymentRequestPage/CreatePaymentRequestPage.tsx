@@ -531,7 +531,7 @@ const CreatePaymentRequestPage = ({
                     <LayoutWrapper layout={false} className="space-y-7" animateOnExit={false} duration={0.6}>
                       <Button
                         label="Confirm payment request"
-                        type="darkPrimary"
+                        type="primaryDark"
                         size="big"
                         onClick={onConfirmClicked}
                         disabled={isSubmitting}

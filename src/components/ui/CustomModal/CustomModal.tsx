@@ -115,7 +115,7 @@ const CustomModal = ({
                   )}
                   <Button
                     label="Apply"
-                    type="darkPrimary"
+                    type="primaryDark"
                     size="medium"
                     onClick={onApplyClicked}
                     disabled={!onApplyEnabled}

@@ -8,16 +8,16 @@ const button = cva(
     variants: {
       type: {
         primary: ['bg-primaryGreen', 'text-white', 'hover:bg-primaryGreenHover', 'stroke:white'],
+        primaryDark: ['bg-[#006A80]', 'text-white', 'hover:bg-[#144752]', 'stroke:white'],
         secondary: ['bg-secondaryButton', 'text-defaultText', 'hover:bg-secondaryButtonHover'],
         tertiary: ['border', 'border-borderGrey', 'hover:border-borderGreyHighlighted', 'text-defaultText'],
         text: ['text-greyText', 'hover:text-greyTextHover'],
-        darkPrimary: ['bg-[#006A80]', 'text-white', 'hover:bg-[#144752]', 'stroke:white'],
       },
       size: {
         big: ['text-base', 'px-3', 'py-3', 'md:px-6', 'font-normal', 'leading-6'],
         medium: ['text-sm', 'px-4', 'py-2', 'font-normal', 'leading-6'],
-        small: ['text-[13px]', 'py-1', 'px-3', 'font-normal', 'leading-6'],
-        xsmall: ['text-[13px]', 'py-1', 'px-3', 'font-normal', 'leading-4'],
+        small: ['text-[0.813rem]', 'py-1', 'px-3', 'font-normal', 'leading-6'],
+        xsmall: ['text-[0.813rem]', 'py-1', 'px-3', 'font-normal', 'leading-4'],
       },
     },
     defaultVariants: {
@@ -34,7 +34,7 @@ const arrow = cva('w-full h-full fill-none stroke-current', {
       secondary: ['text-[#454D54]'],
       tertiary: ['text-[#454D54]'],
       text: ['text-[#454D54]', 'hover:text-greyTextHover'],
-      darkPrimary: ['text-white'],
+      primaryDark: ['text-white'],
     },
   },
   defaultVariants: {
@@ -62,9 +62,9 @@ interface ButtonProps {
   size?: VariantProps<typeof button>['size'];
   previousArrow?: boolean;
   nextArrow?: boolean;
-  onClick?: () => void;
   disabled?: boolean;
   className?: string;
+  onClick?: () => void;
 }
 
 const Button = ({

@@ -18,7 +18,7 @@ export default {
     },
     type: {
       control: { type: 'radio' },
-      options: ['primary', 'secondary', 'tertiary', 'text', 'component'],
+      options: ['primary', 'primaryDark', 'secondary', 'tertiary', 'text'],
     },
     previousArrow: {
       control: { type: 'boolean' },
@@ -56,7 +56,7 @@ Primary.args = {
 Primary.decorators = [
   () => (
     <div className="space-y-2 flex flex-col w-fit">
-      <Button {...{ label: 'Create payment request', size: 'big' }} />
+      <Button {...(Primary.args, { label: 'Create payment request', size: 'big' })} />
       <Button {...{ label: 'Create payment request', size: 'medium' }} />
       <Button {...{ label: 'Create payment request', size: 'small' }} />
       <Button {...{ label: 'Create payment request', size: 'xsmall' }} />

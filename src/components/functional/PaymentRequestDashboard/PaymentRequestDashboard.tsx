@@ -9,6 +9,7 @@ import {
   usePaymentRequests,
   PaymentRequestMetrics,
   useMerchantTags,
+  formatPaymentRequestSortExpression,
 } from '@nofrixion/moneymoov';
 import PaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTable';
 import { SortDirection } from '../../ui/ColumnHeader/ColumnHeader';
@@ -55,6 +56,8 @@ const PaymentRequestDashboard = ({
   const [maxAmountFilter, setMaxAmountFilter] = React.useState<number | undefined>();
   const [tags, setTags] = React.useState<FilterableTag[]>([]);
   const [tagsFilter, setTagsFilter] = React.useState<string[]>([]);
+  const [showMorePage, setShowMorePage] = useState(1);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   let [isCreatePaymentRequestOpen, setIsCreatePaymentRequestOpen] = useState(false);
 
@@ -134,6 +137,7 @@ const PaymentRequestDashboard = ({
   const [localMerchantTags, setLocalMerchantTags] = useState<LocalTag[]>([] as LocalTag[]);
 
   useEffect(() => {
+    setShowMorePage(1);
     setLocalPaymentRequests(
       paymentRequests?.map((paymentRequest) => remotePaymentRequestToLocalPaymentRequest(paymentRequest)) ?? [],
     );
@@ -250,6 +254,44 @@ const PaymentRequestDashboard = ({
     setSelectedPaymentRequestID(paymentRequest.id);
   };
 
+  /**
+   * Fetches the next page of payment requests and adds them to the local list.
+   */
+  const fetchNextPage = async () => {
+    setIsLoadingMore(true);
+
+    const sort = formatPaymentRequestSortExpression(
+      statusSortDirection,
+      createdSortDirection,
+      contactSortDirection,
+      amountSortDirection,
+    );
+
+    const paymentRequests = await client.getAll({
+      pageNumber: showMorePage + 1,
+      pageSize: pageSize,
+      sort: sort,
+      tags: tagsFilter,
+      status: status,
+      fromDate: dateRange.fromDate,
+      toDate: dateRange.toDate,
+      search: searchFilter?.length >= 3 ? searchFilter : undefined,
+      currency: currencyFilter,
+      minAmount: minAmountFilter,
+      maxAmount: maxAmountFilter,
+      merchantId: merchantId,
+    });
+
+    if (paymentRequests.status === 'success') {
+      setLocalPaymentRequests((prev) => [
+        ...prev,
+        ...paymentRequests.data.content?.map((pr) => remotePaymentRequestToLocalPaymentRequest(pr)),
+      ]);
+    }
+    setShowMorePage(showMorePage + 1);
+    setIsLoadingMore(false);
+  };
+
   // tore the results of the first execution of the metrics
   // and use them as the initial state of the metrics.
   // This way, when they change the dates
@@ -334,6 +376,7 @@ const PaymentRequestDashboard = ({
             </LayoutWrapper>
           )}
         </AnimatePresence>
+
         <div className="hidden lg:block"></div>
         <LayoutWrapper className="lg:bg-white lg:min-h-[18rem] lg:py-10 lg:px-6 lg:rounded-lg pb-10">
           {/* 
@@ -360,7 +403,19 @@ const PaymentRequestDashboard = ({
             onOpenPaymentPage={onOpenPaymentPage}
             selectedPaymentRequestID={selectedPaymentRequestID}
           />
-          {/* </ScrollArea> */}
+
+          {!isInitialState && localPaymentRequests.length < totalRecords && (
+            <div className="flex">
+              <Button
+                label="Show more"
+                type="tertiary"
+                size="big"
+                onClick={fetchNextPage}
+                disabled={isLoadingMore}
+                className="lg:hidden mx-auto mt-6 mb-2 w-fit"
+              />
+            </div>
+          )}
         </LayoutWrapper>
       </LayoutGroup>
 
