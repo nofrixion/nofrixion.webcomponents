@@ -43,7 +43,8 @@ const PaymentRequestDetailsModal = ({
   const onCaptureClick = async () => {
     if (selectedTransaction) {
       let parsedAmount = Number(amountToCapture);
-      parsedAmount = (parsedAmount ?? 0) >= selectedTransaction.amount ? 0 : parsedAmount!;
+      let remainingAmount = selectedTransaction.amount - (selectedTransaction.capturedAmount ?? 0);
+      parsedAmount = (parsedAmount ?? 0) > remainingAmount ? remainingAmount : parsedAmount!;
       await onCapture(selectedTransaction.attemptKey, parsedAmount);
       onCaptureDismiss();
     }

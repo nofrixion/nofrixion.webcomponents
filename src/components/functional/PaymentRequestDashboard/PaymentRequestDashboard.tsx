@@ -273,20 +273,20 @@ const PaymentRequestDashboard = ({
 
       let localPrsCopy = [...localPaymentRequests];
       let prIndex = localPrsCopy.findIndex((pr) => pr.id === selectedPaymentRequestID);
-      let authIndex = localPrsCopy[prIndex].paymentAttempts.findIndex(
+      let attemptIndex = localPrsCopy[prIndex].paymentAttempts.findIndex(
         (attempt) => attempt.attemptKey === authorizationID,
       );
-      localPrsCopy[prIndex].paymentAttempts[authIndex].capturedAmount += amount;
-      localPrsCopy[prIndex].paymentAttempts[authIndex].needsCapture =
-        localPrsCopy[prIndex].paymentAttempts[authIndex].capturedAmount <
-        localPrsCopy[prIndex].paymentAttempts[authIndex].amount;
+      localPrsCopy[prIndex].paymentAttempts[attemptIndex].capturedAmount += amount;
+      localPrsCopy[prIndex].paymentAttempts[attemptIndex].needsCapture =
+        localPrsCopy[prIndex].paymentAttempts[attemptIndex].capturedAmount <
+        localPrsCopy[prIndex].paymentAttempts[attemptIndex].amount;
 
-      localPrsCopy[prIndex].paymentAttempts[authIndex].events.splice(0, 0, {
+      localPrsCopy[prIndex].paymentAttempts[attemptIndex].events.splice(0, 0, {
         status: LocalCardPaymentResponseStatus.CardCaptureSuccess.toString(),
         id: '',
         type: PaymentRequestEventType.card_capture,
         amount: amount,
-        currency: localPrsCopy[prIndex].paymentAttempts[authIndex].currency,
+        currency: localPrsCopy[prIndex].paymentAttempts[attemptIndex].currency,
         occurredAt: new Date(),
         authorizationID: authorizationID,
       });
