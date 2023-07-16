@@ -181,16 +181,6 @@ const PaymentRequestTable = ({
         </table>
       )}
 
-      <div className="mb-2 lg:hidden">
-        {paymentRequests && paymentRequests.length > 0 && (
-          <Pager
-            pageSize={pageSize}
-            totalRecords={totalRecords}
-            onPageChange={(newPage) => onPageChanged && onPageChanged(newPage)}
-          />
-        )}
-      </div>
-
       <div className="lg:hidden space-y-2">
         {paymentRequests &&
           paymentRequests.length > 0 &&
