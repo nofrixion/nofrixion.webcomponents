@@ -36,6 +36,7 @@ import PaymentNotificationsModal from '../Modals/PaymentNotificationsModal/Payme
 import { validateEmail } from '../../../utils/validation';
 import { formatAmountAndDecimals } from '../../../utils/formatters';
 import BackArrow from '../utils/BackArrow';
+import Button from '../Button/Button';
 
 interface CreatePaymentRequestPageProps {
   banks: BankSettings[];
@@ -508,7 +509,7 @@ const CreatePaymentRequestPage = ({
             {currency && amount && productOrService && (
               <LayoutWrapper
                 key="buttons"
-                className="flex flex-col !mt-20 justify-center sticky bottom-4 w-10/12 lg:w-full mx-auto lg:mx-0 lg:static lg:bottom-auto"
+                className="flex flex-col !mt-20 justify-center sticky bottom-4 w-full lg:w-full mx-auto lg:mx-0 lg:static lg:bottom-auto"
               >
                 <AnimatePresence initial={false}>
                   {/* Review PR */}
@@ -531,21 +532,16 @@ const CreatePaymentRequestPage = ({
                   {/* Confirm PR */}
                   {isReviewing && (
                     <LayoutWrapper layout={false} className="space-y-7" animateOnExit={false} duration={0.6}>
-                      <button
-                        className="w-full whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-white font-semibold cursor-pointer hover:bg-[#144752] select-none disabled:bg-[#DEE5ED]"
-                        disabled={isSubmitting}
+                      <Button
+                        label="Confirm payment request"
+                        type="primaryDark"
+                        size="big"
                         onClick={onConfirmClicked}
-                      >
-                        Confirm payment request
-                      </button>
+                        disabled={isSubmitting}
+                      />
 
                       {/* Edit button */}
-                      <button
-                        className="hidden lg:inline-block w-full py-3 bg-[#DEE5ED] transition hover:bg-[#BDCCDB] rounded-full mr-5"
-                        onClick={() => setIsReviewing(false)}
-                      >
-                        Edit
-                      </button>
+                      <Button label="Edit" type="secondary" size="big" onClick={() => setIsReviewing(false)} />
                     </LayoutWrapper>
                   )}
                 </AnimatePresence>
@@ -756,18 +752,15 @@ const CreatePaymentRequestPage = ({
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: 20 }}
-                                className="block lg:hidden sticky bottom-0 w-10/12 mx-auto pb-4"
+                                className="block lg:hidden sticky bottom-0 w-full mx-auto pb-4"
                               >
-                                <button
-                                  key="review-pr"
-                                  type="button"
-                                  className="w-full h-12 px-16 whitespace-nowrap flex justify-center items-center rounded-full py-3 text-sm cursor-pointer bg-[#DEE5ED] transition hover:bg-[#BDCCDB]"
+                                <Button
+                                  label="Review payment request"
+                                  type="secondary"
+                                  size="big"
                                   onClick={onReviewClicked}
-                                >
-                                  <span className="py-3">Review payment request</span>
-
-                                  <img src={NextIcon} alt="Arrow right" className="ml-2 w-4 h-4" />
-                                </button>
+                                  nextArrow
+                                />
                               </motion.div>
                             )}
                           </AnimatePresence>
