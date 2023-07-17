@@ -1,5 +1,5 @@
 import emptyStateIllustration from '../../../assets/images/empty-state.svg';
-import PrimaryButton from '../PrimaryButton/PrimaryButton';
+import Button from '../Button/Button';
 
 interface EmptyStateProps {
   state: 'nothingFound' | 'empty';
@@ -22,10 +22,12 @@ const EmptyState: React.FC<EmptyStateProps> = ({ state, onCreatePaymentRequest }
       <p className="text-sm/4 text-greyText">{description}</p>
 
       {state === 'empty' && onCreatePaymentRequest && (
-        <PrimaryButton
+        <Button
           label="Create payment request"
-          className="mt-[2.625rem] text-white bg-primaryGreen hover:bg-primaryGreenHover"
+          type="primary"
+          size="big"
           onClick={onCreatePaymentRequest}
+          className="mt-[2.625rem] w-64"
         />
       )}
     </div>

@@ -37,9 +37,9 @@
 .Toastify__toast {
   min-height: 16px !important;
   --toastify-color-info: #fff;
-  --toastify-color-success: #fff;
-  --toastify-color-warning: #f2eed8;
-  --toastify-color-error: #fee9e7;
+  --toastify-color-success: #cffced;
+  --toastify-color-warning: #fcf5cf;
+  --toastify-color-error: #fee7eb;
   --toastify-text-color-info: #00264d;
   --toastify-text-color-success: #00264d;
   --toastify-text-color-warning: #00264d;
