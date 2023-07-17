@@ -8,6 +8,7 @@ module.exports = {
         mainGrey: '#F6F8F9',
         defaultText: '#00264D',
         greyText: '#73808C',
+        greyTextHover: '#0F3357',
         controlGrey: '#8F99A3',
         controlGreyHover: '#454D54',
         negativeRed: '#F32448',
@@ -24,6 +25,8 @@ module.exports = {
         errorBg: '#FEE7EB',
         disabledText: '#C7CCD1',
         selectedPill: '#042931',
+        secondaryButton: '#DEE5ED',
+        secondaryButtonHover: '#BDCCDB',
       },
       fontSize: {
         '13px': '0.8125rem',
