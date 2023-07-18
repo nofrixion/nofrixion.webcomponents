@@ -12,7 +12,7 @@ const meta: Meta<typeof CaptureModal> = {
     onDismiss: { control: { type: 'action' } },
     initialAmount: { control: { type: 'text' } },
     currency: { control: { type: 'select', options: [Currency.EUR, Currency.GBP] } },
-    totalTransactionAmount: { control: { type: 'number' } },
+    maxCapturableAmount: { control: { type: 'number' } },
     lastFourDigitsOnCard: { control: { type: 'text' } },
     processor: { control: { type: 'select', options: ['VISA', 'MasterCard', 'American Express'] } },
     transactionDate: { control: { type: 'date' } },
@@ -29,10 +29,9 @@ export const Showcase = Template.bind({});
 Showcase.args = {
   initialAmount: '1222.99',
   currency: Currency.EUR,
-  onCapture: action('Captured'),
   onDismiss: action('Dismissed'),
   transactionDate: new Date(),
-  totalTransactionAmount: 1222.99,
+  maxCapturableAmount: 1222.99,
 };
 
 export const GBPInput = Template.bind({});
@@ -40,10 +39,9 @@ export const GBPInput = Template.bind({});
 GBPInput.args = {
   initialAmount: '27.5',
   currency: Currency.GBP,
-  onCapture: action('Captured'),
   onDismiss: action('Dismissed'),
   transactionDate: new Date(),
-  totalTransactionAmount: 27.5,
+  maxCapturableAmount: 27.5,
 };
 
 export default meta;

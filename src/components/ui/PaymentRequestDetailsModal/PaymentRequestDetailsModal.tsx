@@ -34,6 +34,7 @@ const PaymentRequestDetailsModal = ({
   const [amountToCapture, setAmountToCapture] = React.useState<string | undefined>(
     ((selectedTransaction?.amount ?? 0) - (selectedTransaction?.capturedAmount ?? 0)).toString(),
   );
+  const maxCapturableAmount = (selectedTransaction?.amount ?? 0) - (selectedTransaction?.capturedAmount ?? 0);
 
   const onTransactionSelectForCapture = (paymentAttempt: LocalPaymentAttempt) => {
     setSelectedTransaction(paymentAttempt);
@@ -166,10 +167,10 @@ const PaymentRequestDetailsModal = ({
                         onCapture={onCaptureClick}
                         onDismiss={onCaptureDismiss}
                         initialAmount={amountToCapture ?? '0'}
+                        maxCapturableAmount={maxCapturableAmount}
                         currency={selectedTransaction?.currency ?? Currency.EUR}
                         setAmountToCapture={setAmountToCapture}
                         transactionDate={selectedTransaction?.occurredAt ?? new Date()}
-                        totalTransactionAmount={selectedTransaction?.amount ?? 0}
                         contactName={paymentRequest.contact.name}
                         lastFourDigitsOnCard={selectedTransaction?.last4DigitsOfCardNumber}
                         processor={selectedTransaction?.processor}
