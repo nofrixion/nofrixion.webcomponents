@@ -12,7 +12,8 @@ export interface TabProps {
 
 const getSpecificStatusClasses = (status: PaymentRequestStatus) => {
   return classNames({
-    "fill-[#ABB2BA] data-[state='active']:border-[#73808C]": status === PaymentRequestStatus.None,
+    "fill-[#ABB2BA] data-[state='active']:border-[#73808C]":
+      status === PaymentRequestStatus.None || status === PaymentRequestStatus.Authorized,
     "fill-[#ABB2BA] data-[state='active']:border-[#40BFBF]": status === PaymentRequestStatus.All,
     "fill-[#E88C30] data-[state='active']:border-[#E88C30]": status === PaymentRequestStatus.PartiallyPaid,
     "fill-[#00CC88] data-[state='active']:border-[#29A37A]": status === PaymentRequestStatus.FullyPaid,
@@ -27,6 +28,8 @@ const getDisplayTextForStatus = (status: PaymentRequestStatus) => {
       return 'Paid';
     case PaymentRequestStatus.None:
       return 'Unpaid';
+    case PaymentRequestStatus.Authorized:
+      return 'Authorized';
     default:
       return 'All';
   }
@@ -37,6 +40,7 @@ const showIndicator = (status: PaymentRequestStatus) => {
     case PaymentRequestStatus.None:
     case PaymentRequestStatus.PartiallyPaid:
     case PaymentRequestStatus.FullyPaid:
+    case PaymentRequestStatus.Authorized:
       return true;
     default:
       return false;
