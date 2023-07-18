@@ -52,7 +52,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
     } else if (parsedAmount === 0) {
       setValidationErrorMessage("The amount can't be 0.");
     } else if (maxCapturableAmount && parsedAmount > maxCapturableAmount) {
-      setValidationErrorMessage('The amount is higher than the amount remaining.');
+      setValidationErrorMessage("You can't capture more than the remaining amount.");
     } else {
       await onCapture();
     }
@@ -103,7 +103,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
                     onChange={(e) => setAmountToCapture(e.target.value)}
                   ></InputAmountField>
                 </div>
-                <span className="text-13px leading-5 font-normal text-greyText">
+                <span className="mt-2 block text-13px leading-5 font-normal text-greyText">
                   There are&nbsp;{getCurrencySymbol(currency)}&nbsp;
                   {formatter.format(maxCapturableAmount)}
                   &nbsp;remaining to capture.
@@ -111,7 +111,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
                 <AnimatePresence>
                   {validationErrorMessage && (
                     <motion.div
-                      className="mt-2 bg-[#ffe6eb] text-sm p-3 rounded"
+                      className="mt-6 bg-[#ffe6eb] text-sm p-3 rounded"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
