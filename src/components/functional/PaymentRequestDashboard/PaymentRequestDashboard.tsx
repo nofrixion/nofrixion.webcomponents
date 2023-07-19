@@ -306,14 +306,9 @@ const PaymentRequestDashboard = ({
         localPrsCopy[prIndex].paymentAttempts[attemptIndex].capturedAmount <
         localPrsCopy[prIndex].paymentAttempts[attemptIndex].amount;
 
-      localPrsCopy[prIndex].paymentAttempts[attemptIndex].events.splice(0, 0, {
-        status: LocalCardPaymentResponseStatus.CardCaptureSuccess.toString(),
-        id: '',
-        type: PaymentRequestEventType.card_capture,
-        amount: amount,
-        currency: localPrsCopy[prIndex].paymentAttempts[attemptIndex].currency,
-        occurredAt: new Date(),
-        authorizationID: authorizationID,
+      localPrsCopy[prIndex].paymentAttempts[attemptIndex].captureAttempts.splice(0, 0, {
+        capturedAmount: amount,
+        capturedAt: new Date(),
       });
 
       setLocalPaymentRequests([...localPrsCopy]);

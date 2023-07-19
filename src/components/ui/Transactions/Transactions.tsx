@@ -5,7 +5,7 @@ import WalletIcon from '../../../assets/icons/wallet-icon.svg';
 import TickBadgeIcon from '../../../assets/icons/tick-badge-icon.svg';
 import { format } from 'date-fns';
 import classNames from 'classnames';
-import { LocalPaymentAttempt, LocalPaymentRequestEvent } from '../../../types/LocalTypes';
+import { LocalPaymentAttempt } from '../../../types/LocalTypes';
 import { Currency, PaymentRequestEventType } from '@nofrixion/moneymoov';
 import React from 'react';
 
@@ -35,18 +35,6 @@ const Transactions = ({ transactions, onRefund, onCapture }: TransactionsProps) 
     maximumFractionDigits: 2,
   });
 
-  const getShowableEvents = (events: LocalPaymentRequestEvent[]) => {
-    return events.filter((event) => isCaptureEvent(event));
-  };
-
-  const isCaptureEvent = (event: LocalPaymentRequestEvent) => {
-    return (
-      event.type === PaymentRequestEventType.card_capture &&
-      (event.status === LocalCardPaymentResponseStatus.CardCheckoutCaptured ||
-        event.status === LocalCardPaymentResponseStatus.CardCaptureSuccess)
-    );
-  };
-
   return (
     <>
       {transactions.length === 0 && (
@@ -59,7 +47,7 @@ const Transactions = ({ transactions, onRefund, onCapture }: TransactionsProps) 
               <React.Fragment key={index}>
                 <tr
                   className={classNames('group whitespace-nowrap', {
-                    'border-b': getShowableEvents(transaction.events).length === 0,
+                    'border-b': !transaction.captureAttempts || transaction.captureAttempts.length === 0,
                   })}
                 >
                   <td className={classNames('text-[0.813rem] pb-2 leading-6', { 'pt-2': index !== 0 })}>
@@ -132,46 +120,40 @@ const Transactions = ({ transactions, onRefund, onCapture }: TransactionsProps) 
                     </div>
                   </td>
                 </tr>
-                {getShowableEvents(transaction.events).map((event, evIndex) => (
+                {transaction.captureAttempts?.map((captureAttempt, evIndex) => (
                   <tr
                     key={`ev_${evIndex}`}
                     className={classNames('text-xs leading-6 group whitespace-nowrap', {
-                      'border-b [&>td]:pb-2': evIndex === getShowableEvents(transaction.events).length - 1,
+                      'border-b [&>td]:pb-2': evIndex === transaction.captureAttempts.length - 1,
                     })}
                   >
                     <td className="py-0">
                       {/* Mobile date */}
                       <span className="inline lg:hidden">
-                        {event.occurredAt && format(event.occurredAt, 'dd/MM/yyyy')}
+                        {captureAttempt.capturedAt && format(captureAttempt.capturedAt, 'dd/MM/yyyy')}
                       </span>
 
                       {/* Desktop date */}
                       <span className="hidden lg:inline">
-                        {event.occurredAt && format(event.occurredAt, 'MMM do, yyyy')}
+                        {captureAttempt.capturedAt && format(captureAttempt.capturedAt, 'MMM do, yyyy')}
                       </span>
                     </td>
                     <td className="pl-2 lg:pl-6 text-right py-0">
-                      <span
-                        className={classNames('mr-2 font-medium tabular-nums', {
-                          'text-[#29A37A]': isCaptureEvent(event),
-                        })}
-                      >
+                      <span className="mr-2 font-medium tabular-nums text-[#29A37A]">
                         <span className="lg:hidden">{transaction.currency === Currency.EUR ? '€' : '£'}</span>
-                        {formatter.format(Number(event.amount))}
+                        {formatter.format(captureAttempt.capturedAmount)}
                       </span>
                     </td>
                     <td className="hidden lg:table-cell py-0">
                       <span className="text-greyText font-normal">{transaction.currency}</span>
                     </td>
                     <td className="pl-1 lg:pl-5 py-0" colSpan={2}>
-                      {isCaptureEvent(event) && (
-                        <div className="flex flex-row items-center">
-                          <span className="mr-2 p-1.5">
-                            <img src={TickBadgeIcon} className="h-3 w-3" alt="Captured" title="Captured" />
-                          </span>
-                          <span>Captured</span>
-                        </div>
-                      )}
+                      <div className="flex flex-row items-center">
+                        <span className="mr-2 p-1.5">
+                          <img src={TickBadgeIcon} className="h-3 w-3" alt="Captured" title="Captured" />
+                        </span>
+                        <span>Captured</span>
+                      </div>
                     </td>
                   </tr>
                 ))}

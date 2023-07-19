@@ -44,17 +44,12 @@ export interface LocalPaymentAttempt {
   last4DigitsOfCardNumber?: string;
   needsCapture: boolean;
   capturedAmount: number;
-  events: LocalPaymentRequestEvent[];
+  captureAttempts: LocalPaymentRequestCaptureAttempt[];
 }
 
-export interface LocalPaymentRequestEvent {
-  id: string;
-  occurredAt: Date;
-  type: PaymentRequestEventType;
-  amount: number;
-  currency: Currency;
-  status?: string;
-  authorizationID?: string;
+export interface LocalPaymentRequestCaptureAttempt {
+  capturedAt?: Date;
+  capturedAmount: number;
 }
 
 export type LocalAddress = {
