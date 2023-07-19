@@ -190,6 +190,7 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
             settledAt,
             attemptedAmount,
             paymentMethod,
+            authorisedAmount,
             settledAmount,
             captureAttempts,
             currency,
@@ -206,9 +207,7 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
             amount: attemptedAmount,
             currency: currency,
             processor: walletName ? parseApiWalletTypeToLocalWalletType(walletName) : undefined,
-            needsCapture:
-              status === PaymentResult.Authorized ||
-              (status === PaymentResult.PartiallyPaid && settledAmount < attemptedAmount),
+            needsCapture: paymentMethod === PaymentMethodTypes.Card && authorisedAmount > settledAmount,
             capturedAmount: settledAmount,
             captureAttempts: captureAttempts
               .sort((a, b) => {
