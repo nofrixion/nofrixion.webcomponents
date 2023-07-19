@@ -356,7 +356,10 @@ const PaymentRequestDashboard = ({
   /// Only show the total amount if there are payment requests
   /// with the specified timeframe and currency, no matter the status,
   /// unless there are no payment requests at all for the specified status.
-  const getTotalAmountPerCurrencyAndStatus = (currency: 'eur' | 'gbp', status: 'paid' | 'partiallyPaid' | 'unpaid') => {
+  const getTotalAmountPerCurrencyAndStatus = (
+    currency: 'eur' | 'gbp',
+    status: 'paid' | 'partiallyPaid' | 'unpaid' | 'authorized',
+  ) => {
     if (
       metrics &&
       metrics.totalAmountsByCurrency &&
@@ -438,6 +441,13 @@ const PaymentRequestDashboard = ({
                       totalRecords={metrics?.unpaid ?? 0}
                       totalAmountInEuros={getTotalAmountPerCurrencyAndStatus('eur', 'unpaid')}
                       totalAmountInPounds={getTotalAmountPerCurrencyAndStatus('gbp', 'unpaid')}
+                    />
+                    <Tab
+                      status={PaymentRequestStatus.Authorized}
+                      isLoading={isLoadingMetrics}
+                      totalRecords={metrics?.authorized ?? 0}
+                      totalAmountInEuros={getTotalAmountPerCurrencyAndStatus('eur', 'authorized')}
+                      totalAmountInPounds={getTotalAmountPerCurrencyAndStatus('gbp', 'authorized')}
                     />
                     <Tab
                       status={PaymentRequestStatus.PartiallyPaid}

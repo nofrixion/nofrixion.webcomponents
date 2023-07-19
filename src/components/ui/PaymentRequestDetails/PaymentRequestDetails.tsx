@@ -55,7 +55,7 @@ const PaymentRequestDetails = ({
           </div>
         </div>
         <div className="mb-[2.625rem]">
-          {paymentRequest.productOrService && paymentRequest.description && (
+          {(paymentRequest.productOrService || paymentRequest.description) && (
             <div className="flex flex-col gap-2 lg:gap-4 mb-6 lg:mb-8">
               {paymentRequest.productOrService && (
                 <span className="text-base leading-[1.188rem] font-medium">{paymentRequest.productOrService}</span>

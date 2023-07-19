@@ -48,6 +48,8 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
         return 'partial';
       case PaymentResult.OverPaid:
         return 'overpaid';
+      case PaymentResult.Authorized:
+        return 'authorized';
       default:
         return 'unpaid';
     }
