@@ -1,5 +1,10 @@
-import { Currency } from '@nofrixion/moneymoov';
-import { LocalAddressType, LocalPartialPaymentMethods, LocalPaymentMethodTypes } from './LocalEnums';
+import { Currency, PaymentRequestEventType, PaymentResult } from '@nofrixion/moneymoov';
+import {
+  LocalAddressType,
+  LocalCardPaymentResponseStatus,
+  LocalPartialPaymentMethods,
+  LocalPaymentMethodTypes,
+} from './LocalEnums';
 
 export interface LocalContact {
   name?: string;
@@ -37,6 +42,14 @@ export interface LocalPaymentAttempt {
   currency: Currency.EUR | Currency.GBP;
   processor?: string;
   last4DigitsOfCardNumber?: string;
+  needsCapture: boolean;
+  capturedAmount: number;
+  captureAttempts: LocalPaymentRequestCaptureAttempt[];
+}
+
+export interface LocalPaymentRequestCaptureAttempt {
+  capturedAt?: Date;
+  capturedAmount: number;
 }
 
 export type LocalAddress = {

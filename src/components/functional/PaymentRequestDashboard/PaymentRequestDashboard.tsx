@@ -5,6 +5,7 @@ import { DateRange } from '../../ui/DateRangePicker/DateRangePicker';
 import {
   Currency,
   PaymentRequestClient,
+  PaymentRequestEventType,
   PaymentRequestMetrics,
   PaymentRequestStatus,
   useMerchantTags,
@@ -25,7 +26,11 @@ import PaymentRequestDetailsModal from '../PaymentRequestDetailsModal/PaymentReq
 import FilterControlsRow from '../../ui/FilterControlsRow/FilterControlsRow';
 import { FilterableTag } from '../../ui/TagFilter/TagFilter';
 import ScrollArea from '../../ui/ScrollArea/ScrollArea';
-import { LocalPartialPaymentMethods, LocalPaymentMethodTypes } from '../../../types/LocalEnums';
+import {
+  LocalCardPaymentResponseStatus,
+  LocalPartialPaymentMethods,
+  LocalPaymentMethodTypes,
+} from '../../../types/LocalEnums';
 import Button from '../../ui/Button/Button';
 
 interface PaymentRequestDashboardProps {
@@ -275,6 +280,41 @@ const PaymentRequestDashboard = ({
     setSelectedPaymentRequestID(paymentRequest.id);
   };
 
+  const onRefundClick = async (paymentAttemptID: string) => {
+    //TODO: Will implement refund for atleast card payment attempts. For PISP, it will need to be worked on later.
+    console.log(paymentAttemptID);
+  };
+
+  const onCaptureClick = async (authorizationID: string, amount: number) => {
+    if (selectedPaymentRequestID) {
+      let response = await client.captureCardPayment(selectedPaymentRequestID, authorizationID, amount);
+
+      if (response.error) {
+        makeToast('error', response.error.title);
+        return;
+      }
+
+      makeToast('success', 'Payment successfully captured.');
+
+      let localPrsCopy = [...localPaymentRequests];
+      let prIndex = localPrsCopy.findIndex((pr) => pr.id === selectedPaymentRequestID);
+      let attemptIndex = localPrsCopy[prIndex].paymentAttempts.findIndex(
+        (attempt) => attempt.attemptKey === authorizationID,
+      );
+      localPrsCopy[prIndex].paymentAttempts[attemptIndex].capturedAmount += amount;
+      localPrsCopy[prIndex].paymentAttempts[attemptIndex].needsCapture =
+        localPrsCopy[prIndex].paymentAttempts[attemptIndex].capturedAmount <
+        localPrsCopy[prIndex].paymentAttempts[attemptIndex].amount;
+
+      localPrsCopy[prIndex].paymentAttempts[attemptIndex].captureAttempts.splice(0, 0, {
+        capturedAmount: amount,
+        capturedAt: new Date(),
+      });
+
+      setLocalPaymentRequests([...localPrsCopy]);
+    }
+  };
+
   /**
    * Fetches the next page of payment requests and adds them to the local list.
    */
@@ -490,11 +530,13 @@ const PaymentRequestDashboard = ({
         selectedPaymentRequestID={selectedPaymentRequestID ?? ''}
         merchantTags={localMerchantTags}
         paymentRequests={localPaymentRequests}
-        open={selectedPaymentRequestID !== undefined}
+        open={!!selectedPaymentRequestID}
         onDismiss={onPaymentRequestDetailsModalDismiss}
         setMerchantTags={setLocalMerchantTags}
         setPaymentRequests={setLocalPaymentRequests}
         onUnauthorized={onUnauthorized}
+        onRefund={onRefundClick}
+        onCapture={onCaptureClick}
       ></PaymentRequestDetailsModal>
     </div>
   );
