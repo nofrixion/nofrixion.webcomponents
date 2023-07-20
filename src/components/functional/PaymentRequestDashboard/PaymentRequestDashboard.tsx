@@ -302,7 +302,7 @@ const PaymentRequestDashboard = ({
         (attempt) => attempt.attemptKey === authorizationID,
       );
       localPrsCopy[prIndex].paymentAttempts[attemptIndex].capturedAmount += amount;
-      localPrsCopy[prIndex].paymentAttempts[attemptIndex].needsCapture =
+      localPrsCopy[prIndex].paymentAttempts[attemptIndex].isAuthorizeOnly =
         localPrsCopy[prIndex].paymentAttempts[attemptIndex].capturedAmount <
         localPrsCopy[prIndex].paymentAttempts[attemptIndex].amount;
 
