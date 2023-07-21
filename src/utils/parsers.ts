@@ -44,6 +44,8 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
         return 'partial';
       case PaymentResult.OverPaid:
         return 'overpaid';
+      case PaymentResult.Authorized:
+        return 'authorized';
       default:
         return 'unpaid';
     }
@@ -184,21 +186,35 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
             attemptKey,
             authorisedAt,
             settledAt,
+            attemptedAmount,
             paymentMethod,
             authorisedAmount,
             settledAmount,
+            captureAttempts,
             currency,
             walletName,
+            status,
           } = remotePaymentAttempt;
+
           localPaymentAttempts.push({
             attemptKey: attemptKey,
             occurredAt: new Date(settledAt ?? authorisedAt ?? 0),
             paymentMethod: walletName
               ? parseWalletNameToPaymentMethodType(walletName)
               : parseApiPaymentMethodTypeToLocalMethodType(paymentMethod),
-            amount: settledAmount > 0 ? settledAmount : authorisedAmount,
+            amount: attemptedAmount,
             currency: currency,
             processor: walletName ? parseApiWalletTypeToLocalWalletType(walletName) : undefined,
+            needsCapture: paymentMethod === PaymentMethodTypes.Card && authorisedAmount > settledAmount,
+            capturedAmount: settledAmount,
+            captureAttempts: captureAttempts
+              .sort((a, b) => {
+                return new Date(b.capturedAt ?? 0).getTime() - new Date(a.capturedAt ?? 0).getTime();
+              })
+              .map((x) => ({
+                capturedAt: new Date(x.capturedAt ?? 0),
+                capturedAmount: x.capturedAmount,
+              })),
           });
         }
       });

@@ -1,5 +1,5 @@
 import Contact from '../Contact/Contact';
-import { LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
+import { LocalPaymentAttempt, LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
 import QRCode from '../QRCode/QRCode';
 import { CopyLink } from '../CopyLink/CopyLink';
 import AmountPaid from '../AmountPaid/AmountPaid';
@@ -8,23 +8,27 @@ import StatusBadge from '../PaymentRequestStatusBadge/PaymentRequestStatusBadge'
 import DetailsTabs from '../DetailsTabs/DetailsTabs';
 import TagManager from '../Tags/TagManager/TagManager';
 
+export interface PaymentRequestDetailsProps {
+  paymentRequest: LocalPaymentRequest;
+  merchantTags: LocalTag[];
+  hostedPaymentLink: string;
+  onRefund: (paymentAttemptID: string) => void;
+  onCapture: (paymentAttempt: LocalPaymentAttempt) => void;
+  onTagAdded: (tag: LocalTag) => void;
+  onTagDeleted: (id: string) => void;
+  onTagCreated: (tag: LocalTag) => void;
+}
+
 const PaymentRequestDetails = ({
   paymentRequest,
   merchantTags,
   hostedPaymentLink,
-  onRefundClick,
+  onRefund,
+  onCapture,
   onTagAdded,
   onTagDeleted,
   onTagCreated,
-}: {
-  paymentRequest: LocalPaymentRequest;
-  merchantTags: LocalTag[];
-  hostedPaymentLink: string;
-  onRefundClick: (paymentAttemptID: string) => void;
-  onTagAdded: (tag: LocalTag) => void;
-  onTagDeleted: (id: string) => void;
-  onTagCreated: (tag: LocalTag) => void;
-}) => {
+}: PaymentRequestDetailsProps) => {
   return (
     <>
       <div className="bg-[#F6F9F9] px-6 lg:pl-8 lg:pr-7 relative mb-[4.875rem]">
@@ -51,7 +55,7 @@ const PaymentRequestDetails = ({
           </div>
         </div>
         <div className="mb-[2.625rem]">
-          {paymentRequest.productOrService && paymentRequest.description && (
+          {(paymentRequest.productOrService || paymentRequest.description) && (
             <div className="flex flex-col gap-2 lg:gap-4 mb-6 lg:mb-8">
               {paymentRequest.productOrService && (
                 <span className="text-base leading-[1.188rem] font-medium">{paymentRequest.productOrService}</span>
@@ -74,7 +78,7 @@ const PaymentRequestDetails = ({
           </div>
         </div>
         <div className="pb-6">
-          <DetailsTabs paymentRequest={paymentRequest} onRefundClick={onRefundClick}></DetailsTabs>
+          <DetailsTabs paymentRequest={paymentRequest} onRefund={onRefund} onCapture={onCapture}></DetailsTabs>
         </div>
       </div>
     </>

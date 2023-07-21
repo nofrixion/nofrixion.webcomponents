@@ -3,13 +3,15 @@ import * as Tabs from '@radix-ui/react-tabs';
 import React, { useEffect, useState } from 'react';
 import { DateRange } from '../../ui/DateRangePicker/DateRangePicker';
 import {
-  usePaymentRequestMetrics,
-  PaymentRequestStatus,
+  Currency,
   PaymentRequestClient,
-  usePaymentRequests,
+  PaymentRequestEventType,
   PaymentRequestMetrics,
+  PaymentRequestStatus,
   useMerchantTags,
   formatPaymentRequestSortExpression,
+  usePaymentRequestMetrics,
+  usePaymentRequests,
 } from '@nofrixion/moneymoov';
 import PaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTable';
 import { SortDirection } from '../../ui/ColumnHeader/ColumnHeader';
@@ -24,7 +26,11 @@ import PaymentRequestDetailsModal from '../PaymentRequestDetailsModal/PaymentReq
 import FilterControlsRow from '../../ui/FilterControlsRow/FilterControlsRow';
 import { FilterableTag } from '../../ui/TagFilter/TagFilter';
 import ScrollArea from '../../ui/ScrollArea/ScrollArea';
-import { LocalPartialPaymentMethods, LocalPaymentMethodTypes } from '../../../types/LocalEnums';
+import {
+  LocalCardPaymentResponseStatus,
+  LocalPartialPaymentMethods,
+  LocalPaymentMethodTypes,
+} from '../../../types/LocalEnums';
 import { Button } from '@/components/ui/atoms';
 
 interface PaymentRequestDashboardProps {
@@ -180,6 +186,8 @@ const PaymentRequestDashboard = ({
     if (metrics) {
       metrics.all--;
       metrics.unpaid--;
+
+      updateMetricTotals(paymentRequest.currency, paymentRequest.amount * -1);
     }
   };
 
@@ -241,6 +249,22 @@ const PaymentRequestDashboard = ({
     setIsCreatePaymentRequestOpen(false);
   };
 
+  const updateMetricTotals = (currency: Currency, amount: number) => {
+    if (metrics) {
+      let currencyField: 'eur' | 'gbp' | undefined =
+        currency === Currency.EUR ? 'eur' : currency === Currency.GBP ? 'gbp' : undefined;
+
+      if (currencyField) {
+        if (metrics.totalAmountsByCurrency?.all?.[currencyField]) {
+          metrics.totalAmountsByCurrency.all[currencyField]! += amount;
+        }
+        if (metrics.totalAmountsByCurrency?.unpaid?.[currencyField]) {
+          metrics.totalAmountsByCurrency.unpaid[currencyField]! += amount;
+        }
+      }
+    }
+  };
+
   // Adds the newly created payment request to the top of the list
   // Increments the metrics all and unpaid counts
   // Sets the newly created payment request as the selected one
@@ -249,9 +273,46 @@ const PaymentRequestDashboard = ({
     if (metrics) {
       metrics.all++;
       metrics.unpaid++;
+
+      updateMetricTotals(paymentRequest.currency, paymentRequest.amount);
     }
 
     setSelectedPaymentRequestID(paymentRequest.id);
+  };
+
+  const onRefundClick = async (paymentAttemptID: string) => {
+    //TODO: Will implement refund for atleast card payment attempts. For PISP, it will need to be worked on later.
+    console.log(paymentAttemptID);
+  };
+
+  const onCaptureClick = async (authorizationID: string, amount: number) => {
+    if (selectedPaymentRequestID) {
+      let response = await client.captureCardPayment(selectedPaymentRequestID, authorizationID, amount);
+
+      if (response.error) {
+        makeToast('error', response.error.title);
+        return;
+      }
+
+      makeToast('success', 'Payment successfully captured.');
+
+      let localPrsCopy = [...localPaymentRequests];
+      let prIndex = localPrsCopy.findIndex((pr) => pr.id === selectedPaymentRequestID);
+      let attemptIndex = localPrsCopy[prIndex].paymentAttempts.findIndex(
+        (attempt) => attempt.attemptKey === authorizationID,
+      );
+      localPrsCopy[prIndex].paymentAttempts[attemptIndex].capturedAmount += amount;
+      localPrsCopy[prIndex].paymentAttempts[attemptIndex].needsCapture =
+        localPrsCopy[prIndex].paymentAttempts[attemptIndex].capturedAmount <
+        localPrsCopy[prIndex].paymentAttempts[attemptIndex].amount;
+
+      localPrsCopy[prIndex].paymentAttempts[attemptIndex].captureAttempts.splice(0, 0, {
+        capturedAmount: amount,
+        capturedAt: new Date(),
+      });
+
+      setLocalPaymentRequests([...localPrsCopy]);
+    }
   };
 
   /**
@@ -290,6 +351,24 @@ const PaymentRequestDashboard = ({
       setShowMorePage(showMorePage + 1);
     }
     setIsLoadingMore(false);
+  };
+
+  /// Only show the total amount if there are payment requests
+  /// with the specified timeframe and currency, no matter the status,
+  /// unless there are no payment requests at all for the specified status.
+  const getTotalAmountPerCurrencyAndStatus = (
+    currency: 'eur' | 'gbp',
+    status: 'paid' | 'partiallyPaid' | 'unpaid' | 'authorized',
+  ) => {
+    if (
+      metrics &&
+      metrics.totalAmountsByCurrency &&
+      metrics.totalAmountsByCurrency.all?.[currency] &&
+      metrics[status] &&
+      metrics[status] > 0
+    ) {
+      return metrics.totalAmountsByCurrency?.[status]?.[currency] ?? 0;
+    }
   };
 
   // tore the results of the first execution of the metrics
@@ -359,21 +438,36 @@ const PaymentRequestDashboard = ({
                       status={PaymentRequestStatus.All}
                       isLoading={isLoadingMetrics}
                       totalRecords={metrics?.all ?? 0}
+                      totalAmountInEuros={metrics?.totalAmountsByCurrency?.all?.eur}
+                      totalAmountInPounds={metrics?.totalAmountsByCurrency?.all?.gbp}
                     />
                     <Tab
                       status={PaymentRequestStatus.None}
                       isLoading={isLoadingMetrics}
                       totalRecords={metrics?.unpaid ?? 0}
+                      totalAmountInEuros={getTotalAmountPerCurrencyAndStatus('eur', 'unpaid')}
+                      totalAmountInPounds={getTotalAmountPerCurrencyAndStatus('gbp', 'unpaid')}
+                    />
+                    <Tab
+                      status={PaymentRequestStatus.Authorized}
+                      isLoading={isLoadingMetrics}
+                      totalRecords={metrics?.authorized ?? 0}
+                      totalAmountInEuros={getTotalAmountPerCurrencyAndStatus('eur', 'authorized')}
+                      totalAmountInPounds={getTotalAmountPerCurrencyAndStatus('gbp', 'authorized')}
                     />
                     <Tab
                       status={PaymentRequestStatus.PartiallyPaid}
                       isLoading={isLoadingMetrics}
                       totalRecords={metrics?.partiallyPaid ?? 0}
+                      totalAmountInEuros={getTotalAmountPerCurrencyAndStatus('eur', 'partiallyPaid')}
+                      totalAmountInPounds={getTotalAmountPerCurrencyAndStatus('gbp', 'partiallyPaid')}
                     />
                     <Tab
                       status={PaymentRequestStatus.FullyPaid}
                       isLoading={isLoadingMetrics}
                       totalRecords={metrics?.paid ?? 0}
+                      totalAmountInEuros={getTotalAmountPerCurrencyAndStatus('eur', 'paid')}
+                      totalAmountInPounds={getTotalAmountPerCurrencyAndStatus('gbp', 'paid')}
                     />
                   </Tabs.List>
                   <Tabs.Content value=""></Tabs.Content>
@@ -442,11 +536,13 @@ const PaymentRequestDashboard = ({
         selectedPaymentRequestID={selectedPaymentRequestID ?? ''}
         merchantTags={localMerchantTags}
         paymentRequests={localPaymentRequests}
-        open={selectedPaymentRequestID !== undefined}
+        open={!!selectedPaymentRequestID}
         onDismiss={onPaymentRequestDetailsModalDismiss}
         setMerchantTags={setLocalMerchantTags}
         setPaymentRequests={setLocalPaymentRequests}
         onUnauthorized={onUnauthorized}
+        onRefund={onRefundClick}
+        onCapture={onCaptureClick}
       ></PaymentRequestDetailsModal>
     </div>
   );
