@@ -60,11 +60,11 @@ const QRCode = ({ url }: { url: string }) => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className="hidden lg:block" ref={qrCodeSvgRef}>
+        <div className="hidden md:block" ref={qrCodeSvgRef}>
           <QRCodeComponent value={url} className="w-full h-full" />
         </div>
 
-        <div>
+        <div className="block md:hidden">
           <button
             key="review-pr"
             type="button"
@@ -81,8 +81,8 @@ const QRCode = ({ url }: { url: string }) => {
               <path d="M10 14.6667H14.6667V10" stroke="#454D54" />
               <path d="M12.8334 12H9.33337V8.66663" stroke="#454D54" />
               <path d="M11.9973 9.50263V9.16663H12.3333V9.50263H11.9973Z" stroke="#454D54" />
-              <path d="M23 13L23 2" stroke="#454D54" stroke-linecap="round" strokeLinejoin="round" />
-              <path d="M20 11L23 14L26 11" stroke="#454D54" stroke-linecap="round" strokeLinejoin="round" />
+              <path d="M23 13L23 2" stroke="#454D54" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M20 11L23 14L26 11" stroke="#454D54" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
         </div>
@@ -93,7 +93,7 @@ const QRCode = ({ url }: { url: string }) => {
               animate={{ opacity: 1 }}
               initial={{ opacity: 0 }}
               exit={{ opacity: 0 }}
-              className="hidden lg:flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full w-10 h-10 bg-[#CEF5FC] cursor-pointer justify-center items-center"
+              className="hidden md:flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full w-10 h-10 bg-[#CEF5FC] cursor-pointer justify-center items-center"
               onClick={downloadAsImage}
             >
               <div>

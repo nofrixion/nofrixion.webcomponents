@@ -6,7 +6,7 @@ module.exports = {
     extend: {
       colors: {
         mainGrey: '#F6F8F9',
-        defaultText: '#00264D',
+        'default-text': '#00264D',
         greyText: '#73808C',
         greyTextHover: '#0F3357',
         controlGrey: '#8F99A3',
@@ -27,6 +27,7 @@ module.exports = {
         selectedPill: '#042931',
         secondaryButton: '#DEE5ED',
         secondaryButtonHover: '#BDCCDB',
+        disabledIcon: '#ABB3BA',
       },
       fontSize: {
         '13px': '0.8125rem',

@@ -50,7 +50,7 @@ const PaymentRequestTable = ({
   selectedPaymentRequestID,
 }: PaymentRequestTableProps) => {
   const onPaymentRequestClickedHandler = (
-    event: React.MouseEvent<HTMLTableRowElement | HTMLButtonElement, MouseEvent>,
+    event: React.MouseEvent<HTMLTableRowElement | HTMLButtonElement | HTMLDivElement, MouseEvent>,
     paymentRequest: LocalPaymentRequest,
   ) => {
     if (event.metaKey) {

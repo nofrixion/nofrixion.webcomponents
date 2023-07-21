@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import Checkbox from '../Checkbox/Checkbox';
-import Button from '../Button/Button';
+import { Button } from '@/components/ui/atoms';
 
 interface CustomModalProps extends BaseModalProps {
   title: string;
@@ -114,13 +114,14 @@ const CustomModal = ({
                     </div>
                   )}
                   <Button
-                    label="Apply"
-                    type="primaryDark"
+                    variant="primaryDark"
                     size="medium"
                     onClick={onApplyClicked}
                     disabled={!onApplyEnabled}
                     className="w-full md:w-auto px-16"
-                  />
+                  >
+                    Apply
+                  </Button>
                 </div>
               </Dialog.Panel>
             </Transition.Child>

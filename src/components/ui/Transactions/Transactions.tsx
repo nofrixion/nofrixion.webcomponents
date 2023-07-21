@@ -38,7 +38,7 @@ const Transactions = ({ transactions, onRefund, onCapture }: TransactionsProps) 
   return (
     <>
       {transactions.length === 0 && (
-        <div className="text-center text-defaultText text-base pt-9">No transactions found</div>
+        <div className="text-center text-default-text text-base pt-9">No transactions found</div>
       )}
       {transactions && transactions.length > 0 && (
         <table className="w-full">

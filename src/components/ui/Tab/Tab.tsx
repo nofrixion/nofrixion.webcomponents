@@ -57,12 +57,11 @@ const Tab = ({ status, totalRecords, isLoading = false, totalAmountInEuros, tota
     <Tabs.Trigger
       value={status}
       className={classNames(
-        'flex flex-col items-center lg:items-start justify-between rounded-lg w-full px-2 pb-4 pt-2 lg:px-8 md:pt-6 md:px-4 bg-white border-2 border-transparent transition hover:border-borderGrey',
+        'flex flex-col items-center xl:items-start w-36 h-20 px-2 pt-2 pb-4 rounded-lg lg:w-full lg:h-28 lg:px-8 lg:pt-6 lg:pb-8 bg-white border-2 border-transparent transition hover:border-borderGrey',
         getSpecificStatusClasses(status),
       )}
     >
-      <div></div>
-      <span className="text-xs md:text-sm/6 font-normal flex items-center mb-2 leading-6">
+      <span className="text-sm/6 font-normal flex items-center mb-2 leading-6">
         {showIndicator(status) && (
           <div className="items-center whitespace-nowrap inline-block mr-1.5">
             <svg width="6" height="6" viewBox="0 0 6 6" xmlns="http://www.w3.org/2000/svg" className="fill-inherit">
@@ -74,7 +73,7 @@ const Tab = ({ status, totalRecords, isLoading = false, totalAmountInEuros, tota
         {getDisplayTextForStatus(status)}
       </span>
 
-      <div className="relative items-center lg:flex lg:justify-between w-full">
+      <div className="relative items-center xl:flex xl:justify-between w-full">
         <div
           className={classNames(
             'animate-pulse absolute left-1/2 top-0 bottom-0 my-auto -translate-x-1/2 flex items-center',
@@ -87,17 +86,17 @@ const Tab = ({ status, totalRecords, isLoading = false, totalAmountInEuros, tota
         </div>
         <div>
           <span
-            className={classNames('block text-[1.75rem]/6 font-medium truncate leading-6 md:leading-[48px]', {
+            className={classNames('block text-[1.75rem]/6 font-medium truncate leading-6 lg:leading-[48px]', {
               invisible: isLoading,
             })}
           >
             {totalRecords}
           </span>
         </div>
-        <div className="hidden lg:flex flex-col justify-center items-end">
+        <div className="hidden xl:flex flex-col justify-center items-end">
           {totalAmountInEuros !== undefined && (
             <span
-              className={classNames('text-xs md:text-sm/6 font-medium', {
+              className={classNames('text-xs lg:text-sm/6 font-medium', {
                 invisible: isLoading,
               })}
             >
@@ -106,7 +105,7 @@ const Tab = ({ status, totalRecords, isLoading = false, totalAmountInEuros, tota
           )}
           {totalAmountInPounds !== undefined && (
             <span
-              className={classNames('text-xs md:text-sm/6 font-medium', {
+              className={classNames('text-xs lg:text-sm/6 font-medium', {
                 invisible: isLoading,
               })}
             >

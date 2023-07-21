@@ -1,12 +1,13 @@
 import {
   PartialPaymentMethods,
   PaymentMethodTypes,
-  PaymentRequest,
-  PaymentRequestAddress,
+  type PaymentRequestAddress,
+  type PaymentRequest,
   PaymentRequestPaymentAttempt,
   PaymentResult,
-  Tag,
   Wallets,
+  type Tag,
+  type PaymentRequestPaymentAttempt,
 } from '@nofrixion/moneymoov';
 
 import {

@@ -5,9 +5,9 @@ import { motion } from 'framer-motion';
 import { cva } from 'class-variance-authority';
 import { Currency } from '@nofrixion/moneymoov';
 import { localCurrency } from '../../../utils/constants';
-import classNames from 'classnames';
 import MaskedInput from 'react-text-mask';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
+import { cn } from '@/utils';
 
 export interface InputAmountFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   currency: string;
@@ -70,7 +70,7 @@ const InputAmountField: React.FC<InputAmountFieldProps> = ({
           {selectedCurrency.symbol}
         </span>
         <MaskedInput
-          className={classNames('block w-full pl-7 rounded font-normal text-sm text-defaultText appearance-none', {
+          className={cn('block w-full pl-7 rounded font-normal text-sm text-defaultText appearance-none', {
             'mr-1': allowCurrencyChange,
             'pr-2 text-right text-xl leading-5 font-semibold': !allowCurrencyChange,
           })}
@@ -88,7 +88,7 @@ const InputAmountField: React.FC<InputAmountFieldProps> = ({
       {allowCurrencyChange && (
         <DropdownMenu.Root>
           <DropdownMenu.Trigger>
-            <div className="flex h-full items-center pl-3 mr-3 text-greyText font-normal leading-4 hover:text-defaultText bg-transparent text-sm whitespace-nowrap cursor-pointer select-none stroke-greyText hover:stroke-defaultText">
+            <div className="flex h-full items-center pl-3 mr-3 text-greyText font-normal leading-4 hover:text-default-text bg-transparent text-sm whitespace-nowrap cursor-pointer select-none stroke-greyText hover:stroke-default-text">
               <ResizableComponent>
                 <span className="mr-2">{selectedCurrency.code}</span>
               </ResizableComponent>

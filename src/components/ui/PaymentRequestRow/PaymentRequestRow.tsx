@@ -79,7 +79,7 @@ const Row = ({
                   Delete
                 </button>
                 <button
-                  className="bg-white rounded px-5 py-2 text-defaultText font-normal text-sm hover:text-greyText"
+                  className="bg-white rounded px-5 py-2 text-default-text font-normal text-sm hover:text-greyText"
                   onClick={onCancelDeletingPaymentRequestClicked}
                 >
                   Cancel

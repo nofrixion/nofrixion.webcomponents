@@ -31,7 +31,7 @@ const ActiveFilterControl: React.FC<ActiveFilterControlProps> = ({ label, onClic
 
   return (
     <div className="inline-flex space-x-2 px-2 items-center rounded-full border border-solid border-borderGreyHighlighted">
-      <span className="text-defaultText text-sm leading-6">{label}</span>
+      <span className="text-default-text text-sm leading-6">{label}</span>
       <a onPointerDown={onClose} role="button" href="">
         <img src={closeIcon} alt="Close" title="Close" className="w-2 h-2" />
       </a>
