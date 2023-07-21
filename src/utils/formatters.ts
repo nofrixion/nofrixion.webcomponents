@@ -1,6 +1,6 @@
 import { add, formatDistanceToNowStrict, isEqual, isToday, isYesterday, startOfDay } from 'date-fns';
 import { SortDirection } from '../components/ui/ColumnHeader/ColumnHeader';
-import { dateRanges } from './constants';
+import type { TDateRangeOptions } from '@/components/ui/molecules';
 
 // This function formats a date as a string, returning a human-readable
 // representation of either "Today" or "Yesterday" if the date is within the
@@ -108,19 +108,19 @@ const getDateFormat = (date: Date): string => {
   return 'MMM do';
 };
 
-const getSelectRangeText = (fromDate: Date, toDate: Date): string => {
+const getSelectRangeText = (fromDate: Date, toDate: Date): TDateRangeOptions | undefined => {
   if (isToday(fromDate) && isToday(toDate)) {
-    return dateRanges.today;
+    return 'today';
   } else if (isYesterday(fromDate) && isYesterday(toDate)) {
-    return dateRanges.yesterday;
+    return 'yesterday';
   } else if (isToday(toDate) && isEqual(fromDate, startOfDay(add(new Date(), { days: -7 })))) {
-    return dateRanges.last7Days;
+    return 'last7Days';
   } else if (isToday(toDate) && isEqual(fromDate, startOfDay(add(new Date(), { days: -30 })))) {
-    return dateRanges.last30Days;
+    return 'last30Days';
   } else if (isToday(toDate) && isEqual(fromDate, startOfDay(add(new Date(), { days: -90 })))) {
-    return dateRanges.last90Days;
+    return 'last90Days';
   } else {
-    return 'Custom';
+    return undefined;
   }
 };
 

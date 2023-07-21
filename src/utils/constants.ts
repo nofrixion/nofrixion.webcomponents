@@ -5,14 +5,6 @@ export const apiUrls = {
   production: 'https://api.nofrixion.com/api/v1',
 };
 
-export const dateRanges = {
-  today: 'Today',
-  yesterday: 'Yesterday',
-  last7Days: 'Last 7 Days',
-  last30Days: 'Last 30 Days',
-  last90Days: 'Last 90 Days',
-};
-
 export const localCurrency = {
   gbp: { code: 'GBP', symbol: '£' },
   eur: { code: 'EUR', symbol: '€' },

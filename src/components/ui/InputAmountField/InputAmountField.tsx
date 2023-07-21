@@ -63,7 +63,7 @@ const InputAmountField: React.FC<InputAmountFieldProps> = ({ currency, onCurrenc
           {selectedCurrency.symbol}
         </span>
         <MaskedInput
-          className="block w-full pl-7 mr-1 rounded font-normal text-sm text-defaultText appearance-none"
+          className="block w-full pl-7 mr-1 rounded font-normal text-sm text-default-text appearance-none"
           mask={currencyMask}
           inputMode="decimal"
           onChange={(e) => {
@@ -77,7 +77,7 @@ const InputAmountField: React.FC<InputAmountFieldProps> = ({ currency, onCurrenc
       </div>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
-          <div className="flex h-full items-center pl-3 mr-3 text-greyText font-normal leading-4 hover:text-defaultText bg-transparent text-sm whitespace-nowrap cursor-pointer select-none stroke-greyText hover:stroke-defaultText">
+          <div className="flex h-full items-center pl-3 mr-3 text-greyText font-normal leading-4 hover:text-default-text bg-transparent text-sm whitespace-nowrap cursor-pointer select-none stroke-greyText hover:stroke-defaultText">
             <ResizableComponent>
               <span className="mr-2">{selectedCurrency.code}</span>
             </ResizableComponent>

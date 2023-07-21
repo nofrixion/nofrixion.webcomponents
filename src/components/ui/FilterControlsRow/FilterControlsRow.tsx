@@ -2,6 +2,8 @@
 import SearchBar from '../SearchBar/SearchBar';
 import AmountFilter from '../AmountFilter/AmountFilter';
 import TagFilter, { FilterableTag } from '../TagFilter/TagFilter';
+import { SelectSorter, TSorterOptions } from '@/components/ui/molecules';
+import { SortDirection } from '@/components/ui/ColumnHeader/ColumnHeader';
 
 interface FilterControlsRowProps {
   setDateRange: (dateRange: DateRange) => void;
@@ -15,7 +17,22 @@ interface FilterControlsRowProps {
   setMaxAmount?: (maxAmount?: number) => void;
   tags: FilterableTag[];
   setTags: (tags: FilterableTag[]) => void;
+  createdSortDirection: SortDirection;
+  setCreatedSortDirection?: (direction: SortDirection) => void;
+  amountSortDirection: SortDirection;
+  setAmountSortDirection?: (direction: SortDirection) => void;
 }
+
+const sortOptions = {
+  created: {
+    ASC: 'olderFirst',
+    DESC: 'moreRecentFirst',
+  },
+  amount: {
+    ASC: 'amountLowToHigh',
+    DESC: 'amountHighToLow',
+  },
+};
 
 const FilterControlsRow = ({
   setDateRange,
@@ -29,10 +46,56 @@ const FilterControlsRow = ({
   setMaxAmount,
   tags,
   setTags,
+  createdSortDirection,
+  setCreatedSortDirection,
+  amountSortDirection,
+  setAmountSortDirection,
 }: FilterControlsRowProps) => {
+  const onValueChanged = (value: TSorterOptions) => {
+    switch (value) {
+      case 'moreRecentFirst':
+        setCreatedSortDirection && setCreatedSortDirection(SortDirection.DESC);
+        setAmountSortDirection && setAmountSortDirection(SortDirection.NONE);
+        break;
+      case 'olderFirst':
+        setCreatedSortDirection && setCreatedSortDirection(SortDirection.ASC);
+        setAmountSortDirection && setAmountSortDirection(SortDirection.NONE);
+        break;
+      case 'amountHighToLow':
+        setAmountSortDirection && setAmountSortDirection(SortDirection.DESC);
+        setCreatedSortDirection && setCreatedSortDirection(SortDirection.NONE);
+        break;
+      case 'amountLowToHigh':
+        setAmountSortDirection && setAmountSortDirection(SortDirection.ASC);
+        setCreatedSortDirection && setCreatedSortDirection(SortDirection.NONE);
+        break;
+    }
+  };
+
+  const getSorterValue = () => {
+    console.log(createdSortDirection, amountSortDirection);
+
+    if (createdSortDirection === SortDirection.DESC) {
+      return 'moreRecentFirst';
+    } else if (createdSortDirection === SortDirection.ASC) {
+      return 'olderFirst';
+    } else if (amountSortDirection === SortDirection.DESC) {
+      return 'amountHighToLow';
+    } else if (amountSortDirection === SortDirection.ASC) {
+      console.log('Returning default value');
+      return 'amountLowToHigh';
+    } else {
+      return 'moreRecentFirst';
+    }
+  };
+
   return (
-    <div className="md:flex justify-between md:p-3 bg-white rounded-lg">
+    <div className="flex md:w-auto md:flex justify-between md:p-3 bg-white rounded-lg">
       <DateRangePicker onDateChange={(dateRange) => setDateRange(dateRange)}></DateRangePicker>
+
+      <div className="md:hidden">
+        <SelectSorter className="text-right" value={getSorterValue()} onValueChange={onValueChanged} />
+      </div>
 
       <div className="hidden md:inline-flex flex-row space-x-2">
         <SearchBar value={searchFilter} setValue={setSearchFilter} />

@@ -1,5 +1,6 @@
 import emptyStateIllustration from '../../../assets/images/empty-state.svg';
-import Button from '../Button/Button';
+import { Button } from '@/components/ui/atoms';
+import { Text } from '@/components/ui/atoms';
 
 interface EmptyStateProps {
   state: 'nothingFound' | 'empty';
@@ -18,17 +19,13 @@ const EmptyState: React.FC<EmptyStateProps> = ({ state, onCreatePaymentRequest }
       <div className="w-auto h-[9.375rem] mx-auto mb-6">
         <img className="object-cover" src={emptyStateIllustration} alt="Emtpy static illustration" />
       </div>
-      <p className="text-xl/6 mb-2 font-semibold">{title}</p>
+      <Text>{title}</Text>
       <p className="text-sm/4 text-greyText">{description}</p>
 
       {state === 'empty' && onCreatePaymentRequest && (
-        <Button
-          label="Create payment request"
-          type="primary"
-          size="big"
-          onClick={onCreatePaymentRequest}
-          className="mt-[2.625rem] w-64"
-        />
+        <Button size="big" onClick={onCreatePaymentRequest} className="mt-[2.625rem] w-64">
+          Create payment request
+        </Button>
       )}
     </div>
   );

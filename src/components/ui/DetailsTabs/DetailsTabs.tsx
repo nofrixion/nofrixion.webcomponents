@@ -51,7 +51,7 @@ const DetailsTabs: React.FC<DetailsTabsProps> = ({ paymentRequest, onRefundClick
             return (
               <Tabs.Trigger
                 key={tab}
-                className="relative w-full h-10 select-none text-sm/6 text-greyText transition hover:text-defaultText data-[state=active]:text-defaultText"
+                className="relative w-full h-10 select-none text-sm/6 text-greyText transition hover:text-default-text data-[state=active]:text-default-text"
                 value={tab}
               >
                 {tab}

@@ -36,7 +36,7 @@ import PaymentNotificationsModal from '../Modals/PaymentNotificationsModal/Payme
 import { validateEmail } from '../../../utils/validation';
 import { formatAmountAndDecimals } from '../../../utils/formatters';
 import BackArrow from '../utils/BackArrow';
-import Button from '../Button/Button';
+import { Button } from '@/components/ui/atoms';
 
 interface CreatePaymentRequestPageProps {
   banks: BankSettings[];
@@ -532,16 +532,14 @@ const CreatePaymentRequestPage = ({
                   {/* Confirm PR */}
                   {isReviewing && (
                     <LayoutWrapper layout={false} className="space-y-7" animateOnExit={false} duration={0.6}>
-                      <Button
-                        label="Confirm payment request"
-                        type="primaryDark"
-                        size="big"
-                        onClick={onConfirmClicked}
-                        disabled={isSubmitting}
-                      />
+                      <Button variant="primaryDark" size="big" onClick={onConfirmClicked} disabled={isSubmitting}>
+                        Confirm payment request
+                      </Button>
 
                       {/* Edit button */}
-                      <Button label="Edit" type="secondary" size="big" onClick={() => setIsReviewing(false)} />
+                      <Button variant="secondary" size="big" onClick={() => setIsReviewing(false)}>
+                        Edit
+                      </Button>
                     </LayoutWrapper>
                   )}
                 </AnimatePresence>
@@ -572,7 +570,7 @@ const CreatePaymentRequestPage = ({
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative font-inter text-defaultText" onClose={() => {}}>
+        <Dialog as="div" className="relative font-inter text-default-text" onClose={() => {}}>
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center text-center">
               <Transition.Child
@@ -754,13 +752,9 @@ const CreatePaymentRequestPage = ({
                                 exit={{ opacity: 0, y: 20 }}
                                 className="block lg:hidden sticky bottom-0 w-full mx-auto pb-4"
                               >
-                                <Button
-                                  label="Review payment request"
-                                  type="secondary"
-                                  size="big"
-                                  onClick={onReviewClicked}
-                                  nextArrow
-                                />
+                                <Button variant="secondary" size="big" onClick={onReviewClicked} nextArrow>
+                                  Review payment request
+                                </Button>
                               </motion.div>
                             )}
                           </AnimatePresence>

@@ -20,7 +20,7 @@ const AmountPaid = ({
 
   return (
     <div className="flex flex-col">
-      <span className="text-[2rem] font-semibold leading-8 mb-4 text-defaultText">
+      <span className="text-[2rem] font-semibold leading-8 mb-4 text-default-text">
         {currency == Currency.GBP ? '£' : '€'}
         {amountValueWithCommas}
         <sup className="ml-0.5 text-xl">.{amountDecimals}</sup>

@@ -42,7 +42,7 @@ const Tag = ({ id, label, onDelete }: TagProps) => {
           opacity: 0,
         }}
         className={classNames(
-          'inline-flex items-center space-x-2 text-defaultText min-h-[2.0625rem] max-h-[2.0625rem] px-3 py-2 rounded-full text-sm leading-4 whitespace-nowrap align-middle w-fit select-none',
+          'inline-flex items-center space-x-2 text-default-text min-h-[2.0625rem] max-h-[2.0625rem] px-3 py-2 rounded-full text-sm leading-4 whitespace-nowrap align-middle w-fit select-none',
           {
             'bg-greyBg': !deleteMode,
             'text-negativeRed bg-errorBg': deleteMode,

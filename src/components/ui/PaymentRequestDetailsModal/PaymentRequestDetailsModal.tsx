@@ -87,7 +87,7 @@ const PaymentRequestDetailsModal = ({
                         id="Vector 15"
                         d="M2 0.999999L12 11L2 21"
                         stroke="#454D54"
-                        stroke-linecap="round"
+                        strokeLinecap="round"
                         strokeLinejoin="round"
                       />
                     </g>

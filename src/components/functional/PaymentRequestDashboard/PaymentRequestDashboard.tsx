@@ -25,7 +25,7 @@ import FilterControlsRow from '../../ui/FilterControlsRow/FilterControlsRow';
 import { FilterableTag } from '../../ui/TagFilter/TagFilter';
 import ScrollArea from '../../ui/ScrollArea/ScrollArea';
 import { LocalPartialPaymentMethods, LocalPaymentMethodTypes } from '../../../types/LocalEnums';
-import Button from '../../ui/Button/Button';
+import { Button } from '@/components/ui/atoms';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -304,14 +304,16 @@ const PaymentRequestDashboard = ({
 
   const isInitialState = !isLoadingMetrics && (!firstMetrics || firstMetrics?.all === 0);
   return (
-    <div className="font-inter bg-mainGrey text-defaultText h-full">
+    <div className="font-inter bg-mainGrey text-default-text h-full">
       <div className="flex flex-col gap-8 md:flex-row md:justify-between md:items-center mb-8 md:mb-[68px]">
         <span className="md:pl-4 leading-8 font-medium text-2xl md:text-[1.75rem]">Accounts Receivable</span>
         <LayoutGroup>
           <AnimatePresence initial={false}>
-            {!isInitialState && (
+            {!isInitialState && !isLoadingMetrics && (
               <LayoutWrapper className="fixed bottom-0 mb-4 px-6 w-full -mx-6 md:-mx-14 md:px-14 lg:static lg:w-auto">
-                <Button label="Create payment request" type="primary" size="big" onClick={onCreatePaymentRequest} />
+                <Button size="big" onClick={onCreatePaymentRequest}>
+                  Create payment request
+                </Button>
               </LayoutWrapper>
             )}
           </AnimatePresence>
@@ -333,6 +335,10 @@ const PaymentRequestDashboard = ({
               setMaxAmount={setMaxAmountFilter}
               tags={tags}
               setTags={setTags}
+              createdSortDirection={createdSortDirection}
+              setCreatedSortDirection={setCreatedSortDirection}
+              amountSortDirection={amountSortDirection}
+              setAmountSortDirection={setAmountSortDirection}
             />
           </div>
         )}
@@ -406,13 +412,14 @@ const PaymentRequestDashboard = ({
           {!isInitialState && localPaymentRequests.length < totalRecords && (
             <div className="flex">
               <Button
-                label="Show more"
-                type="tertiary"
+                variant="tertiary"
                 size="big"
                 onClick={fetchNextPage}
                 disabled={isLoadingMore}
                 className="lg:hidden mx-auto mt-6 mb-2 w-fit"
-              />
+              >
+                Show more
+              </Button>
             </div>
           )}
         </LayoutWrapper>
