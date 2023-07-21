@@ -1,20 +1,16 @@
 import {
-  Currency,
+  type PaymentRequestAddress,
+  type PaymentRequest,
   PartialPaymentMethods,
   PaymentMethodTypes,
-  PaymentRequest,
-  PaymentRequestAddress,
-  PaymentRequestCaptureAttempt,
-  PaymentRequestEventType,
-  PaymentRequestPaymentAttempt,
   PaymentResult,
-  Tag,
   Wallets,
+  type Tag,
+  type PaymentRequestPaymentAttempt,
 } from '@nofrixion/moneymoov';
 
 import {
   LocalAddressType,
-  LocalCardPaymentResponseStatus,
   LocalPartialPaymentMethods,
   LocalPaymentMethodTypes,
   LocalWallets,

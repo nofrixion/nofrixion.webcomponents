@@ -34,9 +34,9 @@ import PaymentMethodIcon from '../utils/PaymentMethodIcon';
 import _ from 'lodash';
 import PaymentNotificationsModal from '../Modals/PaymentNotificationsModal/PaymentNotificationsModal';
 import { validateEmail } from '../../../utils/validation';
-import { formatAmount } from '../../../utils/formatters';
+import { formatAmountAndDecimals } from '../../../utils/formatters';
 import BackArrow from '../utils/BackArrow';
-import Button from '../Button/Button';
+import { Button } from '@/components/ui/atoms';
 
 interface CreatePaymentRequestPageProps {
   banks: BankSettings[];
@@ -427,6 +427,8 @@ const CreatePaymentRequestPage = ({
   };
 
   const renderReviewSummary = () => {
+    const { amountValueWithCommas, amountDecimals } = formatAmountAndDecimals(Number(amount));
+
     return (
       <div className="w-full lg:max-w-sm xl:max-w-lg mx-auto mt-6 md:mt-44">
         <div className="space-y-5 md:space-y-10">
@@ -436,7 +438,8 @@ const CreatePaymentRequestPage = ({
               <LayoutWrapper key="amount" className={reviewRowClassNames}>
                 <span className="leading-6 text-greyText w-40 shrink-0">Request</span>
                 <span className="font-semibold text-[2rem]/8 w-full">
-                  {currency == 'GBP' ? '£' : '€'} {formatAmount(Number(amount))}
+                  {currency == 'GBP' ? '£' : '€'} {amountValueWithCommas}
+                  <sup className="ml-0.5 text-xl">.{amountDecimals}</sup>
                 </span>
               </LayoutWrapper>
             )}
@@ -529,16 +532,14 @@ const CreatePaymentRequestPage = ({
                   {/* Confirm PR */}
                   {isReviewing && (
                     <LayoutWrapper layout={false} className="space-y-7" animateOnExit={false} duration={0.6}>
-                      <Button
-                        label="Confirm payment request"
-                        type="primaryDark"
-                        size="big"
-                        onClick={onConfirmClicked}
-                        disabled={isSubmitting}
-                      />
+                      <Button variant="primaryDark" size="big" onClick={onConfirmClicked} disabled={isSubmitting}>
+                        Confirm payment request
+                      </Button>
 
                       {/* Edit button */}
-                      <Button label="Edit" type="secondary" size="big" onClick={() => setIsReviewing(false)} />
+                      <Button variant="secondary" size="big" onClick={() => setIsReviewing(false)}>
+                        Edit
+                      </Button>
                     </LayoutWrapper>
                   )}
                 </AnimatePresence>
@@ -569,7 +570,7 @@ const CreatePaymentRequestPage = ({
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative font-inter text-defaultText" onClose={() => {}}>
+        <Dialog as="div" className="relative font-inter text-default-text" onClose={() => {}}>
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center text-center">
               <Transition.Child
@@ -751,13 +752,9 @@ const CreatePaymentRequestPage = ({
                                 exit={{ opacity: 0, y: 20 }}
                                 className="block lg:hidden sticky bottom-0 w-full mx-auto pb-4"
                               >
-                                <Button
-                                  label="Review payment request"
-                                  type="secondary"
-                                  size="big"
-                                  onClick={onReviewClicked}
-                                  nextArrow
-                                />
+                                <Button variant="secondary" size="big" onClick={onReviewClicked} nextArrow>
+                                  Review payment request
+                                </Button>
                               </motion.div>
                             )}
                           </AnimatePresence>
