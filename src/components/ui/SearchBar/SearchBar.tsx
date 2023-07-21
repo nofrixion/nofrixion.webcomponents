@@ -38,7 +38,7 @@ const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
           className={classNames(
             'inline outline outline-1 hover:outline-borderGrey focus:outline-borderGrey ' +
               'focus:rounded-lg focus:w-48 py-2 pl-9 pr-1 text-sm placeholder:text-greyText ' +
-              'placeholder:opacity-100 text-defaultText bg-[12px] bg-no-repeat transition-all',
+              'placeholder:opacity-100 text-default-text bg-[12px] bg-no-repeat transition-all',
             {
               'outline-borderGrey rounded-lg w-48 pr-9': value,
               'rounded w-24': !value,

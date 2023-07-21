@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import Checkbox from '../Checkbox/Checkbox';
-import classNames from 'classnames';
+import { Button } from '@/components/ui/atoms';
 
 interface CustomModalProps extends BaseModalProps {
   title: string;
@@ -102,31 +102,26 @@ const CustomModal = ({
                     <path d="M1.33335 0.999944L8 7.6666L1.33335 14.3333" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </button>
-                <Dialog.Title as="h3" className="text-2xl font-medium leading-6 p-12 pt-2">
+                <Dialog.Title as="h3" className="text-2xl font-medium leading-8 md:leading-6 p-6 md:p-12 md:pt-2">
                   {title}
                 </Dialog.Title>
-                <div className="px-12">{children}</div>
+                <div className="px-6 md:px-12">{children}</div>
 
-                <div className="bg-mainGrey flex items-center pl-8 pr-6 py-4 mt-12">
+                <div className="bg-mainGrey flex flex-col-reverse items-center gap-4 md:gap-0 md:flex-row md:justify-between px-6 md:pl-8 md:pr-6 py-4 mt-4 md:mt-12">
                   {enableUseAsDefault && (
                     <div>
                       <Checkbox label="Use as my default" value={isDefaultChecked} onChange={setIsDefaultChecked} />
                     </div>
                   )}
-                  <button
-                    disabled={!onApplyEnabled}
-                    type="button"
-                    className={classNames(
-                      'inline-flex justify-center rounded-full bg-[#006A80] py-3 px-16 text-sm text-white font-semibold ml-auto transition',
-                      {
-                        'cursor-pointer hover:bg-[#144752]': onApplyEnabled,
-                        'opacity-20 cursor-not-allowed': !onApplyEnabled,
-                      },
-                    )}
+                  <Button
+                    variant="primaryDark"
+                    size="medium"
                     onClick={onApplyClicked}
+                    disabled={!onApplyEnabled}
+                    className="w-full md:w-auto px-16"
                   >
                     Apply
-                  </button>
+                  </Button>
                 </div>
               </Dialog.Panel>
             </Transition.Child>

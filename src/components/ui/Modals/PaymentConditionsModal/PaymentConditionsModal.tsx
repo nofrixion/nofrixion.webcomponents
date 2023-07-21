@@ -2,18 +2,25 @@ import CustomModal, { BaseModalProps } from '../../CustomModal/CustomModal';
 import { useState } from 'react';
 import Checkbox from '../../Checkbox/Checkbox';
 import { LocalPaymentConditionsFormValue } from '../../../../types/LocalTypes';
-import { PaymentConditionsDefaults, UserPaymentDefaults } from '../../../../api/types/ApiResponses';
+import { PaymentConditionsDefaults, UserPaymentDefaults } from '@nofrixion/moneymoov';
 
 interface PaymentConditionsModalProps extends BaseModalProps {
   userDefaults?: PaymentConditionsDefaults;
   onApply: (data: LocalPaymentConditionsFormValue) => void;
+  isPrefilledData: boolean;
 }
 
-const PaymentConditionsModal = ({ open, userDefaults, onDismiss, onApply }: PaymentConditionsModalProps) => {
+const PaymentConditionsModal = ({
+  open,
+  userDefaults,
+  onDismiss,
+  onApply,
+  isPrefilledData = false,
+}: PaymentConditionsModalProps) => {
   const [isAllowPartialEnabled, setIsAllowPartialEnabled] = useState<boolean>(
     userDefaults ? userDefaults.allowPartialPayments : false,
   );
-  const [isDefault, setIsDefault] = useState<boolean>(userDefaults ? true : false);
+  const [isDefault, setIsDefault] = useState<boolean>(!isPrefilledData && !!userDefaults);
   const [currentState, setCurrentState] = useState<LocalPaymentConditionsFormValue>();
 
   // When the user clicks on the Apply button, we need to send the data to the parent component
@@ -50,10 +57,12 @@ const PaymentConditionsModal = ({ open, userDefaults, onDismiss, onApply }: Paym
       isDefault={isDefault}
     >
       <div className="py-1">
-        <Checkbox label="Allow partial payments" value={isAllowPartialEnabled} onChange={setIsAllowPartialEnabled} />
-      </div>
-      <div className="ml-7 mt-1 text-greyText font-normal text-xs">
-        Enable customers to pay a portion of the total amount owed, rather than the full balance all at once.
+        <Checkbox
+          label="Allow partial payments"
+          description="Enable customers to pay a portion of the total amount owed, rather than the full balance all at once."
+          value={isAllowPartialEnabled}
+          onChange={setIsAllowPartialEnabled}
+        />
       </div>
     </CustomModal>
   );

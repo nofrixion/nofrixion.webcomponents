@@ -1,6 +1,4 @@
-import React from 'react';
 import { StoryFn, Meta } from '@storybook/react';
-import { dateRanges } from '../../../utils/constants';
 
 import DateRangePicker from './DateRangePicker';
 import { action } from '@storybook/addon-actions';

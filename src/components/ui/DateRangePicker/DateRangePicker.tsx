@@ -1,34 +1,15 @@
-import classNames from 'classnames';
 import { MouseEventHandler, useEffect, useState } from 'react';
-import { dateRanges } from '../../../utils/constants';
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { motion } from 'framer-motion';
-import { cva } from 'class-variance-authority';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import DateRangeInput from './DateRangeInput';
 import './DateRangePicker.css';
-import { add, startOfDay, endOfDay, isToday, isYesterday } from 'date-fns';
+import { add, startOfDay, endOfDay, format } from 'date-fns';
 import { getSelectRangeText } from '../../../utils/formatters';
 import DateRangeButton from './DateRangeButton';
-import ResizableComponent from '../ResizableComponent/ResizableComponent';
+import { SelectDateRange, type TDateRangeOptions } from '@/components/ui/molecules';
+import { cn } from '@/utils';
 
 const pillClasses =
-  'text-defaultText leading-6 hover:text-greyText bg-transparent text-sm whitespace-nowrap cursor-pointer select-none stroke-defaultText hover:stroke-controlGrey';
-
-const actionItemClassNames =
-  'group text-sm leading-6 rounded-1 flex items-center relative select-none outline-none cursor-pointer';
-
-const actionItem = cva(actionItemClassNames, {
-  variants: {
-    intent: {
-      neutral: ['data-[highlighted]:text-greyText'],
-      selected: ['text-[#009999] data-[highlighted]:cursor-default'],
-    },
-  },
-  defaultVariants: {
-    intent: 'neutral',
-  },
-});
+  'text-default-text leading-6 hover:text-greyText bg-transparent text-sm whitespace-nowrap cursor-pointer select-none stroke-defaultText hover:stroke-controlGrey';
 
 export type DateRange = {
   fromDate: Date;
@@ -39,9 +20,11 @@ interface DateRangeFilterProps {
   onDateChange: (dateRange: DateRange) => void;
 }
 
+const dateFormat = 'MMM do';
+
 const DateRangePicker = ({ onDateChange }: DateRangeFilterProps) => {
   const [dates, setDates] = useState<DateObject[]>([]);
-  const [selectRangeText, setSelectRangeText] = useState(dateRanges.last90Days);
+  const [selectRangeText, setSelectRangeText] = useState<TDateRangeOptions | undefined>('last90Days');
   const [isClosed, setIsClosed] = useState(true);
 
   const weekDays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
@@ -67,71 +50,47 @@ const DateRangePicker = ({ onDateChange }: DateRangeFilterProps) => {
     let toDate = new Date();
 
     switch (selectRangeText) {
-      case dateRanges.today:
+      case 'today':
         fromDate = startOfDay(new Date());
         setDates([new DateObject(fromDate), new DateObject(new Date())]);
         break;
-      case dateRanges.yesterday:
+      case 'yesterday':
         fromDate = startOfDay(add(new Date(), { days: -1 }));
         toDate = endOfDay(add(new Date(), { days: -1 }));
         setDates([new DateObject(fromDate), new DateObject(toDate)]);
         break;
-      case dateRanges.last7Days:
+      case 'last7Days':
         fromDate = startOfDay(add(new Date(), { days: -7 }));
         setDates([new DateObject(fromDate), new DateObject(new Date())]);
         break;
-      case dateRanges.last30Days:
+      case 'last30Days':
         fromDate = startOfDay(add(new Date(), { days: -30 }));
         setDates([new DateObject(fromDate), new DateObject(new Date())]);
         break;
-      case dateRanges.last90Days:
+      case 'last90Days':
         fromDate = startOfDay(add(new Date(), { days: -90 }));
         setDates([new DateObject(fromDate), new DateObject(new Date())]);
         break;
       default:
         break;
     }
+    console.log(selectRangeText);
   }, [selectRangeText]);
 
   return (
-    <div className="flex defaultText w-fit">
-      <DropdownMenu.Root>
-        <DropdownMenu.Trigger>
-          <div className={classNames(pillClasses, 'border-r flex items-center w-fit space-x-2 px-4 py-2')}>
-            <ResizableComponent>
-              <span className="py-2">{selectRangeText}</span>
-            </ResizableComponent>
+    <div className="md:flex md:justify-normal text-left md:w-fit">
+      <SelectDateRange
+        className="mr-1 text-left"
+        value={selectRangeText}
+        onValueChange={setSelectRangeText}
+        subText={
+          dates[0] != undefined && dates[1] != undefined
+            ? `${format(dates[0].toDate(), dateFormat)} - ${format(dates[1].toDate(), dateFormat)}`
+            : 'WTF'
+        }
+      />
 
-            <svg width="10" height="8" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M1 1.25L5 5.25L9 1.25" strokeLinecap="square" />
-            </svg>
-          </div>
-        </DropdownMenu.Trigger>
-
-        <DropdownMenu.Portal>
-          <DropdownMenu.Content asChild forceMount sideOffset={5} className="px-6">
-            <motion.div
-              className="min-w-[150px] bg-white rounded-md shadow-[0px_0px_8px_rgba(4,_41,_49,_0.1)] p-4 space-y-4"
-              initial={{ opacity: 0.5, y: -5, scaleX: 1, scaleY: 1 }}
-              animate={{ opacity: 1, y: 0, scaleX: 1, scaleY: 1 }}
-            >
-              {Object.values(dateRanges).map((daterange) => {
-                return (
-                  <DropdownMenu.Item
-                    key={daterange}
-                    className={actionItem({ intent: selectRangeText === daterange ? 'selected' : 'neutral' })}
-                    onClick={() => setSelectRangeText(daterange)}
-                  >
-                    <span>{daterange}</span>
-                  </DropdownMenu.Item>
-                );
-              })}
-            </motion.div>
-          </DropdownMenu.Content>
-        </DropdownMenu.Portal>
-      </DropdownMenu.Root>
-
-      <div className={classNames(pillClasses, 'flex py-2 pr-4')}>
+      <div className={cn(pillClasses, 'hidden md:flex py-2 pr-4 border-borderGrey border-l')}>
         <DatePicker
           value={dates}
           onChange={(changes: DateObject[]) => {

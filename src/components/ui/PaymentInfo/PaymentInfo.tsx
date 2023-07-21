@@ -1,7 +1,5 @@
 import PaymentMethodIcon from '../utils/PaymentMethodIcon';
-import { PaymentRequest } from '../../../api/types/ApiResponses';
 import { format } from 'date-fns';
-import { AddressType } from '../../../api/types/Enums';
 import { LocalPaymentRequest } from '../../../types/LocalTypes';
 import { LocalAddressType, LocalPaymentMethodTypes } from '../../../types/LocalEnums';
 
@@ -13,8 +11,8 @@ interface PaymentInfoRowProps {
 
 const PaymentInfoRow: React.FC<PaymentInfoRowProps> = ({ label, content, children }) => {
   return (
-    <div className="text-sm/6 flex">
-      <span className="text-greyText w-36 mr-4 block">{label}</span>
+    <div className="text-sm/6 lg:flex">
+      <span className="text-greyText font-medium lg:font-normal mb-1 lg:w-36 mr-4 block">{label}</span>
 
       {!children && content && content.length > 0 && (
         <div className="flex flex-col">
@@ -31,11 +29,9 @@ const PaymentInfoRow: React.FC<PaymentInfoRowProps> = ({ label, content, childre
   );
 };
 
-interface PaymentInfoProps {
-  paymentRequest: LocalPaymentRequest;
-}
+interface PaymentInfoProps extends LocalPaymentRequest {}
 
-const PaymentInfo = ({ paymentRequest: { id, createdAt, paymentMethodTypes, addresses } }: PaymentInfoProps) => {
+const PaymentInfo = ({ id, createdAt, paymentMethodTypes, addresses }: PaymentInfoProps) => {
   // Parsed date should follow the following format: Dec 22nd, 2022
   const formattedDate = format(createdAt, 'MMM do, yyyy');
 
@@ -53,11 +49,11 @@ const PaymentInfo = ({ paymentRequest: { id, createdAt, paymentMethodTypes, addr
   const shippingAddress = shippingAddresses?.length > 0 ? shippingAddresses[0] : undefined;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 lg:space-y-6">
       <PaymentInfoRow label="Payment request ID" content={[id]} />
       <PaymentInfoRow label="Created" content={[formattedDate]} />
       <PaymentInfoRow label="Payment methods">
-        <div className="flex space-x-3">
+        <div className="space-x-3">
           <PaymentMethodIcon paymentMethod="bank" enabled={isBankEnabled} />
           <PaymentMethodIcon paymentMethod="card" enabled={isCardEnabled} />
           <PaymentMethodIcon paymentMethod="wallet" enabled={isWalletEnabled} />

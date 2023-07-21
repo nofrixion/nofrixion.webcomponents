@@ -11,7 +11,14 @@ import { AnimatePresence, motion } from 'framer-motion';
 import AnimateHeightWrapper from '../utils/AnimateHeight';
 import LayoutWrapper from '../utils/LayoutWrapper';
 import PaymentMethodsModal from '../Modals/PaymentMethodsModal/PaymentMethodsModal';
-import { Currency } from '../../../api/types/Enums';
+import {
+  Currency,
+  BankSettings,
+  NotificationEmailsDefaults,
+  PaymentConditionsDefaults,
+  PaymentMethodsDefaults,
+  UserPaymentDefaults,
+} from '@nofrixion/moneymoov';
 import {
   LocalPaymentConditionsFormValue,
   LocalPaymentMethodsFormValue,
@@ -22,12 +29,14 @@ import classNames from 'classnames';
 import PaymentConditionsModal from '../Modals/PaymentConditionsModal/PaymentConditionsModal';
 
 import { formatEmailAddressesForSummary, parseBoldText } from '../../../utils/uiFormaters';
-import { BankSettings, UserPaymentDefaults } from '../../../api/types/ApiResponses';
+
 import PaymentMethodIcon from '../utils/PaymentMethodIcon';
 import _ from 'lodash';
 import PaymentNotificationsModal from '../Modals/PaymentNotificationsModal/PaymentNotificationsModal';
 import { validateEmail } from '../../../utils/validation';
-import { formatAmount } from '../../../utils/formatters';
+import { formatAmountAndDecimals } from '../../../utils/formatters';
+import BackArrow from '../utils/BackArrow';
+import { Button } from '@/components/ui/atoms';
 
 interface CreatePaymentRequestPageProps {
   banks: BankSettings[];
@@ -37,6 +46,7 @@ interface CreatePaymentRequestPageProps {
   onClose: () => void;
   onDefaultsChanged: (data: UserPaymentDefaults) => void;
   isUserPaymentDefaultsLoading: boolean;
+  prefilledData?: LocalPaymentRequestCreate;
 }
 
 const durationAnimationWidth = 0.3;
@@ -49,14 +59,15 @@ const CreatePaymentRequestPage = ({
   onClose,
   onDefaultsChanged,
   isUserPaymentDefaultsLoading,
+  prefilledData,
 }: CreatePaymentRequestPageProps) => {
-  const [amount, setAmount] = useState('');
-  const [currency, setCurrency] = useState<'EUR' | 'GBP'>('EUR');
-  const [productOrService, setProductOrService] = useState('');
-  const [description, setDescription] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
+  const [amount, setAmount] = useState(prefilledData?.amount.toString() ?? '');
+  const [currency, setCurrency] = useState<'EUR' | 'GBP'>((prefilledData?.currency ?? 'EUR') as 'EUR' | 'GBP');
+  const [productOrService, setProductOrService] = useState(prefilledData?.productOrService ?? '');
+  const [description, setDescription] = useState(prefilledData?.description ?? '');
+  const [firstName, setFirstName] = useState(prefilledData?.firstName ?? '');
+  const [lastName, setLastName] = useState(prefilledData?.lastName ?? '');
+  const [email, setEmail] = useState(prefilledData?.email ?? '');
   const [hasEmailError, setHasEmailError] = useState(false);
   const [defaultsChanged, setDefaultsChanged] = useState(false);
 
@@ -94,33 +105,109 @@ const CreatePaymentRequestPage = ({
   const [isReviewing, setIsReviewing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const convertPrefilledDataToPaymentMethodDefaults = (): PaymentMethodsDefaults => {
+    return {
+      pisp: prefilledData?.paymentMethods?.bank?.active ?? false,
+      card: prefilledData?.paymentMethods?.card?.active ?? false,
+      wallet: prefilledData?.paymentMethods?.wallet ?? false,
+      lightning: prefilledData?.paymentMethods?.lightning ?? false,
+      cardAuthorizeOnly: !prefilledData?.paymentMethods?.card?.captureFunds,
+      pispPriorityBankID: prefilledData?.paymentMethods?.bank?.priority?.id ?? '',
+      pispPriorityBank: !!prefilledData?.paymentMethods?.bank?.priority?.id,
+    };
+  };
+  const convertPrefilledDataToPaymentConditionsDefaults = (): PaymentConditionsDefaults => {
+    return {
+      allowPartialPayments: prefilledData?.paymentConditions?.allowPartialPayments ?? false,
+    };
+  };
+  const convertPrefilledDataToNotificationEmailsDefaults = (): NotificationEmailsDefaults => {
+    return {
+      emailAddresses: prefilledData?.notificationEmailAddresses ?? '',
+    };
+  };
+
+  const fillDefaultPaymentMethods = () => {
+    setPaymentMethodsFormValue({
+      isBankEnabled: userPaymentDefaults?.paymentMethodsDefaults?.pisp ?? true,
+      isCardEnabled: userPaymentDefaults?.paymentMethodsDefaults?.card ?? true,
+      isWalletEnabled: userPaymentDefaults?.paymentMethodsDefaults?.wallet ?? true,
+      isLightningEnabled: userPaymentDefaults?.paymentMethodsDefaults?.lightning ?? false,
+      isCaptureFundsEnabled: !userPaymentDefaults?.paymentMethodsDefaults?.cardAuthorizeOnly ?? true,
+      priorityBank: findBank(userPaymentDefaults?.paymentMethodsDefaults?.pispPriorityBankID),
+      isDefault: !!userPaymentDefaults?.paymentMethodsDefaults,
+    });
+  };
+
+  const fillDefaultPaymentConditions = () => {
+    setPaymentConditionsFormValue({
+      allowPartialPayments: userPaymentDefaults?.paymentConditionsDefaults?.allowPartialPayments ?? false,
+      isDefault: !!userPaymentDefaults?.paymentConditionsDefaults,
+    });
+  };
+
+  const fillDefaultNotificationEmailAddresses = () => {
+    setPaymentNotificationsFormValue({
+      emailAddresses: userPaymentDefaults?.notificationEmailsDefaults?.emailAddresses ?? '',
+      isDefault: !!userPaymentDefaults?.notificationEmailsDefaults,
+    });
+  };
+
   useEffect(() => {
     if (userPaymentDefaults?.paymentMethodsDefaults) {
-      setPaymentMethodsFormValue({
-        isBankEnabled: userPaymentDefaults.paymentMethodsDefaults.pisp ?? true,
-        isCardEnabled: userPaymentDefaults.paymentMethodsDefaults.card ?? true,
-        isWalletEnabled: userPaymentDefaults.paymentMethodsDefaults.wallet ?? true,
-        isLightningEnabled: userPaymentDefaults.paymentMethodsDefaults.lightning ?? false,
-        isCaptureFundsEnabled: !userPaymentDefaults.paymentMethodsDefaults.cardAuthorizeOnly ?? true,
-        priorityBank: findBank(userPaymentDefaults.paymentMethodsDefaults.pispPriorityBankID),
-        isDefault: true,
-      });
+      fillDefaultPaymentMethods();
     }
 
     if (userPaymentDefaults?.paymentConditionsDefaults) {
-      setPaymentConditionsFormValue({
-        allowPartialPayments: userPaymentDefaults?.paymentConditionsDefaults?.allowPartialPayments ?? false,
-        isDefault: true,
-      });
+      fillDefaultPaymentConditions();
     }
 
-    if (userPaymentDefaults?.notificationEmailsDefaults) {
-      setPaymentNotificationsFormValue({
-        emailAddresses: userPaymentDefaults?.notificationEmailsDefaults?.emailAddresses ?? '',
-        isDefault: true,
-      });
-    }
+    fillDefaultNotificationEmailAddresses();
   }, [userPaymentDefaults]);
+
+  useEffect(() => {
+    setAmount(prefilledData?.amount.toString() ?? '');
+    setCurrency((prefilledData?.currency ?? 'EUR') as 'EUR' | 'GBP');
+    setProductOrService(prefilledData?.productOrService ?? '');
+    setDescription(prefilledData?.description ?? '');
+    setFirstName(prefilledData?.firstName ?? '');
+    setLastName(prefilledData?.lastName ?? '');
+    setEmail(prefilledData?.email ?? '');
+
+    if (prefilledData?.paymentMethods) {
+      setPaymentMethodsFormValue({
+        isBankEnabled: prefilledData?.paymentMethods?.bank?.active ?? false,
+        isCardEnabled: prefilledData?.paymentMethods?.card?.active ?? false,
+        isWalletEnabled: prefilledData?.paymentMethods?.wallet ?? false,
+        isLightningEnabled: prefilledData?.paymentMethods?.lightning ?? false,
+        isCaptureFundsEnabled: prefilledData?.paymentMethods?.card?.captureFunds ?? false,
+        priorityBank: prefilledData?.paymentMethods?.bank?.priority?.id
+          ? findBank(prefilledData?.paymentMethods?.bank?.priority?.id)
+          : undefined,
+        isDefault: false,
+      });
+    } else {
+      fillDefaultPaymentMethods();
+    }
+
+    if (prefilledData?.paymentConditions) {
+      setPaymentConditionsFormValue({
+        allowPartialPayments: prefilledData?.paymentConditions?.allowPartialPayments ?? false,
+        isDefault: false,
+      });
+    } else {
+      fillDefaultPaymentConditions();
+    }
+
+    if (prefilledData?.notificationEmailAddresses) {
+      setPaymentNotificationsFormValue({
+        emailAddresses: prefilledData?.notificationEmailAddresses ?? '',
+        isDefault: false,
+      });
+    } else {
+      fillDefaultNotificationEmailAddresses();
+    }
+  }, [prefilledData]);
 
   const onCurrencyChange = (currency: string) => {
     setCurrency(currency as 'EUR' | 'GBP');
@@ -265,6 +352,10 @@ const CreatePaymentRequestPage = ({
       allowPartialPayments: false,
       isDefault: false,
     });
+    setPaymentNotificationsFormValue({
+      emailAddresses: '',
+      isDefault: false,
+    });
     setIsReviewing(false);
   };
 
@@ -289,10 +380,197 @@ const CreatePaymentRequestPage = ({
     }
   };
 
+  const reviewRowClassNames = 'flex overflow-hidden items-baseline flex-col gap-2 md:gap-0 md:flex-row';
+
+  const renderSettingsReview = () => {
+    return (
+      <>
+        <div className="h-px w-full bg-borderGrey mt-6 md:mt-12"></div>
+        <div className={classNames('mt-6 md:mt-12', reviewRowClassNames)}>
+          <span className="leading-6 text-greyText w-40 shrink-0">Settings</span>
+          <div className="flex flex-col w-full space-y-4 md:space-y-6">
+            <span className="text-sm/6">
+              {!paymentConditionsFormValue.allowPartialPayments ? 'Single full payment' : 'Partial payments'}
+            </span>
+
+            <div className="flex items-center space-x-3">
+              <PaymentMethodIcon paymentMethod="bank" enabled={paymentMethodsFormValue.isBankEnabled} />
+              <PaymentMethodIcon paymentMethod="card" enabled={paymentMethodsFormValue.isCardEnabled} />
+              <PaymentMethodIcon paymentMethod="wallet" enabled={paymentMethodsFormValue.isWalletEnabled} />
+              <PaymentMethodIcon paymentMethod="lightning" enabled={paymentMethodsFormValue.isLightningEnabled} />
+            </div>
+
+            <div>
+              {availableMethodsDetails.length > 0 && (
+                <div className="flex flex-col text-greyText text-xs">
+                  {availableMethodsDetails?.map((detail, index) => {
+                    return <span key={`detail-${index}`}>{parseBoldText(detail)}</span>;
+                  })}
+                </div>
+              )}
+            </div>
+
+            <div>
+              {paymentNotificationsFormValue.emailAddresses && (
+                <div className="flex text-greyText text-xs">
+                  <span>
+                    Payment notification to{' '}
+                    {formatEmailAddressesForSummary(paymentNotificationsFormValue.emailAddresses)}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  };
+
+  const renderReviewSummary = () => {
+    const { amountValueWithCommas, amountDecimals } = formatAmountAndDecimals(Number(amount));
+
+    return (
+      <div className="w-full lg:max-w-sm xl:max-w-lg mx-auto mt-6 md:mt-44">
+        <div className="space-y-5 md:space-y-10">
+          <AnimatePresence>
+            {/* Amount */}
+            {currency && amount && (
+              <LayoutWrapper key="amount" className={reviewRowClassNames}>
+                <span className="leading-6 text-greyText w-40 shrink-0">Request</span>
+                <span className="font-semibold text-[2rem]/8 w-full">
+                  {currency == 'GBP' ? '£' : '€'} {amountValueWithCommas}
+                  <sup className="ml-0.5 text-xl">.{amountDecimals}</sup>
+                </span>
+              </LayoutWrapper>
+            )}
+
+            {/* Product or service + description */}
+            {(productOrService || description) && (
+              <LayoutWrapper key="product-or-service-wrapper" className={reviewRowClassNames}>
+                <span className="leading-6 text-greyText w-40 shrink-0">For</span>
+
+                <div className="flex flex-col w-full">
+                  {productOrService && (
+                    <LayoutWrapper key="product-or-service">
+                      <p className="font-semibold w-full break-words text-lg/5 mb-0.5 md:mb-2">{productOrService}</p>
+                    </LayoutWrapper>
+                  )}
+
+                  {description && (
+                    <LayoutWrapper key="description">
+                      <p className="text-sm/5 w-full text-ellipsis break-words">{description}</p>
+                    </LayoutWrapper>
+                  )}
+                </div>
+              </LayoutWrapper>
+            )}
+
+            {/* Name */}
+            {(firstName || lastName || email) && (
+              <LayoutWrapper key="from" className={reviewRowClassNames}>
+                <span className="leading-6 text-greyText w-40 shrink-0 break-words">From</span>
+
+                <div className="flex flex-col w-full">
+                  {(firstName || lastName) && (
+                    <motion.p layout="position" className="font-semibold text-lg/5 mb-0.5 md:mb-2 break-words">
+                      {firstName} {lastName}
+                    </motion.p>
+                  )}
+
+                  {email && (
+                    <motion.div
+                      layout="position"
+                      className={classNames('flex items-center w-fit', {
+                        'p-1 bg-[#FCF5CF]': hasEmailError,
+                      })}
+                    >
+                      <p className="text-sm/5 break-words">{email}</p>
+                      {hasEmailError && <img src={AlertIcon} alt="Alert icon" className="w-4 h-4 ml-2" />}
+                    </motion.div>
+                  )}
+                </div>
+              </LayoutWrapper>
+            )}
+
+            {/* Settings */}
+            {/* Show only on desktop so we get the animation only on desktop */}
+            {isReviewing && (
+              <div className="hidden md:block">
+                <LayoutWrapper key="settings" animateOnExit={false} duration={0.6} delay={durationAnimationWidth / 1.5}>
+                  {renderSettingsReview()}
+                </LayoutWrapper>
+              </div>
+            )}
+
+            {/* Show only on desktop so we DONt get the animation on mobile */}
+            {isReviewing && <div className="block md:hidden">{renderSettingsReview()}</div>}
+
+            {/* Buttons */}
+            {currency && amount && productOrService && (
+              <LayoutWrapper
+                key="buttons"
+                className="flex flex-col !mt-20 justify-center sticky bottom-4 w-full lg:w-full mx-auto lg:mx-0 lg:static lg:bottom-auto"
+              >
+                <AnimatePresence initial={false}>
+                  {/* Review PR */}
+                  {!isReviewing && (
+                    <motion.button
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: durationAnimationWidth / 1.5 }}
+                      key="review-pr"
+                      type="button"
+                      className="w-full h-12 px-16 whitespace-nowrap flex justify-center items-center rounded-full py-3 text-sm cursor-pointer bg-[#DEE5ED] transition hover:bg-[#BDCCDB]"
+                      onClick={onReviewClicked}
+                    >
+                      <span className="py-3">Review payment request</span>
+
+                      <img src={NextIcon} alt="Arrow right" className="ml-2 w-4 h-4" />
+                    </motion.button>
+                  )}
+
+                  {/* Confirm PR */}
+                  {isReviewing && (
+                    <LayoutWrapper layout={false} className="space-y-7" animateOnExit={false} duration={0.6}>
+                      <Button variant="primaryDark" size="big" onClick={onConfirmClicked} disabled={isSubmitting}>
+                        Confirm payment request
+                      </Button>
+
+                      {/* Edit button */}
+                      <Button variant="secondary" size="big" onClick={() => setIsReviewing(false)}>
+                        Edit
+                      </Button>
+                    </LayoutWrapper>
+                  )}
+                </AnimatePresence>
+              </LayoutWrapper>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+    );
+  };
+
+  const renderBackArrow = () => {
+    return (
+      <BackArrow
+        intent={isReviewing ? 'back' : 'close'}
+        onClick={() => {
+          if (isReviewing) {
+            setIsReviewing(false);
+            return;
+          }
+
+          onClose();
+        }}
+      />
+    );
+  };
+
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative font-inter text-defaultText" onClose={() => {}}>
+        <Dialog as="div" className="relative font-inter text-default-text" onClose={() => {}}>
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center text-center">
               <Transition.Child
@@ -304,350 +582,197 @@ const CreatePaymentRequestPage = ({
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full transform bg-white text-left align-middle transition-all min-h-screen flex">
-                  {/* Left side */}
+                <Dialog.Panel className="w-full transform bg-white text-left align-middle transition-all min-h-screen px-6 lg:px-0 lg:flex">
+                  {/* Left side & Right side on mobile */}
                   <AnimatePresence initial={false}>
                     {!isReviewing && (
                       <motion.div
-                        initial={{ opacity: 0, width: '0' }}
-                        animate={{ opacity: 1, width: '50%', transition: { duration: durationAnimationWidth } }}
+                        className="relative"
+                        initial={{ opacity: 0, flex: 0 }}
+                        animate={{ opacity: 1, flex: 1, transition: { duration: durationAnimationWidth } }}
                         exit={{ opacity: 0, width: 0, flex: 0, transition: { duration: durationAnimationWidth } }}
                       >
-                        <div className="w-full pt-20 pb-28">
-                          <div className="flex items-center">
-                            <button className="inline-block ml-[3.25rem]" onClick={onClose}>
-                              <svg
-                                className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] transition stroke-controlGrey hover:stroke-controlGreyHover"
-                                width="26"
-                                height="22"
-                                viewBox="0 0 26 22"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
+                        <>
+                          <div className="w-full pt-10 lg:pt-20 pb-28">
+                            <div className="flex flex-col md:flex-row gap-y-6 md:gap-y-0 md:gap-4 lg:gap-[2.875rem] lg:items-center mb-12 md:mb-8">
+                              {renderBackArrow()}
+                              <Dialog.Title
+                                as="h3"
+                                className="text-2xl md:text-[1.75rem]/8 font-semibold inline-block text-clip md:whitespace-nowrap -mr-6"
                               >
-                                <path d="M11 21L1 11L11 1" strokeLinecap="round" strokeLinejoin="round" />
-                                <path d="M1 11.082H25" strokeLinecap="round" strokeLinejoin="round" />
-                              </svg>
-                            </button>
-                            <Dialog.Title
-                              as="h3"
-                              className="text-[1.75rem]/8 font-semibold inline-block ml-[2.875rem] text-clip whitespace-nowrap"
-                            >
-                              New payment request
-                            </Dialog.Title>
-                          </div>
-                          <div className="ml-[7.625rem] space-y-10 w-[27rem]">
-                            <div className="w-[13.938rem] mt-8">
-                              <InputAmountField
-                                value={amount}
-                                onChange={(e) => setAmount(e.target.value)}
-                                onCurrencyChange={onCurrencyChange}
-                                currency={currency}
-                              />
+                                New payment request
+                              </Dialog.Title>
                             </div>
+                            <div className="space-y-10 lg:w-[27rem] lg:ml-[7.625rem] lg:pr-12 xl:pr-0">
+                              <div className="md:w-72 lg:w-[13.938rem]">
+                                <InputAmountField
+                                  value={amount}
+                                  onChange={(e) => setAmount(e.target.value)}
+                                  onCurrencyChange={onCurrencyChange}
+                                  currency={currency}
+                                />
+                              </div>
 
-                            <div>
-                              <InputTextField
-                                label="Product or service"
-                                maxLength={40}
-                                value={productOrService}
-                                onChange={(e) => setProductOrService(e.target.value)}
-                                required
-                              />
-                            </div>
+                              <div>
+                                <InputTextField
+                                  label="Product or service"
+                                  maxLength={40}
+                                  value={productOrService}
+                                  onChange={(e) => setProductOrService(e.target.value)}
+                                  required
+                                />
+                              </div>
 
-                            <div>
-                              <InputTextAreaField
-                                label="Description"
-                                maxLength={140}
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                              />
-                            </div>
+                              <div>
+                                <InputTextAreaField
+                                  label="Description"
+                                  maxLength={140}
+                                  value={description}
+                                  onChange={(e) => setDescription(e.target.value)}
+                                />
+                              </div>
 
-                            <div>
-                              <InputTextField
-                                label="First name"
-                                autoComplete="given-name"
-                                value={firstName}
-                                onChange={(e) => setFirstName(e.target.value)}
-                              />
-                            </div>
+                              <div>
+                                <InputTextField
+                                  label="First name"
+                                  autoComplete="given-name"
+                                  value={firstName}
+                                  onChange={(e) => setFirstName(e.target.value)}
+                                />
+                              </div>
 
-                            <div>
-                              <InputTextField
-                                label="Last name"
-                                autoComplete="family-name"
-                                value={lastName}
-                                onChange={(e) => setLastName(e.target.value)}
-                              />
-                            </div>
+                              <div>
+                                <InputTextField
+                                  label="Last name"
+                                  autoComplete="family-name"
+                                  value={lastName}
+                                  onChange={(e) => setLastName(e.target.value)}
+                                />
+                              </div>
 
-                            <div>
-                              <InputTextField
-                                label="Email"
-                                autoComplete="email"
-                                value={email}
-                                type="email"
-                                onChange={(e) => {
-                                  setEmail(e.target.value);
+                              <div>
+                                <InputTextField
+                                  label="Email"
+                                  autoComplete="email"
+                                  value={email}
+                                  type="email"
+                                  onChange={(e) => {
+                                    setEmail(e.target.value);
 
-                                  if (hasEmailError) {
-                                    onValidateEmail(e.target.value);
-                                  }
-                                }}
-                                onBlur={(e) => onValidateEmail(e.target.value)}
-                              />
+                                    if (hasEmailError) {
+                                      onValidateEmail(e.target.value);
+                                    }
+                                  }}
+                                  onBlur={(e) => onValidateEmail(e.target.value)}
+                                />
 
-                              <AnimatePresence>
-                                {hasEmailError && (
-                                  <AnimateHeightWrapper layoutId="email-error">
-                                    <div className="mt-2 bg-[#FCF5CF] text-sm p-3 w-[27rem] rounded">
-                                      Make sure the email address is valid.
+                                <AnimatePresence>
+                                  {hasEmailError && (
+                                    <AnimateHeightWrapper layoutId="email-error">
+                                      <div className="mt-2 bg-[#FCF5CF] text-sm p-3 rounded">
+                                        Make sure the email address is valid.
+                                      </div>
+                                    </AnimateHeightWrapper>
+                                  )}
+                                </AnimatePresence>
+                              </div>
+
+                              <div>
+                                <h4 className="text-lg/6 font-semibold mb-6">Settings</h4>
+                                <div className="w-full space-y-4 md:space-y-2">
+                                  <EditOptionCard
+                                    label="Payment conditions"
+                                    values={[
+                                      !paymentConditionsFormValue.allowPartialPayments
+                                        ? 'Single full payment'
+                                        : 'Partial payments',
+                                    ]}
+                                    onClick={() => {
+                                      setIsPaymentConditionsModalOpen(true);
+                                    }}
+                                    isLoading={isUserPaymentDefaultsLoading}
+                                  />
+                                  <EditOptionCard
+                                    label="Payment methods"
+                                    details={availableMethodsDetails}
+                                    onClick={() => {
+                                      setIsPaymentMethodsModalOpen(true);
+                                    }}
+                                    isLoading={isUserPaymentDefaultsLoading}
+                                  >
+                                    <div className="flex items-center space-x-6 md:space-x-3">
+                                      <PaymentMethodIcon
+                                        showInfoTooltip={false}
+                                        paymentMethod="bank"
+                                        enabled={paymentMethodsFormValue.isBankEnabled}
+                                      />
+                                      <PaymentMethodIcon
+                                        showInfoTooltip={false}
+                                        paymentMethod="card"
+                                        enabled={paymentMethodsFormValue.isCardEnabled}
+                                      />
+                                      <PaymentMethodIcon
+                                        showInfoTooltip={false}
+                                        paymentMethod="wallet"
+                                        enabled={paymentMethodsFormValue.isWalletEnabled}
+                                      />
+                                      <PaymentMethodIcon
+                                        showInfoTooltip={false}
+                                        paymentMethod="lightning"
+                                        enabled={paymentMethodsFormValue.isLightningEnabled}
+                                      />
                                     </div>
-                                  </AnimateHeightWrapper>
-                                )}
-                              </AnimatePresence>
-                            </div>
-
-                            <div>
-                              <h4 className="text-lg/6 font-semibold mb-6">Settings</h4>
-                              <div className="w-[27rem] space-y-2">
-                                <EditOptionCard
-                                  label="Payment conditions"
-                                  values={[
-                                    !paymentConditionsFormValue.allowPartialPayments
-                                      ? 'Single full payment'
-                                      : 'Partial payments',
-                                  ]}
-                                  onClick={() => {
-                                    setIsPaymentConditionsModalOpen(true);
-                                  }}
-                                  isLoading={isUserPaymentDefaultsLoading}
-                                />
-                                <EditOptionCard
-                                  label="Payment methods"
-                                  details={availableMethodsDetails}
-                                  onClick={() => {
-                                    setIsPaymentMethodsModalOpen(true);
-                                  }}
-                                  isLoading={isUserPaymentDefaultsLoading}
-                                >
-                                  <div className="flex items-center space-x-3">
-                                    <PaymentMethodIcon
-                                      showInfoTooltip={false}
-                                      paymentMethod="bank"
-                                      enabled={paymentMethodsFormValue.isBankEnabled}
-                                    />
-                                    <PaymentMethodIcon
-                                      showInfoTooltip={false}
-                                      paymentMethod="card"
-                                      enabled={paymentMethodsFormValue.isCardEnabled}
-                                    />
-                                    <PaymentMethodIcon
-                                      showInfoTooltip={false}
-                                      paymentMethod="wallet"
-                                      enabled={paymentMethodsFormValue.isWalletEnabled}
-                                    />
-                                    <PaymentMethodIcon
-                                      showInfoTooltip={false}
-                                      paymentMethod="lightning"
-                                      enabled={paymentMethodsFormValue.isLightningEnabled}
-                                    />
-                                  </div>
-                                </EditOptionCard>
-                                <EditOptionCard
-                                  label="Payment notifications"
-                                  values={
-                                    paymentNotificationsFormValue
-                                      ? paymentNotificationsFormValue.emailAddresses
-                                          .split(',')
-                                          .map((email) => email.trim())
-                                      : []
-                                  }
-                                  onClick={() => {
-                                    setIsPaymentNotificationsModalOpen(true);
-                                  }}
-                                  isLoading={isUserPaymentDefaultsLoading}
-                                />
+                                  </EditOptionCard>
+                                  <EditOptionCard
+                                    label="Payment notifications"
+                                    values={
+                                      paymentNotificationsFormValue
+                                        ? paymentNotificationsFormValue.emailAddresses
+                                            .split(',')
+                                            .map((email) => email.trim())
+                                        : []
+                                    }
+                                    onClick={() => {
+                                      setIsPaymentNotificationsModalOpen(true);
+                                    }}
+                                    isLoading={isUserPaymentDefaultsLoading}
+                                  />
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
+
+                          {/* Review PR sticky button for mobile */}
+                          <AnimatePresence initial={false}>
+                            {/* Review PR */}
+                            {currency && amount && productOrService && (
+                              <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 20 }}
+                                className="block lg:hidden sticky bottom-0 w-full mx-auto pb-4"
+                              >
+                                <Button variant="secondary" size="big" onClick={onReviewClicked} nextArrow>
+                                  Review payment request
+                                </Button>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </>
                       </motion.div>
+                    )}
+
+                    {/*  Right side on mobile */}
+                    {isReviewing && (
+                      <div className="min-h-screen lg:hidden pt-10 pb-10">
+                        {renderBackArrow()}
+                        {renderReviewSummary()}
+                      </div>
                     )}
                   </AnimatePresence>
 
                   {/* Right side */}
-                  <div className="flex-1 bg-mainGrey sticky inset-0 min-h-screen h-full pl-[8.25rem] pr-32 py-44">
-                    <div className="w-full max-w-lg mx-auto">
-                      <div className="space-y-10">
-                        <AnimatePresence>
-                          {/* Amount */}
-                          {currency && amount && (
-                            <LayoutWrapper key="amount" className="flex overflow-hidden items-baseline">
-                              <span className="leading-6 text-greyText w-40 shrink-0">Request</span>
-                              <span className="font-semibold text-[2rem]/8 w-full">
-                                {currency == 'GBP' ? '£' : '€'} {formatAmount(Number(amount))}
-                              </span>
-                            </LayoutWrapper>
-                          )}
-
-                          {/* Product or service + description */}
-                          {(productOrService || description) && (
-                            <LayoutWrapper key="product-or-service-wrapper" className="flex items-baseline">
-                              <span className="leading-6 text-greyText w-40 shrink-0">For</span>
-
-                              <div className="flex flex-col w-full">
-                                {productOrService && (
-                                  <LayoutWrapper key="product-or-service">
-                                    <p className="font-semibold w-full break-words text-lg/5 mb-2">
-                                      {productOrService}
-                                    </p>
-                                  </LayoutWrapper>
-                                )}
-
-                                {description && (
-                                  <LayoutWrapper key="description">
-                                    <p className="text-sm/5 w-full text-ellipsis break-words">{description}</p>
-                                  </LayoutWrapper>
-                                )}
-                              </div>
-                            </LayoutWrapper>
-                          )}
-
-                          {/* Name */}
-                          {(firstName || lastName || email) && (
-                            <LayoutWrapper key="from" className="flex items-baseline">
-                              <span className="leading-6 text-greyText w-40 shrink-0 break-words">From</span>
-
-                              <div className="flex flex-col w-full">
-                                {(firstName || lastName) && (
-                                  <motion.p layout="position" className="font-semibold text-lg/5 mb-2 break-words">
-                                    {firstName} {lastName}
-                                  </motion.p>
-                                )}
-
-                                {email && (
-                                  <motion.div
-                                    layout="position"
-                                    className={classNames('flex items-center w-fit', {
-                                      'p-1 bg-[#FCF5CF]': hasEmailError,
-                                    })}
-                                  >
-                                    <p className="text-sm/5 break-words">{email}</p>
-                                    {hasEmailError && <img src={AlertIcon} alt="Alert icon" className="w-4 h-4 ml-2" />}
-                                  </motion.div>
-                                )}
-                              </div>
-                            </LayoutWrapper>
-                          )}
-
-                          {/* Settings */}
-                          {isReviewing && (
-                            <LayoutWrapper key="settings" animateOnExit={false} duration={0.6}>
-                              <div className="h-px w-full bg-borderGrey mt-12"></div>
-                              <div className="flex overflow-hidden mt-12 items-baseline">
-                                <span className="leading-6 text-greyText w-40 shrink-0">Settings</span>
-                                <div className="flex flex-col w-full space-y-6">
-                                  <span className="text-sm/6">
-                                    {!paymentConditionsFormValue.allowPartialPayments
-                                      ? 'Single full payment'
-                                      : 'Partial payments'}
-                                  </span>
-
-                                  <div className="flex items-center space-x-3">
-                                    <PaymentMethodIcon
-                                      paymentMethod="bank"
-                                      enabled={paymentMethodsFormValue.isBankEnabled}
-                                    />
-                                    <PaymentMethodIcon
-                                      paymentMethod="card"
-                                      enabled={paymentMethodsFormValue.isCardEnabled}
-                                    />
-                                    <PaymentMethodIcon
-                                      paymentMethod="wallet"
-                                      enabled={paymentMethodsFormValue.isWalletEnabled}
-                                    />
-                                    <PaymentMethodIcon
-                                      paymentMethod="lightning"
-                                      enabled={paymentMethodsFormValue.isLightningEnabled}
-                                    />
-                                  </div>
-
-                                  {availableMethodsDetails.length > 0 && (
-                                    <div className="flex flex-col text-greyText text-xs">
-                                      {availableMethodsDetails?.map((detail, index) => {
-                                        return <span key={`detail-${index}`}>{parseBoldText(detail)}</span>;
-                                      })}
-                                    </div>
-                                  )}
-                                  {paymentNotificationsFormValue.emailAddresses && (
-                                    <div className="flex text-greyText text-xs">
-                                      <span>
-                                        Payment notification to{' '}
-                                        {formatEmailAddressesForSummary(paymentNotificationsFormValue.emailAddresses)}
-                                      </span>
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            </LayoutWrapper>
-                          )}
-
-                          {/* Buttons */}
-                          {currency && amount && productOrService && (
-                            <LayoutWrapper key="buttons" className="flex flex-col !mt-20 justify-center">
-                              <AnimatePresence initial={false}>
-                                {/* Review PR */}
-                                {!isReviewing && (
-                                  <motion.button
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    transition={{ delay: durationAnimationWidth / 1.5 }}
-                                    key="review-pr"
-                                    type="button"
-                                    className="w-full h-12 px-16 whitespace-nowrap flex justify-center items-center rounded-full py-3 text-sm cursor-pointer bg-[#DEE5ED] transition hover:bg-[#BDCCDB]"
-                                    onClick={onReviewClicked}
-                                  >
-                                    <span className="py-3">Review payment request</span>
-
-                                    <img src={NextIcon} alt="Arrow right" className="ml-2 w-4 h-4" />
-                                  </motion.button>
-                                )}
-
-                                {/* Confirm PR */}
-                                {isReviewing && (
-                                  <LayoutWrapper
-                                    layout={false}
-                                    className="space-y-7"
-                                    animateOnExit={false}
-                                    duration={0.6}
-                                    delay={durationAnimationWidth / 1.5}
-                                  >
-                                    <button
-                                      className="w-full whitespace-nowrap flex justify-center items-center rounded-full bg-[#006A80] py-3 text-white font-semibold cursor-pointer hover:bg-[#144752] select-none disabled:bg-[#DEE5ED]"
-                                      disabled={isSubmitting}
-                                      onClick={onConfirmClicked}
-                                    >
-                                      Confirm payment request
-                                    </button>
-
-                                    {/* Edit button */}
-                                    <button
-                                      className="w-full py-3 bg-[#DEE5ED] transition hover:bg-[#BDCCDB] rounded-full mr-5"
-                                      onClick={() => setIsReviewing(false)}
-                                    >
-                                      Edit
-                                    </button>
-                                  </LayoutWrapper>
-                                )}
-                              </AnimatePresence>
-                            </LayoutWrapper>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                    </div>
-                  </div>
+                  <div className="hidden lg:block lg:flex-1 bg-mainGrey">{renderReviewSummary()}</div>
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -656,7 +781,12 @@ const CreatePaymentRequestPage = ({
           {!isUserPaymentDefaultsLoading && (
             <PaymentMethodsModal
               open={isPaymentMethodsModalOpen}
-              userDefaults={userPaymentDefaults?.paymentMethodsDefaults}
+              userDefaults={
+                prefilledData?.paymentMethods
+                  ? convertPrefilledDataToPaymentMethodDefaults()
+                  : userPaymentDefaults?.paymentMethodsDefaults
+              }
+              isPrefilledData={!!prefilledData?.paymentMethods}
               onApply={onMethodsReceived}
               onDismiss={() => setIsPaymentMethodsModalOpen(false)}
               banks={banks}
@@ -666,7 +796,12 @@ const CreatePaymentRequestPage = ({
           {!isUserPaymentDefaultsLoading && (
             <PaymentConditionsModal
               open={isPaymentConditionsModalOpen}
-              userDefaults={userPaymentDefaults?.paymentConditionsDefaults}
+              userDefaults={
+                prefilledData?.paymentConditions
+                  ? convertPrefilledDataToPaymentConditionsDefaults()
+                  : userPaymentDefaults?.paymentConditionsDefaults
+              }
+              isPrefilledData={!!prefilledData?.paymentConditions}
               onDismiss={() => setIsPaymentConditionsModalOpen(false)}
               onApply={onConditionsReceived}
             />
@@ -675,7 +810,12 @@ const CreatePaymentRequestPage = ({
           {!isUserPaymentDefaultsLoading && (
             <PaymentNotificationsModal
               open={isPaymentNotificationsModalOpen}
-              userDefaults={userPaymentDefaults?.notificationEmailsDefaults}
+              userDefaults={
+                prefilledData?.notificationEmailAddresses
+                  ? convertPrefilledDataToNotificationEmailsDefaults()
+                  : userPaymentDefaults?.notificationEmailsDefaults
+              }
+              isPrefilledData={!!prefilledData?.notificationEmailAddresses}
               onDismiss={() => setIsPaymentNotificationsModalOpen(false)}
               onApply={onPaymentNotificationsReceived}
             />

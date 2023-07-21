@@ -1,7 +1,7 @@
 import CustomModal, { BaseModalProps } from '../../CustomModal/CustomModal';
 import { useState } from 'react';
 import { LocalPaymentNotificationsFormValue } from '../../../../types/LocalTypes';
-import { NotificationEmailsDefaults } from '../../../../api/types/ApiResponses';
+import { NotificationEmailsDefaults } from '@nofrixion/moneymoov';
 import InputTextField from '../../InputTextField/InputTextField';
 import { AnimatePresence } from 'framer-motion';
 import AnimateHeightWrapper from '../../utils/AnimateHeight';
@@ -10,10 +10,17 @@ import { validateEmail } from '../../../../utils/validation';
 interface NotificationEmailsModalProps extends BaseModalProps {
   userDefaults?: NotificationEmailsDefaults;
   onApply: (data: LocalPaymentNotificationsFormValue) => void;
+  isPrefilledData: boolean;
 }
 
-const PaymentNotificationsModal = ({ open, userDefaults, onDismiss, onApply }: NotificationEmailsModalProps) => {
-  const [isDefault, setIsDefault] = useState<boolean>(userDefaults ? true : false);
+const PaymentNotificationsModal = ({
+  open,
+  userDefaults,
+  onDismiss,
+  onApply,
+  isPrefilledData = false,
+}: NotificationEmailsModalProps) => {
+  const [isDefault, setIsDefault] = useState<boolean>(!isPrefilledData && !!userDefaults);
   const [email, setEmail] = useState(userDefaults ? userDefaults.emailAddresses : '');
   const [hasEmailError, setHasEmailError] = useState(false);
   const [currentState, setCurrentState] = useState<LocalPaymentNotificationsFormValue>();
@@ -75,7 +82,7 @@ const PaymentNotificationsModal = ({ open, userDefaults, onDismiss, onApply }: N
       isDefault={isDefault}
       onApplyEnabled={!hasEmailError}
     >
-      <div className="text-defaultText font-normal text-sm mb-6">
+      <div className="text-default-text font-normal text-sm mb-6">
         Send a notification to the specified email addresses when the payment is completed.
       </div>
       <div>

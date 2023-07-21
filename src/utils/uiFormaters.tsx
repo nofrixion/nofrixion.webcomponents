@@ -8,7 +8,7 @@ const parseHighlightedText = (text: string) => {
     if (index % 2) {
       // if part is bold text, wrap it in a span element with the font-bold class
       return (
-        <span key={index} className="text-defaultText">
+        <span key={index} className="text-default-text">
           {part}
         </span>
       );

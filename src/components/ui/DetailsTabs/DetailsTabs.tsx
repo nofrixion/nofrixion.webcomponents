@@ -4,7 +4,8 @@ import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
 import classNames from 'classnames';
 import PaymentInfo from '../PaymentInfo/PaymentInfo';
 import Transactions from '../Transactions/Transactions';
-import { LocalPaymentRequest } from '../../../types/LocalTypes';
+import { LocalPaymentAttempt, LocalPaymentRequest } from '../../../types/LocalTypes';
+import ScrollArea from '../ScrollArea/ScrollArea';
 
 const tabs = ['Transactions', 'Payment info'];
 
@@ -36,21 +37,22 @@ const underlineClasses = 'w-full h-px absolute bottom-0';
 
 interface DetailsTabsProps {
   paymentRequest: LocalPaymentRequest;
-  onRefundClick: (paymentAttemptID: string) => void;
+  onRefund: (paymentAttemptID: string) => void;
+  onCapture: (paymentAttempt: LocalPaymentAttempt) => void;
 }
 
-const DetailsTabs: React.FC<DetailsTabsProps> = ({ paymentRequest, onRefundClick }) => {
+const DetailsTabs: React.FC<DetailsTabsProps> = ({ paymentRequest, onRefund, onCapture }) => {
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
 
   return (
     <MotionConfig transition={{ ease: 'easeInOut' }}>
       <Tabs.Root value={selectedTab} onValueChange={setSelectedTab}>
-        <Tabs.List className="flex mb-11" aria-label="Explore Payment Request Details">
+        <Tabs.List className="flex mb-6 lg:mb-11" aria-label="Explore Payment Request Details">
           {tabs.map((tab) => {
             return (
               <Tabs.Trigger
                 key={tab}
-                className="relative w-full h-10 select-none text-sm/6 text-greyText transition hover:text-defaultText data-[state=active]:text-defaultText"
+                className="relative w-full h-10 select-none text-sm/6 text-greyText transition hover:text-default-text data-[state=active]:text-default-text"
                 value={tab}
               >
                 {tab}
@@ -71,10 +73,16 @@ const DetailsTabs: React.FC<DetailsTabsProps> = ({ paymentRequest, onRefundClick
           })}
         </Tabs.List>
         <TabContent value={tabs[0]} selectedTab={selectedTab}>
-          <Transactions transactions={paymentRequest.paymentAttempts} onRefundClicked={onRefundClick}></Transactions>
+          <ScrollArea>
+            <Transactions
+              transactions={paymentRequest.paymentAttempts}
+              onRefund={onRefund}
+              onCapture={onCapture}
+            ></Transactions>
+          </ScrollArea>
         </TabContent>
         <TabContent value={tabs[1]} selectedTab={selectedTab}>
-          <PaymentInfo paymentRequest={paymentRequest} />
+          <PaymentInfo {...paymentRequest} />
         </TabContent>
       </Tabs.Root>
     </MotionConfig>

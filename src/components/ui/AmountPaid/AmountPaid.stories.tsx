@@ -1,6 +1,6 @@
 import { StoryFn, Meta } from '@storybook/react';
 import AmountPaid from './AmountPaid';
-import { Currency } from '../../../api/types/Enums';
+import { Currency } from '@nofrixion/moneymoov';
 
 export default {
   title: 'UI/AmountPaid',

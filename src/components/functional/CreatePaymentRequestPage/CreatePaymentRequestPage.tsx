@@ -1,14 +1,20 @@
 import UICreatePaymentRequestPage from '../../ui/CreatePaymentRequestPage/CreatePaymentRequestPage';
 
-import { LocalPaymentRequestCreate } from '../../../types/LocalTypes';
+import { LocalPaymentRequest, LocalPaymentRequestCreate } from '../../../types/LocalTypes';
 import { makeToast } from '../../ui/Toast/Toast';
-import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
-import { PaymentRequestCreate, UserPaymentDefaults } from '../../../api/types/ApiResponses';
-import { CardTokenCreateModes, PartialPaymentMethods } from '../../../api/types/Enums';
-import { useBanks } from '../../../api/hooks/useBanks';
-import { useUserPaymentDefaults } from '../../../api/hooks/useUserPaymentDefaults';
-import { ClientSettingsClient } from '../../../api/clients/ClientSettingsClient';
+import {
+  PaymentRequestClient,
+  PaymentRequestCreate,
+  UserPaymentDefaults,
+  useBanks,
+  CardTokenCreateModes,
+  PartialPaymentMethods,
+  useUserPaymentDefaults,
+  ClientSettingsClient,
+} from '@nofrixion/moneymoov';
+
 import { defaultUserPaymentDefaults } from '../../../utils/constants';
+import { remotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
 
 interface CreatePaymentRequesPageProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -17,6 +23,8 @@ interface CreatePaymentRequesPageProps {
   isOpen: boolean; // When true, the modal will be open. When false, the modal will be closed.
   onClose: () => void; // Callback function that will be called when the modal is asked to be closed.
   onUnauthorized: () => void; // Callback function that will be called when the user is unauthorized.
+  onPaymentRequestCreated: (paymentRequest: LocalPaymentRequest) => void; // Callback function that will be called when the payment request is created.
+  prefilledPaymentRequest?: LocalPaymentRequestCreate; // Optional payment request that will be prefilled in the form.
 }
 
 const CreatePaymentRequestPage = ({
@@ -26,11 +34,24 @@ const CreatePaymentRequestPage = ({
   isOpen,
   onClose,
   onUnauthorized,
+  onPaymentRequestCreated,
+  prefilledPaymentRequest,
 }: CreatePaymentRequesPageProps) => {
-  const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId, onUnauthorized);
+  const paymentRequestClient = new PaymentRequestClient({
+    apiUrl: apiUrl,
+    authToken: token,
+    onUnauthorized: onUnauthorized,
+  });
 
-  const { userPaymentDefaults, isUserPaymentDefaultsLoading } = useUserPaymentDefaults(apiUrl, token, onUnauthorized);
-  const { banks } = useBanks(apiUrl, token, merchantId, onUnauthorized);
+  const { userPaymentDefaults, isUserPaymentDefaultsLoading } = useUserPaymentDefaults({
+    apiUrl: apiUrl,
+    authToken: token,
+    onUnauthorized: onUnauthorized,
+  });
+  const { banks } = useBanks(
+    { merchantId: merchantId },
+    { apiUrl: apiUrl, authToken: token, onUnauthorized: onUnauthorized },
+  );
 
   const parseLocalPaymentRequestCreateToRemotePaymentRequest = (
     merchantId: string,
@@ -83,19 +104,23 @@ const CreatePaymentRequestPage = ({
 
     // TODO: Toasts are not working - however, we need to figure out how to handle errors & success cases
     // Maybe we should have a redirectUrl that we can redirect to? This could be a parameter in the web-component
-    if (response.error) {
+    if (response.status === 'error') {
       makeToast('error', response.error.title);
       return;
     }
 
     makeToast('success', 'Payment request successfully created.');
+
+    if (response.data) {
+      onPaymentRequestCreated(remotePaymentRequestToLocalPaymentRequest(response.data));
+    }
   };
 
   const onSaveUserPaymentDefaults = async (userPaymentDefaults: UserPaymentDefaults) => {
-    const client = new ClientSettingsClient(apiUrl, token, onUnauthorized);
+    const client = new ClientSettingsClient({ apiUrl: apiUrl, authToken: token, onUnauthorized: onUnauthorized });
     const response = await client.saveUserPaymentDefaults(userPaymentDefaults);
 
-    if (response.error) {
+    if (response.status === 'error') {
       makeToast('error', response.error.title);
       return;
     }
@@ -111,6 +136,7 @@ const CreatePaymentRequestPage = ({
         userPaymentDefaults={isUserPaymentDefaultsLoading ? defaultUserPaymentDefaults : userPaymentDefaults}
         onDefaultsChanged={onSaveUserPaymentDefaults}
         isUserPaymentDefaultsLoading={isUserPaymentDefaultsLoading}
+        prefilledData={prefilledPaymentRequest}
       />
     </>
   );

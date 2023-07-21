@@ -1,12 +1,17 @@
-import { Currency } from '../api/types/Enums';
-import { LocalAddressType, LocalPartialPaymentMethods, LocalPaymentMethodTypes } from './LocalEnums';
+import { Currency, PaymentRequestEventType, PaymentResult } from '@nofrixion/moneymoov';
+import {
+  LocalAddressType,
+  LocalCardPaymentResponseStatus,
+  LocalPartialPaymentMethods,
+  LocalPaymentMethodTypes,
+} from './LocalEnums';
 
 export interface LocalContact {
   name?: string;
   email?: string;
 }
 
-export type LocalPaymentStatus = 'paid' | 'partial' | 'unpaid' | 'overpaid';
+export type LocalPaymentStatus = 'paid' | 'partial' | 'unpaid' | 'overpaid' | 'authorized';
 
 export interface LocalPaymentRequest {
   id: string;
@@ -23,6 +28,10 @@ export interface LocalPaymentRequest {
   hostedPayCheckoutUrl: string;
   partialPaymentMethod: LocalPartialPaymentMethods;
   paymentAttempts: LocalPaymentAttempt[];
+  priorityBankID?: string;
+  priorityBankName?: string;
+  notificationEmailAddresses?: string;
+  captureFunds: boolean;
 }
 
 export interface LocalPaymentAttempt {
@@ -33,6 +42,14 @@ export interface LocalPaymentAttempt {
   currency: Currency.EUR | Currency.GBP;
   processor?: string;
   last4DigitsOfCardNumber?: string;
+  needsCapture: boolean;
+  capturedAmount: number;
+  captureAttempts: LocalPaymentRequestCaptureAttempt[];
+}
+
+export interface LocalPaymentRequestCaptureAttempt {
+  capturedAt?: Date;
+  capturedAmount: number;
 }
 
 export type LocalAddress = {

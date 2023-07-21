@@ -56,12 +56,35 @@ const QRCode = ({ url }: { url: string }) => {
       <canvas ref={largeQrCodeCanvasRef} height="1024" width="1024" className="hidden"></canvas>
 
       <div
-        className="w-20 h-20 relative"
+        className="w-14 lg:w-20 lg:h-20 relative"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div ref={qrCodeSvgRef}>
+        <div className="hidden md:block" ref={qrCodeSvgRef}>
           <QRCodeComponent value={url} className="w-full h-full" />
+        </div>
+
+        <div className="block md:hidden">
+          <button
+            key="review-pr"
+            type="button"
+            className="w-full h-10 px-3 whitespace-nowrap flex justify-center items-center rounded-full py-3 text-sm cursor-pointer bg-[#DEE5ED] transition hover:bg-[#BDCCDB]"
+            onClick={downloadAsImage}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="16" viewBox="0 0 28 16" fill="none">
+              <path d="M6.66667 6.66667H4V4H6.66667V6.66667Z" stroke="#454D54" />
+              <path d="M12 6.66667H9.33337V4H12V6.66667Z" stroke="#454D54" />
+              <path d="M6.66667 12H4V9.33331H6.66667V12Z" stroke="#454D54" />
+              <path d="M1.33337 5.99998L1.33337 1.33331L6.00004 1.33331" stroke="#454D54" />
+              <path d="M1.33337 10L1.33337 14.6667H6.00004" stroke="#454D54" />
+              <path d="M10 1.33331L14.6667 1.33331V5.99998" stroke="#454D54" />
+              <path d="M10 14.6667H14.6667V10" stroke="#454D54" />
+              <path d="M12.8334 12H9.33337V8.66663" stroke="#454D54" />
+              <path d="M11.9973 9.50263V9.16663H12.3333V9.50263H11.9973Z" stroke="#454D54" />
+              <path d="M23 13L23 2" stroke="#454D54" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M20 11L23 14L26 11" stroke="#454D54" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
         </div>
 
         <AnimatePresence>
@@ -70,7 +93,7 @@ const QRCode = ({ url }: { url: string }) => {
               animate={{ opacity: 1 }}
               initial={{ opacity: 0 }}
               exit={{ opacity: 0 }}
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full w-10 h-10 bg-[#CEF5FC] cursor-pointer flex justify-center items-center"
+              className="hidden md:flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full w-10 h-10 bg-[#CEF5FC] cursor-pointer justify-center items-center"
               onClick={downloadAsImage}
             >
               <div>

@@ -1,4 +1,4 @@
-import { Currency } from '../api/types/Enums';
+import { Currency } from '@nofrixion/moneymoov';
 import { LocalAddressType, LocalPartialPaymentMethods, LocalPaymentMethodTypes } from '../types/LocalEnums';
 import { LocalPaymentAttempt, LocalPaymentRequest } from '../types/LocalTypes';
 
@@ -71,55 +71,73 @@ export const mockMerchantTags = [
 export const mockPaymentAttempts: LocalPaymentAttempt[] = [
   {
     attemptKey: 'a3b752d2-c0a6-4846-90e5-d783bb4ec005',
-    occurredAt: new Date('2023-05-18'),
+    occurredAt: new Date('2023-05-18T00:00:00.000Z'),
     paymentMethod: LocalPaymentMethodTypes.Card,
     amount: 20.02,
     currency: Currency.EUR,
     processor: 'Visa',
     last4DigitsOfCardNumber: '1234',
+    needsCapture: false,
+    capturedAmount: 0,
+    captureAttempts: [],
   },
   {
     attemptKey: 'f4c6e747-6fd6-4a3c-be3b-4d3edd258b35',
-    occurredAt: new Date('2023-03-23'),
+    occurredAt: new Date('2023-03-23T00:00:00.000Z'),
     paymentMethod: LocalPaymentMethodTypes.Card,
     amount: 30.57,
     currency: Currency.EUR,
     processor: 'MasterCard',
     last4DigitsOfCardNumber: '1234',
+    needsCapture: false,
+    capturedAmount: 0,
+    captureAttempts: [],
   },
   {
     attemptKey: 'ca2eb453-9c12-4f8f-b8b2-7c1c6af842ba',
-    occurredAt: new Date('2023-05-18'),
+    occurredAt: new Date('2023-05-18T00:00:00.000Z'),
     paymentMethod: LocalPaymentMethodTypes.Pisp,
-    amount: 5.34,
+    amount: 924852422.99,
     currency: Currency.EUR,
     processor: 'Revolut',
     last4DigitsOfCardNumber: '1234',
+    needsCapture: false,
+    capturedAmount: 0,
+    captureAttempts: [],
   },
   {
     attemptKey: '43535f79-a9f2-4331-9a78-db731e467c49',
-    occurredAt: new Date('2023-05-2'),
+    occurredAt: new Date('2023-05-02T00:00:00.000Z'),
     paymentMethod: LocalPaymentMethodTypes.Pisp,
     amount: 7.9,
     currency: Currency.EUR,
     processor: 'Bank of Ireland',
     last4DigitsOfCardNumber: '1234',
+    needsCapture: false,
+    capturedAmount: 0,
+    captureAttempts: [],
   },
   {
     attemptKey: 'a9f6c19a-0172-47a6-803a-c3f59899cafc',
-    occurredAt: new Date('2023-05-1'),
+    occurredAt: new Date('2023-05-01T00:00:00.000Z'),
     paymentMethod: LocalPaymentMethodTypes.ApplePay,
     amount: 15.39,
     currency: Currency.EUR,
     processor: 'Apple Pay',
+    needsCapture: false,
+    capturedAmount: 0,
+    captureAttempts: [],
   },
   {
     attemptKey: '7bbb2998-8d78-4b2a-9334-84444c9915c8',
-    occurredAt: new Date('2023-05-18'),
+    occurredAt: new Date('2023-05-18T00:00:00.000Z'),
     paymentMethod: LocalPaymentMethodTypes.GooglePay,
     amount: 20.78,
     currency: Currency.EUR,
     processor: 'Google Pay',
+    needsCapture: false,
+    capturedAmount: 0,
+    captureAttempts: [],
   },
   // Add more transactions as needed
 ];
@@ -127,42 +145,54 @@ export const mockPaymentAttempts: LocalPaymentAttempt[] = [
 export const partiallyPaidMockPaymentAttempts: LocalPaymentAttempt[] = [
   {
     attemptKey: 'a3b752d2-c0a6-4846-90e5-d783bb4ec005',
-    occurredAt: new Date('2023-05-18'),
+    occurredAt: new Date('2023-05-18T00:00:00.000Z'),
     paymentMethod: LocalPaymentMethodTypes.Card,
     amount: 20.02,
     currency: Currency.EUR,
     processor: 'Visa',
     last4DigitsOfCardNumber: '1234',
+    needsCapture: false,
+    capturedAmount: 0,
+    captureAttempts: [],
   },
   {
     attemptKey: 'f4c6e747-6fd6-4a3c-be3b-4d3edd258b35',
-    occurredAt: new Date('2023-03-23'),
+    occurredAt: new Date('2023-03-23T00:00:00.000Z'),
     paymentMethod: LocalPaymentMethodTypes.Card,
     amount: 30.57,
     currency: Currency.EUR,
     processor: 'MasterCard',
     last4DigitsOfCardNumber: '1234',
+    needsCapture: false,
+    capturedAmount: 0,
+    captureAttempts: [],
   },
   // Add more transactions as needed
 ];
 export const overpaidMockPaymentAttempts: LocalPaymentAttempt[] = [
   {
     attemptKey: 'a3b752d2-c0a6-4846-90e5-d783bb4ec005',
-    occurredAt: new Date('2023-05-18'),
+    occurredAt: new Date('2023-05-18T00:00:00.000Z'),
     paymentMethod: LocalPaymentMethodTypes.Card,
     amount: 20.02,
     currency: Currency.EUR,
     processor: 'Visa',
     last4DigitsOfCardNumber: '1234',
+    needsCapture: false,
+    capturedAmount: 0,
+    captureAttempts: [],
   },
   {
     attemptKey: 'f4c6e747-6fd6-4a3c-be3b-4d3edd258b35',
-    occurredAt: new Date('2023-03-23'),
+    occurredAt: new Date('2023-03-23T00:00:00.000Z'),
     paymentMethod: LocalPaymentMethodTypes.Card,
     amount: 90.57,
     currency: Currency.EUR,
     processor: 'MasterCard',
     last4DigitsOfCardNumber: '1234',
+    needsCapture: false,
+    capturedAmount: 0,
+    captureAttempts: [],
   },
   // Add more transactions as needed
 ];
@@ -203,6 +233,7 @@ const regular: LocalPaymentRequest = {
     'Curabitur ultricies ligula vitae tellus fringilla consequat. Pellentesque in tortor eu nibh lobortis ultrices vel in quam. Nunc tristique egestas purus et hendrerit.',
   productOrService: 'Flight lessons',
   paymentAttempts: mockPaymentAttempts,
+  captureFunds: true,
 };
 
 const partiallyPaidPaymentRequest: LocalPaymentRequest = {
@@ -246,6 +277,7 @@ const noShippingAddress: LocalPaymentRequest = {
     'Curabitur ultricies ligula vitae tellus fringilla consequat. Pellentesque in tortor eu nibh lobortis ultrices vel in quam. Nunc tristique egestas purus et hendrerit.',
   productOrService: 'Flight lessons',
   paymentAttempts: mockPaymentAttempts,
+  captureFunds: true,
 };
 
 const fewPaymentRequests: LocalPaymentRequest[] = [
@@ -282,6 +314,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
   {
     id: '2',
@@ -323,6 +356,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
   {
     id: '3',
@@ -346,6 +380,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
   {
     id: '4',
@@ -369,6 +404,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
   {
     id: '5',
@@ -392,6 +428,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
   {
     id: '6',
@@ -414,6 +451,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
   {
     id: '7',
@@ -437,6 +475,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
   {
     id: '8',
@@ -460,6 +499,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
   {
     id: '9',
@@ -483,6 +523,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
   {
     id: '10',
@@ -506,6 +547,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
   {
     id: '11',
@@ -529,6 +571,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
   {
     id: '12',
@@ -552,6 +595,7 @@ const fewPaymentRequests: LocalPaymentRequest[] = [
     hostedPayCheckoutUrl: '',
     paymentAttempts: [],
     productOrService: '',
+    captureFunds: true,
   },
 ];
 

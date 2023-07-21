@@ -79,7 +79,7 @@ const Row = ({
                   Delete
                 </button>
                 <button
-                  className="bg-white rounded px-5 py-2 text-defaultText font-normal text-sm hover:text-greyText"
+                  className="bg-white rounded px-5 py-2 text-default-text font-normal text-sm hover:text-greyText"
                   onClick={onCancelDeletingPaymentRequestClicked}
                 >
                   Cancel
@@ -108,10 +108,12 @@ const Row = ({
         <span className="text-greyText text-sm block">{currency}</span>
       </td>
 
-      <td className={classNames(commonTdClasses, `space-x-1 text-right pr-1.5 custom-backdrop-blur-${id}`)}>
-        {tags.map((tag, index) => (
-          <Chip key={`tag-${index}`} label={tag.name} />
-        ))}
+      <td className={classNames(commonTdClasses, `text-right pr-1.5 custom-backdrop-blur-${id}`)}>
+        <div className="hidden xl:block space-x-1">
+          {tags.map((tag, index) => (
+            <Chip key={`tag-${index}`} label={tag.name} />
+          ))}
+        </div>
       </td>
 
       <td className={`pr-2 w-8 custom-backdrop-blur-${id}`}>

@@ -43,7 +43,7 @@ const FilterButton: FilterButtonFC = ({
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
   const filterButtonClassNames =
-    'outline-none inline-flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-greyBg hover:text-defaultText transition-all';
+    'outline-none inline-flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-greyBg hover:text-default-text transition-all';
   const actionButtonClassNames =
     'outline-none px-3 py-1 cursor-pointer leading-6 text-13px rounded-full transition-all';
 
@@ -99,7 +99,7 @@ const FilterButton: FilterButtonFC = ({
           <button
             className={classNames(filterButtonClassNames, {
               'text-greyText': !isDialogOpen,
-              'text-defaultText': isDialogOpen,
+              'text-default-text': isDialogOpen,
               'bg-greyBg': isFiltered && filteredLayout,
             })}
             onMouseOver={onMouseOver}
@@ -138,7 +138,7 @@ const FilterButton: FilterButtonFC = ({
                       <button
                         className={classNames(
                           actionButtonClassNames,
-                          'bg-white text-defaultText border border-solid border-borderGrey hover:border-borderGreyHighlighted',
+                          'bg-white text-default-text border border-solid border-borderGrey hover:border-borderGreyHighlighted',
                         )}
                         onClick={onReset}
                       >
@@ -148,7 +148,7 @@ const FilterButton: FilterButtonFC = ({
                         <button
                           className={classNames(
                             actionButtonClassNames,
-                            'bg-white text-greyText hover:text-defaultText',
+                            'bg-white text-greyText hover:text-default-text',
                           )}
                           onClick={onCancelClick}
                         >

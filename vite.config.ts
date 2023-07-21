@@ -1,4 +1,5 @@
 import { resolve } from 'path';
+import path from 'node:path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
@@ -23,5 +24,8 @@ export default defineConfig(() => ({
   },
   define: {
     'process.env': `"${process.env}"`,
+  },
+  resolve: {
+    alias: [{ find: '@', replacement: path.resolve(__dirname, 'src') }],
   },
 }));

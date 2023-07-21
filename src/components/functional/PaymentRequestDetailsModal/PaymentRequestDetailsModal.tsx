@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import UIPaymentRequestDetailsModal from '../../ui/PaymentRequestDetailsModal/PaymentRequestDetailsModal';
 import { parseApiTagToLocalTag } from '../../../utils/parsers';
-import { LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
-import { PaymentRequestClient } from '../../../api/clients/PaymentRequestClient';
-import { PaymentRequest, PaymentRequestUpdate } from '../../../api/types/ApiResponses';
-import { MerchantClient } from '../../../api/clients/MerchantClient';
+import { LocalPaymentAttempt, LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
+import { PaymentRequestClient, PaymentRequest, PaymentRequestUpdate, MerchantClient } from '@nofrixion/moneymoov';
 
 interface PaymentRequestDetailsModalProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -18,6 +16,8 @@ interface PaymentRequestDetailsModalProps {
   setMerchantTags: (merchantTags: LocalTag[]) => void;
   setPaymentRequests: (paymentRequests: LocalPaymentRequest[]) => void;
   onUnauthorized: () => void;
+  onRefund: (paymentAttemptID: string) => void;
+  onCapture: (authorizationID: string, amount: number) => Promise<void>;
 }
 const PaymentRequestDetailsModal = ({
   token,
@@ -31,9 +31,15 @@ const PaymentRequestDetailsModal = ({
   setMerchantTags,
   setPaymentRequests,
   onUnauthorized,
+  onRefund,
+  onCapture,
 }: PaymentRequestDetailsModalProps) => {
-  const paymentRequestClient = new PaymentRequestClient(apiUrl, token, merchantId, onUnauthorized);
-  const merchantClient = new MerchantClient(apiUrl, token, merchantId, onUnauthorized);
+  const paymentRequestClient = new PaymentRequestClient({
+    apiUrl: apiUrl,
+    authToken: token,
+    onUnauthorized: onUnauthorized,
+  });
+  const merchantClient = new MerchantClient({ apiUrl: apiUrl, authToken: token, onUnauthorized: onUnauthorized });
 
   const [paymentRequest, setPaymentRequest] = useState<LocalPaymentRequest | undefined>(undefined);
 
@@ -45,11 +51,6 @@ const PaymentRequestDetailsModal = ({
       }
     }
   }, [selectedPaymentRequestID, paymentRequests]);
-
-  const onRefundClick = async (paymentAttemptID: string) => {
-    //TODO: Will implement refund for atleast card payment attempts. For PISP, it will need to be worked on later.
-    console.log(paymentAttemptID);
-  };
 
   const updatePaymentRequests = (updatedPaymentRequest: PaymentRequest) => {
     const index = paymentRequests.findIndex((paymentRequest) => paymentRequest.id === selectedPaymentRequestID);
@@ -67,7 +68,7 @@ const PaymentRequestDetailsModal = ({
         tagIds: existingTagIds.concat(tag.id),
       };
       const paymentRequestTagAdd = await paymentRequestClient.update(paymentRequest.id, paymentRequestUpdate);
-      if (paymentRequestTagAdd.error) {
+      if (paymentRequestTagAdd.status === 'error') {
         console.log(paymentRequestTagAdd.error);
       } else if (paymentRequestTagAdd.data) {
         updatePaymentRequests(paymentRequestTagAdd.data);
@@ -77,8 +78,8 @@ const PaymentRequestDetailsModal = ({
 
   const onTagCreated = async (tag: LocalTag) => {
     if (paymentRequest) {
-      const response = await merchantClient.addTag(parseApiTagToLocalTag(tag));
-      if (response.error) {
+      const response = await merchantClient.addTag({ merchantId }, parseApiTagToLocalTag(tag));
+      if (response.status === 'error') {
         console.log(response.error);
       } else {
         const createdTag = response.data;
@@ -90,7 +91,7 @@ const PaymentRequestDetailsModal = ({
             tagIds: existingTagIds.concat(createdTag.id),
           };
           const paymentRequestTagAdd = await paymentRequestClient.update(paymentRequest.id, paymentRequestUpdate);
-          if (paymentRequestTagAdd.error) {
+          if (paymentRequestTagAdd.status === 'error') {
             console.log(paymentRequestTagAdd.error);
           } else if (paymentRequestTagAdd.data) {
             updatePaymentRequests(paymentRequestTagAdd.data);
@@ -107,7 +108,7 @@ const PaymentRequestDetailsModal = ({
         tagIds: existingTagIds.filter((id) => id !== tagIdToDelete),
       };
       const paymentRequestTagDelete = await paymentRequestClient.update(paymentRequest.id, paymentRequestUpdate);
-      if (paymentRequestTagDelete.error) {
+      if (paymentRequestTagDelete.status === 'error') {
         console.log(paymentRequestTagDelete.error);
       } else if (paymentRequestTagDelete.data) {
         updatePaymentRequests(paymentRequestTagDelete.data);
@@ -123,7 +124,8 @@ const PaymentRequestDetailsModal = ({
           paymentRequest={paymentRequest}
           hostedPaymentLink={`${paymentRequest.hostedPayCheckoutUrl}`}
           open={open}
-          onRefundClick={onRefundClick}
+          onRefund={onRefund}
+          onCapture={onCapture}
           onTagAdded={onTagAdded}
           onTagCreated={onTagCreated}
           onTagDeleted={onTagDeleted}
