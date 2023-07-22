@@ -37,9 +37,8 @@ const PaymentRequestDetailsModal = ({
   const paymentRequestClient = new PaymentRequestClient({
     apiUrl: apiUrl,
     authToken: token,
-    onUnauthorized: onUnauthorized,
   });
-  const merchantClient = new MerchantClient({ apiUrl: apiUrl, authToken: token, onUnauthorized: onUnauthorized });
+  const merchantClient = new MerchantClient({ apiUrl: apiUrl, authToken: token });
 
   const [paymentRequest, setPaymentRequest] = useState<LocalPaymentRequest | undefined>(undefined);
 
