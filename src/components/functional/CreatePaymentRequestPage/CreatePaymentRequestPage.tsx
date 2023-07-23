@@ -88,17 +88,15 @@ const CreatePaymentRequestPageMain = ({
     if (banksResponse?.status === 'success') {
       setBanks(banksResponse.data.payByBankSettings);
     } else if (banksResponse?.status === 'error') {
-      makeToast('warning', 'Failed to load the list of banks.');
       console.warn(banksResponse.error);
     }
   }, [isBanksLoading]);
 
   useEffect(() => {
-    if (userPaymentDefaultsResponse?.status === 'error') {
-      makeToast('warning', 'Failed to load the user payment defaults.');
-      console.warn(userPaymentDefaultsResponse.error);
-    } else if (userPaymentDefaultsResponse?.status === 'success') {
+    if (userPaymentDefaultsResponse?.status === 'success') {
       setUserPaymentDefaults(userPaymentDefaultsResponse.data);
+    } else if (userPaymentDefaultsResponse?.status === 'error') {
+      console.warn(userPaymentDefaultsResponse.error);
     }
   }, [isUserPaymentDefaultsLoading]);
 

@@ -180,7 +180,6 @@ const PaymentRequestDashboardMain = ({
         }),
       );
     } else if (merchantTagsResponse?.status === 'error') {
-      makeToast('warning', 'Failed to load the list of Merchant tags.');
       console.warn(merchantTagsResponse.error);
     }
   }, [isMerchantTagsLoading]);
@@ -306,7 +305,8 @@ const PaymentRequestDashboardMain = ({
       let response = await client.captureCardPayment(selectedPaymentRequestID, authorizationID, amount);
 
       if (response.error) {
-        makeToast('error', response.error.title);
+        makeToast('error', 'Error capturing Payment.');
+        console.error(response.error);
         return;
       }
 
