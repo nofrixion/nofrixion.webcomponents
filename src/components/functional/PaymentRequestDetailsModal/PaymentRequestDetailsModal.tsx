@@ -15,7 +15,6 @@ interface PaymentRequestDetailsModalProps {
   onDismiss: () => void;
   setMerchantTags: (merchantTags: LocalTag[]) => void;
   setPaymentRequests: (paymentRequests: LocalPaymentRequest[]) => void;
-  onUnauthorized: () => void;
   onRefund: (paymentAttemptID: string) => void;
   onCapture: (authorizationID: string, amount: number) => Promise<void>;
 }
@@ -30,7 +29,6 @@ const PaymentRequestDetailsModal = ({
   onDismiss,
   setMerchantTags,
   setPaymentRequests,
-  onUnauthorized,
   onRefund,
   onCapture,
 }: PaymentRequestDetailsModalProps) => {
