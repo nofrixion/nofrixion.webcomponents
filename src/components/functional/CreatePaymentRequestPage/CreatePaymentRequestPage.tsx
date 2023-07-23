@@ -77,8 +77,9 @@ const CreatePaymentRequestPageMain = ({
     { apiUrl: apiUrl, authToken: token },
   );
   const [banks, setBanks] = useState<BankSettings[] | undefined>(undefined);
+  const [userPaymentDefaults, setUserPaymentDefaults] = useState<UserPaymentDefaults | undefined>(undefined);
 
-  const { userPaymentDefaults, isUserPaymentDefaultsLoading } = useUserPaymentDefaults({
+  const { data: userPaymentDefaultsResponse, isLoading: isUserPaymentDefaultsLoading } = useUserPaymentDefaults({
     apiUrl: apiUrl,
     authToken: token,
   });
@@ -91,6 +92,15 @@ const CreatePaymentRequestPageMain = ({
       console.warn(banksResponse.error);
     }
   }, [isBanksLoading]);
+
+  useEffect(() => {
+    if (userPaymentDefaultsResponse?.status === 'error') {
+      makeToast('warning', 'Failed to load the user payment defaults.');
+      console.warn(userPaymentDefaultsResponse.error);
+    } else if (userPaymentDefaultsResponse?.status === 'success') {
+      setUserPaymentDefaults(userPaymentDefaultsResponse.data);
+    }
+  }, [isUserPaymentDefaultsLoading]);
 
   const parseLocalPaymentRequestCreateToRemotePaymentRequest = (
     merchantId: string,

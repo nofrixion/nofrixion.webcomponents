@@ -32,6 +32,7 @@ import {
   LocalPaymentMethodTypes,
 } from '../../../types/LocalEnums';
 import { Button } from '@/components/ui/atoms';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -40,6 +41,20 @@ interface PaymentRequestDashboardProps {
 }
 
 const PaymentRequestDashboard = ({
+  token,
+  apiUrl = 'https://api.nofrixion.com/api/v1',
+  merchantId,
+}: PaymentRequestDashboardProps) => {
+  const queryClient = new QueryClient();
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <PaymentRequestDashboardMain token={token} merchantId={merchantId} apiUrl={apiUrl} />
+    </QueryClientProvider>
+  );
+};
+
+const PaymentRequestDashboardMain = ({
   token,
   apiUrl = 'https://api.nofrixion.com/api/v1',
   merchantId,
@@ -133,7 +148,10 @@ const PaymentRequestDashboard = ({
     { apiUrl: apiUrl, authToken: token },
   );
 
-  const merchantTags = useMerchantTags({ merchantId: merchantId }, { apiUrl: apiUrl, authToken: token });
+  const { data: merchantTagsResponse, isLoading: isMerchantTagsLoading } = useMerchantTags(
+    { merchantId: merchantId },
+    { apiUrl: apiUrl, authToken: token },
+  );
 
   const [localMerchantTags, setLocalMerchantTags] = useState<LocalTag[]>([] as LocalTag[]);
 
@@ -150,10 +168,10 @@ const PaymentRequestDashboard = ({
   }, [tags]);
 
   useEffect(() => {
-    if (merchantTags.tags) {
-      setLocalMerchantTags(merchantTags.tags.map((tag) => parseApiTagToLocalTag(tag)));
+    if (merchantTagsResponse?.status === 'success') {
+      setLocalMerchantTags(merchantTagsResponse.data.map((tag) => parseApiTagToLocalTag(tag)));
       setTags(
-        merchantTags.tags.map((tag) => {
+        merchantTagsResponse.data.map((tag) => {
           return {
             id: tag.id,
             label: tag.name,
@@ -161,8 +179,11 @@ const PaymentRequestDashboard = ({
           };
         }),
       );
+    } else if (merchantTagsResponse?.status === 'error') {
+      makeToast('warning', 'Failed to load the list of Merchant tags.');
+      console.warn(merchantTagsResponse.error);
     }
-  }, [merchantTags.tags]);
+  }, [isMerchantTagsLoading]);
 
   const onDeletePaymentRequest = async (paymentRequest: LocalPaymentRequest) => {
     const response = await client.delete(paymentRequest.id);
