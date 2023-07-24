@@ -34,7 +34,7 @@ const AmountPaid = ({
         </div>
       )}
 
-      {amountPaid > 0 && partialPaymentMethod === LocalPartialPaymentMethods.Partial && (
+      {partialPaymentMethod === LocalPartialPaymentMethods.Partial && (
         <span className="text-sm leading-[1.063rem] text-greyText font-medium mt-2">
           {currency == Currency.GBP ? '£' : '€'}
           <span>
