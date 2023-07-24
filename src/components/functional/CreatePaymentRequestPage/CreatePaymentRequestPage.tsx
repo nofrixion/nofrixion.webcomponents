@@ -90,7 +90,7 @@ const CreatePaymentRequestPageMain = ({
     } else if (banksResponse?.status === 'error') {
       console.warn(banksResponse.error);
     }
-  }, [isBanksLoading]);
+  }, [banksResponse]);
 
   useEffect(() => {
     if (userPaymentDefaultsResponse?.status === 'success') {
@@ -98,7 +98,7 @@ const CreatePaymentRequestPageMain = ({
     } else if (userPaymentDefaultsResponse?.status === 'error') {
       console.warn(userPaymentDefaultsResponse.error);
     }
-  }, [isUserPaymentDefaultsLoading]);
+  }, [userPaymentDefaultsResponse]);
 
   const parseLocalPaymentRequestCreateToRemotePaymentRequest = (
     merchantId: string,

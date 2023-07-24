@@ -5,13 +5,13 @@ import { DateRange } from '../../ui/DateRangePicker/DateRangePicker';
 import {
   Currency,
   PaymentRequestClient,
-  PaymentRequestEventType,
   PaymentRequestMetrics,
   PaymentRequestStatus,
   useMerchantTags,
   formatPaymentRequestSortExpression,
   usePaymentRequestMetrics,
   usePaymentRequests,
+  PaymentRequest,
 } from '@nofrixion/moneymoov';
 import PaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTable';
 import { SortDirection } from '../../ui/ColumnHeader/ColumnHeader';
@@ -26,11 +26,7 @@ import PaymentRequestDetailsModal from '../PaymentRequestDetailsModal/PaymentReq
 import FilterControlsRow from '../../ui/FilterControlsRow/FilterControlsRow';
 import { FilterableTag } from '../../ui/TagFilter/TagFilter';
 import ScrollArea from '../../ui/ScrollArea/ScrollArea';
-import {
-  LocalCardPaymentResponseStatus,
-  LocalPartialPaymentMethods,
-  LocalPaymentMethodTypes,
-} from '../../../types/LocalEnums';
+import { LocalPartialPaymentMethods, LocalPaymentMethodTypes } from '../../../types/LocalEnums';
 import { Button } from '@/components/ui/atoms';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
@@ -40,13 +36,13 @@ interface PaymentRequestDashboardProps {
   merchantId: string;
 }
 
+const queryClient = new QueryClient();
+
 const PaymentRequestDashboard = ({
   token,
   apiUrl = 'https://api.nofrixion.com/api/v1',
   merchantId,
 }: PaymentRequestDashboardProps) => {
-  const queryClient = new QueryClient();
-
   return (
     <QueryClientProvider client={queryClient}>
       <PaymentRequestDashboardMain token={token} merchantId={merchantId} apiUrl={apiUrl} />
@@ -77,6 +73,9 @@ const PaymentRequestDashboardMain = ({
   const [tagsFilter, setTagsFilter] = React.useState<string[]>([]);
   const [showMorePage, setShowMorePage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [metrics, setMetrics] = useState<PaymentRequestMetrics | undefined>(undefined);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
+  const [paymentRequests, setPaymentRequests] = useState<PaymentRequest[] | undefined>(undefined);
 
   let [isCreatePaymentRequestOpen, setIsCreatePaymentRequestOpen] = useState(false);
 
@@ -105,11 +104,7 @@ const PaymentRequestDashboardMain = ({
     return tags.filter((tag) => tag.isSelected).map((tag) => tag.id);
   };
 
-  const {
-    paymentRequests,
-    totalRecords,
-    isLoading: isLoadingPaymentRequests,
-  } = usePaymentRequests(
+  const { data: paymentRequestsResponse, isLoading: isLoadingPaymentRequests } = usePaymentRequests(
     {
       amountSortDirection: amountSortDirection,
       statusSortDirection: statusSortDirection,
@@ -134,7 +129,11 @@ const PaymentRequestDashboardMain = ({
 
   const [firstMetrics, setFirstMetrics] = useState<PaymentRequestMetrics | undefined>();
 
-  const { metrics, isLoading: isLoadingMetrics } = usePaymentRequestMetrics(
+  const {
+    data: metricsResponse,
+    isLoading: isLoadingMetrics,
+    error: metricsError,
+  } = usePaymentRequestMetrics(
     {
       merchantId: merchantId,
       fromDateMS: dateRange.fromDate.getTime(),
@@ -148,12 +147,23 @@ const PaymentRequestDashboardMain = ({
     { apiUrl: apiUrl, authToken: token },
   );
 
-  const { data: merchantTagsResponse, isLoading: isMerchantTagsLoading } = useMerchantTags(
-    { merchantId: merchantId },
-    { apiUrl: apiUrl, authToken: token },
-  );
+  const {
+    data: merchantTagsResponse,
+    isLoading: isMerchantTagsLoading,
+    error: merchantTagsError,
+  } = useMerchantTags({ merchantId: merchantId }, { apiUrl: apiUrl, authToken: token });
 
   const [localMerchantTags, setLocalMerchantTags] = useState<LocalTag[]>([] as LocalTag[]);
+
+  useEffect(() => {
+    if (paymentRequestsResponse?.status === 'success') {
+      setPaymentRequests(paymentRequestsResponse.data.content);
+      setTotalRecords(paymentRequestsResponse.data.totalSize);
+    } else if (paymentRequestsResponse?.status === 'error') {
+      makeToast('error', 'Error fetching payment requests.');
+      console.error(paymentRequestsResponse.error);
+    }
+  }, [paymentRequestsResponse]);
 
   useEffect(() => {
     setShowMorePage(1);
@@ -182,7 +192,16 @@ const PaymentRequestDashboardMain = ({
     } else if (merchantTagsResponse?.status === 'error') {
       console.warn(merchantTagsResponse.error);
     }
-  }, [isMerchantTagsLoading]);
+  }, [merchantTagsResponse]);
+
+  useEffect(() => {
+    if (metricsResponse?.status === 'success') {
+      setMetrics(metricsResponse.data);
+    } else if (metricsResponse?.status === 'error') {
+      makeToast('error', 'Error fetching metrics.');
+      console.error(metricsResponse.error);
+    }
+  }, [metricsResponse]);
 
   const onDeletePaymentRequest = async (paymentRequest: LocalPaymentRequest) => {
     const response = await client.delete(paymentRequest.id);
