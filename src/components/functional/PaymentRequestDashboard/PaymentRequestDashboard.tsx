@@ -5,13 +5,13 @@ import { DateRange } from '../../ui/DateRangePicker/DateRangePicker';
 import {
   Currency,
   PaymentRequestClient,
-  PaymentRequestEventType,
   PaymentRequestMetrics,
   PaymentRequestStatus,
   useMerchantTags,
   formatPaymentRequestSortExpression,
   usePaymentRequestMetrics,
   usePaymentRequests,
+  PaymentRequest,
 } from '@nofrixion/moneymoov';
 import PaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTable';
 import { SortDirection } from '../../ui/ColumnHeader/ColumnHeader';
@@ -26,25 +26,34 @@ import PaymentRequestDetailsModal from '../PaymentRequestDetailsModal/PaymentReq
 import FilterControlsRow from '../../ui/FilterControlsRow/FilterControlsRow';
 import { FilterableTag } from '../../ui/TagFilter/TagFilter';
 import ScrollArea from '../../ui/ScrollArea/ScrollArea';
-import {
-  LocalCardPaymentResponseStatus,
-  LocalPartialPaymentMethods,
-  LocalPaymentMethodTypes,
-} from '../../../types/LocalEnums';
+import { LocalPartialPaymentMethods, LocalPaymentMethodTypes } from '../../../types/LocalEnums';
 import { Button } from '@/components/ui/atoms';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
   apiUrl?: string; // Example: "https://api.nofrixion.com/api/v1"
   merchantId: string;
-  onUnauthorized: () => void;
 }
+
+const queryClient = new QueryClient();
 
 const PaymentRequestDashboard = ({
   token,
   apiUrl = 'https://api.nofrixion.com/api/v1',
   merchantId,
-  onUnauthorized,
+}: PaymentRequestDashboardProps) => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <PaymentRequestDashboardMain token={token} merchantId={merchantId} apiUrl={apiUrl} />
+    </QueryClientProvider>
+  );
+};
+
+const PaymentRequestDashboardMain = ({
+  token,
+  apiUrl = 'https://api.nofrixion.com/api/v1',
+  merchantId,
 }: PaymentRequestDashboardProps) => {
   const [page, setPage] = useState(1);
   const [statusSortDirection, setStatusSortDirection] = useState<SortDirection>(SortDirection.NONE);
@@ -64,6 +73,9 @@ const PaymentRequestDashboard = ({
   const [tagsFilter, setTagsFilter] = React.useState<string[]>([]);
   const [showMorePage, setShowMorePage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [metrics, setMetrics] = useState<PaymentRequestMetrics | undefined>(undefined);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
+  const [paymentRequests, setPaymentRequests] = useState<PaymentRequest[] | undefined>(undefined);
 
   let [isCreatePaymentRequestOpen, setIsCreatePaymentRequestOpen] = useState(false);
 
@@ -74,7 +86,7 @@ const PaymentRequestDashboard = ({
 
   const pageSize = 20;
 
-  const client = new PaymentRequestClient({ apiUrl: apiUrl, authToken: token, onUnauthorized: onUnauthorized });
+  const client = new PaymentRequestClient({ apiUrl: apiUrl, authToken: token });
 
   const onPaymentRequestRowClicked = (paymentRequest: LocalPaymentRequest) => {
     setSelectedPaymentRequestID(paymentRequest.id);
@@ -92,11 +104,7 @@ const PaymentRequestDashboard = ({
     return tags.filter((tag) => tag.isSelected).map((tag) => tag.id);
   };
 
-  const {
-    paymentRequests,
-    totalRecords,
-    isLoading: isLoadingPaymentRequests,
-  } = usePaymentRequests(
+  const { data: paymentRequestsResponse, isLoading: isLoadingPaymentRequests } = usePaymentRequests(
     {
       amountSortDirection: amountSortDirection,
       statusSortDirection: statusSortDirection,
@@ -114,14 +122,18 @@ const PaymentRequestDashboard = ({
       maxAmount: maxAmountFilter,
       tags: tagsFilter,
     },
-    { apiUrl: apiUrl, authToken: token, onUnauthorized: onUnauthorized },
+    { apiUrl: apiUrl, authToken: token },
   );
 
   const [localPaymentRequests, setLocalPaymentRequests] = useState<LocalPaymentRequest[]>([]);
 
   const [firstMetrics, setFirstMetrics] = useState<PaymentRequestMetrics | undefined>();
 
-  const { metrics, isLoading: isLoadingMetrics } = usePaymentRequestMetrics(
+  const {
+    data: metricsResponse,
+    isLoading: isLoadingMetrics,
+    error: metricsError,
+  } = usePaymentRequestMetrics(
     {
       merchantId: merchantId,
       fromDateMS: dateRange.fromDate.getTime(),
@@ -132,15 +144,26 @@ const PaymentRequestDashboard = ({
       maxAmount: maxAmountFilter,
       tags: tagsFilter,
     },
-    { apiUrl: apiUrl, authToken: token, onUnauthorized: onUnauthorized },
+    { apiUrl: apiUrl, authToken: token },
   );
 
-  const merchantTags = useMerchantTags(
-    { merchantId: merchantId },
-    { apiUrl: apiUrl, authToken: token, onUnauthorized: onUnauthorized },
-  );
+  const {
+    data: merchantTagsResponse,
+    isLoading: isMerchantTagsLoading,
+    error: merchantTagsError,
+  } = useMerchantTags({ merchantId: merchantId }, { apiUrl: apiUrl, authToken: token });
 
   const [localMerchantTags, setLocalMerchantTags] = useState<LocalTag[]>([] as LocalTag[]);
+
+  useEffect(() => {
+    if (paymentRequestsResponse?.status === 'success') {
+      setPaymentRequests(paymentRequestsResponse.data.content);
+      setTotalRecords(paymentRequestsResponse.data.totalSize);
+    } else if (paymentRequestsResponse?.status === 'error') {
+      makeToast('error', 'Error fetching payment requests.');
+      console.error(paymentRequestsResponse.error);
+    }
+  }, [paymentRequestsResponse]);
 
   useEffect(() => {
     setShowMorePage(1);
@@ -155,10 +178,10 @@ const PaymentRequestDashboard = ({
   }, [tags]);
 
   useEffect(() => {
-    if (merchantTags.tags) {
-      setLocalMerchantTags(merchantTags.tags.map((tag) => parseApiTagToLocalTag(tag)));
+    if (merchantTagsResponse?.status === 'success') {
+      setLocalMerchantTags(merchantTagsResponse.data.map((tag) => parseApiTagToLocalTag(tag)));
       setTags(
-        merchantTags.tags.map((tag) => {
+        merchantTagsResponse.data.map((tag) => {
           return {
             id: tag.id,
             label: tag.name,
@@ -166,8 +189,19 @@ const PaymentRequestDashboard = ({
           };
         }),
       );
+    } else if (merchantTagsResponse?.status === 'error') {
+      console.warn(merchantTagsResponse.error);
     }
-  }, [merchantTags.tags]);
+  }, [merchantTagsResponse]);
+
+  useEffect(() => {
+    if (metricsResponse?.status === 'success') {
+      setMetrics(metricsResponse.data);
+    } else if (metricsResponse?.status === 'error') {
+      makeToast('error', 'Error fetching metrics.');
+      console.error(metricsResponse.error);
+    }
+  }, [metricsResponse]);
 
   const onDeletePaymentRequest = async (paymentRequest: LocalPaymentRequest) => {
     const response = await client.delete(paymentRequest.id);
@@ -290,7 +324,8 @@ const PaymentRequestDashboard = ({
       let response = await client.captureCardPayment(selectedPaymentRequestID, authorizationID, amount);
 
       if (response.error) {
-        makeToast('error', response.error.title);
+        makeToast('error', 'Error capturing Payment.');
+        console.error(response.error);
         return;
       }
 
@@ -389,7 +424,7 @@ const PaymentRequestDashboard = ({
         <LayoutGroup>
           <AnimatePresence initial={false}>
             {!isInitialState && !isLoadingMetrics && (
-              <LayoutWrapper className="fixed bottom-0 mb-4 px-6 w-full -mx-6 md:-mx-14 md:px-14 lg:static lg:w-auto">
+              <LayoutWrapper className="fixed bottom-0 py-4 px-6 w-full -mx-6 md:-mx-14 md:px-14 lg:static lg:w-auto bg-gradient-to-b from-transparent via-mainGrey via-30% to-mainGrey">
                 <Button size="big" onClick={onCreatePaymentRequest}>
                   Create payment request
                 </Button>
@@ -477,12 +512,7 @@ const PaymentRequestDashboard = ({
           )}
         </AnimatePresence>
 
-        <LayoutWrapper className="lg:bg-white lg:min-h-[18rem] lg:py-10 lg:px-6 lg:rounded-lg pb-10">
-          {/* 
-            TODO: Scroll Area will be used in the meantime until Pablo I design the table for mobile.
-            Remove the ScrollArea when the mobile design is ready.
-          */}
-          {/* <ScrollArea> */}
+        <LayoutWrapper className="lg:bg-white lg:min-h-[18rem] lg:py-10 lg:px-6 lg:rounded-lg">
           <PaymentRequestTable
             paymentRequests={localPaymentRequests}
             pageSize={pageSize}
@@ -525,7 +555,6 @@ const PaymentRequestDashboard = ({
         token={token}
         merchantId={merchantId}
         apiUrl={apiUrl}
-        onUnauthorized={onUnauthorized}
         onPaymentRequestCreated={onPaymentRequestCreated}
         prefilledPaymentRequest={prefilledPaymentRequest}
       />
@@ -540,7 +569,6 @@ const PaymentRequestDashboard = ({
         onDismiss={onPaymentRequestDetailsModalDismiss}
         setMerchantTags={setLocalMerchantTags}
         setPaymentRequests={setLocalPaymentRequests}
-        onUnauthorized={onUnauthorized}
         onRefund={onRefundClick}
         onCapture={onCaptureClick}
       ></PaymentRequestDetailsModal>

@@ -74,7 +74,6 @@ const DateRangePicker = ({ onDateChange }: DateRangeFilterProps) => {
       default:
         break;
     }
-    console.log(selectRangeText);
   }, [selectRangeText]);
 
   return (

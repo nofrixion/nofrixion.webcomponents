@@ -11,10 +11,13 @@ import {
   PartialPaymentMethods,
   useUserPaymentDefaults,
   ClientSettingsClient,
+  BankSettings,
 } from '@nofrixion/moneymoov';
 
 import { defaultUserPaymentDefaults } from '../../../utils/constants';
 import { remotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
+import { useEffect, useState } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 interface CreatePaymentRequesPageProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
@@ -22,7 +25,6 @@ interface CreatePaymentRequesPageProps {
   apiUrl?: string; // Example: "https://api.nofrixion.com/api/v1"
   isOpen: boolean; // When true, the modal will be open. When false, the modal will be closed.
   onClose: () => void; // Callback function that will be called when the modal is asked to be closed.
-  onUnauthorized: () => void; // Callback function that will be called when the user is unauthorized.
   onPaymentRequestCreated: (paymentRequest: LocalPaymentRequest) => void; // Callback function that will be called when the payment request is created.
   prefilledPaymentRequest?: LocalPaymentRequestCreate; // Optional payment request that will be prefilled in the form.
 }
@@ -33,25 +35,70 @@ const CreatePaymentRequestPage = ({
   apiUrl = 'https://api.nofrixion.com/api/v1',
   isOpen,
   onClose,
-  onUnauthorized,
+  onPaymentRequestCreated,
+  prefilledPaymentRequest,
+}: CreatePaymentRequesPageProps) => {
+  const queryClient = new QueryClient();
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <CreatePaymentRequestPageMain
+        token={token}
+        merchantId={merchantId}
+        apiUrl={apiUrl}
+        isOpen={isOpen}
+        onClose={onClose}
+        onPaymentRequestCreated={onPaymentRequestCreated}
+        prefilledPaymentRequest={prefilledPaymentRequest}
+      />
+    </QueryClientProvider>
+  );
+};
+
+/**
+ * This is the main component that will be rendered.
+ */
+const CreatePaymentRequestPageMain = ({
+  token,
+  merchantId,
+  apiUrl = 'https://api.nofrixion.com/api/v1',
+  isOpen,
+  onClose,
   onPaymentRequestCreated,
   prefilledPaymentRequest,
 }: CreatePaymentRequesPageProps) => {
   const paymentRequestClient = new PaymentRequestClient({
     apiUrl: apiUrl,
     authToken: token,
-    onUnauthorized: onUnauthorized,
   });
 
-  const { userPaymentDefaults, isUserPaymentDefaultsLoading } = useUserPaymentDefaults({
+  const { data: banksResponse, isLoading: isBanksLoading } = useBanks(
+    { merchantId: merchantId },
+    { apiUrl: apiUrl, authToken: token },
+  );
+  const [banks, setBanks] = useState<BankSettings[] | undefined>(undefined);
+  const [userPaymentDefaults, setUserPaymentDefaults] = useState<UserPaymentDefaults | undefined>(undefined);
+
+  const { data: userPaymentDefaultsResponse, isLoading: isUserPaymentDefaultsLoading } = useUserPaymentDefaults({
     apiUrl: apiUrl,
     authToken: token,
-    onUnauthorized: onUnauthorized,
   });
-  const { banks } = useBanks(
-    { merchantId: merchantId },
-    { apiUrl: apiUrl, authToken: token, onUnauthorized: onUnauthorized },
-  );
+
+  useEffect(() => {
+    if (banksResponse?.status === 'success') {
+      setBanks(banksResponse.data.payByBankSettings);
+    } else if (banksResponse?.status === 'error') {
+      console.warn(banksResponse.error);
+    }
+  }, [banksResponse]);
+
+  useEffect(() => {
+    if (userPaymentDefaultsResponse?.status === 'success') {
+      setUserPaymentDefaults(userPaymentDefaultsResponse.data);
+    } else if (userPaymentDefaultsResponse?.status === 'error') {
+      console.warn(userPaymentDefaultsResponse.error);
+    }
+  }, [userPaymentDefaultsResponse]);
 
   const parseLocalPaymentRequestCreateToRemotePaymentRequest = (
     merchantId: string,
@@ -117,7 +164,7 @@ const CreatePaymentRequestPage = ({
   };
 
   const onSaveUserPaymentDefaults = async (userPaymentDefaults: UserPaymentDefaults) => {
-    const client = new ClientSettingsClient({ apiUrl: apiUrl, authToken: token, onUnauthorized: onUnauthorized });
+    const client = new ClientSettingsClient({ apiUrl: apiUrl, authToken: token });
     const response = await client.saveUserPaymentDefaults(userPaymentDefaults);
 
     if (response.status === 'error') {
