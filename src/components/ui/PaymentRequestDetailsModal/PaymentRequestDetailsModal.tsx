@@ -82,8 +82,8 @@ const PaymentRequestDetailsModal = ({
               leaveTo="translate-y-full lg:translate-x-full lg:translate-y-0"
             >
               {/*
-                h-full fix issue on mobile where transform class generates difficulties
-                to consider the browser Address Bar
+                h-full fixes issue on mobile where transform class generates
+                 difficulties to consider the browser Address Bar
               */}
               <Dialog.Panel className="h-full">
                 <div className="absolute left-0 top-0 -ml-8 flex pr-2 pt-4 sm:-ml-10 sm:pr-4">
@@ -136,7 +136,7 @@ const PaymentRequestDetailsModal = ({
 
                 <div className="bg-white max-h-screen overflow-auto lg:w-[37.5rem]">
                   <div className="max-h-full h-screen">
-                    <div className="h-fit pb-16">
+                    <div className="h-fit pb-16 lg:pb-0">
                       <PaymentRequestDetails
                         paymentRequest={paymentRequest}
                         merchantTags={merchantTags}

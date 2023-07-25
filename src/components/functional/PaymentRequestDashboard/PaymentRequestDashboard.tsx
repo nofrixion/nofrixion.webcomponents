@@ -424,7 +424,6 @@ const PaymentRequestDashboardMain = ({
         <LayoutGroup>
           <AnimatePresence initial={false}>
             {!isInitialState && !isLoadingMetrics && (
-              // background: linear-gradient(180deg, rgba(246, 248, 249, 0.00) 0%, #F6F8F9 31.77%);
               <LayoutWrapper className="fixed bottom-0 py-4 px-6 w-full -mx-6 md:-mx-14 md:px-14 lg:static lg:w-auto bg-gradient-to-b from-transparent via-mainGrey via-30% to-mainGrey">
                 <Button size="big" onClick={onCreatePaymentRequest}>
                   Create payment request
