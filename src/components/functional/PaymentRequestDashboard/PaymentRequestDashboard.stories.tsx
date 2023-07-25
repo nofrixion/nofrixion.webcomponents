@@ -35,7 +35,7 @@ export const Showcase = Template.bind({});
 
 Showcase.args = {
   token: 'Enter user token...',
-  apiUrl: apiUrls.sandbox,
+  apiUrl: apiUrls.dev,
   merchantId: 'Enter merchant id...',
 };
 

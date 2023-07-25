@@ -73,8 +73,6 @@ const FilterControlsRow = ({
   };
 
   const getSorterValue = () => {
-    console.log(createdSortDirection, amountSortDirection);
-
     if (createdSortDirection === SortDirection.DESC) {
       return 'moreRecentFirst';
     } else if (createdSortDirection === SortDirection.ASC) {
@@ -82,7 +80,6 @@ const FilterControlsRow = ({
     } else if (amountSortDirection === SortDirection.DESC) {
       return 'amountHighToLow';
     } else if (amountSortDirection === SortDirection.ASC) {
-      console.log('Returning default value');
       return 'amountLowToHigh';
     } else {
       return 'moreRecentFirst';

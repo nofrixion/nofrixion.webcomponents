@@ -11,7 +11,6 @@ export default {
 
 const Template: StoryFn<typeof SelectDateRange> = ({ onValueChange, ...args }) => {
   const [dateRange, setDateRange] = useState<TDateRangeOptions | undefined>('last7Days');
-  console.log(dateRange);
 
   const handleOnValueChange = (value: TDateRangeOptions) => {
     setDateRange(value);
