@@ -3,7 +3,6 @@ import {
   PaymentMethodTypes,
   type PaymentRequestAddress,
   type PaymentRequest,
-  PaymentRequestPaymentAttempt,
   PaymentResult,
   Wallets,
   type Tag,

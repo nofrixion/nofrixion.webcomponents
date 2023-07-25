@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@headlessui/react": "1.6.0",
-    "@nofrixion/moneymoov": "file:../nofrixion.clients",
+    "@nofrixion/moneymoov": "^0.0.13",
     "@radix-ui/react-checkbox": "^1.0.3",
     "@radix-ui/react-dropdown-menu": "^2.0.4",
     "@radix-ui/react-scroll-area": "^1.0.3",
@@ -62,6 +62,7 @@
     "@storybook/testing-library": "^0.1.0",
     "@storybook/web-components-vite": "^7.0.11",
     "@tanstack/react-query-devtools": "^4.32.0",
+    "@types/lodash": "^4.14.195",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@types/react-text-mask": "^5.4.11",
