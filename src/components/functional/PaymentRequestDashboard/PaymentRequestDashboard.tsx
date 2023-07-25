@@ -424,7 +424,7 @@ const PaymentRequestDashboardMain = ({
         <LayoutGroup>
           <AnimatePresence initial={false}>
             {!isInitialState && !isLoadingMetrics && (
-              <LayoutWrapper className="fixed bottom-0 mb-4 px-6 w-full -mx-6 md:-mx-14 md:px-14 lg:static lg:w-auto">
+              <LayoutWrapper className="fixed bottom-0 py-4 px-6 w-full -mx-6 md:-mx-14 md:px-14 lg:static lg:w-auto bg-gradient-to-b from-transparent via-mainGrey via-30% to-mainGrey">
                 <Button size="big" onClick={onCreatePaymentRequest}>
                   Create payment request
                 </Button>
@@ -512,12 +512,7 @@ const PaymentRequestDashboardMain = ({
           )}
         </AnimatePresence>
 
-        <LayoutWrapper className="lg:bg-white lg:min-h-[18rem] lg:py-10 lg:px-6 lg:rounded-lg pb-10">
-          {/* 
-            TODO: Scroll Area will be used in the meantime until Pablo I design the table for mobile.
-            Remove the ScrollArea when the mobile design is ready.
-          */}
-          {/* <ScrollArea> */}
+        <LayoutWrapper className="lg:bg-white lg:min-h-[18rem] lg:py-10 lg:px-6 lg:rounded-lg">
           <PaymentRequestTable
             paymentRequests={localPaymentRequests}
             pageSize={pageSize}

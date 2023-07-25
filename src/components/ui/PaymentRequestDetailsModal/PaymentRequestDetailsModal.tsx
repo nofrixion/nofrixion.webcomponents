@@ -71,7 +71,7 @@ const PaymentRequestDetailsModal = ({
           >
             <div className="fixed inset-0 bg-black bg-opacity-[15%]" />
           </Transition.Child>
-          <div className="fixed inset-0 lg:inset-y-0 lg:right-0 lg:left-auto">
+          <div className="z-50 fixed inset-0 lg:inset-y-0 lg:right-0 lg:left-auto">
             <Transition.Child
               as={Fragment}
               enter="transform transition ease-in-out duration-300"
@@ -81,7 +81,11 @@ const PaymentRequestDetailsModal = ({
               leaveFrom="translate-y-0 lg:translate-x-0"
               leaveTo="translate-y-full lg:translate-x-full lg:translate-y-0"
             >
-              <Dialog.Panel>
+              {/*
+                h-full fixes issue on mobile where transform class generates
+                 difficulties to consider the browser Address Bar
+              */}
+              <Dialog.Panel className="h-full">
                 <div className="absolute left-0 top-0 -ml-8 flex pr-2 pt-4 sm:-ml-10 sm:pr-4">
                   <button
                     type="button"
@@ -101,10 +105,9 @@ const PaymentRequestDetailsModal = ({
                   </button>
                 </div>
 
-                {/* Review PR */}
-                <div className="block lg:hidden absolute bottom-0 w-full px-6 mx-auto pb-4 z-20">
+                {/* Close button */}
+                <div className="lg:hidden fixed bottom-0 w-full px-6 mx-auto py-4 z-20 bg-gradient-to-b from-transparent via-mainGrey via-30% to-mainGrey">
                   <button
-                    key="review-pr"
                     type="button"
                     className="w-full h-12 px-16 whitespace-nowrap flex justify-center items-center rounded-full py-3 text-sm cursor-pointer bg-[#DEE5ED] transition hover:bg-[#BDCCDB]"
                     onClick={onDismiss}
@@ -133,7 +136,7 @@ const PaymentRequestDetailsModal = ({
 
                 <div className="bg-white max-h-screen overflow-auto lg:w-[37.5rem]">
                   <div className="max-h-full h-screen">
-                    <div className="h-fit">
+                    <div className="h-fit pb-16 lg:pb-0">
                       <PaymentRequestDetails
                         paymentRequest={paymentRequest}
                         merchantTags={merchantTags}
