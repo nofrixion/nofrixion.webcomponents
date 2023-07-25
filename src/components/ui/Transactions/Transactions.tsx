@@ -1,4 +1,4 @@
-import { LocalCardPaymentResponseStatus, LocalPaymentMethodTypes } from '../../../types/LocalEnums';
+import { LocalPaymentMethodTypes } from '../../../types/LocalEnums';
 import CardIcon from '../../../assets/icons/card-icon.svg';
 import BankIcon from '../../../assets/icons/bank-icon.svg';
 import WalletIcon from '../../../assets/icons/wallet-icon.svg';
@@ -6,7 +6,7 @@ import TickBadgeIcon from '../../../assets/icons/tick-badge-icon.svg';
 import { format } from 'date-fns';
 import classNames from 'classnames';
 import { LocalPaymentAttempt } from '../../../types/LocalTypes';
-import { Currency, PaymentRequestEventType } from '@nofrixion/moneymoov';
+import { Currency } from '@nofrixion/moneymoov';
 import React from 'react';
 
 export interface TransactionsProps {
@@ -108,7 +108,7 @@ const Transactions = ({ transactions, onRefund, onCapture }: TransactionsProps) 
                         </div> 
                       </div>
                       */}
-                      {transaction.needsCapture && (
+                      {transaction.paymentMethod === LocalPaymentMethodTypes.Card && transaction.isAuthorizeOnly && (
                         <button
                           type="button"
                           className="text-white text-13px leading-4 bg-primaryGreen hover:bg-primaryGreenHover rounded-full px-2 py-1 transition-colors"
@@ -116,6 +116,11 @@ const Transactions = ({ transactions, onRefund, onCapture }: TransactionsProps) 
                         >
                           Capture
                         </button>
+                      )}
+                      {transaction.paymentMethod === LocalPaymentMethodTypes.Pisp && transaction.isAuthorizeOnly && (
+                        <span className="text-greyText text-[10px] leading-4 block px-1 border rounded border-solid border-borderGreyHighlighted">
+                          Authorized
+                        </span>
                       )}
                     </div>
                   </td>
