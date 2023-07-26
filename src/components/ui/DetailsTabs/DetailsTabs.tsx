@@ -37,7 +37,7 @@ const underlineClasses = 'w-full h-px absolute bottom-0';
 
 interface DetailsTabsProps {
   paymentRequest: LocalPaymentRequest;
-  onRefund: (paymentAttemptID: string) => void;
+  onRefund: (paymentAttempt: LocalPaymentAttempt) => void;
   onCapture: (paymentAttempt: LocalPaymentAttempt) => void;
 }
 

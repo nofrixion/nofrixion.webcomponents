@@ -4,6 +4,7 @@ import {
   LocalCardPaymentResponseStatus,
   LocalPartialPaymentMethods,
   LocalPaymentMethodTypes,
+  SubTransactionType,
 } from './LocalEnums';
 
 export interface LocalContact {
@@ -42,9 +43,27 @@ export interface LocalPaymentAttempt {
   currency: Currency.EUR | Currency.GBP;
   processor?: string;
   last4DigitsOfCardNumber?: string;
-  isAuthorizeOnly: boolean;
-  capturedAmount: number;
+  settledAmount: number;
+  authorizedAmount: number;
   captureAttempts: LocalPaymentRequestCaptureAttempt[];
+  refundAttempts: LocalPaymentRequestRefundAttempt[];
+}
+
+export interface SubTransaction {
+  occurredAt?: Date;
+  amount: number;
+  currency: Currency.EUR | Currency.GBP;
+  type: SubTransactionType;
+}
+
+export interface LocalPaymentRequestRefundAttempt {
+  refundPayoutID?: string;
+  refundInitiatedAt?: Date;
+  refundSettledAt?: Date;
+  refundCancelledAt?: Date;
+  refundInitiatedAmount: number;
+  refundSettledAmount: number;
+  refundCancelledAmount: number;
 }
 
 export interface LocalPaymentRequestCaptureAttempt {

@@ -314,9 +314,33 @@ const PaymentRequestDashboardMain = ({
     setSelectedPaymentRequestID(paymentRequest.id);
   };
 
-  const onRefundClick = async (paymentAttemptID: string) => {
-    //TODO: Will implement refund for atleast card payment attempts. For PISP, it will need to be worked on later.
-    console.log(paymentAttemptID);
+  const onRefundClick = async (authorizationID: string, amount: number) => {
+    if (selectedPaymentRequestID) {
+      let response = await client.refundCardPayment(selectedPaymentRequestID, authorizationID, amount);
+
+      if (response.error) {
+        makeToast('error', response.error.title);
+        return;
+      }
+
+      makeToast('success', 'Payment successfully refunded.');
+
+      let localPrsCopy = [...localPaymentRequests];
+      let prIndex = localPrsCopy.findIndex((pr) => pr.id === selectedPaymentRequestID);
+      let attemptIndex = localPrsCopy[prIndex].paymentAttempts.findIndex(
+        (attempt) => attempt.attemptKey === authorizationID,
+      );
+
+      localPrsCopy[prIndex].paymentAttempts[attemptIndex].refundAttempts.splice(0, 0, {
+        refundInitiatedAmount: amount,
+        refundInitiatedAt: new Date(),
+        refundSettledAmount: amount,
+        refundSettledAt: new Date(),
+        refundCancelledAmount: 0,
+      });
+
+      setLocalPaymentRequests([...localPrsCopy]);
+    }
   };
 
   const onCaptureClick = async (authorizationID: string, amount: number) => {
@@ -336,10 +360,7 @@ const PaymentRequestDashboardMain = ({
       let attemptIndex = localPrsCopy[prIndex].paymentAttempts.findIndex(
         (attempt) => attempt.attemptKey === authorizationID,
       );
-      localPrsCopy[prIndex].paymentAttempts[attemptIndex].capturedAmount += amount;
-      localPrsCopy[prIndex].paymentAttempts[attemptIndex].isAuthorizeOnly =
-        localPrsCopy[prIndex].paymentAttempts[attemptIndex].capturedAmount <
-        localPrsCopy[prIndex].paymentAttempts[attemptIndex].amount;
+      localPrsCopy[prIndex].paymentAttempts[attemptIndex].settledAmount += amount;
 
       localPrsCopy[prIndex].paymentAttempts[attemptIndex].captureAttempts.splice(0, 0, {
         capturedAmount: amount,

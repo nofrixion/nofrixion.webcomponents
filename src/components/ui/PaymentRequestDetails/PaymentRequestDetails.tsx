@@ -13,7 +13,7 @@ export interface PaymentRequestDetailsProps {
   paymentRequest: LocalPaymentRequest;
   merchantTags: LocalTag[];
   hostedPaymentLink: string;
-  onRefund: (paymentAttemptID: string) => void;
+  onRefund: (paymentAttempt: LocalPaymentAttempt) => void;
   onCapture: (paymentAttempt: LocalPaymentAttempt) => void;
   onTagAdded: (tag: LocalTag) => void;
   onTagDeleted: (id: string) => void;

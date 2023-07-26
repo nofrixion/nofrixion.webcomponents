@@ -1,17 +1,24 @@
-import { LocalPaymentMethodTypes } from '../../../types/LocalEnums';
+import { LocalCardPaymentResponseStatus, LocalPaymentMethodTypes, SubTransactionType } from '../../../types/LocalEnums';
 import CardIcon from '../../../assets/icons/card-icon.svg';
 import BankIcon from '../../../assets/icons/bank-icon.svg';
 import WalletIcon from '../../../assets/icons/wallet-icon.svg';
 import TickBadgeIcon from '../../../assets/icons/tick-badge-icon.svg';
+import ReturnIcon from '../../../assets/icons/return-icon.svg';
 import { format } from 'date-fns';
 import classNames from 'classnames';
 import { LocalPaymentAttempt } from '../../../types/LocalTypes';
 import { Currency } from '@nofrixion/moneymoov';
 import React from 'react';
+import {
+  getSubTransactions,
+  hasRefundOrCaptureAttempts,
+  isCaptureable,
+  isRefundable,
+} from '../../../utils/paymentAttemptsHelper';
 
 export interface TransactionsProps {
   transactions: LocalPaymentAttempt[];
-  onRefund: (paymentAttemptID: string) => void;
+  onRefund: (paymentAttempt: LocalPaymentAttempt) => void;
   onCapture: (paymentAttempt: LocalPaymentAttempt) => void;
 }
 
@@ -47,7 +54,7 @@ const Transactions = ({ transactions, onRefund, onCapture }: TransactionsProps) 
               <React.Fragment key={index}>
                 <tr
                   className={classNames('group whitespace-nowrap', {
-                    'border-b': !transaction.captureAttempts || transaction.captureAttempts.length === 0,
+                    'border-b': !hasRefundOrCaptureAttempts(transaction),
                   })}
                 >
                   <td className={classNames('text-[0.813rem] pb-2 leading-6', { 'pt-2': index !== 0 })}>
@@ -94,21 +101,7 @@ const Transactions = ({ transactions, onRefund, onCapture }: TransactionsProps) 
                     })}
                   >
                     <div className="flex justify-end">
-                      {/* 
-                        Commeting out refund button for now
-                        until we have that functionality in the API
-                      */}
-                      {/*
-                      <div className="w-[3.75rem] text-[0.813rem] h-6 ">
-                        <div
-                          className="text-[0.813rem] px-2 py-1 rounded-full bg-[#DEE6ED] leading-4 cursor-pointer opacity-0 transition group-hover:opacity-100 hover:bg-[#BDCCDB]"
-                          onClick={() => onRefundClicked(transaction.attemptKey)}
-                        >
-                          Refund
-                        </div> 
-                      </div>
-                      */}
-                      {transaction.paymentMethod === LocalPaymentMethodTypes.Card && transaction.isAuthorizeOnly && (
+                      {isCaptureable(transaction) && (
                         <button
                           type="button"
                           className="text-white text-13px leading-4 bg-primaryGreen hover:bg-primaryGreenHover rounded-full px-2 py-1 transition-colors"
@@ -122,44 +115,69 @@ const Transactions = ({ transactions, onRefund, onCapture }: TransactionsProps) 
                           Authorized
                         </span>
                       )}
+                      {isRefundable(transaction) && (
+                        <button
+                          className="rounded-full w-6 h-6 p-1 inline-flex items-center justify-center outline-none cursor-pointer align-middle hover:bg-greyBg fill-[#8F99A3] hover:fill-[#454D54] data-[state='open']:fill-[#454D54]"
+                          aria-label="Actions"
+                          onClick={() => onRefund(transaction)}
+                        >
+                          <svg width="15" height="15" viewBox="0 0 15 15" className="w-4 h-4" version="1.1">
+                            <circle cx="7.5" cy="1.5" r="1.5" className="currentColor" id="circle2" />
+                            <circle cx="7.5" cy="7.5" r="1.5" className="currentColor" id="circle4" />
+                            <circle cx="7.5" cy="13.5" r="1.5" className="currentColor" id="circle6" />
+                          </svg>
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>
-                {transaction.captureAttempts?.map((captureAttempt, evIndex) => (
+                {getSubTransactions(transaction).map((subTransaction, evIndex) => (
                   <tr
                     key={`ev_${evIndex}`}
                     className={classNames('text-xs leading-6 group whitespace-nowrap', {
-                      'border-b [&>td]:pb-2': evIndex === transaction.captureAttempts.length - 1,
+                      'border-b [&>td]:pb-2': evIndex === getSubTransactions(transaction).length - 1,
                     })}
                   >
                     <td className="py-0">
                       {/* Mobile date */}
                       <span className="inline lg:hidden">
-                        {captureAttempt.capturedAt && format(captureAttempt.capturedAt, 'dd/MM/yyyy')}
+                        {subTransaction.occurredAt && format(subTransaction.occurredAt, 'dd/MM/yyyy')}
                       </span>
 
                       {/* Desktop date */}
                       <span className="hidden lg:inline">
-                        {captureAttempt.capturedAt && format(captureAttempt.capturedAt, 'MMM do, yyyy')}
+                        {subTransaction.occurredAt && format(subTransaction.occurredAt, 'MMM do, yyyy')}
                       </span>
                     </td>
                     <td className="pl-2 lg:pl-6 text-right py-0">
                       <span className="mr-2 font-medium tabular-nums text-[#29A37A]">
-                        <span className="lg:hidden">{transaction.currency === Currency.EUR ? '€' : '£'}</span>
-                        {formatter.format(captureAttempt.capturedAmount)}
+                        <span className="lg:hidden">{subTransaction.currency === Currency.EUR ? '€' : '£'}</span>
+                        {formatter.format(subTransaction.amount)}
                       </span>
                     </td>
                     <td className="hidden lg:table-cell py-0">
-                      <span className="text-greyText font-normal">{transaction.currency}</span>
+                      <span className="text-greyText font-normal">{subTransaction.currency}</span>
                     </td>
-                    <td className="pl-1 lg:pl-5 py-0" colSpan={2}>
-                      <div className="flex flex-row items-center">
-                        <span className="mr-2 p-1.5">
-                          <img src={TickBadgeIcon} className="h-3 w-3" alt="Captured" title="Captured" />
-                        </span>
-                        <span>Captured</span>
-                      </div>
-                    </td>
+                    {subTransaction.type === SubTransactionType.Capture && (
+                      <td className="pl-1 lg:pl-5 py-0" colSpan={2}>
+                        <div className="flex flex-row items-center">
+                          <span className="mr-2 p-1.5">
+                            <img src={TickBadgeIcon} className="h-3 w-3" alt="Captured" title="Captured" />
+                          </span>
+                          <span>Captured</span>
+                        </div>
+                      </td>
+                    )}
+                    {subTransaction.type === SubTransactionType.Refund && (
+                      <td className="pl-1 lg:pl-5 py-0" colSpan={2}>
+                        <div className="flex flex-row items-center">
+                          <span className="mr-2 p-1.5">
+                            <img src={ReturnIcon} className="h-3 w-3" alt="Refund" title="Refund" />
+                          </span>
+                          <span>Refund</span>
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </React.Fragment>

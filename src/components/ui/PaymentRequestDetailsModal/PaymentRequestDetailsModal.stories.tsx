@@ -10,7 +10,6 @@ export default {
     onDismiss: {
       action: 'Dismiss',
     },
-    onRefundClick: { action: 'refund clicked' },
     onTagAdded: { action: 'tag added' },
     onTagCreated: { action: 'tag created' },
     onTagDeleted: { action: 'tag deleted' },

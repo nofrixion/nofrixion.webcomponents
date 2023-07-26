@@ -3,6 +3,8 @@ import {
   PaymentMethodTypes,
   type PaymentRequestAddress,
   type PaymentRequest,
+  type PaymentRequestCaptureAttempt,
+  type PaymentRequestRefundAttempt,
   PaymentResult,
   Wallets,
   type Tag,
@@ -188,12 +190,13 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
             settledAt,
             attemptedAmount,
             paymentMethod,
-            authorisedAmount,
             settledAmount,
             captureAttempts,
+            refundAttempts,
             currency,
             walletName,
             status,
+            authorisedAmount,
           } = remotePaymentAttempt;
 
           localPaymentAttempts.push({
@@ -205,10 +208,7 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
             amount: attemptedAmount,
             currency: currency,
             processor: walletName ? parseApiWalletTypeToLocalWalletType(walletName) : undefined,
-            isAuthorizeOnly:
-              (paymentMethod === PaymentMethodTypes.Card && authorisedAmount > settledAmount) ||
-              (paymentMethod === PaymentMethodTypes.Pisp && status === PaymentResult.Authorized),
-            capturedAmount: settledAmount,
+            settledAmount: settledAmount,
             captureAttempts: captureAttempts
               .sort((a, b) => {
                 return new Date(b.capturedAt ?? 0).getTime() - new Date(a.capturedAt ?? 0).getTime();
@@ -217,9 +217,24 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
                 capturedAt: new Date(x.capturedAt ?? 0),
                 capturedAmount: x.capturedAmount,
               })),
+            refundAttempts: refundAttempts
+              .sort((a, b) => {
+                return new Date(b.refundSettledAt ?? 0).getTime() - new Date(a.refundSettledAt ?? 0).getTime();
+              })
+              .map((x) => ({
+                refundPayoutID: x.refundPayoutID,
+                refundSettledAt: new Date(x.refundSettledAt ?? 0),
+                refundSettledAmount: x.refundSettledAmount,
+                refundInitiatedAt: new Date(x.refundInitiatedAt ?? 0),
+                refundInitiatedAmount: x.refundInitiatedAmount,
+                refundCancelledAt: new Date(x.refundCancelledAt ?? 0),
+                refundCancelledAmount: x.refundCancelledAmount,
+              })),
+            authorizedAmount: authorisedAmount,
           });
         }
       });
+      console.log(localPaymentAttempts);
       return localPaymentAttempts;
     }
   };

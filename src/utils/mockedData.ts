@@ -68,6 +68,25 @@ export const mockMerchantTags = [
   },
 ];
 
+export const mockRefundAttempts = [
+  {
+    refundPayoutID: '1',
+    refundInitiatedAt: new Date('2023-05-18T00:00:00.000Z'),
+    refundSettledAt: new Date('2023-05-18T00:00:00.000Z'),
+    refundInitiatedAmount: 5,
+    refundSettledAmount: 5,
+    refundCancelledAmount: 0,
+  },
+  {
+    refundPayoutID: '2',
+    refundInitiatedAt: new Date('2023-05-18T00:00:00.000Z'),
+    refundSettledAt: new Date('2023-05-18T00:00:00.000Z'),
+    refundInitiatedAmount: 3,
+    refundSettledAmount: 3,
+    refundCancelledAmount: 0,
+  },
+];
+
 export const mockPaymentAttempts: LocalPaymentAttempt[] = [
   {
     attemptKey: 'a3b752d2-c0a6-4846-90e5-d783bb4ec005',
@@ -77,9 +96,10 @@ export const mockPaymentAttempts: LocalPaymentAttempt[] = [
     currency: Currency.EUR,
     processor: 'Visa',
     last4DigitsOfCardNumber: '1234',
-    isAuthorizeOnly: false,
-    capturedAmount: 0,
+    needsCapture: false,
+    settledAmount: 20.02,
     captureAttempts: [],
+    refundAttempts: mockRefundAttempts,
   },
   {
     attemptKey: 'f4c6e747-6fd6-4a3c-be3b-4d3edd258b35',
@@ -89,9 +109,10 @@ export const mockPaymentAttempts: LocalPaymentAttempt[] = [
     currency: Currency.EUR,
     processor: 'MasterCard',
     last4DigitsOfCardNumber: '1234',
-    isAuthorizeOnly: false,
-    capturedAmount: 0,
+    needsCapture: true,
+    settledAmount: 30.57,
     captureAttempts: [],
+    refundAttempts: [],
   },
   {
     attemptKey: 'ca2eb453-9c12-4f8f-b8b2-7c1c6af842ba',
@@ -101,9 +122,10 @@ export const mockPaymentAttempts: LocalPaymentAttempt[] = [
     currency: Currency.EUR,
     processor: 'Revolut',
     last4DigitsOfCardNumber: '1234',
-    isAuthorizeOnly: false,
-    capturedAmount: 0,
+    needsCapture: false,
+    settledAmount: 924852422.99,
     captureAttempts: [],
+    refundAttempts: [],
   },
   {
     attemptKey: '43535f79-a9f2-4331-9a78-db731e467c49',
@@ -113,9 +135,10 @@ export const mockPaymentAttempts: LocalPaymentAttempt[] = [
     currency: Currency.EUR,
     processor: 'Bank of Ireland',
     last4DigitsOfCardNumber: '1234',
-    isAuthorizeOnly: false,
-    capturedAmount: 0,
+    needsCapture: false,
+    settledAmount: 7.9,
     captureAttempts: [],
+    refundAttempts: [],
   },
   {
     attemptKey: 'a9f6c19a-0172-47a6-803a-c3f59899cafc',
@@ -124,9 +147,10 @@ export const mockPaymentAttempts: LocalPaymentAttempt[] = [
     amount: 15.39,
     currency: Currency.EUR,
     processor: 'Apple Pay',
-    isAuthorizeOnly: false,
-    capturedAmount: 0,
+    needsCapture: false,
+    settledAmount: 15.39,
     captureAttempts: [],
+    refundAttempts: [],
   },
   {
     attemptKey: '7bbb2998-8d78-4b2a-9334-84444c9915c8',
@@ -135,9 +159,10 @@ export const mockPaymentAttempts: LocalPaymentAttempt[] = [
     amount: 20.78,
     currency: Currency.EUR,
     processor: 'Google Pay',
-    isAuthorizeOnly: false,
-    capturedAmount: 0,
+    needsCapture: false,
+    settledAmount: 20.78,
     captureAttempts: [],
+    refundAttempts: [],
   },
   // Add more transactions as needed
 ];
@@ -151,9 +176,10 @@ export const partiallyPaidMockPaymentAttempts: LocalPaymentAttempt[] = [
     currency: Currency.EUR,
     processor: 'Visa',
     last4DigitsOfCardNumber: '1234',
-    isAuthorizeOnly: false,
-    capturedAmount: 0,
+    needsCapture: false,
+    settledAmount: 20.02,
     captureAttempts: [],
+    refundAttempts: [],
   },
   {
     attemptKey: 'f4c6e747-6fd6-4a3c-be3b-4d3edd258b35',
@@ -163,9 +189,10 @@ export const partiallyPaidMockPaymentAttempts: LocalPaymentAttempt[] = [
     currency: Currency.EUR,
     processor: 'MasterCard',
     last4DigitsOfCardNumber: '1234',
-    isAuthorizeOnly: false,
-    capturedAmount: 0,
+    needsCapture: false,
+    settledAmount: 30.57,
     captureAttempts: [],
+    refundAttempts: [],
   },
   // Add more transactions as needed
 ];
@@ -178,9 +205,10 @@ export const overpaidMockPaymentAttempts: LocalPaymentAttempt[] = [
     currency: Currency.EUR,
     processor: 'Visa',
     last4DigitsOfCardNumber: '1234',
-    isAuthorizeOnly: false,
-    capturedAmount: 0,
+    needsCapture: false,
+    settledAmount: 20.02,
     captureAttempts: [],
+    refundAttempts: [],
   },
   {
     attemptKey: 'f4c6e747-6fd6-4a3c-be3b-4d3edd258b35',
@@ -190,9 +218,10 @@ export const overpaidMockPaymentAttempts: LocalPaymentAttempt[] = [
     currency: Currency.EUR,
     processor: 'MasterCard',
     last4DigitsOfCardNumber: '1234',
-    isAuthorizeOnly: false,
-    capturedAmount: 0,
+    needsCapture: false,
+    settledAmount: 90.57,
     captureAttempts: [],
+    refundAttempts: [],
   },
   // Add more transactions as needed
 ];
