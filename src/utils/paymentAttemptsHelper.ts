@@ -1,21 +1,31 @@
 import { LocalPaymentMethodTypes, SubTransactionType } from '../types/LocalEnums';
 import { LocalPaymentAttempt, SubTransaction } from '../types/LocalTypes';
 
-export const getMaxRefundableAmount = (paymentAttempt: LocalPaymentAttempt): number => {
+export const getAmountPaid = (paymentAttempt: LocalPaymentAttempt): number => {
   switch (paymentAttempt.paymentMethod) {
     case LocalPaymentMethodTypes.Card:
-      return (
-        (paymentAttempt.authorizedAmount ?? 0) -
-        (paymentAttempt.refundAttempts.reduce((acc, curr) => acc + curr.refundSettledAmount, 0) ?? 0)
-      );
+      return paymentAttempt.cardAuthorisedAmount;
     case LocalPaymentMethodTypes.Pisp:
-      return (
-        (paymentAttempt.settledAmount ?? 0) -
-        (paymentAttempt.refundAttempts.reduce((acc, curr) => acc + curr.refundSettledAmount, 0) ?? 0)
-      );
+      return paymentAttempt.settledAmount;
     default:
       return 0;
   }
+};
+
+export const getAmountRefunded = (paymentAttempt: LocalPaymentAttempt): number => {
+  return paymentAttempt.refundAttempts.reduce((acc, curr) => acc + curr.refundSettledAmount, 0);
+};
+
+export const getAmountCaptured = (paymentAttempt: LocalPaymentAttempt): number => {
+  return paymentAttempt.captureAttempts.reduce((acc, curr) => acc + curr.capturedAmount, 0);
+};
+
+export const getAmountPaidLessRefunded = (paymentAttempt: LocalPaymentAttempt): number => {
+  return getAmountPaid(paymentAttempt) - getAmountRefunded(paymentAttempt);
+};
+
+export const getMaxRefundableAmount = (paymentAttempt: LocalPaymentAttempt): number => {
+  return getAmountPaidLessRefunded(paymentAttempt);
 };
 
 export const hasRefundOrCaptureAttempts = (paymentAttempt: LocalPaymentAttempt): boolean => {
@@ -30,11 +40,7 @@ export const isCaptureable = (paymentAttempt: LocalPaymentAttempt): boolean => {
   if (paymentAttempt.paymentMethod !== LocalPaymentMethodTypes.Card) {
     return false;
   }
-  return (
-    paymentAttempt.authorizedAmount -
-      paymentAttempt.refundAttempts.reduce((acc, curr) => acc + curr.refundSettledAmount, 0) >
-    paymentAttempt.settledAmount
-  );
+  return getAmountPaidLessRefunded(paymentAttempt) > getAmountCaptured(paymentAttempt);
 };
 
 export const getSubTransactions = (paymentAttempt: LocalPaymentAttempt): SubTransaction[] => {

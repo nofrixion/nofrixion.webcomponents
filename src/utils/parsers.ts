@@ -21,6 +21,8 @@ import {
   LocalAddress,
   LocalPaymentAttempt,
   LocalPaymentRequest,
+  LocalPaymentRequestCaptureAttempt,
+  LocalPaymentRequestRefundAttempt,
   LocalPaymentStatus,
   LocalTag,
 } from '../types/LocalTypes';
@@ -175,6 +177,55 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     }
   };
 
+  const parseApiCaptureAttemptsToLocalCaptureAttempts = (
+    remoteCaptureAttempts: PaymentRequestCaptureAttempt[],
+  ): LocalPaymentRequestCaptureAttempt[] => {
+    if (remoteCaptureAttempts.length === 0) {
+      return [];
+    } else {
+      const localCaptureAttempts: LocalPaymentRequestCaptureAttempt[] = [];
+      remoteCaptureAttempts.map((remoteCaptureAttempt) => {
+        const { capturedAt, capturedAmount } = remoteCaptureAttempt;
+        localCaptureAttempts.push({
+          capturedAt: new Date(capturedAt ?? 0),
+          capturedAmount: capturedAmount,
+        });
+      });
+      return localCaptureAttempts;
+    }
+  };
+
+  const parseApiRefundAttemptsToLocalRefundAttempts = (
+    remoteRefundAttempts: PaymentRequestRefundAttempt[],
+  ): LocalPaymentRequestRefundAttempt[] => {
+    if (remoteRefundAttempts.length === 0) {
+      return [];
+    } else {
+      const localRefundAttempts: LocalPaymentRequestRefundAttempt[] = [];
+      remoteRefundAttempts.map((remoteRefundAttempt) => {
+        const {
+          refundPayoutID,
+          refundInitiatedAt,
+          refundSettledAt,
+          refundCancelledAt,
+          refundInitiatedAmount,
+          refundSettledAmount,
+          refundCancelledAmount,
+        } = remoteRefundAttempt;
+        localRefundAttempts.push({
+          refundPayoutID: refundPayoutID,
+          refundInitiatedAt: new Date(refundInitiatedAt ?? 0),
+          refundSettledAt: new Date(refundSettledAt ?? 0),
+          refundCancelledAt: new Date(refundCancelledAt ?? 0),
+          refundInitiatedAmount: refundInitiatedAmount,
+          refundSettledAmount: refundSettledAmount,
+          refundCancelledAmount: refundCancelledAmount,
+        });
+      });
+      return localRefundAttempts;
+    }
+  };
+
   const parseApiPaymentAttemptsToLocalPaymentAttempts = (
     remotePaymentAttempts: PaymentRequestPaymentAttempt[],
   ): LocalPaymentAttempt[] => {
@@ -197,6 +248,7 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
             walletName,
             status,
             authorisedAmount,
+            cardAuthorisedAmount,
           } = remotePaymentAttempt;
 
           localPaymentAttempts.push({
@@ -209,32 +261,13 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
             currency: currency,
             processor: walletName ? parseApiWalletTypeToLocalWalletType(walletName) : undefined,
             settledAmount: settledAmount,
-            captureAttempts: captureAttempts
-              .sort((a, b) => {
-                return new Date(b.capturedAt ?? 0).getTime() - new Date(a.capturedAt ?? 0).getTime();
-              })
-              .map((x) => ({
-                capturedAt: new Date(x.capturedAt ?? 0),
-                capturedAmount: x.capturedAmount,
-              })),
-            refundAttempts: refundAttempts
-              .sort((a, b) => {
-                return new Date(b.refundSettledAt ?? 0).getTime() - new Date(a.refundSettledAt ?? 0).getTime();
-              })
-              .map((x) => ({
-                refundPayoutID: x.refundPayoutID,
-                refundSettledAt: new Date(x.refundSettledAt ?? 0),
-                refundSettledAmount: x.refundSettledAmount,
-                refundInitiatedAt: new Date(x.refundInitiatedAt ?? 0),
-                refundInitiatedAmount: x.refundInitiatedAmount,
-                refundCancelledAt: new Date(x.refundCancelledAt ?? 0),
-                refundCancelledAmount: x.refundCancelledAmount,
-              })),
-            authorizedAmount: authorisedAmount,
+            captureAttempts: parseApiCaptureAttemptsToLocalCaptureAttempts(captureAttempts),
+            refundAttempts: parseApiRefundAttemptsToLocalRefundAttempts(refundAttempts),
+            authorisedAmount: authorisedAmount,
+            cardAuthorisedAmount: cardAuthorisedAmount,
           });
         }
       });
-      console.log(localPaymentAttempts);
       return localPaymentAttempts;
     }
   };

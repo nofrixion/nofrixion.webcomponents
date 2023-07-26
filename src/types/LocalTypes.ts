@@ -44,7 +44,8 @@ export interface LocalPaymentAttempt {
   processor?: string;
   last4DigitsOfCardNumber?: string;
   settledAmount: number;
-  authorizedAmount: number;
+  authorisedAmount: number;
+  cardAuthorisedAmount: number;
   captureAttempts: LocalPaymentRequestCaptureAttempt[];
   refundAttempts: LocalPaymentRequestRefundAttempt[];
 }
