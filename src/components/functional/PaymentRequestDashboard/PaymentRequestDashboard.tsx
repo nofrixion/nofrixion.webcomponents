@@ -114,7 +114,7 @@ const PaymentRequestDashboardMain = ({
   };
 
   const handleApiError = (error: ApiError) => {
-    if (error.status === 401) {
+    if (error && error.status === 401) {
       onUnauthorized();
     }
   };
