@@ -1,8 +1,8 @@
 import {
-  type PaymentRequestAddress,
-  type PaymentRequest,
   PartialPaymentMethods,
   PaymentMethodTypes,
+  type PaymentRequestAddress,
+  type PaymentRequest,
   PaymentResult,
   Wallets,
   type Tag,
@@ -205,7 +205,9 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
             amount: attemptedAmount,
             currency: currency,
             processor: walletName ? parseApiWalletTypeToLocalWalletType(walletName) : undefined,
-            needsCapture: paymentMethod === PaymentMethodTypes.Card && authorisedAmount > settledAmount,
+            isAuthorizeOnly:
+              (paymentMethod === PaymentMethodTypes.Card && authorisedAmount > settledAmount) ||
+              (paymentMethod === PaymentMethodTypes.Pisp && status === PaymentResult.Authorized),
             capturedAmount: settledAmount,
             captureAttempts: captureAttempts
               .sort((a, b) => {
