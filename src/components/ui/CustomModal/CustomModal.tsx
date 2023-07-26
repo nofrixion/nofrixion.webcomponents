@@ -31,7 +31,7 @@ const CustomModal = ({
   onDismiss,
   onApplyEnabled = true,
 }: CustomModalProps) => {
-  const [isDefaultChecked, setIsDefaultChecked] = useState<boolean>(isDefault);
+  const [isDefaultChecked, setIsDefaultChecked] = useState<boolean>(false);
   const [currentState, setCurrentState] = useState<CustomModalState>();
 
   const onApplyClicked = () => {
