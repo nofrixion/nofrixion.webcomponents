@@ -289,8 +289,6 @@ const CreatePaymentRequestPage = ({
       handleDefaultsChanged();
     }
 
-    // TODO: Remove this. This is just for demo purposes
-    onClose();
     resetStates();
 
     setIsSubmitting(false);

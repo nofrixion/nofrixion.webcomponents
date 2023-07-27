@@ -2,7 +2,7 @@ import { MouseEventHandler, useEffect, useState } from 'react';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import DateRangeInput from './DateRangeInput';
 import './DateRangePicker.css';
-import { add, startOfDay, endOfDay, format } from 'date-fns';
+import { add, startOfDay, endOfDay, format, isSameDay } from 'date-fns';
 import { getSelectRangeText } from '../../../utils/formatters';
 import DateRangeButton from './DateRangeButton';
 import { SelectDateRange, type TDateRangeOptions } from '@/components/ui/molecules';
@@ -84,8 +84,10 @@ const DateRangePicker = ({ onDateChange }: DateRangeFilterProps) => {
         onValueChange={setSelectRangeText}
         subText={
           dates[0] != undefined && dates[1] != undefined
-            ? `${format(dates[0].toDate(), dateFormat)} - ${format(dates[1].toDate(), dateFormat)}`
-            : 'WTF'
+            ? isSameDay(dates[0].toDate(), dates[1].toDate())
+              ? format(dates[0].toDate(), dateFormat)
+              : `${format(dates[0].toDate(), dateFormat)} - ${format(dates[1].toDate(), dateFormat)}`
+            : ''
         }
       />
 
