@@ -3,10 +3,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { cn } from '@/utils';
 
 const options = {
-  moreRecentFirst: 'More recent first',
-  olderFirst: 'Older first',
-  amountHighToLow: 'More expensive first',
-  amountLowToHigh: 'Cheaper first',
+  moreRecentFirst: 'Most recent first',
+  olderFirst: 'Oldest first',
+  amountHighToLow: 'Most expensive first',
+  amountLowToHigh: 'Cheapest first',
 };
 
 const displayValue = {
