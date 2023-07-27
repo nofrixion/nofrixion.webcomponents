@@ -333,6 +333,8 @@ const PaymentRequestDashboardMain = ({
       updateMetricTotals(paymentRequest.currency, paymentRequest.amount);
     }
 
+    setIsCreatePaymentRequestOpen(false);
+
     setSelectedPaymentRequestID(paymentRequest.id);
   };
 
