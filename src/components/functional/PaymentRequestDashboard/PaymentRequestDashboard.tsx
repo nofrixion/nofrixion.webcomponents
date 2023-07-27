@@ -335,13 +335,7 @@ const PaymentRequestDashboardMain = ({
 
     setIsCreatePaymentRequestOpen(false);
 
-    // Wait for the animation to finish before selecting the newly created payment request
-    // Otherwise, the modal will close and after the animation finishes, the details modal will open
-    // causing a weird case where some styles are not applied correctly
-    // and after the details modal is closed, the page will not be scrollable nor clickable
-    setTimeout(() => {
-      setSelectedPaymentRequestID(paymentRequest.id);
-    }, 800);
+    setSelectedPaymentRequestID(paymentRequest.id);
   };
 
   const onRefundClick = async (paymentAttemptID: string) => {
