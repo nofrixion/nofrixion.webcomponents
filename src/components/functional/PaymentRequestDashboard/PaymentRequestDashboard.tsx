@@ -12,6 +12,7 @@ import {
   usePaymentRequestMetrics,
   usePaymentRequests,
   PaymentRequest,
+  ApiError,
 } from '@nofrixion/moneymoov';
 import PaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTable';
 import { SortDirection } from '../../ui/ColumnHeader/ColumnHeader';
@@ -34,6 +35,7 @@ interface PaymentRequestDashboardProps {
   token: string; // Example: "eyJhbGciOiJIUz..."
   apiUrl?: string; // Example: "https://api.nofrixion.com/api/v1"
   merchantId: string;
+  onUnauthorized: () => void;
 }
 
 const queryClient = new QueryClient();
@@ -42,10 +44,16 @@ const PaymentRequestDashboard = ({
   token,
   apiUrl = 'https://api.nofrixion.com/api/v1',
   merchantId,
+  onUnauthorized,
 }: PaymentRequestDashboardProps) => {
   return (
     <QueryClientProvider client={queryClient}>
-      <PaymentRequestDashboardMain token={token} merchantId={merchantId} apiUrl={apiUrl} />
+      <PaymentRequestDashboardMain
+        token={token}
+        merchantId={merchantId}
+        apiUrl={apiUrl}
+        onUnauthorized={onUnauthorized}
+      />
     </QueryClientProvider>
   );
 };
@@ -54,6 +62,7 @@ const PaymentRequestDashboardMain = ({
   token,
   apiUrl = 'https://api.nofrixion.com/api/v1',
   merchantId,
+  onUnauthorized,
 }: PaymentRequestDashboardProps) => {
   const [page, setPage] = useState(1);
   const [statusSortDirection, setStatusSortDirection] = useState<SortDirection>(SortDirection.NONE);
@@ -102,6 +111,12 @@ const PaymentRequestDashboardMain = ({
     }
 
     return tags.filter((tag) => tag.isSelected).map((tag) => tag.id);
+  };
+
+  const handleApiError = (error: ApiError) => {
+    if (error && error.status === 401) {
+      onUnauthorized();
+    }
   };
 
   const { data: paymentRequestsResponse, isLoading: isLoadingPaymentRequests } = usePaymentRequests(
@@ -162,6 +177,8 @@ const PaymentRequestDashboardMain = ({
     } else if (paymentRequestsResponse?.status === 'error') {
       makeToast('error', 'Error fetching payment requests.');
       console.error(paymentRequestsResponse.error);
+
+      handleApiError(paymentRequestsResponse.error);
     }
   }, [paymentRequestsResponse]);
 
@@ -191,6 +208,7 @@ const PaymentRequestDashboardMain = ({
       );
     } else if (merchantTagsResponse?.status === 'error') {
       console.warn(merchantTagsResponse.error);
+      handleApiError(merchantTagsResponse.error);
     }
   }, [merchantTagsResponse]);
 
@@ -200,6 +218,7 @@ const PaymentRequestDashboardMain = ({
     } else if (metricsResponse?.status === 'error') {
       makeToast('error', 'Error fetching metrics.');
       console.error(metricsResponse.error);
+      handleApiError(metricsResponse.error);
     }
   }, [metricsResponse]);
 
@@ -208,6 +227,9 @@ const PaymentRequestDashboardMain = ({
 
     if (response.error) {
       makeToast('error', response.error.title);
+
+      handleApiError(response.error);
+
       return;
     }
 
@@ -311,6 +333,8 @@ const PaymentRequestDashboardMain = ({
       updateMetricTotals(paymentRequest.currency, paymentRequest.amount);
     }
 
+    setIsCreatePaymentRequestOpen(false);
+
     setSelectedPaymentRequestID(paymentRequest.id);
   };
 
@@ -326,6 +350,9 @@ const PaymentRequestDashboardMain = ({
       if (response.error) {
         makeToast('error', 'Error capturing Payment.');
         console.error(response.error);
+
+        handleApiError(response.error);
+
         return;
       }
 
