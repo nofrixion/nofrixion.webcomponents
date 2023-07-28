@@ -57,8 +57,6 @@ const CustomModal = ({
     // Reset to initial state
     if (currentState) {
       setIsDefaultChecked(currentState.isDefaultChecked);
-    } else {
-      setIsDefaultChecked(isDefault);
     }
   };
 
