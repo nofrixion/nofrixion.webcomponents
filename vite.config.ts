@@ -8,7 +8,7 @@ import banner from 'vite-plugin-banner';
 // We could explore to create a npm package
 // Here's an interesting link: https://www.bitovi.com/blog/react-everywhere-with-vite-and-react-to-webcomponent
 
-export default defineConfig(() => ({
+export default defineConfig({
   plugins: [
     react(),
     cssInjectedByJsPlugin(),
@@ -21,6 +21,18 @@ export default defineConfig(() => ({
       entry: resolve(__dirname, 'out/index-webcomponents.ts'),
       name: 'web-components',
     },
+    rollupOptions: {
+      external: ['react', 'react-dom', 'axios', '@tanstack/react-query', '@nofrixion/moneymoov'],
+      output: {
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM',
+          axios: 'axios',
+          '@tanstack/react-query': '@tanstack/react-query',
+          '@nofrixion/moneymoov': '@nofrixion/moneymoov',
+        },
+      },
+    },
   },
   define: {
     'process.env': `"${process.env}"`,
@@ -28,4 +40,4 @@ export default defineConfig(() => ({
   resolve: {
     alias: [{ find: '@', replacement: path.resolve(__dirname, 'src') }],
   },
-}));
+});

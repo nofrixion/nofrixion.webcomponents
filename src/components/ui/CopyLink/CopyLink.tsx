@@ -27,7 +27,7 @@ export const CopyLink = ({ link }: { link: string }) => {
       <div className="w-14 h-6 bg-gradient-to-l from-white right-[5.5rem] absolute pointer-events-none"></div>
       <AnimatePresence>
         {!copied ? (
-          <motion.div
+          <motion.button
             key="copy-link"
             onClick={copyLink}
             initial={{ opacity: 1 }}
@@ -37,7 +37,7 @@ export const CopyLink = ({ link }: { link: string }) => {
           >
             <img src={CopyLinkIcon} alt="copyLink" />
             <span className="text-xs">Copy link</span>
-          </motion.div>
+          </motion.button>
         ) : (
           <motion.div
             key="copied"
