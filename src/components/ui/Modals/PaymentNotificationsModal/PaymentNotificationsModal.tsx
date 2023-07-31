@@ -27,7 +27,7 @@ const PaymentNotificationsModal = ({
   const [enableUseAsDefault, setEnableUseAsDefault] = useState<boolean>(false);
 
   useEffect(() => {
-    setEnableUseAsDefault(!enableUseAsDefault && userDefaults?.emailAddresses !== email);
+    setEnableUseAsDefault(!userDefaults || userDefaults?.emailAddresses !== email);
   }, [email]);
 
   // When the user clicks on the Apply button, we need to send the data to the parent component

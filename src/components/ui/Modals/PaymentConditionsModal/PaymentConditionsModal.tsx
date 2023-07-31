@@ -25,7 +25,7 @@ const PaymentConditionsModal = ({
   const [enableUseAsDefault, setEnableUseAsDefault] = useState<boolean>(false);
 
   useEffect(() => {
-    setEnableUseAsDefault(!enableUseAsDefault && userDefaults?.allowPartialPayments !== isAllowPartialEnabled);
+    setEnableUseAsDefault(!userDefaults || userDefaults?.allowPartialPayments !== isAllowPartialEnabled);
   }, [isAllowPartialEnabled]);
 
   // When the user clicks on the Apply button, we need to send the data to the parent component

@@ -41,13 +41,13 @@ const PaymentMethodsModal = ({
 
   useEffect(() => {
     setEnableUseAsDefault(
-      !enableUseAsDefault &&
-        (userDefaults?.pisp !== isBankEnabled ||
-          userDefaults?.card !== isCardEnabled ||
-          userDefaults?.wallet !== isWalletEnabled ||
-          userDefaults?.lightning !== isLightningEnabled ||
-          userDefaults?.cardAuthorizeOnly === isCaptureFundsEnabled ||
-          userDefaults?.pispPriorityBankID !== priorityBank?.bankID),
+      !userDefaults ||
+        userDefaults?.pisp !== isBankEnabled ||
+        userDefaults?.card !== isCardEnabled ||
+        userDefaults?.wallet !== isWalletEnabled ||
+        userDefaults?.lightning !== isLightningEnabled ||
+        userDefaults?.cardAuthorizeOnly === isCaptureFundsEnabled ||
+        userDefaults?.pispPriorityBankID !== priorityBank?.bankID,
     );
   }, [isBankEnabled, isCardEnabled, isWalletEnabled, isLightningEnabled, isCaptureFundsEnabled, priorityBank]);
 
