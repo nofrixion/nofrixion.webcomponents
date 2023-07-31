@@ -32,7 +32,7 @@ import { Button } from '@/components/ui/atoms';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 interface PaymentRequestDashboardProps {
-  token: string; // Example: "eyJhbGciOiJIUz..."
+  token?: string; // Example: "eyJhbGciOiJIUz..."
   apiUrl?: string; // Example: "https://api.nofrixion.com/api/v1"
   merchantId: string;
   onUnauthorized: () => void;
