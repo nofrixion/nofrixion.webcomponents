@@ -5,7 +5,32 @@ import { cn } from '@/utils';
 import { motion } from 'framer-motion';
 import { Icon } from '@/components/ui/atoms';
 
-const Select = SelectPrimitive.Root;
+const cancelDefaults = (event: any) => {
+  event.preventDefault();
+  event.stopPropagation();
+};
+
+const preventEvents = (open: boolean) => {
+  const items = document.querySelectorAll('[data-radix-collection-item]');
+
+  items.forEach((item) => {
+    const fn = open ? 'addEventListener' : 'removeEventListener';
+    item[fn]('touchstart', cancelDefaults);
+  });
+};
+
+const Select: React.FC<SelectPrimitive.SelectProps> = ({ onOpenChange, children, ...props }) => {
+  const handleOpenChange = (open: boolean) => {
+    preventEvents(open);
+    onOpenChange && onOpenChange(open);
+  };
+
+  return (
+    <SelectPrimitive.Root onOpenChange={handleOpenChange} {...props}>
+      {children}
+    </SelectPrimitive.Root>
+  );
+};
 
 const SelectGroup = SelectPrimitive.Group;
 
@@ -49,7 +74,7 @@ const SelectContent = React.forwardRef<
       <SelectPrimitive.Content ref={ref} position={position} asChild {...props} sideOffset={5}>
         <motion.div
           className={cn(
-            'relative z-50 min-w-[8rem] overflow-hidden rounded-md border bg-white px-3 py-3 shadow-[0px_0px_8px_rgba(4,_41,_49,_0.1)] text-popover-foreground',
+            'relative min-w-[8rem] overflow-hidden rounded-md border bg-white px-3 py-3 shadow-[0px_0px_8px_rgba(4,_41,_49,_0.1)]',
             className,
           )}
           initial={{ opacity: 0.5, y: -5, scaleX: 1, scaleY: 1 }}
@@ -83,13 +108,11 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      'relative flex w-full px-3 py-0.5 cursor-default select-none items-center rounded-full text-sm outline-none transition focus:bg-greyBg focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[state=checked]:text-[#099]',
+      'relative flex w-full px-3 py-0.5 cursor-default select-none items-center rounded-full text-sm outline-none transition active:bg-greyBg lg:focus:bg-greyBg focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[state=checked]:text-[#099]',
       className,
     )}
     {...props}
   >
-    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center"></span>
-
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
   </SelectPrimitive.Item>
 ));

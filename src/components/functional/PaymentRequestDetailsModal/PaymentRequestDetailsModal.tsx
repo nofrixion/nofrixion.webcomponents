@@ -5,7 +5,7 @@ import { LocalPaymentAttempt, LocalPaymentRequest, LocalTag } from '../../../typ
 import { PaymentRequestClient, PaymentRequest, PaymentRequestUpdate, MerchantClient } from '@nofrixion/moneymoov';
 
 interface PaymentRequestDetailsModalProps {
-  token: string; // Example: "eyJhbGciOiJIUz..."
+  token?: string; // Example: "eyJhbGciOiJIUz..."
   apiUrl: string; // Example: "https://api.nofrixion.com/api/v1"
   merchantId: string;
   selectedPaymentRequestID: string;
