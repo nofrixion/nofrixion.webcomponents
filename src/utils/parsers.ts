@@ -234,7 +234,11 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     } else {
       const localPaymentAttempts: LocalPaymentAttempt[] = [];
       remotePaymentAttempts.map((remotePaymentAttempt) => {
-        if (remotePaymentAttempt.settledAt || remotePaymentAttempt.authorisedAt) {
+        if (
+          remotePaymentAttempt.settledAt ||
+          remotePaymentAttempt.authorisedAt ||
+          remotePaymentAttempt.cardAuthorisedAt
+        ) {
           const {
             attemptKey,
             authorisedAt,
@@ -249,14 +253,13 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
             status,
             authorisedAmount,
             cardAuthorisedAmount,
+            cardAuthorisedAt,
           } = remotePaymentAttempt;
 
           localPaymentAttempts.push({
             attemptKey: attemptKey,
-            occurredAt: new Date(settledAt ?? authorisedAt ?? 0),
-            paymentMethod: walletName
-              ? parseWalletNameToPaymentMethodType(walletName)
-              : parseApiPaymentMethodTypeToLocalMethodType(paymentMethod),
+            occurredAt: new Date(settledAt ?? authorisedAt ?? cardAuthorisedAt ?? 0),
+            paymentMethod: parseApiPaymentMethodTypeToLocalMethodType(paymentMethod),
             amount: attemptedAmount,
             currency: currency,
             processor: walletName ? parseApiWalletTypeToLocalWalletType(walletName) : undefined,
@@ -265,6 +268,8 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
             refundAttempts: parseApiRefundAttemptsToLocalRefundAttempts(refundAttempts),
             authorisedAmount: authorisedAmount,
             cardAuthorisedAmount: cardAuthorisedAmount,
+            wallet: walletName ? parseApiWalletTypeToLocalWalletType(walletName) : undefined,
+            status: parseApiStatusToLocalStatus(status),
           });
         }
       });

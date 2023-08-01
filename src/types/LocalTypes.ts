@@ -4,6 +4,7 @@ import {
   LocalCardPaymentResponseStatus,
   LocalPartialPaymentMethods,
   LocalPaymentMethodTypes,
+  LocalWallets,
   SubTransactionType,
 } from './LocalEnums';
 
@@ -45,9 +46,11 @@ export interface LocalPaymentAttempt {
   last4DigitsOfCardNumber?: string;
   settledAmount: number;
   authorisedAmount: number;
-  cardAuthorisedAmount: number;
+  cardAuthorisedAmount?: number;
   captureAttempts: LocalPaymentRequestCaptureAttempt[];
   refundAttempts: LocalPaymentRequestRefundAttempt[];
+  wallet?: LocalWallets | undefined;
+  status: LocalPaymentStatus;
 }
 
 export interface SubTransaction {

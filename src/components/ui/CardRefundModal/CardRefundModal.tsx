@@ -17,6 +17,7 @@ export interface CardRefundModalProps {
   processor?: string;
   transactionDate: Date;
   contactName?: string;
+  IsPartialRefundPossible: boolean;
 }
 
 const CardRefundModal: React.FC<CardRefundModalProps> = ({
@@ -30,6 +31,7 @@ const CardRefundModal: React.FC<CardRefundModalProps> = ({
   processor,
   transactionDate,
   contactName,
+  IsPartialRefundPossible,
 }) => {
   const [isRefundButtonDisabled, setIsRefundButtonDisabled] = React.useState(false);
   const [validationErrorMessage, setValidationErrorMessage] = React.useState('');
@@ -75,8 +77,19 @@ const CardRefundModal: React.FC<CardRefundModalProps> = ({
             </button>
             <span className="block text-2xl font-semibold text-defaultText mt-8">Confirm card payment refund</span>
             <p className="mt-12 text-defaultText text-sm font-normal">
-              You are about to refund the card payment made
-              {contactName && <span className="font-semibold">{` by ${contactName}`}</span>}
+              {!IsPartialRefundPossible && (
+                <span>
+                  You are about to refund{' '}
+                  <span className="font-semibold">{formatter.format(Number(initialAmount))}</span> to{' '}
+                  {contactName && <span className="font-semibold">{contactName}</span>} for the card payment made
+                </span>
+              )}
+              {IsPartialRefundPossible && (
+                <span>
+                  You are about to refund the card payment made
+                  {contactName && <span className="font-semibold">{` by ${contactName}`}</span>}
+                </span>
+              )}
               &nbsp;on&nbsp;
               <span className="font-semibold">{format(transactionDate, 'MMM do, yyyy')}</span>
               {lastFourDigitsOnCard ? (
@@ -89,40 +102,43 @@ const CardRefundModal: React.FC<CardRefundModalProps> = ({
                 '.'
               )}
             </p>
-            <div className="mt-12 md:flex">
-              <div className="md:w-[152px]">
-                <span className="text-sm leading-8 font-normal text-greyText md:leading-[48px]">Refund</span>
-              </div>
-              <div className="text-left">
-                <div className="md:w-40">
-                  <InputAmountField
-                    currency={currency}
-                    onCurrencyChange={() => {}}
-                    allowCurrencyChange={false}
-                    value={formatter.format(Number(initialAmount))}
-                    onChange={(e) => setAmountToRefund(e.target.value)}
-                  ></InputAmountField>
+            {IsPartialRefundPossible && (
+              <div className="mt-12 md:flex">
+                <div className="md:w-[152px]">
+                  <span className="text-sm leading-8 font-normal text-greyText md:leading-[48px]">Refund</span>
                 </div>
-                <span className="mt-2 block text-13px leading-5 font-normal text-greyText">
-                  There are&nbsp;{getCurrencySymbol(currency)}&nbsp;
-                  {formatter.format(maxRefundableAmount)}
-                  &nbsp;remaining to refund.
-                </span>
-                <AnimatePresence>
-                  {validationErrorMessage && (
-                    <motion.div
-                      className="mt-6 bg-[#ffe6eb] text-sm p-3 rounded"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    >
-                      {validationErrorMessage}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+
+                <div className="text-left">
+                  <div className="md:w-40">
+                    <InputAmountField
+                      currency={currency}
+                      onCurrencyChange={() => {}}
+                      allowCurrencyChange={false}
+                      value={formatter.format(Number(initialAmount))}
+                      onChange={(e) => setAmountToRefund(e.target.value)}
+                    ></InputAmountField>
+                  </div>
+                  <span className="mt-2 block text-13px leading-5 font-normal text-greyText">
+                    There are&nbsp;{getCurrencySymbol(currency)}&nbsp;
+                    {formatter.format(maxRefundableAmount)}
+                    &nbsp;available to refund.
+                  </span>
+                  <AnimatePresence>
+                    {validationErrorMessage && (
+                      <motion.div
+                        className="mt-6 bg-[#ffe6eb] text-sm p-3 rounded"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                      >
+                        {validationErrorMessage}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
-            </div>
-            <div className="lg:mt-14 lg:static lg:p-0 fixed bottom-0 left-0 w-full px-6 mx-auto pb-4 z-20">
+            )}
+            <div className="lg:mt-14 lg:static lg:p-0 fixed bottom-16 left-0 w-full px-6 mx-auto pb-4 z-20">
               <button
                 className="justify-center rounded-full bg-[#006A80] h-12 lg:h-11 px-16 text-sm text-white font-semibold transition w-full cursor-pointer hover:bg-[#144752]"
                 onClick={onRefundClick}

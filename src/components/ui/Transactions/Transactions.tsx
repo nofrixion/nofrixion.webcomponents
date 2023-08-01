@@ -110,12 +110,12 @@ const Transactions = ({ transactions, onRefund, onCapture }: TransactionsProps) 
                           Capture
                         </button>
                       )}
-                      {transaction.paymentMethod === LocalPaymentMethodTypes.Pisp && transaction.isAuthorizeOnly && (
+                      {transaction.status === 'authorized' && (
                         <span className="text-greyText text-[10px] leading-4 block px-1 border rounded border-solid border-borderGreyHighlighted">
                           Authorized
                         </span>
                       )}
-                      {isRefundable(transaction) && (
+                      {transaction.paymentMethod === LocalPaymentMethodTypes.Card && isRefundable(transaction) && (
                         <button
                           className="rounded-full w-6 h-6 p-1 inline-flex items-center justify-center outline-none cursor-pointer align-middle hover:bg-greyBg fill-[#8F99A3] hover:fill-[#454D54] data-[state='open']:fill-[#454D54]"
                           aria-label="Actions"
@@ -150,8 +150,13 @@ const Transactions = ({ transactions, onRefund, onCapture }: TransactionsProps) 
                       </span>
                     </td>
                     <td className="pl-2 lg:pl-6 text-right py-0">
-                      <span className="mr-2 font-medium tabular-nums text-[#29A37A]">
+                      <span
+                        className={classNames('mr-2 font-medium tabular-nums ', {
+                          'text-[#29A37A]': subTransaction.type === SubTransactionType.Capture,
+                        })}
+                      >
                         <span className="lg:hidden">{subTransaction.currency === Currency.EUR ? '€' : '£'}</span>
+                        {subTransaction.type === SubTransactionType.Refund && <span>-</span>}
                         {formatter.format(subTransaction.amount)}
                       </span>
                     </td>

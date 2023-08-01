@@ -13,6 +13,7 @@ import {
   usePaymentRequests,
   PaymentRequest,
   ApiError,
+  useRefund,
 } from '@nofrixion/moneymoov';
 import PaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTable';
 import { SortDirection } from '../../ui/ColumnHeader/ColumnHeader';
@@ -120,6 +121,27 @@ const PaymentRequestDashboardMain = ({
   };
 
   const { data: paymentRequestsResponse, isLoading: isLoadingPaymentRequests } = usePaymentRequests(
+    {
+      amountSortDirection: amountSortDirection,
+      statusSortDirection: statusSortDirection,
+      createdSortDirection: createdSortDirection,
+      contactSortDirection: contactSortDirection,
+      merchantId: merchantId,
+      pageNumber: page,
+      pageSize: pageSize,
+      status: status,
+      fromDateMS: dateRange.fromDate.getTime(),
+      toDateMS: dateRange.toDate.getTime(),
+      search: searchFilter?.length >= 3 ? searchFilter : undefined,
+      currency: currencyFilter,
+      minAmount: minAmountFilter,
+      maxAmount: maxAmountFilter,
+      tags: tagsFilter,
+    },
+    { apiUrl: apiUrl, authToken: token },
+  );
+
+  const { processRefund } = useRefund(
     {
       amountSortDirection: amountSortDirection,
       statusSortDirection: statusSortDirection,
@@ -340,30 +362,17 @@ const PaymentRequestDashboardMain = ({
 
   const onRefundClick = async (authorizationID: string, amount: number) => {
     if (selectedPaymentRequestID) {
-      let response = await client.refundCardPayment(selectedPaymentRequestID, authorizationID, amount);
-
-      if (response.error) {
-        makeToast('error', response.error.title);
-        return;
-      }
-
-      makeToast('success', 'Payment successfully refunded.');
-
-      let localPrsCopy = [...localPaymentRequests];
-      let prIndex = localPrsCopy.findIndex((pr) => pr.id === selectedPaymentRequestID);
-      let attemptIndex = localPrsCopy[prIndex].paymentAttempts.findIndex(
-        (attempt) => attempt.attemptKey === authorizationID,
-      );
-
-      localPrsCopy[prIndex].paymentAttempts[attemptIndex].refundAttempts.splice(0, 0, {
-        refundInitiatedAmount: amount,
-        refundInitiatedAt: new Date(),
-        refundSettledAmount: amount,
-        refundSettledAt: new Date(),
-        refundCancelledAmount: 0,
+      const result = await processRefund({
+        paymentRequestId: selectedPaymentRequestID,
+        authorizationId: authorizationID,
+        amount: amount,
       });
 
-      setLocalPaymentRequests([...localPrsCopy]);
+      if (result.error) {
+        makeToast('error', 'Error processing refund.');
+      } else {
+        makeToast('success', 'Payment successfully refunded.');
+      }
     }
   };
 

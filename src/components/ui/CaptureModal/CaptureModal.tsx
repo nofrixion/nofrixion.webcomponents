@@ -121,7 +121,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
               </AnimatePresence>
             </div>
           </div>
-          <div className="lg:mt-14 lg:static lg:p-0 fixed bottom-0 left-0 w-full px-6 mx-auto pb-4 z-20">
+          <div className="lg:mt-14 lg:static lg:p-0 fixed bottom-16 left-0 w-full px-6 mx-auto pb-4 z-20">
             <button
               className="justify-center rounded-full bg-[#006A80] h-12 lg:h-11 px-16 text-sm text-white font-semibold transition w-full cursor-pointer hover:bg-[#144752]"
               onClick={onCaptureClick}
