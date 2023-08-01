@@ -396,7 +396,6 @@ const PaymentRequestDashboardMain = ({
       let attemptIndex = localPrsCopy[prIndex].paymentAttempts.findIndex(
         (attempt) => attempt.attemptKey === authorizationID,
       );
-      localPrsCopy[prIndex].paymentAttempts[attemptIndex].settledAmount += amount;
 
       localPrsCopy[prIndex].paymentAttempts[attemptIndex].captureAttempts.splice(0, 0, {
         capturedAmount: amount,
