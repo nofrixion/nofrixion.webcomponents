@@ -275,7 +275,9 @@ const CreatePaymentRequestPage = ({
         },
         card: {
           active: paymentMethodsFormValue.isCardEnabled,
-          captureFunds: paymentMethodsFormValue.isCaptureFundsEnabled,
+          // Capture funds should always be true when card is disabled
+          // as it's not possible to only authorize on cards if card are disabled
+          captureFunds: paymentMethodsFormValue.isCardEnabled ? paymentMethodsFormValue.isCaptureFundsEnabled : true,
         },
         wallet: paymentMethodsFormValue.isWalletEnabled,
         lightning: paymentMethodsFormValue.isLightningEnabled,
@@ -361,7 +363,9 @@ const CreatePaymentRequestPage = ({
     ...(paymentMethodsFormValue.isBankEnabled && paymentMethodsFormValue.priorityBank
       ? [`*${paymentMethodsFormValue.priorityBank.name}* set up as priority bank.`]
       : []),
-    ...(!paymentMethodsFormValue.isCaptureFundsEnabled ? ["Don't capture funds on cards is on."] : []),
+    ...(paymentMethodsFormValue.isCardEnabled && !paymentMethodsFormValue.isCaptureFundsEnabled
+      ? ["Don't capture funds on cards is on."]
+      : []),
   ];
 
   const onValidateEmail = (email: string) => {
@@ -398,26 +402,21 @@ const CreatePaymentRequestPage = ({
               <PaymentMethodIcon paymentMethod="lightning" enabled={paymentMethodsFormValue.isLightningEnabled} />
             </div>
 
-            <div>
-              {availableMethodsDetails.length > 0 && (
-                <div className="flex flex-col text-greyText text-xs">
-                  {availableMethodsDetails?.map((detail, index) => {
-                    return <span key={`detail-${index}`}>{parseBoldText(detail)}</span>;
-                  })}
-                </div>
-              )}
-            </div>
+            {availableMethodsDetails.length > 0 && (
+              <div className="flex flex-col text-greyText text-xs">
+                {availableMethodsDetails?.map((detail, index) => {
+                  return <span key={`detail-${index}`}>{parseBoldText(detail)}</span>;
+                })}
+              </div>
+            )}
 
-            <div>
-              {paymentNotificationsFormValue.emailAddresses && (
-                <div className="flex text-greyText text-xs">
-                  <span>
-                    Payment notification to{' '}
-                    {formatEmailAddressesForSummary(paymentNotificationsFormValue.emailAddresses)}
-                  </span>
-                </div>
-              )}
-            </div>
+            {paymentNotificationsFormValue.emailAddresses && (
+              <div className="flex text-greyText text-xs">
+                <span>
+                  Payment notification to {formatEmailAddressesForSummary(paymentNotificationsFormValue.emailAddresses)}
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </>
@@ -529,7 +528,13 @@ const CreatePaymentRequestPage = ({
 
                   {/* Confirm PR */}
                   {isReviewing && (
-                    <LayoutWrapper layout={false} className="space-y-7" animateOnExit={false} duration={0.6}>
+                    <LayoutWrapper
+                      key="confirm-pr"
+                      layout={false}
+                      className="space-y-7"
+                      animateOnExit={false}
+                      duration={0.6}
+                    >
                       <Button variant="primaryDark" size="big" onClick={onConfirmClicked} disabled={isSubmitting}>
                         Confirm payment request
                       </Button>
