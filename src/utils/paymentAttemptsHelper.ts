@@ -19,6 +19,10 @@ export const getMaxRefundableAmount = (paymentAttempt: LocalPaymentAttempt): num
   return getAmountPaid(paymentAttempt);
 };
 
+export const getMaxCapturableAmount = (paymentAttempt: LocalPaymentAttempt): number => {
+  return getAmountPaid(paymentAttempt) - getAmountCaptured(paymentAttempt);
+};
+
 export const hasRefundOrCaptureAttempts = (paymentAttempt: LocalPaymentAttempt): boolean => {
   return paymentAttempt.captureAttempts.length > 0 || paymentAttempt.refundAttempts.length > 0;
 };

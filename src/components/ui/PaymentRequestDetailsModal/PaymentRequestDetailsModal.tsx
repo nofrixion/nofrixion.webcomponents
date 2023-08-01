@@ -1,12 +1,15 @@
-import React, { Fragment, useEffect } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
+import React, { useEffect } from 'react';
 import PaymentRequestDetails from '../PaymentRequestDetails/PaymentRequestDetails';
 import { LocalPaymentAttempt, LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
 import CaptureModal from '../CaptureModal/CaptureModal';
 import { Currency } from '@nofrixion/moneymoov';
 import { Sheet, SheetContent } from '@/components/ui/atoms';
 import CardRefundModal from '../CardRefundModal/CardRefundModal';
-import { IsPartialCardRefundPossible, getMaxRefundableAmount } from '../../../utils/paymentAttemptsHelper';
+import {
+  IsPartialCardRefundPossible,
+  getMaxCapturableAmount,
+  getMaxRefundableAmount,
+} from '../../../utils/paymentAttemptsHelper';
 
 export interface PaymentRequestDetailsModalProps {
   paymentRequest: LocalPaymentRequest;
@@ -33,34 +36,22 @@ const PaymentRequestDetailsModal = ({
   open,
   onDismiss,
 }: PaymentRequestDetailsModalProps) => {
-  const [selectedTransaction, setSelectedTransaction] = React.useState<LocalPaymentAttempt | undefined>();
-  const [amountToCapture, setAmountToCapture] = React.useState<string | undefined>(
-    ((selectedTransaction?.amount ?? 0) - (selectedTransaction?.settledAmount ?? 0)).toString(),
-  );
-  const maxCapturableAmount = (selectedTransaction?.amount ?? 0) - (selectedTransaction?.settledAmount ?? 0);
-
-  const onTransactionSelectForCapture = (paymentAttempt: LocalPaymentAttempt) => {
-    setSelectedTransaction(paymentAttempt);
-    setAmountToCapture((paymentAttempt.amount - paymentAttempt.settledAmount).toString());
-  };
-
-  const onCaptureClick = async () => {
-    if (selectedTransaction) {
-      let parsedAmount = Number(amountToCapture);
-      let remainingAmount = selectedTransaction.amount - (selectedTransaction.settledAmount ?? 0);
-      parsedAmount = (parsedAmount ?? 0) > remainingAmount ? remainingAmount : parsedAmount!;
-      await onCapture(selectedTransaction.attemptKey, parsedAmount);
-      onCaptureDismiss();
-    }
-  };
-
-  const onCaptureDismiss = () => {
-    setSelectedTransaction(undefined);
-    setAmountToCapture(undefined);
-  };
-
   const [selectedTransactionForRefund, setSelectedTransactionForRefund] = React.useState<LocalPaymentAttempt>();
   const [maxRefundableAmount, setMaxRefundableAmount] = React.useState<number>(0);
+  const [amountToRefund, setAmountToRefund] = React.useState<string | undefined>();
+  const [selectedTransactionForCapture, setSelectedTransactionForCapture] = React.useState<
+    LocalPaymentAttempt | undefined
+  >();
+  const [amountToCapture, setAmountToCapture] = React.useState<string | undefined>();
+  const [maxCapturableAmount, setMaxCapturableAmount] = React.useState<number>(0);
+
+  useEffect(() => {
+    if (!selectedTransactionForCapture) return;
+
+    const maxCapturableAmount = getMaxCapturableAmount(selectedTransactionForCapture);
+    setMaxCapturableAmount(maxCapturableAmount);
+    setAmountToCapture(maxCapturableAmount.toString());
+  }, [selectedTransactionForCapture]);
 
   useEffect(() => {
     if (!selectedTransactionForRefund) return;
@@ -70,7 +61,23 @@ const PaymentRequestDetailsModal = ({
     setAmountToRefund(maxRefundableAmount.toString());
   }, [selectedTransactionForRefund]);
 
-  const [amountToRefund, setAmountToRefund] = React.useState<string | undefined>();
+  const onCaptureClick = (paymentAttempt: LocalPaymentAttempt) => {
+    setSelectedTransactionForCapture(paymentAttempt);
+  };
+
+  const onCaptureConfirm = async () => {
+    if (selectedTransactionForCapture) {
+      let parsedAmount = Number(amountToCapture);
+      parsedAmount = (parsedAmount ?? 0) > maxCapturableAmount ? maxCapturableAmount : parsedAmount!;
+      await onCapture(selectedTransactionForCapture.attemptKey, parsedAmount);
+      onCaptureDismiss();
+    }
+  };
+
+  const onCaptureDismiss = () => {
+    setSelectedTransactionForCapture(undefined);
+    setAmountToCapture(undefined);
+  };
 
   // This method is called when the user clicks on the refund button
   const onRefundClick = (paymentAttempt: LocalPaymentAttempt) => {
@@ -121,7 +128,7 @@ const PaymentRequestDetailsModal = ({
                   merchantTags={merchantTags}
                   hostedPaymentLink={hostedPaymentLink}
                   onRefund={onRefundClick}
-                  onCapture={onTransactionSelectForCapture}
+                  onCapture={onCaptureClick}
                   onTagAdded={onTagAdded}
                   onTagDeleted={onTagDeleted}
                   onTagCreated={onTagCreated}
@@ -132,21 +139,21 @@ const PaymentRequestDetailsModal = ({
         </SheetContent>
       </Sheet>
 
-      <Sheet open={!!selectedTransaction} onOpenChange={handleOnCaptureFormOpenChange}>
+      <Sheet open={!!selectedTransactionForCapture} onOpenChange={handleOnCaptureFormOpenChange}>
         <SheetContent className="w-full lg:w-[37.5rem]">
           <div className="bg-white max-h-screen overflow-auto">
             <div className="max-h-full h-screen">
               <CaptureModal
-                onCapture={onCaptureClick}
+                onCapture={onCaptureConfirm}
                 onDismiss={onCaptureDismiss}
                 initialAmount={amountToCapture ?? '0'}
                 maxCapturableAmount={maxCapturableAmount}
-                currency={selectedTransaction?.currency ?? Currency.EUR}
+                currency={selectedTransactionForCapture?.currency ?? Currency.EUR}
                 setAmountToCapture={setAmountToCapture}
-                transactionDate={selectedTransaction?.occurredAt ?? new Date()}
+                transactionDate={selectedTransactionForCapture?.occurredAt ?? new Date()}
                 contactName={paymentRequest.contact.name}
-                lastFourDigitsOnCard={selectedTransaction?.last4DigitsOfCardNumber}
-                processor={selectedTransaction?.processor}
+                lastFourDigitsOnCard={selectedTransactionForCapture?.last4DigitsOfCardNumber}
+                processor={selectedTransactionForCapture?.processor}
               />
             </div>
           </div>
