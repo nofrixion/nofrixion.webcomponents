@@ -47,9 +47,18 @@ const PaymentMethodsModal = ({
         userDefaults?.wallet !== isWalletEnabled ||
         userDefaults?.lightning !== isLightningEnabled ||
         userDefaults?.cardAuthorizeOnly === isCaptureFundsEnabled ||
-        userDefaults?.pispPriorityBankID !== priorityBank?.bankID,
+        userDefaults?.pispPriorityBank !== isPriorityBankEnabled ||
+        (isPriorityBankEnabled && userDefaults?.pispPriorityBankID !== priorityBank?.bankID),
     );
-  }, [isBankEnabled, isCardEnabled, isWalletEnabled, isLightningEnabled, isCaptureFundsEnabled, priorityBank]);
+  }, [
+    isBankEnabled,
+    isCardEnabled,
+    isWalletEnabled,
+    isLightningEnabled,
+    isCaptureFundsEnabled,
+    isPriorityBankEnabled,
+    priorityBank,
+  ]);
 
   useEffect(() => {
     if (userDefaults?.pispPriorityBank && userDefaults?.pispPriorityBankID) {
