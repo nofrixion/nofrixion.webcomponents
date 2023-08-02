@@ -31,7 +31,7 @@ const InfoTooltip = ({ content, children, side = 'top', className }: InfoTooltip
             <Tooltip.Portal forceMount>
               <Tooltip.Content sideOffset={5} side={side} asChild>
                 <motion.div
-                  className="rounded-lg p-4 bg-white select-none max-w-xs shadow-[0px_0px_16px_rgba(4,_41,_49,_0.15)] text-sm"
+                  className="rounded-lg p-4 bg-white select-none max-w-xs shadow-[0px_0px_16px_rgba(4,_41,_49,_0.15)] text-sm z-50"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
