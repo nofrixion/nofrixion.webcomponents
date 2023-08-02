@@ -89,9 +89,8 @@ const CardRefundModal: React.FC<CardRefundModalProps> = ({
                   You are about to refund the card payment made
                   {contactName && <span className="font-semibold">{` by ${contactName}`}</span>}
                 </span>
-              )}
-              &nbsp;on&nbsp;
-              <span className="font-semibold">{format(transactionDate, 'MMM do, yyyy')}</span>
+              )}{' '}
+              on <span className="font-semibold">{format(transactionDate, 'MMM do, yyyy')}</span>
               {lastFourDigitsOnCard ? (
                 <>
                   {' with the'}
@@ -119,9 +118,7 @@ const CardRefundModal: React.FC<CardRefundModalProps> = ({
                     ></InputAmountField>
                   </div>
                   <span className="mt-2 block text-13px leading-5 font-normal text-greyText">
-                    There are&nbsp;{getCurrencySymbol(currency)}&nbsp;
-                    {formatter.format(maxRefundableAmount)}
-                    &nbsp;available to refund.
+                    There are {getCurrencySymbol(currency)} {formatter.format(maxRefundableAmount)} available to refund.
                   </span>
                   <AnimatePresence>
                     {validationErrorMessage && (

@@ -75,8 +75,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
           <span className="block text-2xl font-semibold text-defaultText mt-8">Confirm card payment capture</span>
           <p className="mt-12 text-defaultText text-sm font-normal">
             You are about to capture the card payment made
-            {contactName && <span className="font-semibold">{` by ${contactName}`}</span>}
-            &nbsp;on&nbsp;
+            {contactName && <span className="font-semibold">{` by ${contactName}`}</span>} on{' '}
             <span className="font-semibold">{format(transactionDate, 'MMM do, yyyy')}</span>
             {lastFourDigitsOnCard ? (
               <>
@@ -103,9 +102,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
                 ></InputAmountField>
               </div>
               <span className="mt-2 block text-13px leading-5 font-normal text-greyText">
-                There are&nbsp;{getCurrencySymbol(currency)}&nbsp;
-                {formatter.format(maxCapturableAmount)}
-                &nbsp;remaining to capture.
+                There are {getCurrencySymbol(currency)} {formatter.format(maxCapturableAmount)} remaining to capture.
               </span>
               <AnimatePresence>
                 {validationErrorMessage && (
