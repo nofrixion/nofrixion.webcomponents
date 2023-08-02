@@ -1,9 +1,4 @@
-import { LocalCardPaymentResponseStatus, LocalPaymentMethodTypes, SubTransactionType } from '../../../types/LocalEnums';
-import CardIcon from '../../../assets/icons/card-icon.svg';
-import BankIcon from '../../../assets/icons/bank-icon.svg';
-import WalletIcon from '../../../assets/icons/wallet-icon.svg';
-import TickBadgeIcon from '../../../assets/icons/tick-badge-icon.svg';
-import ReturnIcon from '../../../assets/icons/return-icon.svg';
+import { LocalPaymentMethodTypes, LocalWallets, SubTransactionType } from '../../../types/LocalEnums';
 import { format } from 'date-fns';
 import classNames from 'classnames';
 import { LocalPaymentAttempt } from '../../../types/LocalTypes';
@@ -15,6 +10,7 @@ import {
   isCaptureable,
   isRefundable,
 } from '../../../utils/paymentAttemptsHelper';
+import { Icon } from '../atoms';
 
 export interface TransactionsProps {
   transactions: LocalPaymentAttempt[];
@@ -22,15 +18,27 @@ export interface TransactionsProps {
   onCapture: (paymentAttempt: LocalPaymentAttempt) => void;
 }
 
-const PaymentMethodIcon = ({ paymentMethod }: { paymentMethod: LocalPaymentMethodTypes }) => {
+const PaymentMethodIcon = ({
+  paymentMethod,
+  wallet,
+}: {
+  paymentMethod: LocalPaymentMethodTypes;
+  wallet: LocalWallets | undefined;
+}) => {
   switch (paymentMethod) {
     case LocalPaymentMethodTypes.Card:
-      return <img src={CardIcon} alt="card" />;
+      switch (wallet) {
+        case LocalWallets.ApplePay:
+        case LocalWallets.GooglePay:
+          return <Icon name="wallets/24" className="text-[#454D54]" />;
+        default:
+          return <Icon name="card/24" className="text-[#454D54]" />;
+      }
     case LocalPaymentMethodTypes.Pisp:
-      return <img src={BankIcon} alt="bank" />;
+      return <Icon name="bank/24" className="text-[#454D54]" />;
     case LocalPaymentMethodTypes.ApplePay:
     case LocalPaymentMethodTypes.GooglePay:
-      return <img src={WalletIcon} alt="wallet" />;
+      return <Icon name="wallets/24" />;
     default:
       return null;
   }
@@ -82,8 +90,11 @@ const Transactions = ({ transactions, onRefund, onCapture }: TransactionsProps) 
                   </td>
                   <td className={classNames('pl-2 lg:pl-6 pb-2', { 'pt-2': index !== 0 })}>
                     <div className="flex flex-row items-center">
-                      <span className="mr-2 w-4 h-4">
-                        <PaymentMethodIcon paymentMethod={transaction.paymentMethod}></PaymentMethodIcon>
+                      <span className="mr-2">
+                        <PaymentMethodIcon
+                          paymentMethod={transaction.paymentMethod}
+                          wallet={transaction.wallet}
+                        ></PaymentMethodIcon>
                       </span>
                       <span className="hidden lg:inline text-sm leading-6">{transaction.processor}</span>
                       {transaction.paymentMethod === LocalPaymentMethodTypes.Card &&
@@ -117,15 +128,11 @@ const Transactions = ({ transactions, onRefund, onCapture }: TransactionsProps) 
                       )}
                       {transaction.paymentMethod === LocalPaymentMethodTypes.Card && isRefundable(transaction) && (
                         <button
-                          className="rounded-full w-6 h-6 p-1 inline-flex items-center justify-center outline-none cursor-pointer align-middle hover:bg-greyBg fill-[#8F99A3] hover:fill-[#454D54] data-[state='open']:fill-[#454D54]"
+                          className="rounded-full w-6 h-6 p-1 inline-flex items-center justify-center outline-none cursor-pointer align-middle hover:bg-greyBg text-[#8F99A3] hover:text-[#454D54] data-[state='open']:text-[#454D54]"
                           aria-label="Actions"
                           onClick={() => onRefund(transaction)}
                         >
-                          <svg width="15" height="15" viewBox="0 0 15 15" className="w-4 h-4" version="1.1">
-                            <circle cx="7.5" cy="1.5" r="1.5" className="currentColor" id="circle2" />
-                            <circle cx="7.5" cy="7.5" r="1.5" className="currentColor" id="circle4" />
-                            <circle cx="7.5" cy="13.5" r="1.5" className="currentColor" id="circle6" />
-                          </svg>
+                          <Icon name="ellipsis/24" />
                         </button>
                       )}
                     </div>
@@ -165,9 +172,9 @@ const Transactions = ({ transactions, onRefund, onCapture }: TransactionsProps) 
                     </td>
                     {subTransaction.type === SubTransactionType.Capture && (
                       <td className="pl-1 lg:pl-5 py-0" colSpan={2}>
-                        <div className="flex flex-row items-center">
+                        <div className="flex flex-row items-center ml-1">
                           <span className="mr-2 p-1.5">
-                            <img src={TickBadgeIcon} className="h-3 w-3" alt="Captured" title="Captured" />
+                            <Icon name="capture/12" className="text-[#454D54]" />
                           </span>
                           <span>Captured</span>
                         </div>
@@ -175,9 +182,9 @@ const Transactions = ({ transactions, onRefund, onCapture }: TransactionsProps) 
                     )}
                     {subTransaction.type === SubTransactionType.Refund && (
                       <td className="pl-1 lg:pl-5 py-0" colSpan={2}>
-                        <div className="flex flex-row items-center">
+                        <div className="flex flex-row items-center ml-[0.125]">
                           <span className="mr-2 p-1.5">
-                            <img src={ReturnIcon} className="h-3 w-3" alt="Refund" title="Refund" />
+                            <Icon name="return/16" className="text-[#454D54]" />
                           </span>
                           <span>Refund</span>
                         </div>

@@ -1,10 +1,10 @@
 ﻿import React from 'react';
 import InputAmountField from '../InputAmountField/InputAmountField';
 import { Currency } from '@nofrixion/moneymoov';
-import backButtonIcon from '../../../assets/icons/back-button-icon.svg';
 import { format } from 'date-fns';
 import { localCurrency } from '../../../utils/constants';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Icon } from '../atoms';
 
 export interface CaptureModalProps {
   initialAmount: string;
@@ -70,7 +70,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
       <div className="max-h-full">
         <div className="h-fit">
           <button type="button" className="hover:cursor-pointer block" onClick={onDismiss}>
-            <img src={backButtonIcon} alt="Back" title="Back" className="w-6 h-auto" />
+            <Icon name="back/24" />
           </button>
           <span className="block text-2xl font-semibold text-defaultText mt-8">Confirm card payment capture</span>
           <p className="mt-12 text-defaultText text-sm font-normal">
