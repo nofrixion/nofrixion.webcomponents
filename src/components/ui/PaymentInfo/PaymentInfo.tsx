@@ -56,7 +56,7 @@ const PaymentInfo = ({ id, createdAt, paymentMethodTypes, addresses }: PaymentIn
         <div className="space-x-3">
           <PaymentMethodIcon paymentMethod="bank" enabled={isBankEnabled} />
           <PaymentMethodIcon paymentMethod="card" enabled={isCardEnabled} />
-          <PaymentMethodIcon paymentMethod="wallet" enabled={isWalletEnabled} />
+          <PaymentMethodIcon paymentMethod="wallet" enabled={isCardEnabled && isWalletEnabled} />
           <PaymentMethodIcon paymentMethod="lightning" enabled={isLightningEnabled} />
         </div>
       </PaymentInfoRow>

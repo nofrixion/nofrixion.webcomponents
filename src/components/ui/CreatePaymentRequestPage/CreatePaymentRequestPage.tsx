@@ -398,7 +398,10 @@ const CreatePaymentRequestPage = ({
             <div className="flex items-center space-x-3">
               <PaymentMethodIcon paymentMethod="bank" enabled={paymentMethodsFormValue.isBankEnabled} />
               <PaymentMethodIcon paymentMethod="card" enabled={paymentMethodsFormValue.isCardEnabled} />
-              <PaymentMethodIcon paymentMethod="wallet" enabled={paymentMethodsFormValue.isWalletEnabled} />
+              <PaymentMethodIcon
+                paymentMethod="wallet"
+                enabled={paymentMethodsFormValue.isCardEnabled && paymentMethodsFormValue.isWalletEnabled}
+              />
               <PaymentMethodIcon paymentMethod="lightning" enabled={paymentMethodsFormValue.isLightningEnabled} />
             </div>
 
@@ -720,7 +723,10 @@ const CreatePaymentRequestPage = ({
                                       <PaymentMethodIcon
                                         showInfoTooltip={false}
                                         paymentMethod="wallet"
-                                        enabled={paymentMethodsFormValue.isWalletEnabled}
+                                        enabled={
+                                          paymentMethodsFormValue.isCardEnabled &&
+                                          paymentMethodsFormValue.isWalletEnabled
+                                        }
                                       />
                                       <PaymentMethodIcon
                                         showInfoTooltip={false}

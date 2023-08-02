@@ -182,7 +182,13 @@ const PaymentMethodsModal = ({
           <AnimatePresence initial={false}>
             {isCardEnabled && (
               <AnimateHeightWrapper layoutId="card-capture-founds">
-                <div className="ml-10 pt-7 md:pb-4">
+                <div className="ml-10 pt-7 md:pb-4 flex flex-col space-y-4">
+                  <Checkbox
+                    label="Enable Apple Pay / Google Pay"
+                    infoText="Enable this option to allow users to pay with Apple Pay or Google Pay."
+                    value={isWalletEnabled}
+                    onChange={setIsWalletEnabled}
+                  />
                   <Checkbox
                     label="Don't capture funds on card payments"
                     infoText="Enable this option to authorize card payments without immediately capturing the funds. This allows for manual capture or cancellation before completing the transaction."
@@ -194,13 +200,6 @@ const PaymentMethodsModal = ({
             )}
           </AnimatePresence>
         </div>
-        <Switch
-          icon={ApplePayIcon}
-          label="Apple Pay / Google Pay"
-          value={isWalletEnabled}
-          onChange={setIsWalletEnabled}
-          className="py-6 md:py-4"
-        />
         <Switch
           icon={BitcoinIcon}
           label="Bitcoin Lightning"
