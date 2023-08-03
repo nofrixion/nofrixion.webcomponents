@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import UIPaymentRequestDetailsModal from '../../ui/PaymentRequestDetailsModal/PaymentRequestDetailsModal';
-import { parseApiTagToLocalTag } from '../../../utils/parsers';
+import { parseApiTagToLocalTag, remotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
 import { LocalPaymentAttempt, LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
 import { PaymentRequestClient, PaymentRequest, PaymentRequestUpdate, MerchantClient } from '@nofrixion/moneymoov';
+import { usePaymentRequest } from '@/components/usePaymentRequest';
 
 interface PaymentRequestDetailsModalProps {
   token?: string; // Example: "eyJhbGciOiJIUz..."
@@ -17,6 +18,7 @@ interface PaymentRequestDetailsModalProps {
   setPaymentRequests: (paymentRequests: LocalPaymentRequest[]) => void;
   onRefund: (authorizationID: string, amount: number) => Promise<void>;
   onCapture: (authorizationID: string, amount: number) => Promise<void>;
+  queryKey: any[];
 }
 const PaymentRequestDetailsModal = ({
   token,
@@ -31,6 +33,7 @@ const PaymentRequestDetailsModal = ({
   setPaymentRequests,
   onRefund,
   onCapture,
+  queryKey,
 }: PaymentRequestDetailsModalProps) => {
   const paymentRequestClient = new PaymentRequestClient({
     apiUrl: apiUrl,
@@ -40,14 +43,34 @@ const PaymentRequestDetailsModal = ({
 
   const [paymentRequest, setPaymentRequest] = useState<LocalPaymentRequest | undefined>(undefined);
 
+  const { data: paymentRequestResponse } = usePaymentRequest(
+    {
+      paymentRequestId: selectedPaymentRequestID,
+      merchantId: merchantId,
+      paymentRequestsQueryKey: queryKey,
+    },
+    { apiUrl: apiUrl, authToken: token },
+  );
+
   useEffect(() => {
-    if (selectedPaymentRequestID) {
-      const paymentRequest = paymentRequests.find((paymentRequest) => paymentRequest.id === selectedPaymentRequestID);
-      if (paymentRequest) {
-        setPaymentRequest(paymentRequest);
-      }
+    console.log('this is called');
+    if (paymentRequestResponse?.status === 'success') {
+      console.log('remote', paymentRequestResponse.data);
+      setPaymentRequest(remotePaymentRequestToLocalPaymentRequest(paymentRequestResponse.data));
+      console.log('local', paymentRequest);
+    } else if (paymentRequestResponse?.status === 'error') {
+      console.log(paymentRequestResponse.error);
     }
-  }, [selectedPaymentRequestID, paymentRequests]);
+  }, [paymentRequestResponse]);
+
+  // useEffect(() => {
+  //   if (selectedPaymentRequestID) {
+  //     const paymentRequest = paymentRequests.find((paymentRequest) => paymentRequest.id === selectedPaymentRequestID);
+  //     if (paymentRequest) {
+  //       setPaymentRequest(paymentRequest);
+  //     }
+  //   }
+  // }, [selectedPaymentRequestID, paymentRequests]);
 
   const updatePaymentRequests = (updatedPaymentRequest: PaymentRequest) => {
     const index = paymentRequests.findIndex((paymentRequest) => paymentRequest.id === selectedPaymentRequestID);

@@ -13,7 +13,6 @@ import {
   usePaymentRequests,
   PaymentRequest,
   ApiError,
-  useRefund,
 } from '@nofrixion/moneymoov';
 import PaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTable';
 import { SortDirection } from '../../ui/ColumnHeader/ColumnHeader';
@@ -31,6 +30,8 @@ import ScrollArea from '../../ui/ScrollArea/ScrollArea';
 import { LocalPartialPaymentMethods, LocalPaymentMethodTypes } from '../../../types/LocalEnums';
 import { Button } from '@/components/ui/atoms';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useRefund } from '@/components/useRefund';
+import { max, min } from 'lodash';
 
 interface PaymentRequestDashboardProps {
   token?: string; // Example: "eyJhbGciOiJIUz..."
@@ -94,7 +95,52 @@ const PaymentRequestDashboardMain = ({
     undefined,
   );
 
+  const [paymentRequestsQueryKey, setPaymentRequestsQueryKey] = useState<any[]>(['PaymentRequests']);
+
   const pageSize = 20;
+
+  useEffect(() => {
+    const QUERY_KEY = [
+      'PaymentRequests',
+      apiUrl,
+      token,
+      merchantId,
+      statusSortDirection,
+      createdSortDirection,
+      contactSortDirection,
+      amountSortDirection,
+      page,
+      pageSize,
+      dateRange.fromDate.getTime(),
+      dateRange.toDate.getTime(),
+      status,
+      searchFilter?.length >= 3 ? searchFilter : undefined,
+      currencyFilter,
+      minAmountFilter,
+      maxAmountFilter,
+      tagsFilter,
+    ];
+    if (QUERY_KEY) {
+      setPaymentRequestsQueryKey(QUERY_KEY);
+    }
+  }, [
+    apiUrl,
+    token,
+    merchantId,
+    statusSortDirection,
+    createdSortDirection,
+    contactSortDirection,
+    amountSortDirection,
+    page,
+    pageSize,
+    dateRange,
+    status,
+    searchFilter,
+    currencyFilter,
+    minAmountFilter,
+    maxAmountFilter,
+    tagsFilter,
+  ]);
 
   const client = new PaymentRequestClient({ apiUrl: apiUrl, authToken: token });
 
@@ -627,6 +673,7 @@ const PaymentRequestDashboardMain = ({
         setPaymentRequests={setLocalPaymentRequests}
         onRefund={onRefundClick}
         onCapture={onCaptureClick}
+        queryKey={paymentRequestsQueryKey}
       ></PaymentRequestDetailsModal>
     </div>
   );
