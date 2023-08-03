@@ -237,8 +237,8 @@ const PaymentMethodsModal = ({
           <AnimateHeightWrapper layoutId="wallet-card-alert">
             <div className="w-full p-3 mt-6 bg-[#FCF5CF] rounded">
               <p className="text-sm text-default-text font-normal">
-                If you only enable mobile wallets, make sure your customer has Apple Pay or Google Pay available. If you
-                are not sure, include another payment method.
+                Do your customers have access to Apple Pay or Google Pay? If you are unsure, you may want to consider
+                adding a second payment method as a backup.
               </p>
             </div>
           </AnimateHeightWrapper>
