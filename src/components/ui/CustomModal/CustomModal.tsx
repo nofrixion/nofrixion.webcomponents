@@ -3,12 +3,14 @@ import { Dialog, Transition } from '@headlessui/react';
 import Checkbox from '../Checkbox/Checkbox';
 import { Button } from '@/components/ui/atoms';
 import { AnimatePresence, motion } from 'framer-motion';
+import classNames from 'classnames';
 
 interface CustomModalProps extends BaseModalProps {
   title: string;
   enableUseAsDefault?: boolean;
   children: React.ReactNode;
   onApplyEnabled?: boolean;
+  buttonRowClassName?: string;
 }
 
 export interface BaseModalProps {
@@ -29,6 +31,7 @@ const CustomModal = ({
   onApply,
   onDismiss,
   onApplyEnabled = true,
+  buttonRowClassName,
 }: CustomModalProps) => {
   const [isDefaultChecked, setIsDefaultChecked] = useState<boolean>(false);
   const [currentState, setCurrentState] = useState<CustomModalState>();
@@ -104,7 +107,12 @@ const CustomModal = ({
                 </Dialog.Title>
                 <div className="px-6 md:px-12">{children}</div>
 
-                <div className="bg-mainGrey flex flex-col-reverse items-center gap-4 md:gap-0 md:flex-row md:justify-between px-6 md:pl-8 md:pr-6 py-4 mt-4 md:mt-12">
+                <div
+                  className={classNames(
+                    buttonRowClassName,
+                    'bg-mainGrey flex flex-col-reverse items-center gap-4 md:gap-0 md:flex-row md:justify-between px-6 md:pl-8 md:pr-6 py-4 mt-4 md:mt-12',
+                  )}
+                >
                   <div>
                     <AnimatePresence>
                       {enableUseAsDefault && (

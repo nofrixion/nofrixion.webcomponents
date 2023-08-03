@@ -147,9 +147,17 @@ const PaymentMethodsModal = ({
       enableUseAsDefault={enableUseAsDefault}
       onDismiss={handleOnDismiss}
       onApply={onApplyClicked}
+      buttonRowClassName={isWalletEnabled && !isCardEnabled && !isBankEnabled && !isLightningEnabled ? 'md:mt-6' : ''}
     >
-      <div className="divide-y">
-        <div className="pb-6 md:pb-4">
+      <div className="[&>*]:border-b [&>*]:border-solid [&>*]:border-b-borderGrey">
+        <Switch
+          icon={ApplePayIcon}
+          label="Apple Pay / Google Pay"
+          value={isWalletEnabled}
+          onChange={setIsWalletEnabled}
+          className="pb-6 md:pb-4"
+        />
+        <div className="py-6 md:py-4">
           <Switch icon={BankIcon} label="Pay by Bank" value={isBankEnabled} onChange={setIsBankEnabled} />
 
           <AnimatePresence initial={false}>
@@ -216,20 +224,26 @@ const PaymentMethodsModal = ({
           </AnimatePresence>
         </div>
         <Switch
-          icon={ApplePayIcon}
-          label="Apple Pay / Google Pay"
-          value={isWalletEnabled}
-          onChange={setIsWalletEnabled}
-          className="py-6 md:py-4"
-        />
-        <Switch
           icon={BitcoinIcon}
           label="Bitcoin Lightning"
           value={isLightningEnabled}
           onChange={setIsLightningEnabled}
-          className="pt-6 md:pt-4"
+          className="py-6 md:py-4"
         />
       </div>
+
+      <AnimatePresence initial={false}>
+        {isWalletEnabled && !isCardEnabled && !isBankEnabled && !isLightningEnabled && (
+          <AnimateHeightWrapper layoutId="wallet-card-alert">
+            <div className="w-full p-3 mt-6 bg-[#FCF5CF] rounded">
+              <p className="text-sm text-default-text font-normal">
+                If you only enable mobile wallets, make sure your customer has Apple Pay or Google Pay available. If you
+                are not sure, include another payment method.
+              </p>
+            </div>
+          </AnimateHeightWrapper>
+        )}
+      </AnimatePresence>
     </CustomModal>
   );
 };
