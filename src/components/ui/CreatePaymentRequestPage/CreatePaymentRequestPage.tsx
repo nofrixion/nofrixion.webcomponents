@@ -8,7 +8,6 @@ import AlertIcon from '../../../assets/icons/alert-icon.svg';
 import NextIcon from '../../../assets/icons/next-icon.svg';
 import InputTextAreaField from '../InputTextAreaField/InputTextAreaField';
 import { AnimatePresence, motion } from 'framer-motion';
-import AnimateHeightWrapper from '../utils/AnimateHeight';
 import LayoutWrapper from '../utils/LayoutWrapper';
 import PaymentMethodsModal from '../Modals/PaymentMethodsModal/PaymentMethodsModal';
 import {
@@ -247,7 +246,11 @@ const CreatePaymentRequestPage = ({
   };
 
   const onReviewClicked = () => {
-    if (email && !validateEmail(email)) {
+    if (email && onValidateEmail(email)) {
+      return;
+    }
+
+    if (description && onValidateDescription(description)) {
       return;
     }
 
@@ -371,14 +374,24 @@ const CreatePaymentRequestPage = ({
   const onValidateEmail = (email: string) => {
     if (email && !validateEmail(email)) {
       setHasEmailError(true);
+      return 'Make sure the email address is valid.';
     }
 
-    if (!email) {
-      setHasEmailError(false);
-    }
+    setHasEmailError(false);
+  };
 
-    if (email && validateEmail(email)) {
-      setHasEmailError(false);
+  const onValidateDescription = (description: string): string | undefined => {
+    // Get invalid characters if any (using the same regex from backend "[a-zA-Z0-9\-_\.@&\*%\$#!:;'""()\[\] ]+")
+    const invalidCharacters = description.match(/[^a-zA-Z0-9\-_\.@&\*%\$#!:;'""()\[\] ]+/g);
+
+    if (description.length > 0 && invalidCharacters) {
+      // Singular
+      if (invalidCharacters.length === 1) {
+        return `The character "${invalidCharacters[0]}" is not allowed in the description`;
+      }
+
+      // Plural
+      return `The characters "${invalidCharacters.join('')}" are not allowed in the description`;
     }
   };
 
@@ -632,6 +645,8 @@ const CreatePaymentRequestPage = ({
                                   maxLength={140}
                                   value={description}
                                   onChange={(e) => setDescription(e.target.value)}
+                                  validation={onValidateDescription}
+                                  enableQuickValidation
                                 />
                               </div>
 
@@ -661,25 +676,9 @@ const CreatePaymentRequestPage = ({
                                     autoComplete="email"
                                     value={email}
                                     type="email"
-                                    onChange={(e) => {
-                                      setEmail(e.target.value);
-
-                                      if (hasEmailError) {
-                                        onValidateEmail(e.target.value);
-                                      }
-                                    }}
-                                    onBlur={(e) => onValidateEmail(e.target.value)}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    validation={onValidateEmail}
                                   />
-
-                                  <AnimatePresence>
-                                    {hasEmailError && (
-                                      <AnimateHeightWrapper layoutId="email-error">
-                                        <div className="mt-2 bg-[#FCF5CF] text-sm p-3 rounded">
-                                          Make sure the email address is valid.
-                                        </div>
-                                      </AnimateHeightWrapper>
-                                    )}
-                                  </AnimatePresence>
                                 </div>
                               </div>
 

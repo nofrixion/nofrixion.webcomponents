@@ -22,7 +22,7 @@ const makeToast = (type: 'success' | 'error' | 'info' | 'warning', message: stri
 };
 
 const CloseButton = ({ closeToast }: CloseButtonProps) => (
-  <a onClick={closeToast} className="top-0 bottom-0 my-auto">
+  <button onClick={closeToast} className="top-0 bottom-0 my-auto">
     <svg
       width="12"
       height="12"
@@ -39,7 +39,7 @@ const CloseButton = ({ closeToast }: CloseButtonProps) => (
         id="path2-8"
       />
     </svg>
-  </a>
+  </button>
 );
 
 const Toaster = ({ positionY, positionX, duration = 5000 }: ToastProps) => {
