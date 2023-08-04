@@ -17,7 +17,7 @@ export interface CardRefundModalProps {
   processor?: string;
   transactionDate: Date;
   contactName?: string;
-  IsPartialRefundPossible: boolean;
+  isPartialRefundPossible: boolean;
 }
 
 const CardRefundModal: React.FC<CardRefundModalProps> = ({
@@ -31,7 +31,7 @@ const CardRefundModal: React.FC<CardRefundModalProps> = ({
   processor,
   transactionDate,
   contactName,
-  IsPartialRefundPossible,
+  isPartialRefundPossible: isPartialRefundPossible,
 }) => {
   const [isRefundButtonDisabled, setIsRefundButtonDisabled] = React.useState(false);
   const [validationErrorMessage, setValidationErrorMessage] = React.useState('');
@@ -77,14 +77,14 @@ const CardRefundModal: React.FC<CardRefundModalProps> = ({
             </button>
             <span className="block text-2xl font-semibold text-defaultText mt-8">Confirm card payment refund</span>
             <p className="mt-12 text-defaultText text-sm font-normal">
-              {!IsPartialRefundPossible && (
+              {!isPartialRefundPossible && (
                 <span>
                   You are about to refund{' '}
                   <span className="font-semibold">{formatter.format(Number(initialAmount))}</span> to{' '}
                   {contactName && <span className="font-semibold">{contactName}</span>} for the card payment made
                 </span>
               )}
-              {IsPartialRefundPossible && (
+              {isPartialRefundPossible && (
                 <span>
                   You are about to refund the card payment made
                   {contactName && <span className="font-semibold">{` by ${contactName}`}</span>}
@@ -101,7 +101,7 @@ const CardRefundModal: React.FC<CardRefundModalProps> = ({
                 '.'
               )}
             </p>
-            {IsPartialRefundPossible && (
+            {isPartialRefundPossible && (
               <div className="mt-12 md:flex">
                 <div className="md:w-[152px]">
                   <span className="text-sm leading-8 font-normal text-greyText md:leading-[48px]">Refund</span>

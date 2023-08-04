@@ -76,6 +76,7 @@ const DetailsTabs: React.FC<DetailsTabsProps> = ({ paymentRequest, onRefund, onC
           <ScrollArea>
             <Transactions
               transactions={paymentRequest.paymentAttempts}
+              cardAuthoriseOnly={!paymentRequest.captureFunds}
               onRefund={onRefund}
               onCapture={onCapture}
             ></Transactions>

@@ -81,7 +81,7 @@ export const getSubTransactions = (paymentAttempt: LocalPaymentAttempt): SubTran
  * @param paymentAttempt
  * @returns True if the payment attempt is partially refundable, false otherwise.
  */
-export const IsPartialCardRefundPossible = (paymentAttempt: LocalPaymentAttempt | undefined): boolean => {
+export const isPartialCardRefundPossible = (paymentAttempt: LocalPaymentAttempt | undefined): boolean => {
   if (paymentAttempt === undefined) {
     return false;
   } else {

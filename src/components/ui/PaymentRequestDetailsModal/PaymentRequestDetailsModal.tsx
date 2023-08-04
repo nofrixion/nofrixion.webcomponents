@@ -6,7 +6,7 @@ import { Currency } from '@nofrixion/moneymoov';
 import { Sheet, SheetContent } from '@/components/ui/atoms';
 import CardRefundModal from '../CardRefundModal/CardRefundModal';
 import {
-  IsPartialCardRefundPossible,
+  isPartialCardRefundPossible,
   getMaxCapturableAmount,
   getMaxRefundableAmount,
 } from '../../../utils/paymentAttemptsHelper';
@@ -175,7 +175,7 @@ const PaymentRequestDetailsModal = ({
                 contactName={paymentRequest.contact.name}
                 lastFourDigitsOnCard={selectedTransactionForRefund?.last4DigitsOfCardNumber}
                 processor={selectedTransactionForRefund?.processor}
-                IsPartialRefundPossible={IsPartialCardRefundPossible(selectedTransactionForRefund)}
+                isPartialRefundPossible={isPartialCardRefundPossible(selectedTransactionForRefund)}
               />
             </div>
           </div>

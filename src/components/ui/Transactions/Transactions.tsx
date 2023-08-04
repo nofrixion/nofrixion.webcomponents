@@ -14,6 +14,7 @@ import { Icon } from '../atoms';
 
 export interface TransactionsProps {
   transactions: LocalPaymentAttempt[];
+  cardAuthoriseOnly: boolean;
   onRefund: (paymentAttempt: LocalPaymentAttempt) => void;
   onCapture: (paymentAttempt: LocalPaymentAttempt) => void;
 }
@@ -30,12 +31,12 @@ const PaymentMethodIcon = ({
       switch (wallet) {
         case LocalWallets.ApplePay:
         case LocalWallets.GooglePay:
-          return <Icon name="wallets/24" className="text-[#454D54]" />;
+          return <Icon name="wallets/24" className="text-controlGreyHover" />;
         default:
-          return <Icon name="card/24" className="text-[#454D54]" />;
+          return <Icon name="card/24" className="text-controlGreyHover" />;
       }
     case LocalPaymentMethodTypes.Pisp:
-      return <Icon name="bank/24" className="text-[#454D54]" />;
+      return <Icon name="bank/24" className="text-controlGreyHover" />;
     case LocalPaymentMethodTypes.ApplePay:
     case LocalPaymentMethodTypes.GooglePay:
       return <Icon name="wallets/24" />;
@@ -44,12 +45,11 @@ const PaymentMethodIcon = ({
   }
 };
 
-const Transactions = ({ transactions, onRefund, onCapture }: TransactionsProps) => {
+const Transactions = ({ transactions, cardAuthoriseOnly, onRefund, onCapture }: TransactionsProps) => {
   const formatter = new Intl.NumberFormat(navigator.language, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
-
   return (
     <>
       {transactions.length === 0 && (
@@ -128,7 +128,7 @@ const Transactions = ({ transactions, onRefund, onCapture }: TransactionsProps) 
                       )}
                       {transaction.paymentMethod === LocalPaymentMethodTypes.Card && isRefundable(transaction) && (
                         <button
-                          className="rounded-full w-6 h-6 p-1 inline-flex items-center justify-center outline-none cursor-pointer align-middle hover:bg-greyBg text-[#8F99A3] hover:text-[#454D54] data-[state='open']:text-[#454D54]"
+                          className="rounded-full w-6 h-6 inline-flex items-center justify-center outline-none cursor-pointer align-middle hover:bg-greyBg text-[#8F99A3] hover:text-controlGreyHover data-[state='open']:text-controlGreyHover"
                           aria-label="Actions"
                           onClick={() => onRefund(transaction)}
                         >
@@ -138,60 +138,64 @@ const Transactions = ({ transactions, onRefund, onCapture }: TransactionsProps) 
                     </div>
                   </td>
                 </tr>
-                {getSubTransactions(transaction).map((subTransaction, evIndex) => (
-                  <tr
-                    key={`ev_${evIndex}`}
-                    className={classNames('text-xs leading-6 group whitespace-nowrap', {
-                      'border-b [&>td]:pb-2': evIndex === getSubTransactions(transaction).length - 1,
-                    })}
-                  >
-                    <td className="py-0">
-                      {/* Mobile date */}
-                      <span className="inline lg:hidden">
-                        {subTransaction.occurredAt && format(subTransaction.occurredAt, 'dd/MM/yyyy')}
-                      </span>
-
-                      {/* Desktop date */}
-                      <span className="hidden lg:inline">
-                        {subTransaction.occurredAt && format(subTransaction.occurredAt, 'MMM do, yyyy')}
-                      </span>
-                    </td>
-                    <td className="pl-2 lg:pl-6 text-right py-0">
-                      <span
-                        className={classNames('mr-2 font-medium tabular-nums ', {
-                          'text-[#29A37A]': subTransaction.type === SubTransactionType.Capture,
+                {getSubTransactions(transaction).map(
+                  (subTransaction, evIndex) =>
+                    (cardAuthoriseOnly ||
+                      (!cardAuthoriseOnly && subTransaction.type !== SubTransactionType.Capture)) && (
+                      <tr
+                        key={`ev_${evIndex}`}
+                        className={classNames('text-xs leading-6 group whitespace-nowrap', {
+                          'border-b [&>td]:pb-2': evIndex === getSubTransactions(transaction).length - 1,
                         })}
                       >
-                        <span className="lg:hidden">{subTransaction.currency === Currency.EUR ? '€' : '£'}</span>
-                        {subTransaction.type === SubTransactionType.Refund && <span>-</span>}
-                        {formatter.format(subTransaction.amount)}
-                      </span>
-                    </td>
-                    <td className="hidden lg:table-cell py-0">
-                      <span className="text-greyText font-normal">{subTransaction.currency}</span>
-                    </td>
-                    {subTransaction.type === SubTransactionType.Capture && (
-                      <td className="pl-1 lg:pl-5 py-0" colSpan={2}>
-                        <div className="flex flex-row items-center ml-1">
-                          <span className="mr-2 p-1.5">
-                            <Icon name="capture/12" className="text-[#454D54]" />
+                        <td className="py-0">
+                          {/* Mobile date */}
+                          <span className="inline lg:hidden">
+                            {subTransaction.occurredAt && format(subTransaction.occurredAt, 'dd/MM/yyyy')}
                           </span>
-                          <span>Captured</span>
-                        </div>
-                      </td>
-                    )}
-                    {subTransaction.type === SubTransactionType.Refund && (
-                      <td className="pl-1 lg:pl-5 py-0" colSpan={2}>
-                        <div className="flex flex-row items-center ml-[0.125]">
-                          <span className="mr-2 p-1.5">
-                            <Icon name="return/16" className="text-[#454D54]" />
+
+                          {/* Desktop date */}
+                          <span className="hidden lg:inline">
+                            {subTransaction.occurredAt && format(subTransaction.occurredAt, 'MMM do, yyyy')}
                           </span>
-                          <span>Refund</span>
-                        </div>
-                      </td>
-                    )}
-                  </tr>
-                ))}
+                        </td>
+                        <td className="pl-2 lg:pl-6 text-right py-0">
+                          <span
+                            className={classNames('mr-2 font-medium tabular-nums ', {
+                              'text-[#29A37A]': subTransaction.type === SubTransactionType.Capture,
+                            })}
+                          >
+                            <span className="lg:hidden">{subTransaction.currency === Currency.EUR ? '€' : '£'}</span>
+                            {subTransaction.type === SubTransactionType.Refund && <span>-</span>}
+                            {formatter.format(subTransaction.amount)}
+                          </span>
+                        </td>
+                        <td className="hidden lg:table-cell py-0">
+                          <span className="text-greyText font-normal">{subTransaction.currency}</span>
+                        </td>
+                        {subTransaction.type === SubTransactionType.Capture && (
+                          <td className="pl-1 lg:pl-5 py-0" colSpan={2}>
+                            <div className="flex flex-row items-center ml-1">
+                              <span className="mr-2 p-1.5">
+                                <Icon name="capture/12" className="text-controlGreyHover" />
+                              </span>
+                              <span>Captured</span>
+                            </div>
+                          </td>
+                        )}
+                        {subTransaction.type === SubTransactionType.Refund && (
+                          <td className="pl-1 lg:pl-5 py-0" colSpan={2}>
+                            <div className="flex flex-row items-center ml-[0.125]">
+                              <span className="mr-2 p-1.5">
+                                <Icon name="return/16" className="text-controlGreyHover" />
+                              </span>
+                              <span>Refund</span>
+                            </div>
+                          </td>
+                        )}
+                      </tr>
+                    ),
+                )}
               </React.Fragment>
             ))}
           </tbody>
