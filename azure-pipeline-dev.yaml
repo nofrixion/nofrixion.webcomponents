@@ -52,14 +52,14 @@ steps:
 
   - script: |
       npm run build
-    displayName: 'npm build prod'
+    displayName: 'npm build'
 
   - script: |
       cd dist
       mkdir js
       cd ..
-      cp dist/*.cjs dist/js/$(bundleName)
-      mv dist/*.cjs "dist/js/$(versionedBundleName)"
+      cp dist/*.js dist/js/$(bundleName)
+      mv dist/*.js "dist/js/$(versionedBundleName)"
     displayName: 'Rename bundles'
 
   # Creates folder structure for blob container
