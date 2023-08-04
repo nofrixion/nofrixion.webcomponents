@@ -39,6 +39,7 @@ import { formatAmountAndDecimals } from '../../../utils/formatters';
 import BackArrow from '../utils/BackArrow';
 import { Button } from '@/components/ui/atoms';
 import { Loader } from '@/components/ui/Loader/Loader';
+import AnimateHeightWrapper from '@/components/ui/utils/AnimateHeight';
 
 interface CreatePaymentRequestPageProps {
   banks: BankSettings[];
@@ -72,6 +73,11 @@ const CreatePaymentRequestPage = ({
   const [email, setEmail] = useState(prefilledData?.email ?? '');
   const [hasEmailError, setHasEmailError] = useState(false);
   const [defaultsChanged, setDefaultsChanged] = useState(false);
+
+  const formatter = new Intl.NumberFormat(navigator.language, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
   const findBank = (bankID: string | undefined) => {
     if (!bankID) {
@@ -417,6 +423,17 @@ const CreatePaymentRequestPage = ({
     }
   };
 
+  const getMinimumAmountPerCurrency = (currency: string) => {
+    switch (currency) {
+      case 'EUR':
+        return 1;
+      case 'GBP':
+        return 2;
+      default:
+        return 0;
+    }
+  };
+
   const reviewRowClassNames = 'flex overflow-hidden items-baseline flex-col gap-2 md:gap-0 md:flex-row';
 
   const renderSettingsReview = () => {
@@ -469,9 +486,23 @@ const CreatePaymentRequestPage = ({
             {currency && amount && (
               <LayoutWrapper key="amount" className={reviewRowClassNames}>
                 <span className="leading-6 text-greyText w-40 shrink-0">Amount</span>
-                <span className="font-semibold text-[2rem]/8 w-full">
+                <span
+                  className={classNames('font-semibold text-[2rem]/8 inline p-1', {
+                    'bg-warningYellow rounded':
+                      currency &&
+                      amount &&
+                      paymentMethodsFormValue?.isBankEnabled === true &&
+                      Number(amount) < getMinimumAmountPerCurrency(currency),
+                  })}
+                >
                   {currency == 'GBP' ? '£' : '€'} {amountValueWithCommas}
                   <sup className="ml-0.5 text-xl">.{amountDecimals}</sup>
+                  {currency &&
+                    amount &&
+                    paymentMethodsFormValue?.isBankEnabled === true &&
+                    Number(amount) < getMinimumAmountPerCurrency(currency) && (
+                      <img src={AlertIcon} className="inline-block ml-2 w-4 h-4" alt="Alert" title="Alert" />
+                    )}
                 </span>
               </LayoutWrapper>
             )}
@@ -538,89 +569,92 @@ const CreatePaymentRequestPage = ({
             {isReviewing && <div className="block md:hidden">{renderSettingsReview()}</div>}
 
             {/* Buttons */}
-            {currency && amount && productOrService && (
-              <LayoutWrapper
-                key="buttons"
-                className="flex flex-col !mt-20 justify-center sticky bottom-4 w-full lg:w-full mx-auto lg:mx-0 lg:static lg:bottom-auto"
-              >
-                <AnimatePresence initial={false}>
-                  {/* Review PR */}
-                  {!isReviewing && (
-                    <motion.button
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: durationAnimationWidth / 1.5 }}
-                      key="review-pr"
-                      type="button"
-                      className="w-full h-12 px-16 whitespace-nowrap flex justify-center items-center rounded-full py-3 text-sm cursor-pointer bg-[#DEE5ED] transition hover:bg-[#BDCCDB]"
-                      onClick={onReviewClicked}
-                    >
-                      <span className="py-3">Review payment request</span>
-
-                      <img src={NextIcon} alt="Arrow right" className="ml-2 w-4 h-4" />
-                    </motion.button>
-                  )}
-
-                  {/* Confirm PR */}
-                  {isReviewing && (
-                    <LayoutWrapper
-                      key="confirm-pr"
-                      layout={false}
-                      className="space-y-7"
-                      animateOnExit={false}
-                      duration={0.6}
-                    >
-                      <AnimatePresence>
-                        {showSubmitError && (
-                          <AnimateHeightWrapper layoutId="submit-error">
-                            <motion.div
-                              className="border-2 border-solid border-negativeRed rounded px-4 py-6 flex flex-row space-x-4"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                            >
-                              <img src={RedAlertIcon} alt="Warning" title="Warning" className="w-4 h-4" />
-                              <div className="[&>p]:text-default-text [&>p]:text-13px [&>p]:leading-5 [&>p]:font-normal [&>p]:py-1">
-                                <span className="text-base leading-4 font-semibold text-default-text block mb-2">
-                                  The payment request couldn't be created
-                                </span>
-                                {submitErrorMessages && submitErrorMessages.length > 0 ? (
-                                  submitErrorMessages.map((message, index) => <p>{message}</p>)
-                                ) : (
-                                  <p>
-                                    Please try again and, if the problem persists, you can contact us at{' '}
-                                    <a className="underline" href="mailto:support@nofrixion.com" target="_blank">
-                                      support@nofrixion.com
-                                    </a>
-                                    .
-                                  </p>
-                                )}
-                              </div>
-                            </motion.div>
-                          </AnimateHeightWrapper>
-                        )}
-                      </AnimatePresence>
-                      <Button
-                        variant={isSubmitting ? 'text' : 'primaryDark'}
-                        size="big"
-                        onClick={onConfirmClicked}
-                        disabled={isSubmitting}
-                        className={classNames({
-                          '!bg-greyText disabled:!opacity-100': isSubmitting,
-                        })}
+            {currency &&
+              amount &&
+              (!paymentMethodsFormValue?.isBankEnabled || Number(amount) >= getMinimumAmountPerCurrency(currency)) &&
+              productOrService && (
+                <LayoutWrapper
+                  key="buttons"
+                  className="flex flex-col !mt-20 justify-center sticky bottom-4 w-full lg:w-full mx-auto lg:mx-0 lg:static lg:bottom-auto"
+                >
+                  <AnimatePresence initial={false}>
+                    {/* Review PR */}
+                    {!isReviewing && (
+                      <motion.button
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: durationAnimationWidth / 1.5 }}
+                        key="review-pr"
+                        type="button"
+                        className="w-full h-12 px-16 whitespace-nowrap flex justify-center items-center rounded-full py-3 text-sm cursor-pointer bg-[#DEE5ED] transition hover:bg-[#BDCCDB]"
+                        onClick={onReviewClicked}
                       >
-                        {isSubmitting ? <Loader className="h-6 w-6 ml-0.5" /> : 'Confirm payment request'}
-                      </Button>
+                        <span className="py-3">Review payment request</span>
 
-                      {/* Edit button */}
-                      <Button variant="secondary" size="big" onClick={() => setIsReviewing(false)}>
-                        Edit
-                      </Button>
-                    </LayoutWrapper>
-                  )}
-                </AnimatePresence>
-              </LayoutWrapper>
-            )}
+                        <img src={NextIcon} alt="Arrow right" className="ml-2 w-4 h-4" />
+                      </motion.button>
+                    )}
+
+                    {/* Confirm PR */}
+                    {isReviewing && (
+                      <LayoutWrapper
+                        key="confirm-pr"
+                        layout={false}
+                        className="space-y-7"
+                        animateOnExit={false}
+                        duration={0.6}
+                      >
+                        <AnimatePresence>
+                          {showSubmitError && (
+                            <AnimateHeightWrapper layoutId="submit-error">
+                              <motion.div
+                                className="border-2 border-solid border-negativeRed rounded px-4 py-6 flex flex-row space-x-4"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                              >
+                                <img src={RedAlertIcon} alt="Warning" title="Warning" className="w-4 h-4" />
+                                <div className="[&>p]:text-default-text [&>p]:text-13px [&>p]:leading-5 [&>p]:font-normal [&>p]:py-1">
+                                  <span className="text-base leading-4 font-semibold text-default-text block mb-2">
+                                    The payment request couldn't be created
+                                  </span>
+                                  {submitErrorMessages && submitErrorMessages.length > 0 ? (
+                                    submitErrorMessages.map((message, index) => <p>{message}</p>)
+                                  ) : (
+                                    <p>
+                                      Please try again and, if the problem persists, you can contact us at{' '}
+                                      <a className="underline" href="mailto:support@nofrixion.com" target="_blank">
+                                        support@nofrixion.com
+                                      </a>
+                                      .
+                                    </p>
+                                  )}
+                                </div>
+                              </motion.div>
+                            </AnimateHeightWrapper>
+                          )}
+                        </AnimatePresence>
+                        <Button
+                          variant={isSubmitting ? 'text' : 'primaryDark'}
+                          size="big"
+                          onClick={onConfirmClicked}
+                          disabled={isSubmitting}
+                          className={classNames({
+                            '!bg-greyText disabled:!opacity-100': isSubmitting,
+                          })}
+                        >
+                          {isSubmitting ? <Loader className="h-6 w-6 ml-0.5" /> : 'Confirm payment request'}
+                        </Button>
+
+                        {/* Edit button */}
+                        <Button variant="secondary" size="big" onClick={() => setIsReviewing(false)}>
+                          Edit
+                        </Button>
+                      </LayoutWrapper>
+                    )}
+                  </AnimatePresence>
+                </LayoutWrapper>
+              )}
           </AnimatePresence>
         </div>
       </div>
@@ -679,14 +713,32 @@ const CreatePaymentRequestPage = ({
                                 New payment request
                               </Dialog.Title>
                             </div>
-                            <div className="lg:w-[27rem] lg:ml-[7.625rem] lg:pr-12 xl:pr-0">
-                              <div className="md:w-72 lg:w-[13.938rem] mb-11">
-                                <InputAmountField
-                                  value={amount}
-                                  onChange={(e) => setAmount(e.target.value)}
-                                  onCurrencyChange={onCurrencyChange}
-                                  currency={currency}
-                                />
+                            <div className="lg:w-[27rem] lg:ml-[7.625rem] lg:mr-12 xl:mr-0">
+                              <div className="mb-11">
+                                <div className="md:w-72 lg:w-[13.938rem]">
+                                  <InputAmountField
+                                    value={amount}
+                                    onChange={(e) => setAmount(e.target.value)}
+                                    onCurrencyChange={onCurrencyChange}
+                                    currency={currency}
+                                  />
+                                </div>
+                                <AnimatePresence initial={false}>
+                                  {currency &&
+                                    amount &&
+                                    paymentMethodsFormValue?.isBankEnabled === true &&
+                                    Number(amount) < getMinimumAmountPerCurrency(currency) && (
+                                      <AnimateHeightWrapper layoutId="amount-validation">
+                                        <div className="w-full p-3 mt-2 bg-warningYellow rounded">
+                                          <p className="text-sm text-default-text font-normal">
+                                            The minimum amount for bank payments is {currency == 'GBP' ? '£' : '€'}
+                                            {formatter.format(getMinimumAmountPerCurrency(currency))}. You must use
+                                            another payment method for lower amounts.
+                                          </p>
+                                        </div>
+                                      </AnimateHeightWrapper>
+                                    )}
+                                </AnimatePresence>
                               </div>
 
                               <div className="mb-9">
@@ -810,18 +862,22 @@ const CreatePaymentRequestPage = ({
                           {/* Review PR sticky button for mobile */}
                           <AnimatePresence initial={false}>
                             {/* Review PR */}
-                            {currency && amount && productOrService && (
-                              <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: 20 }}
-                                className="block lg:hidden sticky bottom-0 w-full mx-auto pb-4"
-                              >
-                                <Button variant="secondary" size="big" onClick={onReviewClicked} nextArrow>
-                                  Review payment request
-                                </Button>
-                              </motion.div>
-                            )}
+                            {currency &&
+                              amount &&
+                              (!paymentMethodsFormValue?.isBankEnabled ||
+                                Number(amount) >= getMinimumAmountPerCurrency(currency)) &&
+                              productOrService && (
+                                <motion.div
+                                  initial={{ opacity: 0, y: 20 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  exit={{ opacity: 0, y: 20 }}
+                                  className="block lg:hidden sticky bottom-0 w-full mx-auto pb-4"
+                                >
+                                  <Button variant="secondary" size="big" onClick={onReviewClicked} nextArrow>
+                                    Review payment request
+                                  </Button>
+                                </motion.div>
+                              )}
                           </AnimatePresence>
                         </>
                       </motion.div>
@@ -845,6 +901,9 @@ const CreatePaymentRequestPage = ({
 
           {!isUserPaymentDefaultsLoading && (
             <PaymentMethodsModal
+              currencySymbol={currency == 'GBP' ? '£' : '€'}
+              amount={amount}
+              minimumCurrencyAmount={getMinimumAmountPerCurrency(currency)}
               open={isPaymentMethodsModalOpen}
               userDefaults={
                 prefilledData?.paymentMethods

@@ -5,7 +5,7 @@ import BankIcon from '../../../../assets/icons/bank-icon.svg';
 import CardIcon from '../../../../assets/icons/card-icon.svg';
 import ApplePayIcon from '../../../../assets/icons/wallet-icon.svg';
 import BitcoinIcon from '../../../../assets/icons/bitcoin-icon.svg';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Checkbox from '../../Checkbox/Checkbox';
 import { AnimatePresence } from 'framer-motion';
 import Select from '../../Select/Select';
@@ -14,6 +14,9 @@ import { LocalPaymentMethodsFormValue } from '../../../../types/LocalTypes';
 import { BankSettings, PaymentMethodsDefaults } from '@nofrixion/moneymoov';
 
 interface PaymentMethodsModalProps extends BaseModalProps {
+  amount: string;
+  currencySymbol: '€' | '£';
+  minimumCurrencyAmount: number;
   banks: BankSettings[];
   userDefaults?: PaymentMethodsDefaults;
   onApply: (data: LocalPaymentMethodsFormValue) => void;
@@ -21,6 +24,9 @@ interface PaymentMethodsModalProps extends BaseModalProps {
 }
 
 const PaymentMethodsModal = ({
+  amount,
+  currencySymbol,
+  minimumCurrencyAmount,
   open,
   banks,
   userDefaults,
@@ -38,6 +44,12 @@ const PaymentMethodsModal = ({
   const [priorityBank, setPriorityBank] = useState<BankSettings | undefined>();
   const [currentState, setCurrentState] = useState<LocalPaymentMethodsFormValue>();
   const [enableUseAsDefault, setEnableUseAsDefault] = useState<boolean>(false);
+  const [applyEnabled, setApplyEnabled] = useState<boolean>(true);
+
+  const formatter = new Intl.NumberFormat(navigator.language, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
   useEffect(() => {
     setEnableUseAsDefault(
@@ -50,6 +62,9 @@ const PaymentMethodsModal = ({
         userDefaults?.pispPriorityBank !== isPriorityBankEnabled ||
         (isPriorityBankEnabled && userDefaults?.pispPriorityBankID !== priorityBank?.bankID),
     );
+
+    // Enabled unless PISP is enabled and amount is less than minimum.
+    setApplyEnabled(!(isBankEnabled && amount && Number(amount) < minimumCurrencyAmount));
   }, [
     isBankEnabled,
     isCardEnabled,
@@ -58,6 +73,8 @@ const PaymentMethodsModal = ({
     isCaptureFundsEnabled,
     isPriorityBankEnabled,
     priorityBank,
+    minimumCurrencyAmount,
+    amount,
   ]);
 
   useEffect(() => {
@@ -140,6 +157,16 @@ const PaymentMethodsModal = ({
     }
   };
 
+  const ValidationAlert: React.FC<{ layoutId: string; children?: React.ReactNode }> = ({ layoutId, children }) => {
+    return (
+      <AnimateHeightWrapper layoutId={layoutId}>
+        <div className="w-full p-3 mt-6 bg-warningYellow rounded">
+          <p className="text-sm text-default-text font-normal">{children}</p>
+        </div>
+      </AnimateHeightWrapper>
+    );
+  };
+
   return (
     <CustomModal
       title="Payment methods"
@@ -147,6 +174,7 @@ const PaymentMethodsModal = ({
       enableUseAsDefault={enableUseAsDefault}
       onDismiss={handleOnDismiss}
       onApply={onApplyClicked}
+      onApplyEnabled={applyEnabled}
       buttonRowClassName={isWalletEnabled && !isCardEnabled && !isBankEnabled && !isLightningEnabled ? 'md:mt-6' : ''}
     >
       <div className="[&>*]:border-b [&>*]:border-solid [&>*]:border-b-borderGrey">
@@ -232,18 +260,22 @@ const PaymentMethodsModal = ({
         />
       </div>
 
-      <AnimatePresence initial={false}>
-        {isWalletEnabled && !isCardEnabled && !isBankEnabled && !isLightningEnabled && (
-          <AnimateHeightWrapper layoutId="wallet-card-alert">
-            <div className="w-full p-3 mt-6 bg-[#FCF5CF] rounded">
-              <p className="text-sm text-default-text font-normal">
-                Do your customers have access to Apple Pay or Google Pay? If you are unsure, you may want to consider
-                adding a second payment method as a backup.
-              </p>
-            </div>
-          </AnimateHeightWrapper>
-        )}
-      </AnimatePresence>
+      <div className="flex flex-col space-y-4">
+        <AnimatePresence initial={false}>
+          {isWalletEnabled && !isCardEnabled && !isBankEnabled && !isLightningEnabled && (
+            <ValidationAlert layoutId="wallet-card-alert">
+              Do your customers have access to Apple Pay or Google Pay? If you are unsure, you may want to consider
+              adding a second payment method as a backup.
+            </ValidationAlert>
+          )}
+          {isBankEnabled && amount && Number(amount) < minimumCurrencyAmount && (
+            <ValidationAlert layoutId="amount-pisp-alert">
+              The minimum amount for bank payments is {currencySymbol}
+              {formatter.format(minimumCurrencyAmount)}. You must use another payment method for lower amounts.
+            </ValidationAlert>
+          )}
+        </AnimatePresence>
+      </div>
     </CustomModal>
   );
 };
