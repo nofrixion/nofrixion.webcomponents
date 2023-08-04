@@ -11,6 +11,7 @@ import {
   isRefundable,
 } from '../../../utils/paymentAttemptsHelper';
 import { Icon } from '../atoms';
+import PaymentAttemptActionMenu from '../PaymentAttemptActionMenu/PaymentAttemptActionMenu';
 
 export interface TransactionsProps {
   transactions: LocalPaymentAttempt[];
@@ -127,13 +128,7 @@ const Transactions = ({ transactions, cardAuthoriseOnly, onRefund, onCapture }: 
                         </span>
                       )}
                       {transaction.paymentMethod === LocalPaymentMethodTypes.Card && isRefundable(transaction) && (
-                        <button
-                          className="rounded-full w-6 h-6 inline-flex items-center justify-center outline-none cursor-pointer align-middle hover:bg-greyBg text-[#8F99A3] hover:text-controlGreyHover data-[state='open']:text-controlGreyHover"
-                          aria-label="Actions"
-                          onClick={() => onRefund(transaction)}
-                        >
-                          <Icon name="ellipsis/24" />
-                        </button>
+                        <PaymentAttemptActionMenu onRefund={() => onRefund(transaction)} />
                       )}
                     </div>
                   </td>
