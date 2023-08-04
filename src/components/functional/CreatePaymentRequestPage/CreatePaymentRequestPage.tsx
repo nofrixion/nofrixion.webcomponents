@@ -12,6 +12,7 @@ import {
   useUserPaymentDefaults,
   ClientSettingsClient,
   BankSettings,
+  ApiResponse,
 } from '@nofrixion/moneymoov';
 
 import { defaultUserPaymentDefaults } from '../../../utils/constants';
@@ -93,12 +94,18 @@ const CreatePaymentRequestPageMain = ({
   }, [banksResponse]);
 
   useEffect(() => {
+    if (userPaymentDefaultsResponse) {
+      updateUserPaymentDefaults(userPaymentDefaultsResponse);
+    }
+  }, [userPaymentDefaultsResponse]);
+
+  const updateUserPaymentDefaults = (userPaymentDefaultsResponse: ApiResponse<UserPaymentDefaults>) => {
     if (userPaymentDefaultsResponse?.status === 'success') {
       setUserPaymentDefaults(userPaymentDefaultsResponse.data);
     } else if (userPaymentDefaultsResponse?.status === 'error') {
       console.warn(userPaymentDefaultsResponse.error);
     }
-  }, [userPaymentDefaultsResponse]);
+  };
 
   const parseLocalPaymentRequestCreateToRemotePaymentRequest = (
     merchantId: string,
@@ -156,8 +163,6 @@ const CreatePaymentRequestPageMain = ({
       return;
     }
 
-    makeToast('success', 'Payment request successfully created.');
-
     if (response.data) {
       onPaymentRequestCreated(remotePaymentRequestToLocalPaymentRequest(response.data));
     }
@@ -171,6 +176,8 @@ const CreatePaymentRequestPageMain = ({
       makeToast('error', response.error.title);
       return;
     }
+
+    updateUserPaymentDefaults(response);
   };
 
   return (

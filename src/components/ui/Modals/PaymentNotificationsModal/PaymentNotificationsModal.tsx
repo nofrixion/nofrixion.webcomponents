@@ -1,5 +1,5 @@
 import CustomModal, { BaseModalProps } from '../../CustomModal/CustomModal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LocalPaymentNotificationsFormValue } from '../../../../types/LocalTypes';
 import { NotificationEmailsDefaults } from '@nofrixion/moneymoov';
 import InputTextField from '../../InputTextField/InputTextField';
@@ -24,6 +24,11 @@ const PaymentNotificationsModal = ({
   const [email, setEmail] = useState(userDefaults ? userDefaults.emailAddresses : '');
   const [hasEmailError, setHasEmailError] = useState(false);
   const [currentState, setCurrentState] = useState<LocalPaymentNotificationsFormValue>();
+  const [enableUseAsDefault, setEnableUseAsDefault] = useState<boolean>(false);
+
+  useEffect(() => {
+    setEnableUseAsDefault(!userDefaults || (userDefaults?.emailAddresses ?? '') !== (email ?? ''));
+  }, [email]);
 
   // When the user clicks on the Apply button, we need to send the data to the parent component
   const onApplyClicked = (data: any) => {
@@ -76,10 +81,9 @@ const PaymentNotificationsModal = ({
     <CustomModal
       title="Payment notifications"
       open={open}
-      enableUseAsDefault
+      enableUseAsDefault={enableUseAsDefault}
       onDismiss={handleOnDismiss}
       onApply={onApplyClicked}
-      isDefault={isDefault}
       onApplyEnabled={!hasEmailError}
     >
       <div className="text-default-text font-normal text-sm mb-6">

@@ -59,6 +59,12 @@ export const Icons = {
       <path d="M15 8L1 8" strokeLinecap="round" strokeLinejoin="round" />
     </SVG>
   ),
+  'add/16': (className: string) => (
+    <SVG className={className} size="16">
+      <path d="M1 8H15" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M8 1L8 15" strokeLinecap="round" strokeLinejoin="round" />
+    </SVG>
+  ),
   'done/12': (className: string) => (
     <SVG className={className} size="12">
       <path d="M1.5 6.31579L4.34211 9.15789L10.5 3" strokeLinecap="round" strokeLinejoin="round" />

@@ -1,5 +1,5 @@
 import CustomModal, { BaseModalProps } from '../../CustomModal/CustomModal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Checkbox from '../../Checkbox/Checkbox';
 import { LocalPaymentConditionsFormValue } from '../../../../types/LocalTypes';
 import { PaymentConditionsDefaults, UserPaymentDefaults } from '@nofrixion/moneymoov';
@@ -22,6 +22,11 @@ const PaymentConditionsModal = ({
   );
   const [isDefault, setIsDefault] = useState<boolean>(!isPrefilledData && !!userDefaults);
   const [currentState, setCurrentState] = useState<LocalPaymentConditionsFormValue>();
+  const [enableUseAsDefault, setEnableUseAsDefault] = useState<boolean>(false);
+
+  useEffect(() => {
+    setEnableUseAsDefault(!userDefaults || userDefaults?.allowPartialPayments !== isAllowPartialEnabled);
+  }, [isAllowPartialEnabled]);
 
   // When the user clicks on the Apply button, we need to send the data to the parent component
   const onApplyClicked = (data: any) => {
@@ -51,10 +56,9 @@ const PaymentConditionsModal = ({
     <CustomModal
       title="Payment conditions"
       open={open}
-      enableUseAsDefault
+      enableUseAsDefault={enableUseAsDefault}
       onDismiss={handleOnDismiss}
       onApply={onApplyClicked}
-      isDefault={isDefault}
     >
       <div className="py-1">
         <Checkbox
