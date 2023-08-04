@@ -68,7 +68,6 @@ const CreatePaymentRequestPage = ({
   const [lastName, setLastName] = useState(prefilledData?.lastName ?? '');
   const [email, setEmail] = useState(prefilledData?.email ?? '');
   const [hasEmailError, setHasEmailError] = useState(false);
-  const [hasDescriptionError, setHasDescriptionError] = useState(false);
   const [defaultsChanged, setDefaultsChanged] = useState(false);
 
   const findBank = (bankID: string | undefined) => {
@@ -386,12 +385,14 @@ const CreatePaymentRequestPage = ({
     const invalidCharacters = description.match(/[^a-zA-Z0-9\-_\.@&\*%\$#!:;'""()\[\] ]+/g);
 
     if (description.length > 0 && invalidCharacters) {
-      setHasDescriptionError(true);
+      // Singular
+      if (invalidCharacters.length === 1) {
+        return `The character "${invalidCharacters[0]}" is not allowed in the description`;
+      }
 
+      // Plural
       return `The characters "${invalidCharacters.join('')}" are not allowed in the description`;
     }
-
-    setHasDescriptionError(false);
   };
 
   const reviewRowClassNames = 'flex overflow-hidden items-baseline flex-col gap-2 md:gap-0 md:flex-row';
