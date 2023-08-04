@@ -163,8 +163,6 @@ const CreatePaymentRequestPageMain = ({
       return;
     }
 
-    makeToast('success', 'Payment request successfully created.');
-
     if (response.data) {
       onPaymentRequestCreated(remotePaymentRequestToLocalPaymentRequest(response.data));
     }

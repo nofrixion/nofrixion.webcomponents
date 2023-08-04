@@ -27,7 +27,7 @@ const Checkbox = ({ label, description, value, infoText, onChange }: CheckboxPro
         </RadixCheckbox.Indicator>
       </RadixCheckbox.Root>
 
-      <label className="cursor-pointer pl-3 pr-2 -mt-0.5 md:mt-0" htmlFor={id}>
+      <label className="cursor-pointer pl-3 pr-2 mb-0 -mt-0.5 md:mt-0" htmlFor={id}>
         {label}
 
         {description && <div className="mt-1 text-greyText font-normal text-xs">{description}</div>}

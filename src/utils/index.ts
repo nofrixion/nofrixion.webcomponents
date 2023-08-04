@@ -1,4 +1,11 @@
 import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { extendTailwindMerge } from 'tailwind-merge';
 
-export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
+const isBuilt = import.meta.env.PROD;
+const builtClassesPrefix = import.meta.env.builtClassesPrefix;
+
+const customTwMerge = extendTailwindMerge({
+  prefix: isBuilt ? builtClassesPrefix : '',
+});
+
+export const cn = (...inputs: ClassValue[]) => customTwMerge(clsx(inputs));
