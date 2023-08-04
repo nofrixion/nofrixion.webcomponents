@@ -5,6 +5,7 @@ import InputTextField from '../InputTextField/InputTextField';
 import EditOptionCard from '../EditOptionCard/EditOptionCard';
 
 import AlertIcon from '../../../assets/icons/alert-icon.svg';
+import RedAlertIcon from '../../../assets/icons/red-alert-icon.svg';
 import NextIcon from '../../../assets/icons/next-icon.svg';
 import InputTextAreaField from '../InputTextAreaField/InputTextAreaField';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -18,6 +19,7 @@ import {
   PaymentConditionsDefaults,
   PaymentMethodsDefaults,
   UserPaymentDefaults,
+  ApiError,
 } from '@nofrixion/moneymoov';
 import {
   LocalPaymentConditionsFormValue,
@@ -37,11 +39,12 @@ import { validateEmail } from '../../../utils/validation';
 import { formatAmountAndDecimals } from '../../../utils/formatters';
 import BackArrow from '../utils/BackArrow';
 import { Button } from '@/components/ui/atoms';
+import { Loader } from '@/components/ui/Loader/Loader';
 
 interface CreatePaymentRequestPageProps {
   banks: BankSettings[];
   userPaymentDefaults?: UserPaymentDefaults;
-  onConfirm: (data: LocalPaymentRequestCreate) => Promise<void>;
+  onConfirm: (data: LocalPaymentRequestCreate) => Promise<ApiError | undefined>;
   isOpen: boolean;
   onClose: () => void;
   onDefaultsChanged: (data: UserPaymentDefaults) => void;
@@ -104,6 +107,8 @@ const CreatePaymentRequestPage = ({
   const [isPaymentNotificationsModalOpen, setIsPaymentNotificationsModalOpen] = useState(false);
   const [isReviewing, setIsReviewing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSubmitError, setShowSubmitError] = useState(false);
+  const [submitErrorMessages, setSubmitErrorMessages] = useState<string[]>([]);
 
   const convertPrefilledDataToPaymentMethodDefaults = (): PaymentMethodsDefaults => {
     return {
@@ -256,6 +261,8 @@ const CreatePaymentRequestPage = ({
 
   const onConfirmClicked = async () => {
     setIsSubmitting(true);
+    setShowSubmitError(false);
+    setSubmitErrorMessages([]);
 
     const paymentRequestToCreate: LocalPaymentRequestCreate = {
       amount: Number(amount),
@@ -285,7 +292,22 @@ const CreatePaymentRequestPage = ({
       notificationEmailAddresses: paymentNotificationsFormValue.emailAddresses,
     };
 
-    await onConfirm(paymentRequestToCreate);
+    const apiError = await onConfirm(paymentRequestToCreate);
+
+    if (apiError) {
+      let errorMessages: string[] = [];
+      if (apiError.errors) {
+        Object.keys(apiError.errors).forEach((key) => {
+          const error = apiError.errors![key];
+          errorMessages = errorMessages.concat(error);
+        });
+      }
+
+      setSubmitErrorMessages(errorMessages);
+      setShowSubmitError(true);
+      setIsSubmitting(false);
+      return;
+    }
 
     if (defaultsChanged) {
       handleDefaultsChanged();
@@ -535,8 +557,46 @@ const CreatePaymentRequestPage = ({
                       animateOnExit={false}
                       duration={0.6}
                     >
-                      <Button variant="primaryDark" size="big" onClick={onConfirmClicked} disabled={isSubmitting}>
-                        Confirm payment request
+                      <AnimatePresence>
+                        {showSubmitError && (
+                          <AnimateHeightWrapper layoutId="submit-error">
+                            <motion.div
+                              className="border-2 border-solid border-negativeRed rounded px-4 py-6 flex flex-row space-x-4"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                            >
+                              <img src={RedAlertIcon} alt="Warning" title="Warning" className="w-4 h-4" />
+                              <div className="[&>p]:text-default-text [&>p]:text-13px [&>p]:leading-5 [&>p]:font-normal [&>p]:py-1">
+                                <span className="text-base leading-4 font-semibold text-default-text block mb-2">
+                                  The payment request couldn't be created
+                                </span>
+                                {submitErrorMessages && submitErrorMessages.length > 0 ? (
+                                  submitErrorMessages.map((message, index) => <p>{message}</p>)
+                                ) : (
+                                  <p>
+                                    Please try again and, if the problem persists, you can contact us at{' '}
+                                    <a className="underline" href="mailto:support@nofrixion.com" target="_blank">
+                                      support@nofrixion.com
+                                    </a>
+                                    .
+                                  </p>
+                                )}
+                              </div>
+                            </motion.div>
+                          </AnimateHeightWrapper>
+                        )}
+                      </AnimatePresence>
+                      <Button
+                        variant={isSubmitting ? 'text' : 'primaryDark'}
+                        size="big"
+                        onClick={onConfirmClicked}
+                        disabled={isSubmitting}
+                        className={classNames({
+                          '!bg-greyText disabled:!opacity-100': isSubmitting,
+                        })}
+                      >
+                        {isSubmitting ? <Loader className="h-6 w-6 ml-0.5" /> : 'Confirm payment request'}
                       </Button>
 
                       {/* Edit button */}
