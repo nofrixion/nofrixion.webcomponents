@@ -7,10 +7,11 @@ export interface InputTextAreaFieldProps extends React.InputHTMLAttributes<HTMLT
   required?: boolean;
   maxLength?: number;
   validation?: (value: string) => string | undefined;
+  enableQuickValidation?: boolean; // If enabled, the validation will be done on every change, not only after blur
   error?: string;
 }
 const InputTextAreaField = React.forwardRef<HTMLTextAreaElement, InputTextAreaFieldProps>(
-  ({ label, onChange, onBlur, validation, value, required, maxLength, ...props }, ref) => {
+  ({ label, onChange, onBlur, validation, enableQuickValidation, value, required, maxLength, ...props }, ref) => {
     const textId = useId();
 
     const [error, setError] = useState<string>();
@@ -18,7 +19,7 @@ const InputTextAreaField = React.forwardRef<HTMLTextAreaElement, InputTextAreaFi
     const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       onChange && onChange(e);
 
-      if (!validation || !error) {
+      if (!validation || (!enableQuickValidation && !error)) {
         return;
       }
 

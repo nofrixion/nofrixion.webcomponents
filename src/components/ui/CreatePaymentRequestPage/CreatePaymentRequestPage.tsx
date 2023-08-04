@@ -382,10 +382,13 @@ const CreatePaymentRequestPage = ({
   };
 
   const onValidateDescription = (description: string): string | undefined => {
-    // Validate with this same regex from backend "[a-zA-Z0-9\-_\.@&\*%\$#!:;'""()\[\] ]+"
-    if (description.length > 0 && !description.match(/^[a-zA-Z0-9\-_\.@&\*%\$#!:;'""()\[\] ]+$/)) {
+    // Get invalid characters if any (using the same regex from backend "[a-zA-Z0-9\-_\.@&\*%\$#!:;'""()\[\] ]+")
+    const invalidCharacters = description.match(/[^a-zA-Z0-9\-_\.@&\*%\$#!:;'""()\[\] ]+/g);
+
+    if (description.length > 0 && invalidCharacters) {
       setHasDescriptionError(true);
-      return 'The only allowed characters are letters, numbers, and the following symbols: -_.@&*%$#!:;’“”';
+
+      return `The characters "${invalidCharacters.join('')}" are not allowed in the description`;
     }
 
     setHasDescriptionError(false);
@@ -642,6 +645,7 @@ const CreatePaymentRequestPage = ({
                                   value={description}
                                   onChange={(e) => setDescription(e.target.value)}
                                   validation={onValidateDescription}
+                                  enableQuickValidation
                                 />
                               </div>
 
