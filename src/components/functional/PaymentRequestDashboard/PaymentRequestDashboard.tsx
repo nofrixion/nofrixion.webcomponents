@@ -28,7 +28,7 @@ import FilterControlsRow from '../../ui/FilterControlsRow/FilterControlsRow';
 import { FilterableTag } from '../../ui/TagFilter/TagFilter';
 import ScrollArea from '../../ui/ScrollArea/ScrollArea';
 import { LocalPartialPaymentMethods, LocalPaymentMethodTypes } from '../../../types/LocalEnums';
-import { Button } from '@/components/ui/atoms';
+import { Button, Icon } from '@/components/ui/atoms';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 interface PaymentRequestDashboardProps {
@@ -444,16 +444,18 @@ const PaymentRequestDashboardMain = ({
   }, [metrics]);
 
   const isInitialState = !isLoadingMetrics && (!firstMetrics || firstMetrics?.all === 0);
+
   return (
     <div className="font-inter bg-mainGrey text-default-text h-full">
-      <div className="flex flex-col gap-8 md:flex-row md:justify-between md:items-center mb-8 md:mb-[68px]">
+      <div className="flex gap-8 justify-between items-center mb-8 md:mb-[68px]">
         <span className="md:pl-4 leading-8 font-medium text-2xl md:text-[1.75rem]">Accounts Receivable</span>
         <LayoutGroup>
           <AnimatePresence initial={false}>
-            {!isInitialState && !isLoadingMetrics && (
-              <LayoutWrapper className="fixed bottom-0 py-4 px-6 w-full -mx-6 md:-mx-14 md:px-14 lg:static lg:w-auto bg-gradient-to-b from-transparent via-mainGrey via-30% to-mainGrey">
-                <Button size="big" onClick={onCreatePaymentRequest}>
-                  Create payment request
+            {!isInitialState && (
+              <LayoutWrapper>
+                <Button size="big" onClick={onCreatePaymentRequest} className="w-10 h-10 md:w-full md:h-full">
+                  <span className="hidden md:inline-block">Create payment request</span>
+                  <Icon name="add/16" className="md:hidden" />
                 </Button>
               </LayoutWrapper>
             )}

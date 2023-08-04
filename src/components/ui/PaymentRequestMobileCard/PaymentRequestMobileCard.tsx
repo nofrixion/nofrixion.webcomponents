@@ -52,7 +52,7 @@ const PaymentRequestMobileCard = ({
         {/* TODO: Add context menu */}
       </div>
       <div className="flex">
-        <div className="flex flex-col text-left overflow-hidden">
+        <div className="flex flex-col w-36 text-left overflow-hidden">
           <span className="text-xs truncate">{contact.name ?? defaultAnonymousUserName}</span>
           <span className="text-xs text-greyText truncate break-all">{contact.email}</span>
         </div>
