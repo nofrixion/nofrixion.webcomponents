@@ -100,7 +100,7 @@ const InputAmountField: React.FC<InputAmountFieldProps> = ({
           </DropdownMenu.Trigger>
 
           <DropdownMenu.Portal>
-            <DropdownMenu.Content asChild forceMount sideOffset={5} className="px-6 z-10">
+            <DropdownMenu.Content asChild forceMount sideOffset={5} className="px-6 z-50">
               <motion.div
                 className="bg-white rounded-md shadow-[0px_0px_8px_rgba(4,_41,_49,_0.1)] p-4 space-y-4"
                 initial={{ opacity: 0.5, y: -5, scaleX: 1, scaleY: 1 }}

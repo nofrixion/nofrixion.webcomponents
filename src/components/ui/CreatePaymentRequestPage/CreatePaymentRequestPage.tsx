@@ -8,7 +8,6 @@ import AlertIcon from '../../../assets/icons/alert-icon.svg';
 import NextIcon from '../../../assets/icons/next-icon.svg';
 import InputTextAreaField from '../InputTextAreaField/InputTextAreaField';
 import { AnimatePresence, motion } from 'framer-motion';
-import AnimateHeightWrapper from '../utils/AnimateHeight';
 import LayoutWrapper from '../utils/LayoutWrapper';
 import PaymentMethodsModal from '../Modals/PaymentMethodsModal/PaymentMethodsModal';
 import {
@@ -247,7 +246,11 @@ const CreatePaymentRequestPage = ({
   };
 
   const onReviewClicked = () => {
-    if (email && !validateEmail(email)) {
+    if (email && onValidateEmail(email)) {
+      return;
+    }
+
+    if (description && onValidateDescription(description)) {
       return;
     }
 
@@ -275,7 +278,9 @@ const CreatePaymentRequestPage = ({
         },
         card: {
           active: paymentMethodsFormValue.isCardEnabled,
-          captureFunds: paymentMethodsFormValue.isCaptureFundsEnabled,
+          // Capture funds should always be true when card is disabled
+          // as it's not possible to only authorize on cards if card are disabled
+          captureFunds: paymentMethodsFormValue.isCardEnabled ? paymentMethodsFormValue.isCaptureFundsEnabled : true,
         },
         wallet: paymentMethodsFormValue.isWalletEnabled,
         lightning: paymentMethodsFormValue.isLightningEnabled,
@@ -361,20 +366,32 @@ const CreatePaymentRequestPage = ({
     ...(paymentMethodsFormValue.isBankEnabled && paymentMethodsFormValue.priorityBank
       ? [`*${paymentMethodsFormValue.priorityBank.name}* set up as priority bank.`]
       : []),
-    ...(!paymentMethodsFormValue.isCaptureFundsEnabled ? ["Don't capture funds on cards is on."] : []),
+    ...(paymentMethodsFormValue.isCardEnabled && !paymentMethodsFormValue.isCaptureFundsEnabled
+      ? ["Don't capture funds on cards is on."]
+      : []),
   ];
 
   const onValidateEmail = (email: string) => {
     if (email && !validateEmail(email)) {
       setHasEmailError(true);
+      return 'Make sure the email address is valid.';
     }
 
-    if (!email) {
-      setHasEmailError(false);
-    }
+    setHasEmailError(false);
+  };
 
-    if (email && validateEmail(email)) {
-      setHasEmailError(false);
+  const onValidateDescription = (description: string): string | undefined => {
+    // Get invalid characters if any (using the same regex from backend "[a-zA-Z0-9\-_\.@&\*%\$#!:;'""()\[\] ]+")
+    const invalidCharacters = description.match(/[^a-zA-Z0-9\-_\.@&\*%\$#!:;'""()\[\] ]+/g);
+
+    if (description.length > 0 && invalidCharacters) {
+      // Singular
+      if (invalidCharacters.length === 1) {
+        return `The character "${invalidCharacters[0]}" is not allowed in the description`;
+      }
+
+      // Plural
+      return `The characters "${invalidCharacters.join('')}" are not allowed in the description`;
     }
   };
 
@@ -398,26 +415,21 @@ const CreatePaymentRequestPage = ({
               <PaymentMethodIcon paymentMethod="lightning" enabled={paymentMethodsFormValue.isLightningEnabled} />
             </div>
 
-            <div>
-              {availableMethodsDetails.length > 0 && (
-                <div className="flex flex-col text-greyText text-xs">
-                  {availableMethodsDetails?.map((detail, index) => {
-                    return <span key={`detail-${index}`}>{parseBoldText(detail)}</span>;
-                  })}
-                </div>
-              )}
-            </div>
+            {availableMethodsDetails.length > 0 && (
+              <div className="flex flex-col text-greyText text-xs">
+                {availableMethodsDetails?.map((detail, index) => {
+                  return <span key={`detail-${index}`}>{parseBoldText(detail)}</span>;
+                })}
+              </div>
+            )}
 
-            <div>
-              {paymentNotificationsFormValue.emailAddresses && (
-                <div className="flex text-greyText text-xs">
-                  <span>
-                    Payment notification to{' '}
-                    {formatEmailAddressesForSummary(paymentNotificationsFormValue.emailAddresses)}
-                  </span>
-                </div>
-              )}
-            </div>
+            {paymentNotificationsFormValue.emailAddresses && (
+              <div className="flex text-greyText text-xs">
+                <span>
+                  Payment notification to {formatEmailAddressesForSummary(paymentNotificationsFormValue.emailAddresses)}
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </>
@@ -434,7 +446,7 @@ const CreatePaymentRequestPage = ({
             {/* Amount */}
             {currency && amount && (
               <LayoutWrapper key="amount" className={reviewRowClassNames}>
-                <span className="leading-6 text-greyText w-40 shrink-0">Request</span>
+                <span className="leading-6 text-greyText w-40 shrink-0">Amount</span>
                 <span className="font-semibold text-[2rem]/8 w-full">
                   {currency == 'GBP' ? '£' : '€'} {amountValueWithCommas}
                   <sup className="ml-0.5 text-xl">.{amountDecimals}</sup>
@@ -445,7 +457,7 @@ const CreatePaymentRequestPage = ({
             {/* Product or service + description */}
             {(productOrService || description) && (
               <LayoutWrapper key="product-or-service-wrapper" className={reviewRowClassNames}>
-                <span className="leading-6 text-greyText w-40 shrink-0">For</span>
+                <span className="leading-6 text-greyText w-40 shrink-0">Product/Service</span>
 
                 <div className="flex flex-col w-full">
                   {productOrService && (
@@ -466,7 +478,7 @@ const CreatePaymentRequestPage = ({
             {/* Name */}
             {(firstName || lastName || email) && (
               <LayoutWrapper key="from" className={reviewRowClassNames}>
-                <span className="leading-6 text-greyText w-40 shrink-0 break-words">From</span>
+                <span className="leading-6 text-greyText w-40 shrink-0 break-words">Customer</span>
 
                 <div className="flex flex-col w-full">
                   {(firstName || lastName) && (
@@ -529,7 +541,13 @@ const CreatePaymentRequestPage = ({
 
                   {/* Confirm PR */}
                   {isReviewing && (
-                    <LayoutWrapper layout={false} className="space-y-7" animateOnExit={false} duration={0.6}>
+                    <LayoutWrapper
+                      key="confirm-pr"
+                      layout={false}
+                      className="space-y-7"
+                      animateOnExit={false}
+                      duration={0.6}
+                    >
                       <Button variant="primaryDark" size="big" onClick={onConfirmClicked} disabled={isSubmitting}>
                         Confirm payment request
                       </Button>
@@ -592,7 +610,7 @@ const CreatePaymentRequestPage = ({
                       >
                         <>
                           <div className="w-full pt-10 lg:pt-20 pb-28">
-                            <div className="flex flex-col md:flex-row gap-y-6 md:gap-y-0 md:gap-4 lg:gap-[2.875rem] lg:items-center mb-12 md:mb-8">
+                            <div className="flex flex-col md:flex-row gap-y-6 md:gap-y-0 md:gap-4 lg:gap-[2.875rem] lg:items-center mb-12 md:mb-14">
                               {renderBackArrow()}
                               <Dialog.Title
                                 as="h3"
@@ -601,8 +619,8 @@ const CreatePaymentRequestPage = ({
                                 New payment request
                               </Dialog.Title>
                             </div>
-                            <div className="space-y-10 lg:w-[27rem] lg:ml-[7.625rem] lg:pr-12 xl:pr-0">
-                              <div className="md:w-72 lg:w-[13.938rem]">
+                            <div className="lg:w-[27rem] lg:ml-[7.625rem] lg:pr-12 xl:pr-0">
+                              <div className="md:w-72 lg:w-[13.938rem] mb-11">
                                 <InputAmountField
                                   value={amount}
                                   onChange={(e) => setAmount(e.target.value)}
@@ -611,7 +629,7 @@ const CreatePaymentRequestPage = ({
                                 />
                               </div>
 
-                              <div>
+                              <div className="mb-9">
                                 <InputTextField
                                   label="Product or service"
                                   maxLength={40}
@@ -621,58 +639,47 @@ const CreatePaymentRequestPage = ({
                                 />
                               </div>
 
-                              <div>
+                              <div className="mb-14">
                                 <InputTextAreaField
                                   label="Description"
                                   maxLength={140}
                                   value={description}
                                   onChange={(e) => setDescription(e.target.value)}
+                                  validation={onValidateDescription}
+                                  enableQuickValidation
                                 />
                               </div>
 
-                              <div>
-                                <InputTextField
-                                  label="First name"
-                                  autoComplete="given-name"
-                                  value={firstName}
-                                  onChange={(e) => setFirstName(e.target.value)}
-                                />
-                              </div>
+                              <div className="space-y-10 mb-14">
+                                <h4 className="text-lg/6 font-semibold">Customer info</h4>
+                                <div>
+                                  <InputTextField
+                                    label="First name"
+                                    autoComplete="given-name"
+                                    value={firstName}
+                                    onChange={(e) => setFirstName(e.target.value)}
+                                  />
+                                </div>
 
-                              <div>
-                                <InputTextField
-                                  label="Last name"
-                                  autoComplete="family-name"
-                                  value={lastName}
-                                  onChange={(e) => setLastName(e.target.value)}
-                                />
-                              </div>
+                                <div>
+                                  <InputTextField
+                                    label="Last name"
+                                    autoComplete="family-name"
+                                    value={lastName}
+                                    onChange={(e) => setLastName(e.target.value)}
+                                  />
+                                </div>
 
-                              <div>
-                                <InputTextField
-                                  label="Email"
-                                  autoComplete="email"
-                                  value={email}
-                                  type="email"
-                                  onChange={(e) => {
-                                    setEmail(e.target.value);
-
-                                    if (hasEmailError) {
-                                      onValidateEmail(e.target.value);
-                                    }
-                                  }}
-                                  onBlur={(e) => onValidateEmail(e.target.value)}
-                                />
-
-                                <AnimatePresence>
-                                  {hasEmailError && (
-                                    <AnimateHeightWrapper layoutId="email-error">
-                                      <div className="mt-2 bg-[#FCF5CF] text-sm p-3 rounded">
-                                        Make sure the email address is valid.
-                                      </div>
-                                    </AnimateHeightWrapper>
-                                  )}
-                                </AnimatePresence>
+                                <div>
+                                  <InputTextField
+                                    label="Email"
+                                    autoComplete="email"
+                                    value={email}
+                                    type="email"
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    validation={onValidateEmail}
+                                  />
+                                </div>
                               </div>
 
                               <div>

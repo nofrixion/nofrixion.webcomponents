@@ -209,14 +209,17 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
               (paymentMethod === PaymentMethodTypes.Card && authorisedAmount > settledAmount) ||
               (paymentMethod === PaymentMethodTypes.Pisp && status === PaymentResult.Authorized),
             capturedAmount: settledAmount,
-            captureAttempts: captureAttempts
-              .sort((a, b) => {
-                return new Date(b.capturedAt ?? 0).getTime() - new Date(a.capturedAt ?? 0).getTime();
-              })
-              .map((x) => ({
-                capturedAt: new Date(x.capturedAt ?? 0),
-                capturedAmount: x.capturedAmount,
-              })),
+            captureAttempts:
+              captureAttempts && captureAttempts.length > 0
+                ? captureAttempts
+                    .sort((a, b) => {
+                      return new Date(b.capturedAt ?? 0).getTime() - new Date(a.capturedAt ?? 0).getTime();
+                    })
+                    .map((x) => ({
+                      capturedAt: new Date(x.capturedAt ?? 0),
+                      capturedAmount: x.capturedAmount,
+                    }))
+                : [],
           });
         }
       });
