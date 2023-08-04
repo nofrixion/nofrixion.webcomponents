@@ -572,7 +572,9 @@ const CreatePaymentRequestPage = ({
             {currency &&
               amount &&
               (!paymentMethodsFormValue?.isBankEnabled || Number(amount) >= getMinimumAmountPerCurrency(currency)) &&
-              productOrService && (
+              productOrService &&
+              (!description || !onValidateDescription(description)) &&
+              !hasEmailError && (
                 <LayoutWrapper
                   key="buttons"
                   className="flex flex-col !mt-20 justify-center sticky bottom-4 w-full lg:w-full mx-auto lg:mx-0 lg:static lg:bottom-auto"
