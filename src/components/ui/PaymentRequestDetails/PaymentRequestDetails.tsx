@@ -7,13 +7,13 @@ import { Currency } from '@nofrixion/moneymoov';
 import StatusBadge from '../PaymentRequestStatusBadge/PaymentRequestStatusBadge';
 import DetailsTabs from '../DetailsTabs/DetailsTabs';
 import TagManager from '../Tags/TagManager/TagManager';
-import { LocalPaymentMethodTypes } from '../../../types/LocalEnums';
+import { getTotalAmountPaid } from '@/utils/paymentAttemptsHelper';
 
 export interface PaymentRequestDetailsProps {
   paymentRequest: LocalPaymentRequest;
   merchantTags: LocalTag[];
   hostedPaymentLink: string;
-  onRefund: (paymentAttemptID: string) => void;
+  onRefund: (paymentAttempt: LocalPaymentAttempt) => void;
   onCapture: (paymentAttempt: LocalPaymentAttempt) => void;
   onTagAdded: (tag: LocalTag) => void;
   onTagDeleted: (id: string) => void;
@@ -45,13 +45,7 @@ const PaymentRequestDetails = ({
         <div className="flex flex-col-reverse mb-4 lg:mb-10 gap-4 lg:gap-0 lg:flex-row lg:justify-between">
           <div className="lg:w-1/3">
             <AmountPaid
-              amountPaid={paymentRequest.paymentAttempts
-                .filter(
-                  (pr) =>
-                    (pr.paymentMethod === LocalPaymentMethodTypes.Pisp && !pr.isAuthorizeOnly) ||
-                    pr.paymentMethod !== LocalPaymentMethodTypes.Pisp,
-                )
-                .reduce((acc, curr) => acc + curr.amount, 0)}
+              amountPaid={getTotalAmountPaid(paymentRequest.paymentAttempts)}
               totalAmount={paymentRequest.amount}
               currency={paymentRequest.currency === Currency.EUR ? Currency.EUR : Currency.GBP}
               partialPaymentMethod={paymentRequest.partialPaymentMethod}

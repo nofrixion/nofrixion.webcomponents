@@ -1,10 +1,10 @@
 ﻿import React from 'react';
 import InputAmountField from '../InputAmountField/InputAmountField';
 import { Currency } from '@nofrixion/moneymoov';
-import backButtonIcon from '../../../assets/icons/back-button-icon.svg';
 import { format } from 'date-fns';
 import { localCurrency } from '../../../utils/constants';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Icon } from '../atoms';
 
 export interface CaptureModalProps {
   initialAmount: string;
@@ -70,13 +70,12 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
       <div className="max-h-full">
         <div className="h-fit">
           <button type="button" className="hover:cursor-pointer block" onClick={onDismiss}>
-            <img src={backButtonIcon} alt="Back" title="Back" className="w-6 h-auto" />
+            <Icon name="back/24" />
           </button>
           <span className="block text-2xl font-semibold text-defaultText mt-8">Confirm card payment capture</span>
           <p className="mt-12 text-defaultText text-sm font-normal">
             You are about to capture the card payment made
-            {contactName && <span className="font-semibold">{` by ${contactName}`}</span>}
-            &nbsp;on&nbsp;
+            {contactName && <span className="font-semibold">{` by ${contactName}`}</span>} on{' '}
             <span className="font-semibold">{format(transactionDate, 'MMM do, yyyy')}</span>
             {lastFourDigitsOnCard ? (
               <>
@@ -103,9 +102,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
                 ></InputAmountField>
               </div>
               <span className="mt-2 block text-13px leading-5 font-normal text-greyText">
-                There are&nbsp;{getCurrencySymbol(currency)}&nbsp;
-                {formatter.format(maxCapturableAmount)}
-                &nbsp;remaining to capture.
+                There are {getCurrencySymbol(currency)} {formatter.format(maxCapturableAmount)} remaining to capture.
               </span>
               <AnimatePresence>
                 {validationErrorMessage && (
@@ -121,7 +118,7 @@ const CaptureModal: React.FC<CaptureModalProps> = ({
               </AnimatePresence>
             </div>
           </div>
-          <div className="lg:mt-14 lg:static lg:p-0 fixed bottom-0 left-0 w-full px-6 mx-auto pb-4 z-20">
+          <div className="lg:mt-14 lg:static lg:p-0 fixed bottom-16 left-0 w-full px-6 mx-auto pb-4 z-20">
             <button
               className="justify-center rounded-full bg-[#006A80] h-12 lg:h-11 px-16 text-sm text-white font-semibold transition w-full cursor-pointer hover:bg-[#144752]"
               onClick={onCaptureClick}

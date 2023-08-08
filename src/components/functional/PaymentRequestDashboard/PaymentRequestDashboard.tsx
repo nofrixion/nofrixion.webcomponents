@@ -13,6 +13,8 @@ import {
   usePaymentRequests,
   PaymentRequest,
   ApiError,
+  useRefund,
+  useCapture,
 } from '@nofrixion/moneymoov';
 import PaymentRequestTable from '../../ui/PaymentRequestTable/PaymentRequestTable';
 import { SortDirection } from '../../ui/ColumnHeader/ColumnHeader';
@@ -120,6 +122,48 @@ const PaymentRequestDashboardMain = ({
   };
 
   const { data: paymentRequestsResponse, isLoading: isLoadingPaymentRequests } = usePaymentRequests(
+    {
+      amountSortDirection: amountSortDirection,
+      statusSortDirection: statusSortDirection,
+      createdSortDirection: createdSortDirection,
+      contactSortDirection: contactSortDirection,
+      merchantId: merchantId,
+      pageNumber: page,
+      pageSize: pageSize,
+      status: status,
+      fromDateMS: dateRange.fromDate.getTime(),
+      toDateMS: dateRange.toDate.getTime(),
+      search: searchFilter?.length >= 3 ? searchFilter : undefined,
+      currency: currencyFilter,
+      minAmount: minAmountFilter,
+      maxAmount: maxAmountFilter,
+      tags: tagsFilter,
+    },
+    { apiUrl: apiUrl, authToken: token },
+  );
+
+  const { processRefund } = useRefund(
+    {
+      amountSortDirection: amountSortDirection,
+      statusSortDirection: statusSortDirection,
+      createdSortDirection: createdSortDirection,
+      contactSortDirection: contactSortDirection,
+      merchantId: merchantId,
+      pageNumber: page,
+      pageSize: pageSize,
+      status: status,
+      fromDateMS: dateRange.fromDate.getTime(),
+      toDateMS: dateRange.toDate.getTime(),
+      search: searchFilter?.length >= 3 ? searchFilter : undefined,
+      currency: currencyFilter,
+      minAmount: minAmountFilter,
+      maxAmount: maxAmountFilter,
+      tags: tagsFilter,
+    },
+    { apiUrl: apiUrl, authToken: token },
+  );
+
+  const { processCapture } = useCapture(
     {
       amountSortDirection: amountSortDirection,
       statusSortDirection: statusSortDirection,
@@ -338,42 +382,37 @@ const PaymentRequestDashboardMain = ({
     setSelectedPaymentRequestID(paymentRequest.id);
   };
 
-  const onRefundClick = async (paymentAttemptID: string) => {
-    //TODO: Will implement refund for atleast card payment attempts. For PISP, it will need to be worked on later.
-    console.log(paymentAttemptID);
+  const onRefundClick = async (authorizationID: string, amount: number) => {
+    if (selectedPaymentRequestID) {
+      const result = await processRefund({
+        paymentRequestId: selectedPaymentRequestID,
+        authorizationId: authorizationID,
+        amount: amount,
+      });
+
+      if (result.error) {
+        makeToast('error', 'Error processing refund.');
+        handleApiError(result.error);
+      } else {
+        makeToast('success', 'Payment successfully refunded.');
+      }
+    }
   };
 
   const onCaptureClick = async (authorizationID: string, amount: number) => {
     if (selectedPaymentRequestID) {
-      let response = await client.captureCardPayment(selectedPaymentRequestID, authorizationID, amount);
-
-      if (response.error) {
-        makeToast('error', 'Error capturing Payment.');
-        console.error(response.error);
-
-        handleApiError(response.error);
-
-        return;
-      }
-
-      makeToast('success', 'Payment successfully captured.');
-
-      let localPrsCopy = [...localPaymentRequests];
-      let prIndex = localPrsCopy.findIndex((pr) => pr.id === selectedPaymentRequestID);
-      let attemptIndex = localPrsCopy[prIndex].paymentAttempts.findIndex(
-        (attempt) => attempt.attemptKey === authorizationID,
-      );
-      localPrsCopy[prIndex].paymentAttempts[attemptIndex].capturedAmount += amount;
-      localPrsCopy[prIndex].paymentAttempts[attemptIndex].isAuthorizeOnly =
-        localPrsCopy[prIndex].paymentAttempts[attemptIndex].capturedAmount <
-        localPrsCopy[prIndex].paymentAttempts[attemptIndex].amount;
-
-      localPrsCopy[prIndex].paymentAttempts[attemptIndex].captureAttempts.splice(0, 0, {
-        capturedAmount: amount,
-        capturedAt: new Date(),
+      const result = await processCapture({
+        paymentRequestId: selectedPaymentRequestID,
+        authorizationId: authorizationID,
+        amount: amount,
       });
 
-      setLocalPaymentRequests([...localPrsCopy]);
+      if (result.error) {
+        makeToast('error', 'Error capturing Payment.');
+        handleApiError(result.error);
+      } else {
+        makeToast('success', 'Payment successfully captured.');
+      }
     }
   };
 
@@ -600,6 +639,20 @@ const PaymentRequestDashboardMain = ({
         setPaymentRequests={setLocalPaymentRequests}
         onRefund={onRefundClick}
         onCapture={onCaptureClick}
+        statusSortDirection={statusSortDirection}
+        createdSortDirection={createdSortDirection}
+        contactSortDirection={contactSortDirection}
+        amountSortDirection={amountSortDirection}
+        pageNumber={page}
+        pageSize={pageSize}
+        fromDateMS={dateRange.fromDate.getTime()}
+        toDateMS={dateRange.toDate.getTime()}
+        status={status}
+        search={searchFilter?.length >= 3 ? searchFilter : undefined}
+        currency={currencyFilter}
+        minAmount={minAmountFilter}
+        maxAmount={maxAmountFilter}
+        tags={tagsFilter}
       ></PaymentRequestDetailsModal>
     </div>
   );

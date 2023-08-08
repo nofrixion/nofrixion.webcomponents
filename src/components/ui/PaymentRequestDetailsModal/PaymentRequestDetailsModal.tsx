@@ -1,16 +1,21 @@
-import React, { Fragment } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
+import React, { useEffect } from 'react';
 import PaymentRequestDetails from '../PaymentRequestDetails/PaymentRequestDetails';
 import { LocalPaymentAttempt, LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
 import CaptureModal from '../CaptureModal/CaptureModal';
 import { Currency } from '@nofrixion/moneymoov';
 import { Sheet, SheetContent } from '@/components/ui/atoms';
+import CardRefundModal from '../CardRefundModal/CardRefundModal';
+import {
+  isPartialCardRefundPossible,
+  getMaxCapturableAmount,
+  getMaxRefundableAmount,
+} from '../../../utils/paymentAttemptsHelper';
 
 export interface PaymentRequestDetailsModalProps {
   paymentRequest: LocalPaymentRequest;
   merchantTags: LocalTag[];
   hostedPaymentLink: string;
-  onRefund: (paymentAttemptID: string) => void;
+  onRefund: (authorizationID: string, amount: number) => Promise<void>;
   onCapture: (authorizationID: string, amount: number) => Promise<void>;
   onTagAdded: (tag: LocalTag) => void;
   onTagDeleted: (id: string) => void;
@@ -31,35 +36,83 @@ const PaymentRequestDetailsModal = ({
   open,
   onDismiss,
 }: PaymentRequestDetailsModalProps) => {
-  const [selectedTransaction, setSelectedTransaction] = React.useState<LocalPaymentAttempt | undefined>();
-  const [amountToCapture, setAmountToCapture] = React.useState<string | undefined>(
-    ((selectedTransaction?.amount ?? 0) - (selectedTransaction?.capturedAmount ?? 0)).toString(),
-  );
-  const maxCapturableAmount = (selectedTransaction?.amount ?? 0) - (selectedTransaction?.capturedAmount ?? 0);
+  const [selectedTransactionForRefund, setSelectedTransactionForRefund] = React.useState<LocalPaymentAttempt>();
+  const [maxRefundableAmount, setMaxRefundableAmount] = React.useState<number>(0);
+  const [amountToRefund, setAmountToRefund] = React.useState<string | undefined>();
+  const [selectedTransactionForCapture, setSelectedTransactionForCapture] = React.useState<
+    LocalPaymentAttempt | undefined
+  >();
+  const [amountToCapture, setAmountToCapture] = React.useState<string | undefined>();
+  const [maxCapturableAmount, setMaxCapturableAmount] = React.useState<number>(0);
 
-  const onTransactionSelectForCapture = (paymentAttempt: LocalPaymentAttempt) => {
-    setSelectedTransaction(paymentAttempt);
-    setAmountToCapture((paymentAttempt.amount - paymentAttempt.capturedAmount).toString());
+  useEffect(() => {
+    if (!selectedTransactionForCapture) return;
+
+    const maxCapturableAmount = getMaxCapturableAmount(selectedTransactionForCapture);
+    setMaxCapturableAmount(maxCapturableAmount);
+    setAmountToCapture(maxCapturableAmount.toString());
+  }, [selectedTransactionForCapture]);
+
+  useEffect(() => {
+    if (!selectedTransactionForRefund) return;
+
+    const maxRefundableAmount = getMaxRefundableAmount(selectedTransactionForRefund);
+    setMaxRefundableAmount(maxRefundableAmount);
+    setAmountToRefund(maxRefundableAmount.toString());
+  }, [selectedTransactionForRefund]);
+
+  const onCaptureClick = (paymentAttempt: LocalPaymentAttempt) => {
+    setSelectedTransactionForCapture(paymentAttempt);
   };
 
-  const onCaptureClick = async () => {
-    if (selectedTransaction) {
+  const onCaptureConfirm = async () => {
+    if (selectedTransactionForCapture) {
       let parsedAmount = Number(amountToCapture);
-      let remainingAmount = selectedTransaction.amount - (selectedTransaction.capturedAmount ?? 0);
-      parsedAmount = (parsedAmount ?? 0) > remainingAmount ? remainingAmount : parsedAmount!;
-      await onCapture(selectedTransaction.attemptKey, parsedAmount);
+      parsedAmount = (parsedAmount ?? 0) > maxCapturableAmount ? maxCapturableAmount : parsedAmount!;
+      await onCapture(selectedTransactionForCapture.attemptKey, parsedAmount);
       onCaptureDismiss();
     }
   };
 
   const onCaptureDismiss = () => {
-    setSelectedTransaction(undefined);
+    setSelectedTransactionForCapture(undefined);
     setAmountToCapture(undefined);
+  };
+
+  // This method is called when the user clicks on the refund button
+  const onRefundClick = (paymentAttempt: LocalPaymentAttempt) => {
+    setSelectedTransactionForRefund(paymentAttempt);
+  };
+  // This method is called when the user confirms the refund
+  const onRefundConfirm = async () => {
+    if (selectedTransactionForRefund) {
+      let parsedAmount = Number(amountToRefund);
+      parsedAmount = (parsedAmount ?? 0) > maxRefundableAmount ? maxRefundableAmount : parsedAmount!;
+      await onRefund(selectedTransactionForRefund.attemptKey, parsedAmount);
+      onRefundDismiss();
+    }
+  };
+
+  const onRefundDismiss = () => {
+    setSelectedTransactionForRefund(undefined);
+    setAmountToRefund(undefined);
   };
 
   const handleOnOpenChange = (open: boolean) => {
     if (!open) {
       onDismiss();
+    }
+  };
+
+  const handleOnCaptureFormOpenChange = (open: boolean) => {
+    if (!open) {
+      onCaptureDismiss();
+    }
+  };
+
+  const handleOnRefundFormOpenChange = (open: boolean) => {
+    if (!open) {
+      onRefundDismiss();
     }
   };
 
@@ -74,8 +127,8 @@ const PaymentRequestDetailsModal = ({
                   paymentRequest={paymentRequest}
                   merchantTags={merchantTags}
                   hostedPaymentLink={hostedPaymentLink}
-                  onRefund={onRefund}
-                  onCapture={onTransactionSelectForCapture}
+                  onRefund={onRefundClick}
+                  onCapture={onCaptureClick}
                   onTagAdded={onTagAdded}
                   onTagDeleted={onTagDeleted}
                   onTagCreated={onTagCreated}
@@ -86,36 +139,48 @@ const PaymentRequestDetailsModal = ({
         </SheetContent>
       </Sheet>
 
-      <Transition appear show={!!selectedTransaction} as={Fragment}>
-        <Dialog as="div" onClose={onCaptureDismiss}>
-          <div className="fixed inset-0 lg:inset-y-0 lg:right-0 lg:left-auto">
-            <Transition.Child
-              as={Fragment}
-              enter="transform transition ease-in-out duration-300"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="transform transition ease-in-out duration-300"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <Dialog.Panel>
-                <CaptureModal
-                  onCapture={onCaptureClick}
-                  onDismiss={onCaptureDismiss}
-                  initialAmount={amountToCapture ?? '0'}
-                  maxCapturableAmount={maxCapturableAmount}
-                  currency={selectedTransaction?.currency ?? Currency.EUR}
-                  setAmountToCapture={setAmountToCapture}
-                  transactionDate={selectedTransaction?.occurredAt ?? new Date()}
-                  contactName={paymentRequest.contact.name}
-                  lastFourDigitsOnCard={selectedTransaction?.last4DigitsOfCardNumber}
-                  processor={selectedTransaction?.processor}
-                />
-              </Dialog.Panel>
-            </Transition.Child>
+      <Sheet open={!!selectedTransactionForCapture} onOpenChange={handleOnCaptureFormOpenChange}>
+        <SheetContent className="w-full lg:w-[37.5rem]">
+          <div className="bg-white max-h-screen overflow-auto">
+            <div className="max-h-full h-screen">
+              <CaptureModal
+                onCapture={onCaptureConfirm}
+                onDismiss={onCaptureDismiss}
+                initialAmount={amountToCapture ?? '0'}
+                maxCapturableAmount={maxCapturableAmount}
+                currency={selectedTransactionForCapture?.currency ?? Currency.EUR}
+                setAmountToCapture={setAmountToCapture}
+                transactionDate={selectedTransactionForCapture?.occurredAt ?? new Date()}
+                contactName={paymentRequest.contact.name}
+                lastFourDigitsOnCard={selectedTransactionForCapture?.last4DigitsOfCardNumber}
+                processor={selectedTransactionForCapture?.processor}
+              />
+            </div>
           </div>
-        </Dialog>
-      </Transition>
+        </SheetContent>
+      </Sheet>
+
+      <Sheet open={!!selectedTransactionForRefund} onOpenChange={handleOnRefundFormOpenChange}>
+        <SheetContent className="w-full lg:w-[37.5rem]">
+          <div className="bg-white max-h-screen overflow-auto">
+            <div className="max-h-full h-screen">
+              <CardRefundModal
+                onRefund={onRefundConfirm}
+                onDismiss={onRefundDismiss}
+                initialAmount={amountToRefund ?? '0'}
+                maxRefundableAmount={maxRefundableAmount}
+                currency={selectedTransactionForRefund?.currency ?? Currency.EUR}
+                setAmountToRefund={setAmountToRefund}
+                transactionDate={selectedTransactionForRefund?.occurredAt ?? new Date()}
+                contactName={paymentRequest.contact.name}
+                lastFourDigitsOnCard={selectedTransactionForRefund?.last4DigitsOfCardNumber}
+                processor={selectedTransactionForRefund?.processor}
+                isPartialRefundPossible={isPartialCardRefundPossible(selectedTransactionForRefund)}
+              />
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
     </>
   );
 };
