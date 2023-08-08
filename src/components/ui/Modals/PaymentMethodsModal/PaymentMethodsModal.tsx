@@ -50,6 +50,8 @@ const PaymentMethodsModal = ({
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
+  
+  const numberAmount = Number(amount);
 
   useEffect(() => {
     setEnableUseAsDefault(
@@ -157,16 +159,6 @@ const PaymentMethodsModal = ({
     }
   };
 
-  const ValidationAlert: React.FC<{ layoutId: string; children?: React.ReactNode }> = ({ layoutId, children }) => {
-    return (
-      <AnimateHeightWrapper layoutId={layoutId}>
-        <div className="w-full p-3 mt-6 bg-warningYellow rounded">
-          <p className="text-sm text-default-text font-normal">{children}</p>
-        </div>
-      </AnimateHeightWrapper>
-    );
-  };
-
   return (
     <CustomModal
       title="Payment methods"
@@ -261,18 +253,26 @@ const PaymentMethodsModal = ({
       </div>
 
       <div className="flex flex-col space-y-4">
-        <AnimatePresence initial={false}>
-          {isWalletEnabled && !isCardEnabled && !isBankEnabled && !isLightningEnabled && (
-            <ValidationAlert layoutId="wallet-card-alert">
-              Do your customers have access to Apple Pay or Google Pay? If you are unsure, you may want to consider
-              adding a second payment method as a backup.
-            </ValidationAlert>
+        <AnimatePresence>
+          {isBankEnabled && amount && numberAmount < minimumCurrencyAmount && (
+            <AnimateHeightWrapper layoutId="amount-pisp-alert">
+              <div className="w-full p-3 mt-6 bg-warningYellow rounded">
+                <p className="text-sm text-default-text font-normal">
+                  The minimum amount for bank payments is {currencySymbol}
+                  {formatter.format(minimumCurrencyAmount)}. You must use another payment method for lower amounts.
+                </p>
+              </div>
+            </AnimateHeightWrapper>  
           )}
-          {isBankEnabled && amount && Number(amount) < minimumCurrencyAmount && (
-            <ValidationAlert layoutId="amount-pisp-alert">
-              The minimum amount for bank payments is {currencySymbol}
-              {formatter.format(minimumCurrencyAmount)}. You must use another payment method for lower amounts.
-            </ValidationAlert>
+          {isWalletEnabled && !isCardEnabled && !isBankEnabled && !isLightningEnabled && (
+            <AnimateHeightWrapper layoutId="wallet-card-alert">
+              <div className="w-full p-3 mt-6 bg-warningYellow rounded">
+                <p className="text-sm text-default-text font-normal">
+                  Do your customers have access to Apple Pay or Google Pay? If you are unsure, you may want to consider
+                  adding a second payment method as a backup.
+                </p>
+              </div>
+            </AnimateHeightWrapper>
           )}
         </AnimatePresence>
       </div>
