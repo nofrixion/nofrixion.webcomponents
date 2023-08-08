@@ -182,7 +182,7 @@ const Transactions = ({ transactions, cardAuthoriseOnly, onRefund, onCapture }: 
                           <td className="pl-1 lg:pl-5 py-0" colSpan={2}>
                             <div className="flex flex-row items-center ml-[0.125]">
                               <span className="mr-2 p-1.5">
-                                <Icon name="return/16" className="text-controlGreyHover" />
+                                <Icon name="return/12" className="text-controlGreyHover" />
                               </span>
                               <span>Refund</span>
                             </div>

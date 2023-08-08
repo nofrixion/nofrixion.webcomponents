@@ -34,7 +34,7 @@ interface PaymentAttemptActionMenuProps {
 
 interface PaymentAttemptActionMenuItemContentProps {
   label: string;
-  iconName: 'return/16';
+  iconName: 'return/12';
 }
 
 const PaymentAttemptActionMenuItemContent = ({ label, iconName }: PaymentAttemptActionMenuItemContentProps) => {
@@ -71,7 +71,7 @@ const PaymentAttemptActionMenu = ({ onRefund, onBlur }: PaymentAttemptActionMenu
             animate={{ opacity: 1, y: 0, scaleX: 1, scaleY: 1 }}
           >
             <DropdownMenu.Item className={actionItem()} onClick={onRefundClick}>
-              <PaymentAttemptActionMenuItemContent label="Refund" iconName="return/16" />
+              <PaymentAttemptActionMenuItemContent label="Refund" iconName="return/12" />
             </DropdownMenu.Item>
           </motion.div>
         </DropdownMenu.Content>

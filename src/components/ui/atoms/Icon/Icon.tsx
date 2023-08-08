@@ -143,16 +143,7 @@ export const Icons = {
       <path d="M8 1L8 15" strokeLinecap="round" strokeLinejoin="round" />
     </SVG>
   ),
-  'return/16': (className: string) => (
-    <SVG className={className} size="16">
-      <path d="M3.5 14.498L0.5 11.498L3.5 8.49805" strokeLinecap="round" strokeLinejoin="round" />
-      <path
-        d="M0.5 11.498H10.5C11.8261 11.498 13.0979 10.9713 14.0355 10.0336C14.9732 9.0959 15.5 7.82413 15.5 6.49805C15.5 5.17196 14.9732 3.9002 14.0355 2.96251C13.0979 2.02483 11.8261 1.49805 10.5 1.49805H6.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </SVG>
-  ),
+
   'done/12': (className: string) => (
     <SVG className={className} size="12">
       <path d="M1.5 6.31579L4.34211 9.15789L10.5 3" strokeLinecap="round" strokeLinejoin="round" />
@@ -186,6 +177,16 @@ export const Icons = {
       />
       <path
         d="M8.5 4L5.87579 7.71273C5.8175 7.79499 5.74327 7.86304 5.6581 7.91227C5.57293 7.96151 5.4788 7.9908 5.38206 7.99816C5.28532 8.00552 5.18822 7.99078 5.0973 7.95493C5.00638 7.91909 4.92376 7.86298 4.85501 7.79037L3.5 6.35245"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </SVG>
+  ),
+  'return/12': (className: string) => (
+    <SVG className={className} size="12">
+      <path d="M3.25 10.8735L1 8.62354L3.25 6.37354" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M1.5 8.62354H7.375C8.36956 8.62354 9.32339 8.22845 10.0267 7.52519C10.7299 6.82192 11.125 5.8681 11.125 4.87354C11.125 3.87897 10.7299 2.92515 10.0267 2.22188C9.32339 1.51862 8.36956 1.12354 7.375 1.12354H4.375"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
