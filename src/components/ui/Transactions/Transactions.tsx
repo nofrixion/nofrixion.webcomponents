@@ -180,7 +180,7 @@ const Transactions = ({ transactions, cardAuthoriseOnly, onRefund, onCapture }: 
                         )}
                         {subTransaction.type === SubTransactionType.Refund && (
                           <td className="pl-1 lg:pl-5 py-0" colSpan={2}>
-                            <div className="flex flex-row items-center ml-[0.125]">
+                            <div className="flex flex-row items-center ml-1">
                               <span className="mr-2 p-1.5">
                                 <Icon name="return/12" className="text-controlGreyHover" />
                               </span>
