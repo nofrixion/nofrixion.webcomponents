@@ -50,8 +50,6 @@ const PaymentMethodsModal = ({
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
-  
-  const numberAmount = Number(amount);
 
   useEffect(() => {
     setEnableUseAsDefault(
@@ -65,8 +63,10 @@ const PaymentMethodsModal = ({
         (isPriorityBankEnabled && userDefaults?.pispPriorityBankID !== priorityBank?.bankID),
     );
 
-    // Enabled unless PISP is enabled and amount is less than minimum.
-    setApplyEnabled(!(isBankEnabled && amount && Number(amount) < minimumCurrencyAmount));
+    setApplyEnabled(
+      (isBankEnabled && (!amount || Number(amount) >= minimumCurrencyAmount)) ||
+        (!isBankEnabled && (isWalletEnabled || isCardEnabled || isLightningEnabled)),
+    );
   }, [
     isBankEnabled,
     isCardEnabled,
@@ -157,6 +157,14 @@ const PaymentMethodsModal = ({
         setIsPriorityBankEnabled(false);
       }
     }
+  };
+
+  const ValidationAlert: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+    return (
+      <div className="w-full p-3 mt-6 bg-warningYellow rounded">
+        <p className="text-sm text-default-text font-normal">{children}</p>
+      </div>
+    );
   };
 
   return (
@@ -254,24 +262,25 @@ const PaymentMethodsModal = ({
 
       <div className="flex flex-col space-y-4">
         <AnimatePresence>
-          {isBankEnabled && amount && numberAmount < minimumCurrencyAmount && (
+          {isBankEnabled && amount && Number(amount) < minimumCurrencyAmount && (
             <AnimateHeightWrapper layoutId="amount-pisp-alert">
-              <div className="w-full p-3 mt-6 bg-warningYellow rounded">
-                <p className="text-sm text-default-text font-normal">
-                  The minimum amount for bank payments is {currencySymbol}
-                  {formatter.format(minimumCurrencyAmount)}. You must use another payment method for lower amounts.
-                </p>
-              </div>
-            </AnimateHeightWrapper>  
+              <ValidationAlert>
+                The minimum amount for bank payments is {currencySymbol}
+                {formatter.format(minimumCurrencyAmount)}. You must use another payment method for lower amounts.
+              </ValidationAlert>
+            </AnimateHeightWrapper>
           )}
           {isWalletEnabled && !isCardEnabled && !isBankEnabled && !isLightningEnabled && (
             <AnimateHeightWrapper layoutId="wallet-card-alert">
-              <div className="w-full p-3 mt-6 bg-warningYellow rounded">
-                <p className="text-sm text-default-text font-normal">
-                  Do your customers have access to Apple Pay or Google Pay? If you are unsure, you may want to consider
-                  adding a second payment method as a backup.
-                </p>
-              </div>
+              <ValidationAlert>
+                Do your customers have access to Apple Pay or Google Pay? If you are unsure, you may want to consider
+                adding a second payment method as a backup.
+              </ValidationAlert>
+            </AnimateHeightWrapper>
+          )}
+          {!isWalletEnabled && !isCardEnabled && !isBankEnabled && !isLightningEnabled && (
+            <AnimateHeightWrapper layoutId="wallet-card-alert">
+              <ValidationAlert>At least one payment method has to be enabled.</ValidationAlert>
             </AnimateHeightWrapper>
           )}
         </AnimatePresence>
