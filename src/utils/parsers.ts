@@ -3,6 +3,8 @@ import {
   PaymentMethodTypes,
   type PaymentRequestAddress,
   type PaymentRequest,
+  type PaymentRequestCaptureAttempt,
+  type PaymentRequestRefundAttempt,
   PaymentResult,
   Wallets,
   type Tag,
@@ -19,6 +21,8 @@ import {
   LocalAddress,
   LocalPaymentAttempt,
   LocalPaymentRequest,
+  LocalPaymentRequestCaptureAttempt,
+  LocalPaymentRequestRefundAttempt,
   LocalPaymentStatus,
   LocalTag,
 } from '../types/LocalTypes';
@@ -173,6 +177,55 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     }
   };
 
+  const parseApiCaptureAttemptsToLocalCaptureAttempts = (
+    remoteCaptureAttempts: PaymentRequestCaptureAttempt[],
+  ): LocalPaymentRequestCaptureAttempt[] => {
+    if (remoteCaptureAttempts.length === 0) {
+      return [];
+    } else {
+      const localCaptureAttempts: LocalPaymentRequestCaptureAttempt[] = [];
+      remoteCaptureAttempts.map((remoteCaptureAttempt) => {
+        const { capturedAt, capturedAmount } = remoteCaptureAttempt;
+        localCaptureAttempts.push({
+          capturedAt: new Date(capturedAt ?? 0),
+          capturedAmount: capturedAmount,
+        });
+      });
+      return localCaptureAttempts;
+    }
+  };
+
+  const parseApiRefundAttemptsToLocalRefundAttempts = (
+    remoteRefundAttempts: PaymentRequestRefundAttempt[],
+  ): LocalPaymentRequestRefundAttempt[] => {
+    if (remoteRefundAttempts.length === 0) {
+      return [];
+    } else {
+      const localRefundAttempts: LocalPaymentRequestRefundAttempt[] = [];
+      remoteRefundAttempts.map((remoteRefundAttempt) => {
+        const {
+          refundPayoutID,
+          refundInitiatedAt,
+          refundSettledAt,
+          refundCancelledAt,
+          refundInitiatedAmount,
+          refundSettledAmount,
+          refundCancelledAmount,
+        } = remoteRefundAttempt;
+        localRefundAttempts.push({
+          refundPayoutID: refundPayoutID,
+          refundInitiatedAt: new Date(refundInitiatedAt ?? 0),
+          refundSettledAt: new Date(refundSettledAt ?? 0),
+          refundCancelledAt: new Date(refundCancelledAt ?? 0),
+          refundInitiatedAmount: refundInitiatedAmount,
+          refundSettledAmount: refundSettledAmount,
+          refundCancelledAmount: refundCancelledAmount,
+        });
+      });
+      return localRefundAttempts;
+    }
+  };
+
   const parseApiPaymentAttemptsToLocalPaymentAttempts = (
     remotePaymentAttempts: PaymentRequestPaymentAttempt[],
   ): LocalPaymentAttempt[] => {
@@ -181,45 +234,42 @@ const remotePaymentRequestToLocalPaymentRequest = (remotePaymentRequest: Payment
     } else {
       const localPaymentAttempts: LocalPaymentAttempt[] = [];
       remotePaymentAttempts.map((remotePaymentAttempt) => {
-        if (remotePaymentAttempt.settledAt || remotePaymentAttempt.authorisedAt) {
+        if (
+          remotePaymentAttempt.settledAt ||
+          remotePaymentAttempt.authorisedAt ||
+          remotePaymentAttempt.cardAuthorisedAt
+        ) {
           const {
             attemptKey,
             authorisedAt,
             settledAt,
             attemptedAmount,
             paymentMethod,
-            authorisedAmount,
             settledAmount,
             captureAttempts,
+            refundAttempts,
             currency,
             walletName,
             status,
+            authorisedAmount,
+            cardAuthorisedAmount,
+            cardAuthorisedAt,
           } = remotePaymentAttempt;
 
           localPaymentAttempts.push({
             attemptKey: attemptKey,
-            occurredAt: new Date(settledAt ?? authorisedAt ?? 0),
-            paymentMethod: walletName
-              ? parseWalletNameToPaymentMethodType(walletName)
-              : parseApiPaymentMethodTypeToLocalMethodType(paymentMethod),
+            occurredAt: new Date(settledAt ?? authorisedAt ?? cardAuthorisedAt ?? 0),
+            paymentMethod: parseApiPaymentMethodTypeToLocalMethodType(paymentMethod),
             amount: attemptedAmount,
             currency: currency,
             processor: walletName ? parseApiWalletTypeToLocalWalletType(walletName) : undefined,
-            isAuthorizeOnly:
-              (paymentMethod === PaymentMethodTypes.Card && authorisedAmount > settledAmount) ||
-              (paymentMethod === PaymentMethodTypes.Pisp && status === PaymentResult.Authorized),
-            capturedAmount: settledAmount,
-            captureAttempts:
-              captureAttempts && captureAttempts.length > 0
-                ? captureAttempts
-                    .sort((a, b) => {
-                      return new Date(b.capturedAt ?? 0).getTime() - new Date(a.capturedAt ?? 0).getTime();
-                    })
-                    .map((x) => ({
-                      capturedAt: new Date(x.capturedAt ?? 0),
-                      capturedAmount: x.capturedAmount,
-                    }))
-                : [],
+            settledAmount: settledAmount,
+            captureAttempts: parseApiCaptureAttemptsToLocalCaptureAttempts(captureAttempts),
+            refundAttempts: parseApiRefundAttemptsToLocalRefundAttempts(refundAttempts),
+            authorisedAmount: authorisedAmount,
+            cardAuthorisedAmount: cardAuthorisedAmount,
+            wallet: walletName ? parseApiWalletTypeToLocalWalletType(walletName) : undefined,
+            status: parseApiStatusToLocalStatus(status),
           });
         }
       });

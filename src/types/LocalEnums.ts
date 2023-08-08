@@ -34,3 +34,8 @@ export enum LocalCardPaymentResponseStatus {
   CardCheckoutAuthorized = 'Authorized',
   CardCheckoutVerified = 'CardVerified',
 }
+
+export enum SubTransactionType {
+  Refund = 'Refund',
+  Capture = 'Capture',
+}

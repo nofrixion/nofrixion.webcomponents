@@ -1,10 +1,18 @@
 import { useEffect, useState } from 'react';
 import UIPaymentRequestDetailsModal from '../../ui/PaymentRequestDetailsModal/PaymentRequestDetailsModal';
-import { parseApiTagToLocalTag } from '../../../utils/parsers';
+import { parseApiTagToLocalTag, remotePaymentRequestToLocalPaymentRequest } from '../../../utils/parsers';
 import { LocalPaymentAttempt, LocalPaymentRequest, LocalTag } from '../../../types/LocalTypes';
-import { PaymentRequestClient, PaymentRequest, PaymentRequestUpdate, MerchantClient } from '@nofrixion/moneymoov';
+import {
+  PaymentRequestClient,
+  PaymentRequest,
+  PaymentRequestUpdate,
+  MerchantClient,
+  usePaymentRequestsProps,
+  usePaymentRequest,
+} from '@nofrixion/moneymoov';
+import { makeToast } from '@/components/ui/Toast/Toast';
 
-interface PaymentRequestDetailsModalProps {
+interface PaymentRequestDetailsModalProps extends usePaymentRequestsProps {
   token?: string; // Example: "eyJhbGciOiJIUz..."
   apiUrl: string; // Example: "https://api.nofrixion.com/api/v1"
   merchantId: string;
@@ -15,7 +23,7 @@ interface PaymentRequestDetailsModalProps {
   onDismiss: () => void;
   setMerchantTags: (merchantTags: LocalTag[]) => void;
   setPaymentRequests: (paymentRequests: LocalPaymentRequest[]) => void;
-  onRefund: (paymentAttemptID: string) => void;
+  onRefund: (authorizationID: string, amount: number) => Promise<void>;
   onCapture: (authorizationID: string, amount: number) => Promise<void>;
 }
 const PaymentRequestDetailsModal = ({
@@ -31,6 +39,20 @@ const PaymentRequestDetailsModal = ({
   setPaymentRequests,
   onRefund,
   onCapture,
+  statusSortDirection,
+  createdSortDirection,
+  contactSortDirection,
+  amountSortDirection,
+  pageNumber,
+  pageSize,
+  fromDateMS,
+  toDateMS,
+  status,
+  search,
+  currency,
+  minAmount,
+  maxAmount,
+  tags,
 }: PaymentRequestDetailsModalProps) => {
   const paymentRequestClient = new PaymentRequestClient({
     apiUrl: apiUrl,
@@ -40,14 +62,38 @@ const PaymentRequestDetailsModal = ({
 
   const [paymentRequest, setPaymentRequest] = useState<LocalPaymentRequest | undefined>(undefined);
 
+  const { data: paymentRequestResponse } = usePaymentRequest(
+    {
+      merchantId: merchantId,
+      statusSortDirection: statusSortDirection,
+      createdSortDirection: createdSortDirection,
+      contactSortDirection: contactSortDirection,
+      amountSortDirection: amountSortDirection,
+      pageNumber: pageNumber,
+      pageSize: pageSize,
+      fromDateMS: fromDateMS,
+      toDateMS: toDateMS,
+      status: status,
+      search: search,
+      currency: currency,
+      minAmount: minAmount,
+      maxAmount: maxAmount,
+      tags: tags,
+    },
+    {
+      paymentRequestId: selectedPaymentRequestID,
+      merchantId: merchantId,
+    },
+    { apiUrl: apiUrl, authToken: token },
+  );
+
   useEffect(() => {
-    if (selectedPaymentRequestID) {
-      const paymentRequest = paymentRequests.find((paymentRequest) => paymentRequest.id === selectedPaymentRequestID);
-      if (paymentRequest) {
-        setPaymentRequest(paymentRequest);
-      }
+    if (paymentRequestResponse?.status === 'success') {
+      setPaymentRequest(remotePaymentRequestToLocalPaymentRequest(paymentRequestResponse.data));
+    } else if (paymentRequestResponse?.status === 'error') {
+      makeToast('error', 'Could not get payment request details.');
     }
-  }, [selectedPaymentRequestID, paymentRequests]);
+  }, [paymentRequestResponse]);
 
   const updatePaymentRequests = (updatedPaymentRequest: PaymentRequest) => {
     const index = paymentRequests.findIndex((paymentRequest) => paymentRequest.id === selectedPaymentRequestID);
@@ -113,6 +159,11 @@ const PaymentRequestDetailsModal = ({
     }
   };
 
+  const onModalDismiss = () => {
+    setPaymentRequest(undefined);
+    onDismiss();
+  };
+
   return (
     <div>
       {paymentRequest && (
@@ -126,7 +177,7 @@ const PaymentRequestDetailsModal = ({
           onTagAdded={onTagAdded}
           onTagCreated={onTagCreated}
           onTagDeleted={onTagDeleted}
-          onDismiss={onDismiss}
+          onDismiss={onModalDismiss}
         ></UIPaymentRequestDetailsModal>
       )}
     </div>

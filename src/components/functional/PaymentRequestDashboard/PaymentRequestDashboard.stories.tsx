@@ -20,6 +20,9 @@ const meta: Meta<typeof PaymentRequestDashboard> = {
         type: 'text',
       },
     },
+    onUnauthorized: {
+      action: 'onUnauthorized',
+    },
   },
 } as Meta<typeof PaymentRequestDashboard>;
 
