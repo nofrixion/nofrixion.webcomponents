@@ -46,6 +46,11 @@ const PaymentMethodsModal = ({
   const [enableUseAsDefault, setEnableUseAsDefault] = useState<boolean>(false);
   const [applyEnabled, setApplyEnabled] = useState<boolean>(true);
 
+  /* Error alert states */
+  const [showWalletOnlyAlert, setShowWalletOnlyAlert] = useState<boolean>(false);
+  const [showPispAmountAlert, setShowPispAmountAlert] = useState<boolean>(false);
+  const [showNoPaymentMethodAlert, setShowNoPaymentMethodAlert] = useState<boolean>(false);
+
   const formatter = new Intl.NumberFormat(navigator.language, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
@@ -67,6 +72,27 @@ const PaymentMethodsModal = ({
       (isBankEnabled && (!amount || Number(amount) >= minimumCurrencyAmount)) ||
         (!isBankEnabled && (isWalletEnabled || isCardEnabled || isLightningEnabled)),
     );
+
+    const shouldShowPispAmountAlert = !!(isBankEnabled && amount && Number(amount) < minimumCurrencyAmount);
+    const shouldShowWalletOnlyAlert = isWalletEnabled && !isCardEnabled && !isBankEnabled && !isLightningEnabled;
+    const shouldShowNoPaymentMethodAlert = !isWalletEnabled && !isCardEnabled && !isBankEnabled && !isLightningEnabled;
+
+    /* Delay display animations by 200 to avoid weird stretching animations */
+    if (shouldShowWalletOnlyAlert && !showWalletOnlyAlert) {
+      setTimeout(() => setShowWalletOnlyAlert(true), 200);
+    } else {
+      setShowWalletOnlyAlert(shouldShowWalletOnlyAlert);
+    }
+    if (shouldShowPispAmountAlert && !showPispAmountAlert) {
+      setTimeout(() => setShowPispAmountAlert(true), 200);
+    } else {
+      setShowPispAmountAlert(shouldShowPispAmountAlert);
+    }
+    if (shouldShowNoPaymentMethodAlert && !showNoPaymentMethodAlert) {
+      setTimeout(() => setShowNoPaymentMethodAlert(true), 200);
+    } else {
+      setShowNoPaymentMethodAlert(shouldShowNoPaymentMethodAlert);
+    }
   }, [
     isBankEnabled,
     isCardEnabled,
@@ -262,7 +288,7 @@ const PaymentMethodsModal = ({
 
       <div className="flex flex-col space-y-4">
         <AnimatePresence>
-          {isBankEnabled && amount && Number(amount) < minimumCurrencyAmount && (
+          {showPispAmountAlert && (
             <AnimateHeightWrapper layoutId="amount-pisp-alert">
               <ValidationAlert>
                 The minimum amount for bank payments is {currencySymbol}
@@ -270,7 +296,7 @@ const PaymentMethodsModal = ({
               </ValidationAlert>
             </AnimateHeightWrapper>
           )}
-          {isWalletEnabled && !isCardEnabled && !isBankEnabled && !isLightningEnabled && (
+          {showWalletOnlyAlert && (
             <AnimateHeightWrapper layoutId="wallet-card-alert">
               <ValidationAlert>
                 Do your customers have access to Apple Pay or Google Pay? If you are unsure, you may want to consider
@@ -278,7 +304,7 @@ const PaymentMethodsModal = ({
               </ValidationAlert>
             </AnimateHeightWrapper>
           )}
-          {!isWalletEnabled && !isCardEnabled && !isBankEnabled && !isLightningEnabled && (
+          {showNoPaymentMethodAlert && (
             <AnimateHeightWrapper layoutId="wallet-card-alert">
               <ValidationAlert>At least one payment method has to be enabled.</ValidationAlert>
             </AnimateHeightWrapper>
