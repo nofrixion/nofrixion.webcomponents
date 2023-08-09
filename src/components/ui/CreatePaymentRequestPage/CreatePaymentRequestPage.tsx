@@ -435,6 +435,7 @@ const CreatePaymentRequestPage = ({
   };
 
   const reviewRowClassNames = 'flex overflow-hidden items-baseline flex-col gap-2 md:gap-0 md:flex-row';
+  const paymentMethodIconClassNames = 'w-4 h-4 lg:w-6 lg:h-6 [&>img]:w-4 [&>img]:h-4 [&>img]:lg:w-6 [&>img]:lg:h-6';
 
   const renderSettingsReview = () => {
     return (
@@ -448,10 +449,26 @@ const CreatePaymentRequestPage = ({
             </span>
 
             <div className="flex items-center space-x-3">
-              <PaymentMethodIcon paymentMethod="bank" enabled={paymentMethodsFormValue.isBankEnabled} />
-              <PaymentMethodIcon paymentMethod="card" enabled={paymentMethodsFormValue.isCardEnabled} />
-              <PaymentMethodIcon paymentMethod="wallet" enabled={paymentMethodsFormValue.isWalletEnabled} />
-              <PaymentMethodIcon paymentMethod="lightning" enabled={paymentMethodsFormValue.isLightningEnabled} />
+              <PaymentMethodIcon
+                paymentMethod="bank"
+                enabled={paymentMethodsFormValue.isBankEnabled}
+                iconClassNames={paymentMethodIconClassNames}
+              />
+              <PaymentMethodIcon
+                paymentMethod="card"
+                enabled={paymentMethodsFormValue.isCardEnabled}
+                iconClassNames={paymentMethodIconClassNames}
+              />
+              <PaymentMethodIcon
+                paymentMethod="wallet"
+                enabled={paymentMethodsFormValue.isWalletEnabled}
+                iconClassNames={paymentMethodIconClassNames}
+              />
+              <PaymentMethodIcon
+                paymentMethod="lightning"
+                enabled={paymentMethodsFormValue.isLightningEnabled}
+                iconClassNames={paymentMethodIconClassNames}
+              />
             </div>
 
             {availableMethodsDetails.length > 0 && (
