@@ -45,7 +45,7 @@ const PaymentRequestMobileCard = ({
         <span className="text-sm/6 text-greyText uppercase mr-2">{currency}</span>
         <PaymentRequestActionMenu
           onDuplicate={onDuplicate}
-          onDelete={onDeletePaymentRequestClicked}
+          onDelete={onDelete ? onDeletePaymentRequestClicked : undefined}
           onCopyLink={onCopyLink}
           onOpenPaymentPage={onOpenPaymentPage}
         />

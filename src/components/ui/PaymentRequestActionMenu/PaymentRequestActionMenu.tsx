@@ -113,6 +113,7 @@ const PaymentRequestActionMenu = ({
               <DropdownMenu.Item className={actionItem({ intent: 'disabled' })} disabled>
                 <InfoTooltip
                   side="bottom"
+                  className="w-full"
                   content="Payment requests that have already received payments cannot be deleted."
                 >
                   <PaymentRequestActionMenuItemContent label="Delete not available" iconSource={trashDisabledIcon} />

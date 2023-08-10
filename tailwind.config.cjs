@@ -27,6 +27,7 @@ module.exports = {
         secondaryButton: '#DEE5ED',
         secondaryButtonHover: '#BDCCDB',
         disabledIcon: '#ABB3BA',
+        warningYellow: '#FCF5CF',
       },
       fontSize: {
         '13px': '0.8125rem',
